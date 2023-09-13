@@ -1,0 +1,10 @@
+# server setting
+server:
+  port: 8080
+
+
+# logging
+logging:
+  level:
+    com.innim.okkycopy: trace
+    org.springframework.security: trace
