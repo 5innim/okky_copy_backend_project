@@ -7,3 +7,12 @@ server:
 logging:
   level:
     com.innim.okkycopy: debug
+
+
+spring:
+  #postgresql
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/okky_dev
+    username: for_dev
+    password: okky1234
