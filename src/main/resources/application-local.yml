@@ -9,10 +9,22 @@ logging:
     com.innim.okkycopy: debug
 
 
+
 spring:
-  #postgresql
+  # postgresql
   datasource:
     driver-class-name: org.postgresql.Driver
     url: jdbc:postgresql://localhost:5432/okky_dev
     username: for_dev
     password: okky1234
+
+  # jpa
+  jpa:
+    hibernate:
+      ddl-auto: create
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format-sql: true
+    show-sql: true
+
