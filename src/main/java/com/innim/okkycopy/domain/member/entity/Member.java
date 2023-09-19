@@ -4,14 +4,15 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import java.time.LocalDateTime;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.DynamicUpdate;
-import org.springframework.data.annotation.Id;
 
 @Entity
 @Table(name = "member")
@@ -45,6 +46,8 @@ public class Member {
     private boolean emailCheck;
 
     @Column(nullable = false, name = "created_date")
+    @CreationTimestamp
     private LocalDateTime createdDate;
+
 
 }
