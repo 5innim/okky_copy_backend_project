@@ -2,6 +2,8 @@ package com.innim.okkycopy.domain.member;
 
 import com.innim.okkycopy.domain.member.dto.request.SignupRequest;
 import com.innim.okkycopy.domain.member.dto.response.BriefMemberInfo;
+
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -18,7 +20,7 @@ public class MemberController {
     private final MemberService memberService;
 
     @PostMapping("/member/signup")
-    public ResponseEntity<BriefMemberInfo> signup(@RequestBody SignupRequest signupRequest) {
+    public ResponseEntity<BriefMemberInfo> signup(@Valid @RequestBody SignupRequest signupRequest) {
         log.trace("signup invoked");
         return ResponseEntity
             .status(HttpStatus.CREATED)
