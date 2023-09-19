@@ -9,7 +9,7 @@ logging:
     com.innim.okkycopy: trace
     org:
       springframework.security: trace
-      hibernate.type.descriptor.sql: trace
+      hibernate.orm.jdbc.bind: trace
 
 # spring
 spring:
