@@ -1,5 +1,6 @@
 package com.innim.okkycopy.domain.member.entity;
 
+import com.innim.okkycopy.domain.member.dto.request.SignupRequest;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -10,6 +11,7 @@ import java.time.LocalDateTime;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.DynamicUpdate;
@@ -20,6 +22,7 @@ import org.hibernate.annotations.DynamicUpdate;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Builder
+@Getter
 public class Member {
 
     @Id
@@ -49,5 +52,15 @@ public class Member {
     @CreationTimestamp
     private LocalDateTime createdDate;
 
+    public static Member toEntity(SignupRequest request) {
+        return Member.builder()
+            .id(request.getId())
+            .password(request.getPassword())
+            .email(request.getEmail())
+            .name(request.getName())
+            .nickname(request.getNickname())
+            .emailCheck(request.isEmailCheck())
+            .build();
+    }
 
 }
