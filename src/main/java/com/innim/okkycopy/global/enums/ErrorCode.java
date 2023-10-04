@@ -17,7 +17,7 @@ public enum ErrorCode {
     _409_DUPLICATE_ID (HttpStatus.CONFLICT, "409001", "input value of 'id' is duplicated"),
     _409_DUPLICATE_EMAIL (HttpStatus.CONFLICT, "409002", "input value of 'email' is duplicated");
 
-    private HttpStatus status;
-    private String code;
-    private String message;
+    private final HttpStatus status;
+    private final String code;
+    private final String message;
 }
