@@ -32,7 +32,7 @@ public class MemberService {
 
         signupRequest.encodePassword(passwordEncoder);
 
-        Member member = Member.toEntity(signupRequest);
+        Member member = Member.toUserEntity(signupRequest);
         memberRepository.save(member);
 
         return BriefMemberInfo.toDto(member);

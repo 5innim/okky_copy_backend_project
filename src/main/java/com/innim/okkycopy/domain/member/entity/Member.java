@@ -1,6 +1,7 @@
 package com.innim.okkycopy.domain.member.entity;
 
 import com.innim.okkycopy.domain.member.dto.request.SignupRequest;
+import com.innim.okkycopy.global.enums.Role;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -52,7 +53,10 @@ public class Member {
     @CreationTimestamp
     private LocalDateTime createdDate;
 
-    public static Member toEntity(SignupRequest request) {
+    @Column(nullable = false)
+    private String role;
+
+    public static Member toUserEntity(SignupRequest request) {
         return Member.builder()
             .id(request.getId())
             .password(request.getPassword())
@@ -60,6 +64,7 @@ public class Member {
             .name(request.getName())
             .nickname(request.getNickname())
             .emailCheck(request.isEmailCheck())
+            .role(Role.USER.getValue())
             .build();
     }
 
