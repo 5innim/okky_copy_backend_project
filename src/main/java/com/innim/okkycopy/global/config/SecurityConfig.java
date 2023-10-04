@@ -1,9 +1,13 @@
 package com.innim.okkycopy.global.config;
 
+import com.innim.okkycopy.global.auth.CustomUserDetailsService;
+import com.innim.okkycopy.global.auth.filter.IdPasswordAuthenticationFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.annotation.web.configurers.AnonymousConfigurer;
 import org.springframework.security.config.annotation.web.configurers.CsrfConfigurer;
 import org.springframework.security.config.annotation.web.configurers.ExceptionHandlingConfigurer;
@@ -14,6 +18,7 @@ import org.springframework.security.config.annotation.web.configurers.SessionMan
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity
@@ -33,7 +38,9 @@ public class SecurityConfig {
             .logout(configure -> logoutConfigure(configure))
             .servletApi(configure -> servletApiConfigure(configure))
             .anonymous(configure -> anonymousConfigure(configure))
-            .exceptionHandling(configure -> exceptionHandlingConfigure(configure));
+            .exceptionHandling(configure -> exceptionHandlingConfigure(configure))
+            .apply(new CustomDsl());
+
 
         return http.build();
     }
@@ -71,5 +78,14 @@ public class SecurityConfig {
     private ExceptionHandlingConfigurer<HttpSecurity> exceptionHandlingConfigure(ExceptionHandlingConfigurer<HttpSecurity> configure) {
         configure.disable();
         return configure;
+    }
+
+    public class CustomDsl extends AbstractHttpConfigurer<CustomDsl, HttpSecurity> {
+        @Override
+        public void configure(HttpSecurity http) throws Exception {
+            http.addFilterAt(new IdPasswordAuthenticationFilter(http.getSharedObject(
+                AuthenticationManager.class)), UsernamePasswordAuthenticationFilter.class);
+        }
+
     }
 }
