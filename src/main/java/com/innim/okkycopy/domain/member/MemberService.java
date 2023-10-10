@@ -3,7 +3,7 @@ package com.innim.okkycopy.domain.member;
 import com.innim.okkycopy.domain.member.dto.request.SignupRequest;
 import com.innim.okkycopy.domain.member.dto.response.BriefMemberInfo;
 import com.innim.okkycopy.domain.member.entity.Member;
-import com.innim.okkycopy.global.enums.ErrorCode;
+import com.innim.okkycopy.global.error.ErrorCode;
 import com.innim.okkycopy.global.error.exception.DuplicateException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

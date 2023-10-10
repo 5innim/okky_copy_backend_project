@@ -1,4 +1,4 @@
-package com.innim.okkycopy.global.enums;
+package com.innim.okkycopy.global.auth.enums;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

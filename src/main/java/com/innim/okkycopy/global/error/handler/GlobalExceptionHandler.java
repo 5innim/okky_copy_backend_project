@@ -1,9 +1,9 @@
 package com.innim.okkycopy.global.error.handler;
 
-import com.innim.okkycopy.global.enums.ErrorCode;
+import com.innim.okkycopy.domain.member.dto.request.SignupRequest;
+import com.innim.okkycopy.global.error.ErrorCode;
 import com.innim.okkycopy.global.error.ErrorResponse;
 import com.innim.okkycopy.global.error.exception.ServiceException;
-import com.innim.okkycopy.global.utils.ValidationUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatusCode;
@@ -24,7 +24,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         WebRequest request) {
 
         String field = ex.getBindingResult().getFieldErrors().get(0).getField();
-        ErrorCode errorCode = ValidationUtil.retreiveErrorCode(field);
+        ErrorCode errorCode = SignupRequest.retreiveErrorCode(field);
 
         return ResponseEntity
             .status(errorCode.getStatus())

@@ -1,4 +1,4 @@
-package com.innim.okkycopy.global.enums;
+package com.innim.okkycopy.global.error;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
