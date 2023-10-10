@@ -1,6 +1,6 @@
 package com.innim.okkycopy.global.error.exception;
 
-import com.innim.okkycopy.global.enums.ErrorCode;
+import com.innim.okkycopy.global.error.ErrorCode;
 import lombok.Getter;
 
 @Getter
