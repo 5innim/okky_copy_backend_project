@@ -14,6 +14,8 @@ public class JwtProperty {
 
     public static String algorithm;
     public static String secret;
+    public static long accessValidTime;
+    public static long refreshValidTime;
     public static Key secretKey;
     public static SignatureAlgorithm signatureAlgorithm;
     @Value("#{environment['jwt.signature-algorithm']}")
@@ -25,6 +27,17 @@ public class JwtProperty {
     public void setSecret(String secret) {
         this.secret = secret;
     }
+
+    @Value("#{environment['jwt.valid-time.access-limit-milliseconds']}")
+    public void setAccessValidTime(long accessValidTime) {
+        this.accessValidTime = accessValidTime;
+    }
+
+    @Value("#{environment['jwt.valid-time.refresh-limit-milliseconds']}")
+    public void setRefreshValidTime(long refreshValidTime) {
+        this.refreshValidTime = refreshValidTime;
+    }
+
 
     @PostConstruct
     private void init() {

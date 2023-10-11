@@ -6,5 +6,5 @@ jwt:
     prefix: "Bearer "
   signature-algorithm: "HS256"
   valid-time:
-    access-limit-seconds: 1000
-    refresh-limit-seconds: 1000
+    access-limit-milliseconds: 1_800_000
+    refresh-limit-milliseconds: 86_400_000
