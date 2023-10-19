@@ -1,55 +1,55 @@
 package com.innim.okkycopy.global.auth;
 
+import com.innim.okkycopy.domain.member.entity.Member;
 import java.util.Collection;
-import lombok.Builder;
+import java.util.List;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class CustomUserDetails implements UserDetails {
 
-    private Collection<? extends GrantedAuthority> authorities;
-    private String password;
-    private String username;
-    private boolean accountNonExpired;
-    private boolean accountNonLocked;
-    private boolean credentialsNonExpired;
-    private boolean enabled;
+    private Member member;
 
-
+    public long getUserId() {
+        return member.getMemberId();
+    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return authorities;
+        return List.of(() -> member.getRole());
     }
 
     @Override
     public String getPassword() {
-        return password;
+        return member.getPassword();
     }
 
     @Override
     public String getUsername() {
-        return username;
+        return member.getId();
     }
 
     @Override
     public boolean isAccountNonExpired() {
-        return accountNonExpired;
+        return true;
     }
 
     @Override
     public boolean isAccountNonLocked() {
-        return accountNonLocked;
+        return true;
     }
 
     @Override
     public boolean isCredentialsNonExpired() {
-        return credentialsNonExpired;
+        return true;
     }
 
     @Override
     public boolean isEnabled() {
-        return enabled;
+        return true;
     }
 }
