@@ -2,7 +2,6 @@ package com.innim.okkycopy.global.auth;
 
 import com.innim.okkycopy.domain.member.MemberRepository;
 import com.innim.okkycopy.domain.member.entity.Member;
-import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -17,18 +16,12 @@ public class CustomUserDetailsService implements UserDetailsService {
     private final MemberRepository memberRepository;
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+    public UserDetails loadUserByUsername(String username) {
 
         Optional<Member> member = memberRepository.findById(username);
 
-        return member.isEmpty() ? null : CustomUserDetails.builder()
-            .authorities(List.of(() -> member.get().getRole()))
-            .username(member.get().getId())
-            .password(member.get().getPassword())
-            .accountNonLocked(true)
-            .accountNonExpired(true)
-            .credentialsNonExpired(true)
-            .enabled(true)
-            .build();
+        if (member.isEmpty()) throw new UsernameNotFoundException("can not find user with " + "[" + username + "]");
+
+        return new CustomUserDetails(member.get());
     }
 }
