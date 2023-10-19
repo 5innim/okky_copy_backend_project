@@ -1,4 +1,4 @@
-package com.innim.okkycopy.global.auth.dto;
+package com.innim.okkycopy.global.auth.dto.request;
 
 import lombok.Getter;
 import lombok.Setter;
