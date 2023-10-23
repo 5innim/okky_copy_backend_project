@@ -1,6 +1,9 @@
 package com.innim.okkycopy.global.config;
 
+import com.innim.okkycopy.global.auth.CustomUserDetailsService;
 import com.innim.okkycopy.global.auth.filter.IdPasswordAuthenticationFilter;
+import com.innim.okkycopy.global.auth.filter.JwtAuthenticationFilter;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -21,13 +24,15 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 @Configuration
 @EnableWebSecurity
+@RequiredArgsConstructor
 public class SecurityConfig {
+
+    private final CustomUserDetailsService userDetailsService;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
-
 
 
     @Bean
@@ -42,16 +47,17 @@ public class SecurityConfig {
             .exceptionHandling(configure -> exceptionHandlingConfigure(configure))
             .apply(new CustomDsl());
 
-
         return http.build();
     }
 
-    private SessionManagementConfigurer<HttpSecurity> sessionManagementConfigure(SessionManagementConfigurer<HttpSecurity> configure) {
+    private SessionManagementConfigurer<HttpSecurity> sessionManagementConfigure(
+        SessionManagementConfigurer<HttpSecurity> configure) {
         configure.disable();
         return configure;
     }
 
-    private HeadersConfigurer<HttpSecurity> headersConfigure(HeadersConfigurer<HttpSecurity> configure) {
+    private HeadersConfigurer<HttpSecurity> headersConfigure(
+        HeadersConfigurer<HttpSecurity> configure) {
         configure.disable();
         return configure;
     }
@@ -61,31 +67,38 @@ public class SecurityConfig {
         return configure;
     }
 
-    private LogoutConfigurer<HttpSecurity> logoutConfigure(LogoutConfigurer<HttpSecurity> configure) {
+    private LogoutConfigurer<HttpSecurity> logoutConfigure(
+        LogoutConfigurer<HttpSecurity> configure) {
         configure.disable();
         return configure;
     }
 
-    private ServletApiConfigurer<HttpSecurity> servletApiConfigure(ServletApiConfigurer<HttpSecurity> configure) {
+    private ServletApiConfigurer<HttpSecurity> servletApiConfigure(
+        ServletApiConfigurer<HttpSecurity> configure) {
         configure.disable();
         return configure;
     }
 
-    private AnonymousConfigurer<HttpSecurity> anonymousConfigure(AnonymousConfigurer<HttpSecurity> configure) {
+    private AnonymousConfigurer<HttpSecurity> anonymousConfigure(
+        AnonymousConfigurer<HttpSecurity> configure) {
         configure.disable();
         return configure;
     }
 
-    private ExceptionHandlingConfigurer<HttpSecurity> exceptionHandlingConfigure(ExceptionHandlingConfigurer<HttpSecurity> configure) {
+    private ExceptionHandlingConfigurer<HttpSecurity> exceptionHandlingConfigure(
+        ExceptionHandlingConfigurer<HttpSecurity> configure) {
         configure.disable();
         return configure;
     }
 
     public class CustomDsl extends AbstractHttpConfigurer<CustomDsl, HttpSecurity> {
+
         @Override
         public void configure(HttpSecurity http) throws Exception {
             http.addFilterAt(new IdPasswordAuthenticationFilter(http.getSharedObject(
-                AuthenticationManager.class)), UsernamePasswordAuthenticationFilter.class);
+                    AuthenticationManager.class)), UsernamePasswordAuthenticationFilter.class)
+                .addFilterAfter(new JwtAuthenticationFilter(userDetailsService),
+                    IdPasswordAuthenticationFilter.class);
         }
 
     }
