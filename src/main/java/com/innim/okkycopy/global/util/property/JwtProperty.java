@@ -18,6 +18,7 @@ public class JwtProperty {
     public static long refreshValidTime;
     public static Key secretKey;
     public static SignatureAlgorithm signatureAlgorithm;
+    public static String prefix;
     @Value("#{environment['jwt.signature-algorithm']}")
     public void setAlgorithm(String algorithm) {
         this.algorithm = algorithm;
@@ -36,6 +37,11 @@ public class JwtProperty {
     @Value("#{environment['jwt.valid-time.refresh-limit-milliseconds']}")
     public void setRefreshValidTime(long refreshValidTime) {
         this.refreshValidTime = refreshValidTime;
+    }
+
+    @Value("#{environment['jwt.header.prefix']}")
+    public void setPrefix(String prefix) {
+        this.prefix = prefix;
     }
 
 
