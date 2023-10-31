@@ -17,27 +17,26 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class JwtUtil {
 
-    public static String generateAccessToken(Long userId) throws TokenGenerateException {
-        Date date = new Date();
-        date.setTime(date.getTime() + JwtProperty.accessValidTime);
-        return generateToken(userId, date, "access");
+    public static String generateAccessToken(Long userId, Date loginDate) throws TokenGenerateException {
+        Date expiredDate = new Date(loginDate.getTime() + JwtProperty.accessValidTime);
+        return generateToken(userId, expiredDate, loginDate, "access");
     }
 
-    public static String generateRefreshToken(Long userId) throws TokenGenerateException {
-        Date date = new Date();
-        date.setTime(date.getTime() + JwtProperty.refreshValidTime);
-        return generateToken(userId, date, "refresh");
+    public static String generateRefreshToken(Long userId, Date loginDate) throws TokenGenerateException {
+        Date expiredDate = new Date(loginDate.getTime() + JwtProperty.refreshValidTime);
+        return generateToken(userId, expiredDate, loginDate, "refresh");
     }
 
-    private static String generateToken(Long userId, Date expiration, String tokenSub) throws TokenGenerateException{
+    private static String generateToken(Long userId, Date expiredDate, Date loginDate, String tokenSub) throws TokenGenerateException{
 
         String generatedToken;
         try {
             generatedToken = Jwts.builder()
                 .setHeader(Map.of("alg", JwtProperty.algorithm, "typ", "JWT"))
-                .setExpiration(expiration)
+                .setExpiration(expiredDate)
                 .setSubject(tokenSub)
                 .addClaims(Map.of("uid", userId))
+                .addClaims(Map.of("lat", loginDate))
                 .signWith(JwtProperty.secretKey, JwtProperty.signatureAlgorithm)
                 .compact();
         } catch(Exception ex) {
