@@ -14,6 +14,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.DynamicUpdate;
 
@@ -24,6 +25,7 @@ import org.hibernate.annotations.DynamicUpdate;
 @AllArgsConstructor
 @Builder
 @Getter
+@Setter
 public class Member {
 
     @Id
@@ -55,6 +57,9 @@ public class Member {
 
     @Column(nullable = false)
     private String role;
+
+    @Column(name = "login_date")
+    private LocalDateTime loginDate;
 
     public static Member toUserEntity(SignupRequest request) {
         return Member.builder()
