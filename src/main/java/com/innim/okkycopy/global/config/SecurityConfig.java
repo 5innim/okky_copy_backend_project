@@ -1,8 +1,10 @@
 package com.innim.okkycopy.global.config;
 
+import com.innim.okkycopy.global.auth.AuthService;
 import com.innim.okkycopy.global.auth.CustomUserDetailsService;
 import com.innim.okkycopy.global.auth.filter.IdPasswordAuthenticationFilter;
 import com.innim.okkycopy.global.auth.filter.JwtAuthenticationFilter;
+import com.innim.okkycopy.global.auth.filter.JwtRefreshFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -28,6 +30,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class SecurityConfig {
 
     private final CustomUserDetailsService userDetailsService;
+    private final AuthService authService;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -96,9 +99,12 @@ public class SecurityConfig {
         @Override
         public void configure(HttpSecurity http) throws Exception {
             http.addFilterAt(new IdPasswordAuthenticationFilter(http.getSharedObject(
-                    AuthenticationManager.class)), UsernamePasswordAuthenticationFilter.class)
+                        AuthenticationManager.class), authService),
+                    UsernamePasswordAuthenticationFilter.class)
                 .addFilterAfter(new JwtAuthenticationFilter(userDetailsService),
-                    IdPasswordAuthenticationFilter.class);
+                    IdPasswordAuthenticationFilter.class)
+                .addFilterAfter(new JwtRefreshFilter(authService),
+                    JwtAuthenticationFilter.class);
         }
 
     }
