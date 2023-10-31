@@ -58,11 +58,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         try {
             Claims claims = validateToken(token);
-            Long userId = Long.valueOf((Integer) claims.get("uid"));
+            if (claims.getSubject().equals("access")) {
+                Long userId = Long.valueOf((Integer) claims.get("uid"));
 
-            Authentication authResult = authenticate(userId);
-            onSuccessfulAuthentication(authResult, request, response);
-
+                Authentication authResult = authenticate(userId);
+                onSuccessfulAuthentication(authResult, request, response);
+            }
         } catch (ExpiredJwtException ex) {
             RequestResponseUtil.makeExceptionResponseForFilter(response,
                 ErrorCode._403_TOKEN_EXPIRED);
@@ -101,11 +102,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         try {
             claims = JwtUtil.validateToken(token);
-            if (claims.getSubject().equals("access")) {
-                return claims;
-            }
-            throw new FailValidationJwtException("it's not access token");
-
+            return claims;
         } catch (ExpiredJwtException ex) {
             throw ex;
         } catch (FailValidationJwtException ex) {
@@ -113,11 +110,15 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         }
     }
 
-    private Authentication authenticate(Long userId) throws UserIdNotFoundException {
-        UserDetails userDetails = userDetailsService.loadUserByUserId(userId);
+    private Authentication authenticate(Long userId) throws FailValidationJwtException {
+        try {
+            UserDetails userDetails = userDetailsService.loadUserByUserId(userId);
 
-        return new UsernamePasswordAuthenticationToken(
-            userDetails, null, userDetails.getAuthorities());
+            return new UsernamePasswordAuthenticationToken(
+                userDetails, null, userDetails.getAuthorities());
+        } catch(UserIdNotFoundException ex) {
+            throw new FailValidationJwtException(ex.getMessage());
+        }
 
     }
 
