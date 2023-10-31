@@ -1,16 +1,21 @@
 package com.innim.okkycopy.global.auth.filter;
 
+import com.innim.okkycopy.global.auth.AuthService;
 import com.innim.okkycopy.global.auth.CustomUserDetails;
 import com.innim.okkycopy.global.auth.dto.request.LoginRequest;
 import com.innim.okkycopy.global.auth.dto.response.LoginResponse;
 import com.innim.okkycopy.global.error.ErrorCode;
 import com.innim.okkycopy.global.error.exception.TokenGenerateException;
+import com.innim.okkycopy.global.error.exception.UserIdNotFoundException;
 import com.innim.okkycopy.global.util.JwtUtil;
 import com.innim.okkycopy.global.util.RequestResponseUtil;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.Date;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.lang.Nullable;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -26,10 +31,13 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 public class IdPasswordAuthenticationFilter extends AbstractAuthenticationProcessingFilter {
     private static final AntPathRequestMatcher DEFAULT_ANT_PATH_REQUEST_MATCHER = new AntPathRequestMatcher("/login",
         "POST");
+    private AuthService authService;
     private boolean postOnly = true;
 
-    public IdPasswordAuthenticationFilter(AuthenticationManager authenticationManager) {
+
+    public IdPasswordAuthenticationFilter(AuthenticationManager authenticationManager, AuthService authService) {
         super(DEFAULT_ANT_PATH_REQUEST_MATCHER, authenticationManager);
+        this.authService = authService;
     }
 
     @Override
@@ -65,9 +73,14 @@ public class IdPasswordAuthenticationFilter extends AbstractAuthenticationProces
 
         LoginResponse body = new LoginResponse();
         try {
-            body.setAccessToken(JwtUtil.generateAccessToken(userId));
-            body.setRefreshToken(JwtUtil.generateRefreshToken(userId));
-        } catch(TokenGenerateException ex) {
+            Date loginDate = new Date();
+            body.setAccessToken(JwtUtil.generateAccessToken(userId, loginDate));
+            body.setRefreshToken(JwtUtil.generateRefreshToken(userId, loginDate));
+
+            LocalDateTime localDateTime = LocalDateTime.ofInstant(loginDate.toInstant(), ZoneId.systemDefault());
+            authService.updateMemberLoginDate(userId, localDateTime);
+
+        } catch(TokenGenerateException | UserIdNotFoundException ex) {
             RequestResponseUtil.makeExceptionResponseForFilter(response,
                 ErrorCode._500_GENERATE_TOKEN);
             return;
