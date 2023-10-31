@@ -14,6 +14,10 @@ public class CustomUserDetails implements UserDetails {
 
     private Member member;
 
+    public Member getMember() {
+        return member;
+    }
+
     public long getUserId() {
         return member.getMemberId();
     }
