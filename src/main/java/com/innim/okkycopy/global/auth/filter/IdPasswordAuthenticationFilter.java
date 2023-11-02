@@ -3,7 +3,6 @@ package com.innim.okkycopy.global.auth.filter;
 import com.innim.okkycopy.global.auth.AuthService;
 import com.innim.okkycopy.global.auth.CustomUserDetails;
 import com.innim.okkycopy.global.auth.dto.request.LoginRequest;
-import com.innim.okkycopy.global.auth.dto.response.LoginResponse;
 import com.innim.okkycopy.global.error.ErrorCode;
 import com.innim.okkycopy.global.error.exception.TokenGenerateException;
 import com.innim.okkycopy.global.error.exception.UserIdNotFoundException;
@@ -71,11 +70,12 @@ public class IdPasswordAuthenticationFilter extends AbstractAuthenticationProces
         CustomUserDetails userDetails = (CustomUserDetails) authResult.getPrincipal();
         long userId = userDetails.getUserId();
 
-        LoginResponse body = new LoginResponse();
+        String accessToken = "";
+        String refreshToken = "";
         try {
             Date loginDate = new Date();
-            body.setAccessToken(JwtUtil.generateAccessToken(userId, loginDate));
-            body.setRefreshToken(JwtUtil.generateRefreshToken(userId, loginDate));
+            accessToken = JwtUtil.generateAccessToken(userId, loginDate);
+            refreshToken = JwtUtil.generateRefreshToken(userId, loginDate);
 
             LocalDateTime localDateTime = LocalDateTime.ofInstant(loginDate.toInstant(), ZoneId.systemDefault());
             authService.updateMemberLoginDate(userId, localDateTime);
@@ -86,8 +86,8 @@ public class IdPasswordAuthenticationFilter extends AbstractAuthenticationProces
             return;
         }
 
-        RequestResponseUtil.makeJsonResponseHeader(response);
-        response.getWriter().write(RequestResponseUtil.objectToJson(body));
+        RequestResponseUtil.addCookieWithHttpOnly(response, "accessToken", accessToken);
+        RequestResponseUtil.addCookieWithHttpOnly(response, "refreshToken", refreshToken);
     }
 
     @Override

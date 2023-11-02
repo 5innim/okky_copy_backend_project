@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.innim.okkycopy.global.error.ErrorCode;
 import com.innim.okkycopy.global.error.ErrorResponse;
 import jakarta.servlet.ServletInputStream;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 public class RequestResponseUtil {
@@ -32,6 +33,12 @@ public class RequestResponseUtil {
 
         String body = objectToJson(new ErrorResponse(errorCode.getCode(), errorCode.getMessage()));
         response.getWriter().write(body);
+    }
+
+    public static void addCookieWithHttpOnly(HttpServletResponse response, String name, String value) {
+        Cookie cookie = new Cookie(name, value);
+        cookie.setHttpOnly(true);
+        response.addCookie(cookie);
     }
 
 }
