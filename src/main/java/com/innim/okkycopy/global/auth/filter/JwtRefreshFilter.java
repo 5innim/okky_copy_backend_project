@@ -1,7 +1,6 @@
 package com.innim.okkycopy.global.auth.filter;
 
 import com.innim.okkycopy.global.auth.AuthService;
-import com.innim.okkycopy.global.auth.dto.response.RefreshResponse;
 import com.innim.okkycopy.global.error.ErrorCode;
 import com.innim.okkycopy.global.error.exception.FailValidationJwtException;
 import com.innim.okkycopy.global.error.exception.InvalidTokenValueException;
@@ -62,10 +61,7 @@ public class JwtRefreshFilter extends OncePerRequestFilter {
             }
 
             String accessToken = JwtUtil.generateAccessToken(memberId, new Date());
-            RefreshResponse body = new RefreshResponse(accessToken);
-
-            RequestResponseUtil.makeJsonResponseHeader(response);
-            response.getWriter().write(RequestResponseUtil.objectToJson(body));
+            RequestResponseUtil.addCookieWithHttpOnly(response, "accessToken", accessToken);
 
             return;
 
