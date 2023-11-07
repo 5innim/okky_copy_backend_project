@@ -6,11 +6,19 @@ server:
 # logging
 logging:
   level:
-    com.innim.okkycopy: debug
+    com.innim.okkycopy: trace
+    org:
+      springframework.security: trace
+      hibernate.orm.jdbc.bind: trace
 
-
-
+# spring
 spring:
+  # devtools
+  devtools:
+    restart:
+      enabled: true
+      additional-exclude: resources/**
+
   # postgresql
   datasource:
     driver-class-name: org.postgresql.Driver
@@ -27,4 +35,3 @@ spring:
         dialect: org.hibernate.dialect.PostgreSQLDialect
         format-sql: true
     show-sql: true
-
