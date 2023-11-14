@@ -6,6 +6,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OrderBy;
 import jakarta.persistence.Table;
 import java.util.List;
 import org.hibernate.annotations.DynamicUpdate;
@@ -19,11 +20,13 @@ public class BoardType {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long typeId;
 
+    @OrderBy("type_id ASC")
     @OneToMany(mappedBy = "boardType")
     List<BoardTopic> boardTopics;
-
     @Column(name = "name")
     private String name;
+
+
 
 
 }
