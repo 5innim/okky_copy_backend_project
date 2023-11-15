@@ -21,7 +21,8 @@ public enum ErrorCode {
     _403_TOKEN_EXPIRED (HttpStatus.FORBIDDEN, "403001", "token is expired"),
     _409_DUPLICATE_ID (HttpStatus.CONFLICT, "409001", "input value of 'id' is duplicated"),
     _409_DUPLICATE_EMAIL (HttpStatus.CONFLICT, "409002", "input value of 'email' is duplicated"),
-    _500_GENERATE_TOKEN (HttpStatus.INTERNAL_SERVER_ERROR, "500001", "can not generate token");
+    _500_GENERATE_TOKEN (HttpStatus.INTERNAL_SERVER_ERROR, "500001", "can not generate token"),
+    _500_FAIL_INITIALIZATION (HttpStatus.INTERNAL_SERVER_ERROR, "500002", "database was not initialized");
 
     private final HttpStatus status;
     private final String code;
