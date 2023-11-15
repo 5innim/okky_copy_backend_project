@@ -55,6 +55,7 @@ public class Member {
     @CreationTimestamp
     private LocalDateTime createdDate;
 
+    @Enumerated(EnumType.ORDINAL)
     @Column(nullable = false)
     private String role;
 
@@ -69,7 +70,7 @@ public class Member {
             .name(request.getName())
             .nickname(request.getNickname())
             .emailCheck(request.isEmailCheck())
-            .role(Role.USER.getValue())
+            .role(Role.USER)
             .build();
     }
 
