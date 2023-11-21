@@ -11,15 +11,15 @@ import lombok.Setter;
 @Getter
 @Setter
 @AllArgsConstructor
-public class Type {
-    private List<Topic> topics;
+public class TypeResponse {
+    private List<TopicResponse> topics;
 
-    public static Type toDto(BoardType boardType) {
-        List<Topic> topicList = new ArrayList<>();
+    public static TypeResponse toDto(BoardType boardType) {
+        List<TopicResponse> topicList = new ArrayList<>();
         for (BoardTopic boardTopic : boardType.getBoardTopics()) {
-            topicList.add(new Topic(boardTopic.getName()));
+            topicList.add(new TopicResponse(boardTopic.getName()));
         }
-        return new Type(topicList);
+        return new TypeResponse(topicList);
     }
 
 }

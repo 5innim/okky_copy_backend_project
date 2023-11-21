@@ -5,6 +5,6 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public class Topic {
+public class TopicResponse {
     String name;
 }
