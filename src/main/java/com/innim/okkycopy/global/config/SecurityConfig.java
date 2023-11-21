@@ -2,12 +2,14 @@ package com.innim.okkycopy.global.config;
 
 import com.innim.okkycopy.global.auth.AuthService;
 import com.innim.okkycopy.global.auth.CustomUserDetailsService;
+import com.innim.okkycopy.global.auth.enums.Role;
 import com.innim.okkycopy.global.auth.filter.IdPasswordAuthenticationFilter;
 import com.innim.okkycopy.global.auth.filter.JwtAuthenticationFilter;
 import com.innim.okkycopy.global.auth.filter.JwtRefreshFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -48,6 +50,12 @@ public class SecurityConfig {
             .servletApi(configure -> servletApiConfigure(configure))
             .anonymous(configure -> anonymousConfigure(configure))
             .exceptionHandling(configure -> exceptionHandlingConfigure(configure))
+            .authorizeHttpRequests(request -> {
+                request.requestMatchers(HttpMethod.POST, "/board/knowledge/write")
+                    .hasAnyAuthority(Role.USER.getValue(), Role.ADMIN.getValue())
+                    .requestMatchers(HttpMethod.GET, "/board/topics").permitAll()
+                    .requestMatchers(HttpMethod.POST, "/member/signup").permitAll();
+            })
             .apply(new CustomDsl());
 
         return http.build();
