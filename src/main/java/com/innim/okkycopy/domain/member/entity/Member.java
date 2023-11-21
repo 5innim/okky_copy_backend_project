@@ -1,14 +1,20 @@
 package com.innim.okkycopy.domain.member.entity;
 
+import com.innim.okkycopy.domain.board.entity.Post;
 import com.innim.okkycopy.domain.member.dto.request.SignupRequest;
 import com.innim.okkycopy.global.auth.enums.Role;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import java.time.LocalDateTime;
+import java.util.List;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -61,6 +67,9 @@ public class Member {
 
     @Column(name = "login_date")
     private LocalDateTime loginDate;
+
+    @OneToMany(mappedBy = "member", fetch = FetchType.LAZY)
+    private List<Post> posts;
 
     public static Member toUserEntity(SignupRequest request) {
         return Member.builder()

@@ -9,13 +9,14 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.OrderBy;
 import jakarta.persistence.Table;
 import java.util.List;
+import lombok.AccessLevel;
 import lombok.Getter;
-import org.hibernate.annotations.DynamicUpdate;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "board_type")
-@DynamicUpdate
 @Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class BoardType {
     @Id
     @Column(name = "type_id")
@@ -24,8 +25,9 @@ public class BoardType {
 
     @OrderBy("type_id ASC")
     @OneToMany(mappedBy = "boardType")
-    List<BoardTopic> boardTopics;
-    @Column(name = "name")
+    private List<BoardTopic> boardTopics;
+
+    @Column(nullable = false, unique = true)
     private String name;
 
 
