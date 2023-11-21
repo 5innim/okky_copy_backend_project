@@ -14,7 +14,7 @@ import org.springframework.stereotype.Service;
 public class BoardService {
     private final BoardTypeRepository boardTypeRepository;
 
-    public TopicsResponse findAllBoardTypes() {
+    public TopicsResponse findAllBoardTopics() {
         List<BoardType> boardTypes = boardTypeRepository.findAll();
 
         if (boardTypes.isEmpty())
