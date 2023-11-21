@@ -57,7 +57,7 @@ public class Member {
 
     @Enumerated(EnumType.ORDINAL)
     @Column(nullable = false)
-    private String role;
+    private Role role;
 
     @Column(name = "login_date")
     private LocalDateTime loginDate;
