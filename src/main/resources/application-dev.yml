@@ -36,6 +36,7 @@ spring:
         format-sql: true
     show-sql: true
     defer-datasource-initialization: true
+    open-in-view: true
 
   # sql
   sql:
