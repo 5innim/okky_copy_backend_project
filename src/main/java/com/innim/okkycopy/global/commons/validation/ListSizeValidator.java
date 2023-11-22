@@ -1,5 +1,6 @@
-package com.innim.okkycopy.global.commons.validation.annotation;
+package com.innim.okkycopy.global.commons.validation;
 
+import com.innim.okkycopy.global.commons.validation.annotation.ListSize;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 import java.util.List;

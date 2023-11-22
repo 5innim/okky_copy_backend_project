@@ -1,5 +1,6 @@
 package com.innim.okkycopy.global.commons.validation.annotation;
 
+import com.innim.okkycopy.global.commons.validation.ListSizeValidator;
 import jakarta.validation.Constraint;
 import jakarta.validation.Payload;
 import java.lang.annotation.ElementType;
