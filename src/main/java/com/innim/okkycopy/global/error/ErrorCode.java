@@ -17,6 +17,7 @@ public enum ErrorCode {
     _400_AUTHENTICATION_FAILED (HttpStatus.BAD_REQUEST, "400012", "authentication is failed"),
     _400_INVALID_TOKEN_VALUE(HttpStatus.BAD_REQUEST, "400013", "invalid token value"),
     _400_NO_SUCH_TOPIC(HttpStatus.BAD_REQUEST, "400020", "can not find such topic"),
+    _400_NO_SUCH_POST(HttpStatus.BAD_REQUEST, "400021", "can not find such post"),
     _400_INVALID_UNEXPECTED (HttpStatus.BAD_REQUEST, "400100", "unexpected input is invalid"),
     _401_TOKEN_AUTHENTICATION_FAIL(HttpStatus.UNAUTHORIZED, "401001", "this token is not valid"),
     _403_TOKEN_EXPIRED (HttpStatus.FORBIDDEN, "403001", "token is expired"),
