@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.DynamicUpdate;
@@ -23,6 +24,7 @@ import org.hibernate.annotations.DynamicUpdate;
 @DynamicUpdate
 @Entity
 @Setter
+@Getter
 @Table(name = "knowledge_post")
 @DiscriminatorValue(value = "knowledge")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
