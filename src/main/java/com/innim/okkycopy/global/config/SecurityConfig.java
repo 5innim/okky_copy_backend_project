@@ -53,7 +53,9 @@ public class SecurityConfig {
             .authorizeHttpRequests(request -> {
                 request.requestMatchers(HttpMethod.POST, "/board/knowledge/write")
                     .hasAnyAuthority(Role.USER.getValue(), Role.ADMIN.getValue())
-                    .requestMatchers(HttpMethod.GET, "/board/topics").permitAll()
+                    .requestMatchers(HttpMethod.GET,
+                        "/board/topics",
+                        "/board/knowledge/posts/{id}").permitAll()
                     .requestMatchers(HttpMethod.POST, "/member/signup").permitAll();
             })
             .apply(new CustomDsl());
