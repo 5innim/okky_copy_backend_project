@@ -65,6 +65,9 @@ public class Member {
     @Column(nullable = false)
     private Role role;
 
+    @Column
+    private String profile;
+
     @Column(name = "login_date")
     private LocalDateTime loginDate;
 
@@ -80,6 +83,7 @@ public class Member {
             .nickname(request.getNickname())
             .emailCheck(request.isEmailCheck())
             .role(Role.USER)
+            .profile(null)
             .build();
     }
 
