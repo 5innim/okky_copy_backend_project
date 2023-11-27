@@ -17,6 +17,7 @@ import jakarta.persistence.Table;
 import java.time.LocalDateTime;
 import java.util.List;
 import lombok.AccessLevel;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
@@ -25,6 +26,7 @@ import org.hibernate.annotations.DynamicUpdate;
 @Entity
 @Table(name = "post")
 @Setter
+@Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Inheritance(strategy = InheritanceType.JOINED)
 @DiscriminatorColumn(name = "dtype")
