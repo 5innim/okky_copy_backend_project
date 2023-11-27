@@ -71,7 +71,7 @@ public class Member {
     @OneToMany(mappedBy = "member", fetch = FetchType.LAZY)
     private List<Post> posts;
 
-    public static Member toUserEntity(SignupRequest request) {
+    public static Member toMemberEntity(SignupRequest request) {
         return Member.builder()
             .id(request.getId())
             .password(request.getPassword())

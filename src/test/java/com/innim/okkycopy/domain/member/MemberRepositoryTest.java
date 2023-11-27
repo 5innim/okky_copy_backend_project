@@ -23,7 +23,7 @@ class MemberRepositoryTest {
         SignupRequest signupRequest = signupRequest();
 
         // when
-        memberRepository.save(Member.toUserEntity(signupRequest));
+        memberRepository.save(Member.toMemberEntity(signupRequest));
 
         // then
         assertTrue(memberRepository.existsById("test1"));
@@ -37,7 +37,7 @@ class MemberRepositoryTest {
         SignupRequest signupRequest = signupRequest();
 
         // when
-        Member member = memberRepository.save(Member.toUserEntity(signupRequest));
+        Member member = memberRepository.save(Member.toMemberEntity(signupRequest));
 
         // then
         assertFalse(member.getCreatedDate() == null);
