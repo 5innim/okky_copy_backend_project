@@ -5,7 +5,9 @@ import com.innim.okkycopy.global.error.ErrorCode;
 import com.innim.okkycopy.global.error.ErrorResponse;
 import com.innim.okkycopy.global.error.exception.ServiceException;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -37,6 +39,14 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return ResponseEntity
             .status(errorCode.getStatus())
             .body(new ErrorResponse(errorCode.getCode(), errorCode.getMessage()));
+    }
+
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    public ResponseEntity<ErrorResponse> handleDataIntegrityViolationException(DataIntegrityViolationException ex) {
+
+        return ResponseEntity
+            .status(HttpStatus.BAD_REQUEST)
+            .body(new ErrorResponse(ErrorCode._400_DATA_INTEGRITY_VIOLATION.getCode(), ex.getMessage()));
     }
 
 }
