@@ -51,8 +51,11 @@ public class SecurityConfig {
             .anonymous(configure -> anonymousConfigure(configure))
             .exceptionHandling(configure -> exceptionHandlingConfigure(configure))
             .authorizeHttpRequests(request -> {
-                request.requestMatchers(HttpMethod.POST, "/board/knowledge/write")
-                    .hasAnyAuthority(Role.USER.getValue(), Role.ADMIN.getValue())
+                request.requestMatchers(HttpMethod.POST,
+                        "/board/knowledge/write",
+                        "/board/post/scrap").hasAnyAuthority(Role.USER.getValue(), Role.ADMIN.getValue())
+                    .requestMatchers(HttpMethod.DELETE,
+                        "/board/post/scrap").hasAnyAuthority(Role.USER.getValue(), Role.ADMIN.getValue())
                     .requestMatchers(HttpMethod.GET,
                         "/board/topics",
                         "/board/knowledge/posts/{id}").permitAll()
