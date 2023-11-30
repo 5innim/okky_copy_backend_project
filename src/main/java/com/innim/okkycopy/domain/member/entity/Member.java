@@ -11,8 +11,12 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 import java.time.LocalDateTime;
 import java.util.List;
 import lombok.AccessLevel;
@@ -73,6 +77,15 @@ public class Member {
 
     @OneToMany(mappedBy = "member", fetch = FetchType.LAZY)
     private List<Post> posts;
+
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+        name = "scrap",
+        joinColumns = {@JoinColumn(name = "member_id")},
+        inverseJoinColumns = {@JoinColumn(name = "post_id")},
+        uniqueConstraints = {@UniqueConstraint(columnNames = {"member_id", "post_id"})}
+    )
+    private List<Post> scrappedPosts;
 
     public static Member toMemberEntity(SignupRequest request) {
         return Member.builder()
