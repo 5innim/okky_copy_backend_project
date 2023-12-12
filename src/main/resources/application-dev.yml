@@ -22,7 +22,7 @@ spring:
   # postgresql
   datasource:
     driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://localhost:5432/okky_dev
+    url: jdbc:postgresql://43.202.216.151:5432/okky_dev
     username: for_dev
     password: okky1234
 
