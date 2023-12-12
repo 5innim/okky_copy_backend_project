@@ -22,9 +22,9 @@ spring:
   # postgresql
   datasource:
     driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://43.202.216.151:5432/okky_dev
-    username: for_dev
-    password: okky1234
+    url: jdbc:postgresql://ec2-43-202-216-151.ap-northeast-2.compute.amazonaws.com:5432/okky_dev
+    username: postgres
+    password: 952000
 
   # jpa
   jpa:
