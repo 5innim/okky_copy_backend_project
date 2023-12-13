@@ -10,4 +10,10 @@ fi
 
 echo '=================== run application newly ==================='
 JAR_NAME='okky-copy-0.0.1-SNAPSHOT.jar'
-nohup java -jar -Dspring.profiles.active="$1" $JAR_NAME 2>errors/error_$(date +'%Y-%m-%d_%H:%M').txt &
+PROFILE="$1"
+
+if  [ -z "$PROFILE" ]; then
+  PROFILE='prod'
+fi
+
+nohup java -jar -Dspring.profiles.active="$PROFILE" $JAR_NAME 1>logs/log_$(date +'%Y-%m-%d_%H:%M').txt 2>errors/error_$(date +'%Y-%m-%d_%H:%M').txt &
