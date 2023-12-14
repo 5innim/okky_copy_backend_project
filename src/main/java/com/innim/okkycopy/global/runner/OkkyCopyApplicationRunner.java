@@ -15,7 +15,7 @@ public class OkkyCopyApplicationRunner implements ApplicationRunner {
 
     @Override
     public void run(ApplicationArguments args) throws Exception {
-        log.info(activeProfile);
+        log.info("active_profile: " + activeProfile);
 
     }
 }
