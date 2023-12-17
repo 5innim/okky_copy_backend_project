@@ -50,5 +50,7 @@ public class Post {
     private LocalDateTime lastUpdate;
     @OneToMany(mappedBy = "post", cascade = {CascadeType.REMOVE, CascadeType.PERSIST})
     private List<Tag> tags;
+    @OneToMany(mappedBy = "post", cascade = {CascadeType.REMOVE})
+    private List<Scrap> scrapList;
 
 }
