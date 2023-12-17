@@ -58,7 +58,8 @@ public class SecurityConfig {
                         "/board/post/scrap").hasAnyAuthority(Role.USER.getValue(), Role.ADMIN.getValue())
                     .requestMatchers(HttpMethod.GET,
                         "/board/topics",
-                        "/board/knowledge/posts/{id}").permitAll()
+                        "/board/knowledge/posts/{id}",
+                        "/member/info").permitAll()
                     .requestMatchers(HttpMethod.POST, "/member/signup").permitAll();
             })
             .apply(new CustomDsl());
