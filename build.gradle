@@ -33,7 +33,6 @@ dependencies {
 
 	// for test
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
-	testImplementation 'org.mockito:mockito-core:3.+'
 	testImplementation 'org.springframework.security:spring-security-test'
 
 	// json
