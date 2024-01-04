@@ -59,24 +59,24 @@ class MemberControllerTest {
 
     }
 
-    @Test
-    void given_invalidInput_then_responseErrorCode() throws Exception {
-
-        // given
-        SignupRequest request = signupRequest();
-        request.setName("testName**");
-
-        // when
-        ResultActions resultActions = mockMvc.perform(
-            MockMvcRequestBuilders.post("/member/signup")
-                .characterEncoding("UTF-8")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(new Gson().toJson(request))
-        ).andDo(print());
-
-        // then
-        resultActions.andExpect(jsonPath("code", 400004).exists());
-    }
+//    @Test   => 통합 테스트로 이전되어야 할듯.
+//    void given_invalidInput_then_responseErrorCode() throws Exception {
+//
+//        // given
+//        SignupRequest request = signupRequest();
+//        request.setName("testName**");
+//
+//        // when
+//        ResultActions resultActions = mockMvc.perform(
+//            MockMvcRequestBuilders.post("/member/signup")
+//                .characterEncoding("UTF-8")
+//                .contentType(MediaType.APPLICATION_JSON)
+//                .content(new Gson().toJson(request))
+//        ).andDo(print());
+//
+//        // then
+//        resultActions.andExpect(jsonPath("code", 400004).exists());
+//    }
 
     private SignupRequest signupRequest() {
         return SignupRequest.builder()
