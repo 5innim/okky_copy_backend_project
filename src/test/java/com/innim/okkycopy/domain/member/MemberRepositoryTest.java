@@ -1,15 +1,20 @@
 package com.innim.okkycopy.domain.member;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.*;
 
 import com.innim.okkycopy.domain.member.dto.request.SignupRequest;
 import com.innim.okkycopy.domain.member.entity.Member;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.transaction.annotation.Transactional;
 
-@SpringBootTest
+
+@DataJpaTest
+@TestPropertySource(locations = "classpath:application-dev.yml")
+@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 class MemberRepositoryTest {
 
     @Autowired
@@ -26,8 +31,8 @@ class MemberRepositoryTest {
         memberRepository.save(Member.toMemberEntity(signupRequest));
 
         // then
-        assertTrue(memberRepository.existsById("test1"));
-        assertTrue(memberRepository.existsByEmail("test1@test.com"));
+        assertThat(memberRepository.existsById("test1")).isTrue();
+        assertThat(memberRepository.existsByEmail("test1@test.com")).isTrue();
     }
 
     @Test
@@ -40,7 +45,7 @@ class MemberRepositoryTest {
         Member member = memberRepository.save(Member.toMemberEntity(signupRequest));
 
         // then
-        assertFalse(member.getCreatedDate() == null);
+        assertThat(member.getCreatedDate()).isNotNull();
     }
 
     private SignupRequest signupRequest() {
