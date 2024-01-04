@@ -1,6 +1,6 @@
 package com.innim.okkycopy.domain.member;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
@@ -45,9 +45,10 @@ class MemberServiceTest {
         then(memberRepository).should(times(1)).existsById(any(String.class));
         then(memberRepository).should(times(1)).existsByEmail(any(String.class));
         then(memberRepository).shouldHaveNoMoreInteractions();
-        assertEquals(briefMemberInfo.getEmail(), signupRequest.getEmail());
-        assertEquals(briefMemberInfo.getName(), signupRequest.getName());
-        assertEquals(briefMemberInfo.getNickname(), signupRequest.getNickname());
+
+        assertThat(briefMemberInfo.getEmail()).isEqualTo(signupRequest.getEmail());
+        assertThat(briefMemberInfo.getName()).isEqualTo(signupRequest.getName());
+        assertThat(briefMemberInfo.getNickname()).isEqualTo(signupRequest.getNickname());
 
     }
 
@@ -64,7 +65,7 @@ class MemberServiceTest {
         signupRequest2.encodePassword(passwordEncoder);
 
         // then
-        assertNotEquals(signupRequest1.getPassword(), signupRequest2.getPassword());
+        assertThat(signupRequest1.getPassword()).isNotEqualTo(signupRequest2.getPassword());
     }
 
 //    @Test
