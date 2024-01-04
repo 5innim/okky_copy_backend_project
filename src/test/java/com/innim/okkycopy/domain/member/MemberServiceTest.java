@@ -9,17 +9,15 @@ import static org.mockito.Mockito.times;
 import com.innim.okkycopy.domain.member.dto.request.SignupRequest;
 import com.innim.okkycopy.domain.member.dto.response.BriefMemberInfo;
 import com.innim.okkycopy.domain.member.entity.Member;
-import com.innim.okkycopy.global.error.exception.DuplicateException;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.transaction.annotation.Transactional;
 
-@SpringBootTest
+@ExtendWith(MockitoExtension.class)
 class MemberServiceTest {
 
     @Mock
@@ -29,8 +27,8 @@ class MemberServiceTest {
     @InjectMocks
     MemberService memberService;
 
-    @Autowired
-    MemberService memberServiceBean;
+//    @Autowired
+//    MemberService memberServiceBean;
 
     @Test
     void insertMemberTest() {
@@ -69,22 +67,22 @@ class MemberServiceTest {
         assertNotEquals(signupRequest1.getPassword(), signupRequest2.getPassword());
     }
 
-    @Test
-    @Transactional
-    void given_duplicatedIdOrEmail_then_duplicateException() {
-
-        // given
-        SignupRequest signupRequest1 = signupRequest();
-        SignupRequest signupRequest2 = signupRequest();
-
-        // when
-        memberServiceBean.insertMember(signupRequest1);
-
-        // then
-        assertThrows(DuplicateException.class, () -> {
-            memberServiceBean.insertMember(signupRequest2);
-        });
-    }
+//    @Test
+//    @Transactional   => 중복 체크로 select 쿼리 실행. 따라서 통합 테스트에 재작성 필요
+//    void given_duplicatedIdOrEmail_then_duplicateException() {
+//
+//        // given
+//        SignupRequest signupRequest1 = signupRequest();
+//        SignupRequest signupRequest2 = signupRequest();
+//
+//        // when
+//        memberServiceBean.insertMember(signupRequest1);
+//
+//        // then
+//        assertThrows(DuplicateException.class, () -> {
+//            memberServiceBean.insertMember(signupRequest2);
+//        });
+//    }
 
     private SignupRequest signupRequest() {
         return SignupRequest.builder()
