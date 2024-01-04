@@ -21,7 +21,7 @@ public class BoardController {
     private final BoardService boardService;
 
     @GetMapping("/topics")
-    public ResponseEntity serveTopics(HttpServletRequest request, HttpServletResponse response) {
+    public ResponseEntity serveTopics() {
 
         return ResponseEntity.ok(boardService.findAllBoardTopics());
     }
