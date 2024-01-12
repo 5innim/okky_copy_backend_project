@@ -1,49 +1,81 @@
 package com.innim.okkycopy.global.auth.filter;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
-import com.innim.okkycopy.domain.member.MemberService;
+
+import com.google.gson.Gson;
 import com.innim.okkycopy.global.auth.AuthService;
-import com.innim.okkycopy.global.auth.CustomUserDetailsService;
-import jakarta.servlet.FilterChain;
-import jakarta.servlet.ServletException;
+import com.innim.okkycopy.global.auth.dto.request.LoginRequest;
 import java.io.IOException;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 
-@SpringBootTest
+@ExtendWith(MockitoExtension.class)
 class IdPasswordAuthenticationFilterTest {
+    @Mock
+    AuthenticationManager authenticationManager;
+    @Mock
+    AuthService authService;
+    @InjectMocks
+    IdPasswordAuthenticationFilter filter;
 
-    @Autowired
-    MemberService memberService;
-    @Autowired
-    CustomUserDetailsService userDetailsService;
+    @Nested
+    class attemptAuthenticationTest {
+        @Test
+        public void given_notPostRequest_then_throwAuthenticationServiceException()
+            throws IOException {
+            // given
+            MockHttpServletRequest request = new MockHttpServletRequest();
+            MockHttpServletResponse response = new MockHttpServletResponse();
+            request.setMethod("GET");
 
+            // when
+            Throwable thrown = catchThrowable(() -> {
+                filter.attemptAuthentication(request, response);
+            });
 
-    @Test
-    void given_unmatchedUri_then_passFilter() throws ServletException, IOException {
-        // given
-        AuthenticationManager manager = mock(AuthenticationManager.class);
-        AuthService service = mock(AuthService.class);
-        IdPasswordAuthenticationFilter filter = new IdPasswordAuthenticationFilter(manager,
-            service);
+            // then
+            assertThat(thrown).hasMessageContaining("Authentication method not supported: ");
+        }
 
-        MockHttpServletRequest request = new MockHttpServletRequest();
-        MockHttpServletResponse response = new MockHttpServletResponse();
-        FilterChain filterChain = mock(FilterChain.class);
-        request.setRequestURI("/not_login");
+        @Test
+        public void given_postRequest_then_callAuthenticateMethod() throws IOException {
+            // given
+            MockHttpServletRequest request = new MockHttpServletRequest();
+            MockHttpServletResponse response = new MockHttpServletResponse();
+            request.setMethod("POST");
+            request.setContentType("application/json");
+            request.setContent(new Gson().toJson(loginRequest()).getBytes());
+            given(authenticationManager.authenticate(any(UsernamePasswordAuthenticationToken.class)))
+                .willReturn(mock(Authentication.class));
 
-        // when
-        filter.doFilter(request, response, filterChain);
+            // when
+            Authentication authentication = filter.attemptAuthentication(request, response);
 
-        // then
-        then(filterChain).should(times(1)).doFilter(request, response);
+            // then
+            then(authenticationManager)
+                .should(times(1))
+                .authenticate(any(UsernamePasswordAuthenticationToken.class));
+            assertThat(authentication).isInstanceOf(Authentication.class);
+        }
     }
+
+    public LoginRequest loginRequest() {
+        return new LoginRequest("test_id", "test_passwd");
+    }
+
 
 }
