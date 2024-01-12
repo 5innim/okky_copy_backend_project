@@ -23,6 +23,7 @@ public class WithMockCustomUserSecurityContextFactory implements
         Authentication auth =
             UsernamePasswordAuthenticationToken.authenticated(principal, principal.getPassword(), principal.getAuthorities());
         context.setAuthentication(auth);
+        SecurityContextHolder.setContext(context);
 
         return context;
     }
