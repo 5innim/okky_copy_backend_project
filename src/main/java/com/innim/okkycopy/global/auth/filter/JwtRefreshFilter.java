@@ -70,7 +70,7 @@ public class JwtRefreshFilter extends OncePerRequestFilter {
         filterChain.doFilter(request, response);
     }
 
-    private boolean requiresRefresh(HttpServletRequest request) {
+    protected boolean requiresRefresh(HttpServletRequest request) {
         if (requiresAuthenticationRequestMatcher.matches(request)) {
             return true;
         }
