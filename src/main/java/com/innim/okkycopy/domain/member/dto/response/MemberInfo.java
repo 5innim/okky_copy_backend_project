@@ -10,7 +10,7 @@ import lombok.Setter;
 @Builder
 public class MemberInfo {
     private long memberId;
-    private String nickName;
+    private String nickname;
     private List<Long> scrappedPost;
 
 }

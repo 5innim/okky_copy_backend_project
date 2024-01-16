@@ -59,7 +59,7 @@ public class MemberService {
 
         return MemberInfo.builder()
             .memberId(mergedMember.getMemberId())
-            .nickName(mergedMember.getNickname())
+            .nickname(mergedMember.getNickname())
             .scrappedPost(scrappedPostIdList)
             .build();
     }
