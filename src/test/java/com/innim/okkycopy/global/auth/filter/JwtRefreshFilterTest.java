@@ -29,7 +29,7 @@ class JwtRefreshFilterTest {
     @Nested
     class doFilterInternalTest {
         @Test
-        void given_() throws ServletException, IOException {
+        void given_noAuthorizationHeader_then_noAuthenticate() throws ServletException, IOException {
             // given
             FilterChain filterChain = mock(FilterChain.class);
             MockHttpServletRequest request = new MockHttpServletRequest();

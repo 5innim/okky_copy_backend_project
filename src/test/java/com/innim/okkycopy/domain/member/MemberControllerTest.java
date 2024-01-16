@@ -4,14 +4,21 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.times;
+import static org.assertj.core.api.Assertions.*;
 
+import com.innim.okkycopy.common.WithMockCustomUserSecurityContextFactory;
 import com.innim.okkycopy.domain.member.dto.request.SignupRequest;
 import com.innim.okkycopy.domain.member.dto.response.BriefMemberInfo;
+import com.innim.okkycopy.domain.member.dto.response.MemberInfo;
+import com.innim.okkycopy.domain.member.entity.Member;
+import com.innim.okkycopy.global.auth.CustomUserDetails;
+import java.util.ArrayList;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.http.ResponseEntity;
 
 @ExtendWith(MockitoExtension.class)
 class MemberControllerTest {
@@ -20,63 +27,40 @@ class MemberControllerTest {
     private MemberService memberService;
     @InjectMocks
     private MemberController memberController;
-//    MockMvc mockMvc;
-
-//    @BeforeEach
-//    void init() {
-//        mockMvc = MockMvcBuilders
-//            .standaloneSetup(memberController)
-//            .setControllerAdvice(new GlobalExceptionHandler())
-//            .build();
-//    }
 
     @Test
-    void signupTest() throws Exception {
-
+    void signupTest() {
         // given
         SignupRequest request = signupRequest();
-        BriefMemberInfo response = briefMemberInfo();
+        BriefMemberInfo briefMemberInfo = briefMemberInfo();
 
-        given(memberService.insertMember(any(SignupRequest.class))).willReturn(response);
+        given(memberService.insertMember(any(SignupRequest.class))).willReturn(briefMemberInfo);
 
         // when
-//        ResultActions resultActions = mockMvc.perform(
-//            MockMvcRequestBuilders.post("/member/signup")
-//                .characterEncoding("UTF-8")
-//                .contentType(MediaType.APPLICATION_JSON)
-//                .content(new Gson().toJson(request))
-//        ).andDo(print());
-        memberController.signup(request);
+        ResponseEntity response = memberController.signup(request);
 
         // then
         then(memberService).should(times(1)).insertMember(any(SignupRequest.class));
         then(memberService).shouldHaveNoMoreInteractions();
-//        resultActions
-//            .andExpect(status().is(201))
-//            .andExpect(jsonPath("email", response.getEmail()).exists())
-//            .andExpect(jsonPath("name", response.getName()).exists())
-//            .andExpect(jsonPath("nickname", response.getNickname()).exists());
-
+        assertThat(response.getBody()).isInstanceOf(BriefMemberInfo.class).isEqualTo(briefMemberInfo);
     }
 
-//    @Test   => 통합 테스트로 이전되어야 할듯.
-//    void given_invalidInput_then_responseErrorCode() throws Exception {
-//
-//        // given
-//        SignupRequest request = signupRequest();
-//        request.setName("testName**");
-//
-//        // when
-//        ResultActions resultActions = mockMvc.perform(
-//            MockMvcRequestBuilders.post("/member/signup")
-//                .characterEncoding("UTF-8")
-//                .contentType(MediaType.APPLICATION_JSON)
-//                .content(new Gson().toJson(request))
-//        ).andDo(print());
-//
-//        // then
-//        resultActions.andExpect(jsonPath("code", 400004).exists());
-//    }
+    @Test
+    void serveMemberInfo() {
+        // given
+        CustomUserDetails request = WithMockCustomUserSecurityContextFactory.customUserDetailsMock();
+        MemberInfo memberInfo = memberInfo();
+
+        given(memberService.selectMember(any(Member.class))).willReturn(memberInfo);
+
+        // when
+        ResponseEntity response = memberController.serveMemberInfo(request);
+
+        // then
+        then(memberService).should(times(1)).selectMember(any(Member.class));
+        then(memberService).shouldHaveNoMoreInteractions();
+        assertThat(response.getBody()).isInstanceOf(MemberInfo.class).isEqualTo(memberInfo);
+    }
 
     private SignupRequest signupRequest() {
         return SignupRequest.builder()
@@ -94,6 +78,14 @@ class MemberControllerTest {
             .name("testName")
             .nickname("testNickname")
             .email("test@test.com")
+            .build();
+    }
+
+    private MemberInfo memberInfo() {
+        return MemberInfo.builder()
+            .memberId(1l)
+            .nickname("testNickname")
+            .scrappedPost(new ArrayList<>())
             .build();
     }
 

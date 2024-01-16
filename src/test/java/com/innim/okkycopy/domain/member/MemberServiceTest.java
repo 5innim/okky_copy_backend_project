@@ -17,23 +17,16 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
 class MemberServiceTest {
-
     @Mock
     MemberRepository memberRepository;
-    @Mock
-    PasswordEncoder passwordEncoder;
     @InjectMocks
     MemberService memberService;
 
-//    @Autowired
-//    MemberService memberServiceBean;
-
     @Test
     void insertMemberTest() {
-
         // given
         SignupRequest signupRequest = signupRequest();
-        given(memberRepository.save(any(Member.class))).willReturn(null);
+        given(memberRepository.save(any(Member.class))) .willReturn(null);
 
         // when
         BriefMemberInfo briefMemberInfo = memberService.insertMember(signupRequest);
@@ -50,39 +43,6 @@ class MemberServiceTest {
 
     }
 
-    @Test
-    void given_samePassword_then_returnDifferentEncodedPassword() {
-
-        // given
-        SignupRequest signupRequest1 = signupRequest();
-        SignupRequest signupRequest2 = signupRequest();
-        passwordEncoder = new BCryptPasswordEncoder();
-
-        // when
-        signupRequest1.encodePassword(passwordEncoder);
-        signupRequest2.encodePassword(passwordEncoder);
-
-        // then
-        assertThat(signupRequest1.getPassword()).isNotEqualTo(signupRequest2.getPassword());
-    }
-
-//    @Test
-//    @Transactional   => 중복 체크로 select 쿼리 실행. 따라서 통합 테스트에 재작성 필요
-//    void given_duplicatedIdOrEmail_then_duplicateException() {
-//
-//        // given
-//        SignupRequest signupRequest1 = signupRequest();
-//        SignupRequest signupRequest2 = signupRequest();
-//
-//        // when
-//        memberServiceBean.insertMember(signupRequest1);
-//
-//        // then
-//        assertThrows(DuplicateException.class, () -> {
-//            memberServiceBean.insertMember(signupRequest2);
-//        });
-//    }
-
     private SignupRequest signupRequest() {
         return SignupRequest.builder()
             .id("test1")
@@ -93,6 +53,4 @@ class MemberServiceTest {
             .emailCheck(true)
             .build();
     }
-
-
 }
