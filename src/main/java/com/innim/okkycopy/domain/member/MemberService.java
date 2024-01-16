@@ -52,8 +52,11 @@ public class MemberService {
         Member mergedMember = entityManager.merge(member);
 
         List<Long> scrappedPostIdList = new ArrayList<>();
-        for (Scrap scrap : mergedMember.getScrapList()) {
-            scrappedPostIdList.add(scrap.getPost().getPostId());
+        List<Scrap> scraps = mergedMember.getScrapList();
+        if (scraps != null) {
+            for (Scrap scrap : scraps) {
+                scrappedPostIdList.add(scrap.getPost().getPostId());
+            }
         }
 
         return MemberInfo.builder()
