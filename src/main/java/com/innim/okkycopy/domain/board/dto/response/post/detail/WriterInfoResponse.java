@@ -8,13 +8,13 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 @Builder
-public class WriterInfoRequest {
+public class WriterInfoResponse {
     private long memberId;
     private String nickName;
     private String profile;
 
-    public static WriterInfoRequest toWriterInfoRequestDto(Member member) {
-        return WriterInfoRequest.builder()
+    public static WriterInfoResponse toWriterInfoRequestDto(Member member) {
+        return WriterInfoResponse.builder()
             .memberId(member.getMemberId())
             .nickName(member.getNickname())
             .profile(member.getProfile())

@@ -13,8 +13,8 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 @Builder
-public class PostDetailRequest {
-    private WriterInfoRequest writerInfo;
+public class PostDetailResponse {
+    private WriterInfoResponse writerInfo;
     private String title;
     private String content;
     private List<String> tags;
@@ -22,14 +22,14 @@ public class PostDetailRequest {
     private int likes;
     private LocalDateTime createdDate;
 
-    public static PostDetailRequest toPostDetailRequestDto(KnowledgePost knowledgePost, Member member) {
+    public static PostDetailResponse toPostDetailRequestDto(KnowledgePost knowledgePost, Member member) {
         List<String> tags = new ArrayList<>();
         for (Tag tag : knowledgePost.getTags()) {
             tags.add(tag.getName());
         }
 
-        return PostDetailRequest.builder()
-            .writerInfo(WriterInfoRequest.builder()
+        return PostDetailResponse.builder()
+            .writerInfo(WriterInfoResponse.builder()
                     .memberId(member.getMemberId())
                     .nickName(member.getNickname())
                     .profile(member.getProfile()).build())
