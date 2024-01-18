@@ -1,7 +1,7 @@
 package com.innim.okkycopy.domain.board.knowledge;
 
 import com.innim.okkycopy.domain.board.dto.request.write.WriteRequest;
-import com.innim.okkycopy.domain.board.dto.response.post.detail.PostDetailRequest;
+import com.innim.okkycopy.domain.board.dto.response.post.detail.PostDetailResponse;
 import com.innim.okkycopy.domain.board.entity.BoardTopic;
 import com.innim.okkycopy.domain.board.knowledge.entity.KnowledgePost;
 import com.innim.okkycopy.domain.board.repository.BoardTopicRepository;
@@ -39,12 +39,12 @@ public class KnowledgeService {
         entityManager.persist(knowledgePost);
     }
 
-    public PostDetailRequest selectKnowledgePost(long postId) {
+    public PostDetailResponse selectKnowledgePost(long postId) {
         KnowledgePost knowledgePost = knowledgePostRepository.findByPostId(postId).orElseThrow(() -> new NoSuchPostException(ErrorCode._400_NO_SUCH_POST));
         Member member = memberRepository.findByMemberId(knowledgePost.getMember().getMemberId()).orElseGet(() -> Member.builder()
             .build());
 
-        return PostDetailRequest.toPostDetailRequestDto(knowledgePost, member);
+        return PostDetailResponse.toPostDetailRequestDto(knowledgePost, member);
     }
 
 
