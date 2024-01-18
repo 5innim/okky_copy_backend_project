@@ -5,101 +5,68 @@ import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.times;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.assertj.core.api.Assertions.*;
 
-import com.google.gson.Gson;
-import com.innim.okkycopy.common.annotation.WithMockCustomUser;
+import com.innim.okkycopy.common.WithMockCustomUserSecurityContextFactory;
 import com.innim.okkycopy.domain.board.dto.request.ScrapRequest;
 import com.innim.okkycopy.domain.board.dto.response.topics.TopicResponse;
 import com.innim.okkycopy.domain.board.dto.response.topics.TopicsResponse;
 import com.innim.okkycopy.domain.board.dto.response.topics.TypeResponse;
-import com.innim.okkycopy.global.error.handler.GlobalExceptionHandler;
+import com.innim.okkycopy.domain.member.entity.Member;
 import java.util.Arrays;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.MediaType;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.ResultActions;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 
-@SpringBootTest
+@ExtendWith(MockitoExtension.class)
 class BoardControllerTest {
-
     @Mock
     BoardService boardService;
     @InjectMocks
     BoardController boardController;
 
-    MockMvc mockMvc;
-
-    @BeforeEach
-    void init() {
-        mockMvc = MockMvcBuilders
-            .standaloneSetup(boardController)
-            .setControllerAdvice(new GlobalExceptionHandler())
-            .build();
-    }
-
-
     @Test
-    @WithMockCustomUser
     void serveTopicsTest() throws Exception {
         // given
         TopicsResponse topicsResponse = topicsResponse();
         given(boardService.findAllBoardTopics()).willReturn(topicsResponse);
 
         // when
-        ResultActions resultActions = mockMvc.perform(
-            MockMvcRequestBuilders.get("/board/topics")
-        );
+        ResponseEntity response =  boardController.serveTopics();
 
         // then
         then(boardService).should(times(1)).findAllBoardTopics();
-        resultActions
-            .andExpect(status().isOk())
-            .andExpect(jsonPath("types", topicsResponse.getTypes()).exists());
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(response.getBody()).isInstanceOf(TopicsResponse.class);
     }
 
     @Test
-    @WithMockCustomUser
     void doScrapTest() throws Exception {
         // given
         ScrapRequest request = scrapRequest();
 
         // when
-        ResultActions resultActions = mockMvc.perform(
-            MockMvcRequestBuilders.post("/board/post/scrap")
-                .characterEncoding("UTF-8")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(new Gson().toJson(request))
-        );
+        boardController.doScrap(request, WithMockCustomUserSecurityContextFactory.customUserDetailsMock());
 
         // then
-        then(boardService).should(times(1)).scrapPost(any(), anyLong());
+        then(boardService).should(times(1)).scrapPost(any(Member.class), anyLong());
 
     }
 
     @Test
-    @WithMockCustomUser
     void cancelScrapTest() throws Exception {
         // given
         ScrapRequest request = scrapRequest();
 
         // when
-        ResultActions resultActions = mockMvc.perform(
-            MockMvcRequestBuilders.delete("/board/post/scrap")
-                .characterEncoding("UTF-8")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(new Gson().toJson(request))
-        );
+        boardController.cancelScrap(request, WithMockCustomUserSecurityContextFactory.customUserDetailsMock());
 
         // then
-        then(boardService).should(times(1)).cancelScrap(any(), anyLong());
+        then(boardService).should(times(1)).cancelScrap(any(Member.class), anyLong());
     }
 
 
