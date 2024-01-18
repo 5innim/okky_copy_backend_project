@@ -2,8 +2,6 @@ package com.innim.okkycopy.domain.board;
 
 import com.innim.okkycopy.domain.board.dto.request.ScrapRequest;
 import com.innim.okkycopy.global.auth.CustomUserDetails;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
