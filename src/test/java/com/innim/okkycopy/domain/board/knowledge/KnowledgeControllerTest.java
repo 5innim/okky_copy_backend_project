@@ -1,0 +1,76 @@
+package com.innim.okkycopy.domain.board.knowledge;
+
+import static org.assertj.core.api.Assertions.*;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.then;
+import static org.mockito.Mockito.times;
+
+import com.innim.okkycopy.common.WithMockCustomUserSecurityContextFactory;
+import com.innim.okkycopy.domain.board.dto.request.write.WriteRequest;
+import com.innim.okkycopy.domain.board.dto.response.post.detail.PostDetailResponse;
+import com.innim.okkycopy.global.auth.CustomUserDetails;
+import java.time.LocalDateTime;
+import java.util.Arrays;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+
+@ExtendWith(MockitoExtension.class)
+class KnowledgeControllerTest {
+
+    @Mock
+    KnowledgeService service;
+    @InjectMocks
+    KnowledgeController controller;
+
+    @Test
+    void writeKnowledgePostTest() {
+        // given
+        WriteRequest writeRequest = writeRequest();
+        CustomUserDetails customUserDetails = WithMockCustomUserSecurityContextFactory.customUserDetailsMock();
+
+        // when
+        ResponseEntity response = controller.writeKnowledgePost(writeRequest, customUserDetails);
+
+        // then
+        then(service).should(times(1)).saveKnowledgePost(writeRequest, customUserDetails);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
+    }
+
+    @Test
+    void getKnowledgePostTest() {
+        // given
+        long id = 1l;
+        PostDetailResponse postDetailResponse = postDetailRequest();
+        given(service.selectKnowledgePost(id)).willReturn(postDetailResponse);
+
+        // when
+        ResponseEntity response = controller.getKnowledgePost(id);
+
+        // then
+        assertThat(response.getBody()).isEqualTo(postDetailResponse);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+    }
+
+    WriteRequest writeRequest() {
+        return WriteRequest.builder()
+            .title("test_title")
+            .topic("test_topic")
+            .tags(Arrays.asList())
+            .content("test_content")
+            .build();
+    }
+
+    PostDetailResponse postDetailRequest() {
+        return PostDetailResponse.builder()
+            .title("test_title")
+            .tags(Arrays.asList())
+            .content("test_content")
+            .createdDate(LocalDateTime.now())
+            .build();
+    }
+}
