@@ -14,11 +14,14 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 @ExtendWith(MockitoExtension.class)
 class MemberServiceTest {
     @Mock
     MemberRepository memberRepository;
+    @Mock
+    PasswordEncoder passwordEncoder;
     @InjectMocks
     MemberService memberService;
 
@@ -26,7 +29,8 @@ class MemberServiceTest {
     void insertMemberTest() {
         // given
         SignupRequest signupRequest = signupRequest();
-        given(memberRepository.save(any(Member.class))) .willReturn(null);
+        given(memberRepository.save(any(Member.class))).willReturn(null);
+        given(passwordEncoder.encode(any(String.class))).willReturn("**************");
 
         // when
         BriefMemberInfo briefMemberInfo = memberService.insertMember(signupRequest);
