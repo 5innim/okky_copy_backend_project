@@ -107,7 +107,8 @@ public class JwtAuthenticationTest {
     void given_unSavedMemberClaim_then_response401001() throws Exception {
         // given
         String prefix = JwtProperty.prefix;
-        String accessToken = correctToken();
+        String accessToken = notExistMemberToken();
+
 
         // when
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.get("/member/info")
@@ -145,6 +146,12 @@ public class JwtAuthenticationTest {
         Date loginDate = new Date();
         Date expiredDate = new Date(loginDate.getTime() + JwtProperty.accessValidTime);
         return JwtUtil.generateToken(1l, expiredDate, loginDate, "access");
+    }
+
+    String notExistMemberToken() {
+        Date loginDate = new Date();
+        Date expiredDate = new Date(loginDate.getTime() + JwtProperty.accessValidTime);
+        return JwtUtil.generateToken(1111l, expiredDate, loginDate, "access");
     }
 
     String expiredToken() {

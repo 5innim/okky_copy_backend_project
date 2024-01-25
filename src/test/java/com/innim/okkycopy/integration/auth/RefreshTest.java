@@ -5,7 +5,6 @@ import static org.springframework.security.test.web.servlet.setup.SecurityMockMv
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
 import com.google.gson.Gson;
-import com.innim.okkycopy.domain.member.dto.request.SignupRequest;
 import com.innim.okkycopy.global.error.exception.TokenGenerateException;
 import com.innim.okkycopy.global.util.JwtUtil;
 import com.innim.okkycopy.global.util.property.JwtProperty;
@@ -107,7 +106,7 @@ public class RefreshTest {
     void given_unSavedMemberClaim_then_response401001() throws Exception {
         // given
         String prefix = JwtProperty.prefix;
-        String refreshToken = correctToken();
+        String refreshToken = notExistMemberToken();
 
         // when
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.post("/refresh")
@@ -139,17 +138,10 @@ public class RefreshTest {
         // given
         String prefix = JwtProperty.prefix;
         String refreshToken = correctToken();
-
-        SignupRequest signupRequest = signupRequest();
-        mockMvc.perform(MockMvcRequestBuilders.post("/member/signup")
-            .characterEncoding("UTF-8")
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(new Gson().toJson(signupRequest)));
-
         mockMvc.perform(MockMvcRequestBuilders.post("/login")
             .characterEncoding("UTF-8")
             .contentType(MediaType.APPLICATION_JSON)
-            .content(new Gson().toJson(new LoginContent("test1234", "test1234**"))));
+            .content(new Gson().toJson(new LoginContent("test_id", "test1234**"))));
 
         // when
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.post("/refresh")
@@ -164,16 +156,10 @@ public class RefreshTest {
     @Transactional
     void given_correctRefreshToken_then_responseNewAccessToken() throws Exception {
         // given
-        SignupRequest signupRequest = signupRequest();
-        mockMvc.perform(MockMvcRequestBuilders.post("/member/signup")
-            .characterEncoding("UTF-8")
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(new Gson().toJson(signupRequest)));
-
         ResultActions loginResult = mockMvc.perform(MockMvcRequestBuilders.post("/login")
             .characterEncoding("UTF-8")
             .contentType(MediaType.APPLICATION_JSON)
-            .content(new Gson().toJson(new LoginContent("test1234", "test1234**"))));
+            .content(new Gson().toJson(new LoginContent("test_id", "test1234**"))));
 
         String prefix = JwtProperty.prefix;
         String refreshToken = loginResult.andReturn().getResponse().getCookie("refreshToken").getValue();
@@ -229,15 +215,10 @@ public class RefreshTest {
         return JwtUtil.generateToken(1l, expiredDate, loginDate, "access");
     }
 
-    private SignupRequest signupRequest() {
-        return SignupRequest.builder()
-            .id("test1234")
-            .password("test1234**")
-            .email("test@test.com")
-            .name("testName")
-            .nickname("testNickname")
-            .emailCheck(true)
-            .build();
+    String notExistMemberToken() {
+        Date loginDate = new Date();
+        Date expiredDate = new Date(loginDate.getTime() + JwtProperty.accessValidTime);
+        return JwtUtil.generateToken(1111l, expiredDate, loginDate, "access");
     }
 
     private class LoginContent {
