@@ -5,6 +5,7 @@ import com.innim.okkycopy.domain.member.entity.Member;
 import com.innim.okkycopy.global.auth.CustomUserDetails;
 import com.innim.okkycopy.global.auth.enums.Role;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
@@ -23,7 +24,6 @@ public class WithMockCustomUserSecurityContextFactory implements
         Authentication auth =
             UsernamePasswordAuthenticationToken.authenticated(principal, principal.getPassword(), principal.getAuthorities());
         context.setAuthentication(auth);
-        SecurityContextHolder.setContext(context);
 
         return context;
     }
@@ -41,6 +41,7 @@ public class WithMockCustomUserSecurityContextFactory implements
             .password("test_password")
             .name("test_name")
             .loginDate(null)
+            .posts(new ArrayList<>())
             .build();
 
         return new CustomUserDetails(testMember);
