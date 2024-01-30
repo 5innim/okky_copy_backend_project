@@ -38,7 +38,7 @@ Temporary Items
 build
 .gradle
 .idea
-
+/bin
 
 
 # End of https://www.toptal.com/developers/gitignore/api/macos
