@@ -1,5 +1,6 @@
 package com.innim.okkycopy.domain.member.entity;
 
+import com.innim.okkycopy.domain.board.entity.Comment;
 import com.innim.okkycopy.domain.board.entity.Post;
 import com.innim.okkycopy.domain.board.entity.Scrap;
 import com.innim.okkycopy.domain.member.dto.request.SignupRequest;
@@ -77,6 +78,9 @@ public class Member {
 
     @OneToMany(mappedBy = "member", cascade = {CascadeType.REMOVE})
     private List<Scrap> scrapList;
+
+    @OneToMany(mappedBy = "member")
+    private List<Comment> comments;
 
 
 

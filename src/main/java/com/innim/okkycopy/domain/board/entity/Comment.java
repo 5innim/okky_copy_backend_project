@@ -1,7 +1,6 @@
 package com.innim.okkycopy.domain.board.entity;
 
 import com.innim.okkycopy.domain.member.entity.Member;
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.DiscriminatorColumn;
 import jakarta.persistence.Entity;
@@ -12,51 +11,40 @@ import jakarta.persistence.Inheritance;
 import jakarta.persistence.InheritanceType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import java.time.LocalDateTime;
-import java.util.List;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.DynamicUpdate;
+import org.hibernate.annotations.DynamicInsert;
 
 @Entity
-@Table(name = "post")
+@Table(name = "comment")
 @Setter
-@Getter
-@Builder
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Inheritance(strategy = InheritanceType.JOINED)
 @DiscriminatorColumn(name = "dtype")
-@DynamicUpdate
-public class Post {
+@DynamicInsert
+public class Comment {
     @Id
-    @Column(name = "post_id")
+    @Column(name = "comment_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long postId;
-    @ManyToOne
-    @JoinColumn(name = "member_id")
-    private Member member;
-    @Column(nullable = false)
-    private String title;
-    @Column(length = 20000, nullable = false)
-    private String content;
-    @CreationTimestamp
+    private long commentId;
     @Column(name = "created_date", nullable = false)
+    @CreationTimestamp
     private LocalDateTime createdDate;
     @Column(name = "last_update")
     private LocalDateTime lastUpdate;
-    @OneToMany(mappedBy = "post", cascade = {CascadeType.REMOVE, CascadeType.PERSIST})
-    private List<Tag> tags;
-    @OneToMany(mappedBy = "post", cascade = {CascadeType.REMOVE})
-    private List<Scrap> scrapList;
-    @OneToMany(mappedBy = "post", cascade = {CascadeType.REMOVE})
-    private List<Comment> commentList;
+
+    @ManyToOne
+    @JoinColumn(name = "post_id", nullable = false)
+    private Post post;
+    @ManyToOne
+    @JoinColumn(name = "member_id")
+    private Member member;
+
 
 }
