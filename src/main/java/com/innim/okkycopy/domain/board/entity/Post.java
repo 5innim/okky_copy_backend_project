@@ -52,11 +52,12 @@ public class Post {
     private LocalDateTime createdDate;
     @Column(name = "last_update")
     private LocalDateTime lastUpdate;
-    @OneToMany(mappedBy = "post", cascade = {CascadeType.REMOVE, CascadeType.PERSIST})
+    @OneToMany(mappedBy = "post", cascade = {CascadeType.REMOVE, CascadeType.PERSIST}, orphanRemoval = true)
     private List<Tag> tags;
     @OneToMany(mappedBy = "post", cascade = {CascadeType.REMOVE})
     private List<Scrap> scrapList;
     @OneToMany(mappedBy = "post", cascade = {CascadeType.REMOVE})
     private List<Comment> commentList;
+
 
 }
