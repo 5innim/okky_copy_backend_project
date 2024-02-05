@@ -56,6 +56,21 @@ class KnowledgeControllerTest {
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     }
 
+    @Test
+    void editKnowledgePost() {
+        // given
+        long id = 1l;
+        WriteRequest writeRequest = writeRequest();
+        CustomUserDetails customUserDetails = WithMockCustomUserSecurityContextFactory.customUserDetailsMock();
+
+        // when
+        ResponseEntity response = controller.editKnowledgePost(customUserDetails, writeRequest, id);
+
+        // then
+        then(service).should(times(1)).updateKnowledgePost(customUserDetails, writeRequest, id);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
+    }
+
     WriteRequest writeRequest() {
         return WriteRequest.builder()
             .title("test_title")
