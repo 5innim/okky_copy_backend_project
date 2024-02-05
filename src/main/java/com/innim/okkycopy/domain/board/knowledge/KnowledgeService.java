@@ -9,6 +9,7 @@ import com.innim.okkycopy.domain.member.MemberRepository;
 import com.innim.okkycopy.domain.member.entity.Member;
 import com.innim.okkycopy.global.auth.CustomUserDetails;
 import com.innim.okkycopy.global.error.ErrorCode;
+import com.innim.okkycopy.global.error.exception.NoAuthorityException;
 import com.innim.okkycopy.global.error.exception.NoSuchPostException;
 import com.innim.okkycopy.global.error.exception.NoSuchTopicException;
 import jakarta.persistence.EntityManager;
@@ -45,6 +46,17 @@ public class KnowledgeService {
             .build());
 
         return PostDetailResponse.toPostDetailRequestDto(knowledgePost, member);
+    }
+
+    @Transactional
+    public void updateKnowledgePost(CustomUserDetails customUserDetails, WriteRequest updateRequest, long postId) {
+        Member mergedMember = entityManager.merge(customUserDetails.getMember());
+        KnowledgePost knowledgePost = knowledgePostRepository.findByPostId(postId).orElseThrow(() -> new NoSuchPostException(ErrorCode._400_NO_SUCH_POST));
+        BoardTopic boardTopic = boardTopicRepository.findByName(updateRequest.getTopic()).orElseThrow(() -> new NoSuchTopicException(
+            ErrorCode._400_NO_SUCH_TOPIC));
+
+        if (knowledgePost.getMember().getMemberId() != mergedMember.getMemberId()) throw new NoAuthorityException(ErrorCode._403_NO_AUTHORITY);
+        knowledgePost.updateKnowledgePost(updateRequest, boardTopic);
     }
 
 
