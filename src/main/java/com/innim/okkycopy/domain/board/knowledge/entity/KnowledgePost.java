@@ -65,4 +65,17 @@ public class KnowledgePost extends Post {
         return knowledgePost;
     }
 
+    public void updateKnowledgePost(WriteRequest updateRequest, BoardTopic boardTopic) {
+        this.setTitle(updateRequest.getTitle());
+        this.setContent(updateRequest.getContent());
+        this.setBoardTopic(boardTopic);
+
+        List<Tag> tags = this.getTags();
+        tags.clear();
+
+        for (TagRequest tag : updateRequest.getTags()) {
+            tags.add(KnowledgeTag.createKnowledgeTag(this, boardTopic, tag.getName()));
+        }
+    }
+
 }
