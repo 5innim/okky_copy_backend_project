@@ -54,7 +54,7 @@ public class RefreshTest {
         );
 
         // then
-        resultActions.andExpect(jsonPath("code", 400013).exists());
+        resultActions.andExpect(jsonPath("code").value(400013));
     }
 
     @Test
@@ -69,7 +69,7 @@ public class RefreshTest {
         );
 
         // then
-        resultActions.andExpect(jsonPath("code", 400013).exists());
+        resultActions.andExpect(jsonPath("code").value(400013));
     }
 
     @Test
@@ -84,7 +84,7 @@ public class RefreshTest {
         );
 
         // then
-        resultActions.andExpect(jsonPath("code", 403001).exists());
+        resultActions.andExpect(jsonPath("code").value(403001));
     }
 
     @Test
@@ -99,7 +99,7 @@ public class RefreshTest {
         );
 
         // then
-        resultActions.andExpect(jsonPath("code", 401001).exists());
+        resultActions.andExpect(jsonPath("code").value(401001));
     }
 
     @Test
@@ -114,7 +114,7 @@ public class RefreshTest {
         );
 
         // then
-        resultActions.andExpect(jsonPath("code", 401001).exists());
+        resultActions.andExpect(jsonPath("code").value(401001));
     }
 
     @Test
@@ -129,7 +129,7 @@ public class RefreshTest {
         );
 
         // then
-        resultActions.andExpect(jsonPath("code", 401001).exists());
+        resultActions.andExpect(jsonPath("code").value(401001));
     }
 
     @Test
@@ -149,7 +149,7 @@ public class RefreshTest {
         );
 
         // then
-        resultActions.andExpect(jsonPath("code", 401001).exists());
+        resultActions.andExpect(jsonPath("code").value(401001));
     }
 
     @Test

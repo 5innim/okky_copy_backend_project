@@ -48,7 +48,7 @@ public class SignupTest {
             );
 
             // then
-            resultActions.andExpect(jsonPath("code", 400001).exists());
+            resultActions.andExpect(jsonPath("code").value(400001));
         }
 
         @Test
@@ -66,7 +66,7 @@ public class SignupTest {
             );
 
             // then
-            resultActions.andExpect(jsonPath("code", 400002).exists());
+            resultActions.andExpect(jsonPath("code").value(400002));
         }
 
         @Test
@@ -84,14 +84,14 @@ public class SignupTest {
             );
 
             // then
-            resultActions.andExpect(jsonPath("code", 400003).exists());
+            resultActions.andExpect(jsonPath("code").value(400003));
         }
 
         @Test
         void given_invalidName_then_responseErrorCode() throws Exception {
             // given
             SignupRequest request = signupRequest();
-            request.setEmail("t");
+            request.setName("t");
 
             // when
             ResultActions resultActions = mockMvc.perform(
@@ -102,14 +102,14 @@ public class SignupTest {
             );
 
             // then
-            resultActions.andExpect(jsonPath("code", 400004).exists());
+            resultActions.andExpect(jsonPath("code").value(400004));
         }
 
         @Test
         void given_invalidNickname_then_responseErrorCode() throws Exception {
             // given
             SignupRequest request = signupRequest();
-            request.setEmail("t");
+            request.setNickname("t");
 
             // when
             ResultActions resultActions = mockMvc.perform(
@@ -120,7 +120,7 @@ public class SignupTest {
             );
 
             // then
-            resultActions.andExpect(jsonPath("code", 400005).exists());
+            resultActions.andExpect(jsonPath("code").value(400005));
         }
     }
 
