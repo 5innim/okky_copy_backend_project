@@ -10,6 +10,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -31,8 +32,16 @@ public class KnowledgeController {
 
     @GetMapping("/posts/{id}")
     public ResponseEntity<Object> getKnowledgePost(@PathVariable("id") long id) {
-
         return ResponseEntity.ok(knowledgeService.selectKnowledgePost(id));
+    }
+
+    @PutMapping("/posts/{id}")
+    public ResponseEntity<Object> editKnowledgePost(
+        @AuthenticationPrincipal CustomUserDetails customUserDetails,
+        @RequestBody @Valid WriteRequest updateRequest,
+        @PathVariable("id") long id) {
+        knowledgeService.updateKnowledgePost(customUserDetails, updateRequest, id);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
 }
