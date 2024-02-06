@@ -1,6 +1,9 @@
 package com.innim.okkycopy.domain.board.knowledge.entity;
 
+import com.innim.okkycopy.domain.board.dto.request.CommentRequest;
 import com.innim.okkycopy.domain.board.entity.Comment;
+import com.innim.okkycopy.domain.board.entity.Post;
+import com.innim.okkycopy.domain.member.entity.Member;
 import jakarta.persistence.Column;
 import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
@@ -26,6 +29,16 @@ public class KnowledgeComment extends Comment {
     @Column(name = "content", nullable = false, length = 20000)
     private String content;
     @Column(name = "parent_id")
-    private long parentId;
+    private Long parentId;
+
+    public static KnowledgeComment createKnowledgeComment(Post post, Member member, CommentRequest commentRequest) {
+        KnowledgeComment comment = KnowledgeComment.builder()
+            .content(commentRequest.getContent())
+            .build();
+        comment.setPost(post);
+        comment.setMember(member);
+        comment.setLikes(0l);
+        return comment;
+    }
 }
 
