@@ -27,7 +27,7 @@ public class BoardType {
     @Id
     @Column(name = "type_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long typeId;
+    private Long typeId;
 
     @OrderBy("type_id ASC")
     @OneToMany(mappedBy = "boardType")

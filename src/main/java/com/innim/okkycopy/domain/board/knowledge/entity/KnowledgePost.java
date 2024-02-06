@@ -34,13 +34,13 @@ public class KnowledgePost extends Post {
     @JoinColumn(name = "topic_id")
     private BoardTopic boardTopic;
     @Column(nullable = false)
-    private int likes;
+    private Integer likes;
     @Column(nullable = false)
-    private int scraps;
+    private Integer scraps;
     @Column(nullable = false)
-    private int views;
+    private Integer views;
     @Column(nullable = false)
-    private int comments;
+    private Integer comments;
 
     public static KnowledgePost createKnowledgePost(WriteRequest writeRequest, BoardTopic boardTopic, Member member) {
         KnowledgePost knowledgePost = new KnowledgePost();

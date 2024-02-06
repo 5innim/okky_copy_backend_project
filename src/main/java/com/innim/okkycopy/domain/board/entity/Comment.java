@@ -32,7 +32,7 @@ public class Comment {
     @Id
     @Column(name = "comment_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long commentId;
+    private Long commentId;
     @Column(name = "created_date", nullable = false)
     @CreationTimestamp
     private LocalDateTime createdDate;

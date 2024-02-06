@@ -33,7 +33,7 @@ public class Scrap {
     @Id
     @Column(name = "scrap_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long scrapId;
+    private Long scrapId;
 
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = "post_id")

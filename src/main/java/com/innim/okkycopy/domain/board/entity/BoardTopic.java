@@ -31,7 +31,7 @@ public class BoardTopic {
     @Id
     @Column(name = "topic_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long topicId;
+    private Long topicId;
 
     @ManyToOne(optional = false)
     @JoinColumn(name = "type_id", insertable = false, updatable = false)

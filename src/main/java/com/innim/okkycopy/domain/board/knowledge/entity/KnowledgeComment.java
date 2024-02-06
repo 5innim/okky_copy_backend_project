@@ -25,7 +25,7 @@ import org.hibernate.annotations.DynamicUpdate;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class KnowledgeComment extends Comment {
     @Column(name = "likes", nullable = false)
-    private long likes;
+    private Long likes;
     @Column(name = "content", nullable = false, length = 20000)
     private String content;
     @Column(name = "parent_id")
