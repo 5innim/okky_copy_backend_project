@@ -63,7 +63,7 @@ public class EditTest {
     void given_noExistPost_then_responseErrorCode() throws Exception {
         // given
         WriteRequest updateRequest = writeRequest();
-        long postId = 3l;
+        long postId = 1000l;
 
         // when
         ResultActions resultActions = mockMvc.perform(

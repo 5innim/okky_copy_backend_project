@@ -56,7 +56,7 @@ public class DeleteTest {
     @Transactional
     void given_noExistPost_then_responseErrorCode() throws Exception {
         // given
-        long postId = 3l;
+        long postId = 1000l;
 
         // when
         ResultActions resultActions = mockMvc.perform(
