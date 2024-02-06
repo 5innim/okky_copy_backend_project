@@ -6,6 +6,7 @@ import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.times;
 
 import com.innim.okkycopy.common.WithMockCustomUserSecurityContextFactory;
+import com.innim.okkycopy.domain.board.dto.request.CommentRequest;
 import com.innim.okkycopy.domain.board.dto.request.write.WriteRequest;
 import com.innim.okkycopy.domain.board.dto.response.post.detail.PostDetailResponse;
 import com.innim.okkycopy.global.auth.CustomUserDetails;
@@ -57,7 +58,7 @@ class KnowledgeControllerTest {
     }
 
     @Test
-    void editKnowledgePost() {
+    void editKnowledgePostTest() {
         // given
         long id = 1l;
         WriteRequest writeRequest = writeRequest();
@@ -72,7 +73,7 @@ class KnowledgeControllerTest {
     }
 
     @Test
-    void deleteKnowledgePost() {
+    void deleteKnowledgePostTest() {
         // given
         long id = 1l;
         CustomUserDetails customUserDetails = WithMockCustomUserSecurityContextFactory.customUserDetailsMock();
@@ -83,6 +84,21 @@ class KnowledgeControllerTest {
         // then
         then(service).should(times(1)).deleteKnowledgePost(customUserDetails, id);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
+    }
+
+    @Test
+    void writeKnowledgePostCommentTest() {
+        // given
+        long id = 1l;
+        CustomUserDetails customUserDetails = WithMockCustomUserSecurityContextFactory.customUserDetailsMock();
+        CommentRequest commentRequest = commentRequest();
+
+        // when
+        ResponseEntity response = controller.writeKnowledgePostComment(customUserDetails, commentRequest, id);
+
+        // then
+        then(service).should(times(1)).saveKnowledgeComment(customUserDetails, commentRequest, id);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
     }
 
     WriteRequest writeRequest() {
@@ -101,5 +117,9 @@ class KnowledgeControllerTest {
             .content("test_content")
             .createdDate(LocalDateTime.now())
             .build();
+    }
+
+    CommentRequest commentRequest() {
+        return new CommentRequest("test comment");
     }
 }
