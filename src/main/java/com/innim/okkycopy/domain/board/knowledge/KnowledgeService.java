@@ -59,6 +59,15 @@ public class KnowledgeService {
         knowledgePost.updateKnowledgePost(updateRequest, boardTopic);
     }
 
+    @Transactional
+    public void deleteKnowledgePost(CustomUserDetails customUserDetails, long postId) {
+        Member mergedMember = entityManager.merge(customUserDetails.getMember());
+        KnowledgePost knowledgePost = knowledgePostRepository.findByPostId(postId).orElseThrow(() -> new NoSuchPostException(ErrorCode._400_NO_SUCH_POST));
+
+        if (knowledgePost.getMember().getMemberId() != mergedMember.getMemberId()) throw new NoAuthorityException(ErrorCode._403_NO_AUTHORITY);
+        entityManager.remove(knowledgePost);
+    }
+
 
 
 }
