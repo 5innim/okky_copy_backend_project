@@ -1,8 +1,10 @@
 package com.innim.okkycopy.domain.board.knowledge;
 
+import com.innim.okkycopy.domain.board.dto.request.CommentRequest;
 import com.innim.okkycopy.domain.board.dto.request.write.WriteRequest;
 import com.innim.okkycopy.domain.board.dto.response.post.detail.PostDetailResponse;
 import com.innim.okkycopy.domain.board.entity.BoardTopic;
+import com.innim.okkycopy.domain.board.knowledge.entity.KnowledgeComment;
 import com.innim.okkycopy.domain.board.knowledge.entity.KnowledgePost;
 import com.innim.okkycopy.domain.board.repository.BoardTopicRepository;
 import com.innim.okkycopy.domain.member.MemberRepository;
@@ -66,6 +68,19 @@ public class KnowledgeService {
 
         if (knowledgePost.getMember().getMemberId() != mergedMember.getMemberId()) throw new NoAuthorityException(ErrorCode._403_NO_AUTHORITY);
         entityManager.remove(knowledgePost);
+    }
+
+    @Transactional
+    public void saveKnowledgeComment(CustomUserDetails customUserDetails,
+        CommentRequest commentRequest,
+        long postId) {
+        Member mergedMember = entityManager.merge(customUserDetails.getMember());
+        KnowledgePost knowledgePost = knowledgePostRepository.findByPostId(postId).orElseThrow(() -> new NoSuchPostException(ErrorCode._400_NO_SUCH_POST));
+
+        KnowledgeComment comment = KnowledgeComment.createKnowledgeComment(knowledgePost, mergedMember, commentRequest);
+        entityManager.persist(comment);
+
+        knowledgePost.setComments(knowledgePost.getComments() + 1);
     }
 
 
