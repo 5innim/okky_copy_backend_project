@@ -55,7 +55,8 @@ public class SecurityConfig {
                         "/board/knowledge/write",
                         "/board/post/scrap").hasAnyAuthority(Role.USER.getValue(), Role.ADMIN.getValue())
                     .requestMatchers(HttpMethod.DELETE,
-                        "/board/post/scrap").hasAnyAuthority(Role.USER.getValue(), Role.ADMIN.getValue())
+                        "/board/post/scrap",
+                        "/board/knowledge/posts/{id}").hasAnyAuthority(Role.USER.getValue(), Role.ADMIN.getValue())
                     .requestMatchers(HttpMethod.PUT,
                         "/board/knowledge/posts/{id}").hasAnyAuthority(Role.USER.getValue(), Role.ADMIN.getValue())
                     .requestMatchers(HttpMethod.GET,
