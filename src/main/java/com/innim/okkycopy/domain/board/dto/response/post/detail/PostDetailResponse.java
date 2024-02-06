@@ -22,7 +22,7 @@ public class PostDetailResponse {
     private int likes;
     private LocalDateTime createdDate;
 
-    public static PostDetailResponse toPostDetailRequestDto(KnowledgePost knowledgePost, Member member) {
+    public static PostDetailResponse toPostDetailResponseDto(KnowledgePost knowledgePost, Member member) {
         List<String> tags = new ArrayList<>();
         for (Tag tag : knowledgePost.getTags()) {
             tags.add(tag.getName());
