@@ -44,10 +44,10 @@ public class KnowledgeService {
 
     public PostDetailResponse selectKnowledgePost(long postId) {
         KnowledgePost knowledgePost = knowledgePostRepository.findByPostId(postId).orElseThrow(() -> new NoSuchPostException(ErrorCode._400_NO_SUCH_POST));
-        Member member = memberRepository.findByMemberId(knowledgePost.getMember().getMemberId()).orElseGet(() -> Member.builder()
+        Member member = memberRepository.findByMemberId(knowledgePost.getMember().getMemberId()).orElseGet(() -> Member.builder().memberId(0l)
             .build());
 
-        return PostDetailResponse.toPostDetailRequestDto(knowledgePost, member);
+        return PostDetailResponse.toPostDetailResponseDto(knowledgePost, member);
     }
 
     @Transactional
