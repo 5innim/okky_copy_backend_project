@@ -53,7 +53,8 @@ public class SecurityConfig {
             .authorizeHttpRequests(request -> {
                 request.requestMatchers(HttpMethod.POST,
                         "/board/knowledge/write",
-                        "/board/post/scrap").hasAnyAuthority(Role.USER.getValue(), Role.ADMIN.getValue())
+                        "/board/post/scrap",
+                        "/board/knowledge/posts/{id}/comment").hasAnyAuthority(Role.USER.getValue(), Role.ADMIN.getValue())
                     .requestMatchers(HttpMethod.DELETE,
                         "/board/post/scrap",
                         "/board/knowledge/posts/{id}").hasAnyAuthority(Role.USER.getValue(), Role.ADMIN.getValue())
