@@ -1,5 +1,6 @@
 package com.innim.okkycopy.domain.board.knowledge;
 
+import com.innim.okkycopy.domain.board.dto.request.CommentRequest;
 import com.innim.okkycopy.domain.board.dto.request.write.WriteRequest;
 import com.innim.okkycopy.global.auth.CustomUserDetails;
 import jakarta.validation.Valid;
@@ -51,6 +52,15 @@ public class KnowledgeController {
         @PathVariable("id") long id) {
         knowledgeService.deleteKnowledgePost(customUserDetails, id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
+
+    @PostMapping("/posts/{id}/comment")
+    public ResponseEntity<Object> writeKnowledgePostComment(
+        @AuthenticationPrincipal CustomUserDetails customUserDetails,
+        @RequestBody @Valid CommentRequest commentRequest,
+        @PathVariable("id") long id) {
+        knowledgeService.saveKnowledgeComment(customUserDetails, commentRequest, id);
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
 }
