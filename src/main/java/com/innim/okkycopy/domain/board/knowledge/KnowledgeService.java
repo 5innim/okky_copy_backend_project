@@ -6,16 +6,20 @@ import com.innim.okkycopy.domain.board.dto.response.post.detail.PostDetailRespon
 import com.innim.okkycopy.domain.board.entity.BoardTopic;
 import com.innim.okkycopy.domain.board.knowledge.entity.KnowledgeComment;
 import com.innim.okkycopy.domain.board.knowledge.entity.KnowledgePost;
+import com.innim.okkycopy.domain.board.knowledge.repository.KnowledgeCommentRepository;
+import com.innim.okkycopy.domain.board.knowledge.repository.KnowledgePostRepository;
 import com.innim.okkycopy.domain.board.repository.BoardTopicRepository;
 import com.innim.okkycopy.domain.member.MemberRepository;
 import com.innim.okkycopy.domain.member.entity.Member;
 import com.innim.okkycopy.global.auth.CustomUserDetails;
 import com.innim.okkycopy.global.error.ErrorCode;
 import com.innim.okkycopy.global.error.exception.NoAuthorityException;
+import com.innim.okkycopy.global.error.exception.NoSuchCommentException;
 import com.innim.okkycopy.global.error.exception.NoSuchPostException;
 import com.innim.okkycopy.global.error.exception.NoSuchTopicException;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
+import java.time.LocalDateTime;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,6 +30,7 @@ public class KnowledgeService {
 
     private final BoardTopicRepository boardTopicRepository;
     private final KnowledgePostRepository knowledgePostRepository;
+    private final KnowledgeCommentRepository knowledgeCommentRepository;
     private final MemberRepository memberRepository;
 
     @PersistenceContext
@@ -81,6 +86,18 @@ public class KnowledgeService {
         entityManager.persist(comment);
 
         knowledgePost.setComments(knowledgePost.getComments() + 1);
+    }
+
+    @Transactional
+    public void updateKnowledgeComment(CustomUserDetails customUserDetails,
+        CommentRequest commentRequest,
+        long commentId) {
+        Member mergedMember = entityManager.merge(customUserDetails.getMember());
+        KnowledgeComment comment = knowledgeCommentRepository.findByCommentId(commentId).orElseThrow(() -> new NoSuchCommentException(ErrorCode._400_NO_SUCH_COMMENT));
+
+        if (comment.getMember().getMemberId() != mergedMember.getMemberId()) throw new NoAuthorityException(ErrorCode._403_NO_AUTHORITY);
+        comment.setContent(commentRequest.getContent());
+        comment.setLastUpdate(LocalDateTime.now());
     }
 
 
