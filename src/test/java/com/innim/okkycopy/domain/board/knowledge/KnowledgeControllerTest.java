@@ -94,7 +94,7 @@ class KnowledgeControllerTest {
         CommentRequest commentRequest = commentRequest();
 
         // when
-        ResponseEntity response = controller.writeKnowledgePostComment(customUserDetails, commentRequest, id);
+        ResponseEntity response = controller.writeKnowledgeComment(customUserDetails, commentRequest, id);
 
         // then
         then(service).should(times(1)).saveKnowledgeComment(customUserDetails, commentRequest, id);

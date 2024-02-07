@@ -55,7 +55,7 @@ public class KnowledgeController {
     }
 
     @PostMapping("/posts/{id}/comment")
-    public ResponseEntity<Object> writeKnowledgePostComment(
+    public ResponseEntity<Object> writeKnowledgeComment(
         @AuthenticationPrincipal CustomUserDetails customUserDetails,
         @RequestBody @Valid CommentRequest commentRequest,
         @PathVariable("id") long id) {
