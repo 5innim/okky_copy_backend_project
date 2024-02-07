@@ -116,6 +116,20 @@ class KnowledgeControllerTest {
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
     }
 
+    @Test
+    void deleteKnowledgeCommentTest() {
+        // given
+        long id = 1l;
+        CustomUserDetails customUserDetails = WithMockCustomUserSecurityContextFactory.customUserDetailsMock();
+
+        // when
+        ResponseEntity response = controller.deleteKnowledgeComment(customUserDetails, id);
+
+        // then
+        then(service).should(times(1)).deleteKnowledgeComment(customUserDetails, id);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
+    }
+
     WriteRequest writeRequest() {
         return WriteRequest.builder()
             .title("test_title")
