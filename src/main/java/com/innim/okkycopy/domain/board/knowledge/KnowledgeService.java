@@ -100,6 +100,15 @@ public class KnowledgeService {
         comment.setLastUpdate(LocalDateTime.now());
     }
 
+    @Transactional
+    public void deleteKnowledgeComment(CustomUserDetails customUserDetails, long commentId) {
+        Member mergedMember = entityManager.merge(customUserDetails.getMember());
+        KnowledgeComment comment = knowledgeCommentRepository.findByCommentId(commentId).orElseThrow(() -> new NoSuchCommentException(ErrorCode._400_NO_SUCH_COMMENT));
+
+        if (comment.getMember().getMemberId() != mergedMember.getMemberId()) throw new NoAuthorityException(ErrorCode._403_NO_AUTHORITY);
+        entityManager.remove(comment);
+    }
+
 
 
 }
