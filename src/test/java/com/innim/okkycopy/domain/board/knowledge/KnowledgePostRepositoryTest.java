@@ -7,6 +7,7 @@ import com.innim.okkycopy.domain.board.dto.request.write.WriteRequest;
 import com.innim.okkycopy.domain.board.entity.BoardTopic;
 import com.innim.okkycopy.domain.board.entity.Post;
 import com.innim.okkycopy.domain.board.knowledge.entity.KnowledgePost;
+import com.innim.okkycopy.domain.board.knowledge.repository.KnowledgePostRepository;
 import com.innim.okkycopy.domain.board.repository.BoardTopicRepository;
 import com.innim.okkycopy.domain.member.entity.Member;
 import jakarta.persistence.EntityManager;

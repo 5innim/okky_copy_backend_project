@@ -1,4 +1,4 @@
-package com.innim.okkycopy.domain.board.knowledge;
+package com.innim.okkycopy.domain.board.knowledge.repository;
 
 import com.innim.okkycopy.domain.board.knowledge.entity.KnowledgePost;
 import java.util.Optional;

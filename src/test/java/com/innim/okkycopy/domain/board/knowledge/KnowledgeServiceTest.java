@@ -12,6 +12,7 @@ import com.innim.okkycopy.domain.board.entity.BoardTopic;
 import com.innim.okkycopy.domain.board.entity.BoardType;
 import com.innim.okkycopy.domain.board.entity.Post;
 import com.innim.okkycopy.domain.board.knowledge.entity.KnowledgePost;
+import com.innim.okkycopy.domain.board.knowledge.repository.KnowledgePostRepository;
 import com.innim.okkycopy.domain.member.MemberRepository;
 import com.innim.okkycopy.domain.member.entity.Member;
 import com.innim.okkycopy.global.error.exception.NoSuchPostException;
