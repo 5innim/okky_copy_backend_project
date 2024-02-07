@@ -87,7 +87,7 @@ class KnowledgeControllerTest {
     }
 
     @Test
-    void writeKnowledgePostCommentTest() {
+    void writeKnowledgeCommentTest() {
         // given
         long id = 1l;
         CustomUserDetails customUserDetails = WithMockCustomUserSecurityContextFactory.customUserDetailsMock();
@@ -99,6 +99,21 @@ class KnowledgeControllerTest {
         // then
         then(service).should(times(1)).saveKnowledgeComment(customUserDetails, commentRequest, id);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
+    }
+
+    @Test
+    void editKnowledgeCommentTest() {
+        // given
+        long id = 1l;
+        CustomUserDetails customUserDetails = WithMockCustomUserSecurityContextFactory.customUserDetailsMock();
+        CommentRequest commentRequest = commentRequest();
+
+        // when
+        ResponseEntity response = controller.editKnowledgeComment(customUserDetails, commentRequest, id);
+
+        // then
+        then(service).should(times(1)).updateKnowledgeComment(customUserDetails, commentRequest, id);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
     }
 
     WriteRequest writeRequest() {
