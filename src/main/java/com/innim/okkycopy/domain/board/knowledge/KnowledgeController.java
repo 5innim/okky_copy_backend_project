@@ -63,4 +63,13 @@ public class KnowledgeController {
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
+    @PutMapping("/comments/{id}")
+    public ResponseEntity<Object> editKnowledgeComment(
+        @AuthenticationPrincipal CustomUserDetails customUserDetails,
+        @RequestBody @Valid CommentRequest commentRequest,
+        @PathVariable("id") long id) {
+        knowledgeService.updateKnowledgeComment(customUserDetails, commentRequest, id);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
+
 }
