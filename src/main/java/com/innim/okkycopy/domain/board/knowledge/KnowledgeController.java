@@ -72,4 +72,12 @@ public class KnowledgeController {
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
+    @DeleteMapping("/comments/{id}")
+    public ResponseEntity<Object> deleteKnowledgeComment(
+        @AuthenticationPrincipal CustomUserDetails customUserDetails,
+        @PathVariable("id") long id) {
+        knowledgeService.deleteKnowledgeComment(customUserDetails, id);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
+
 }
