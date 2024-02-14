@@ -1,6 +1,7 @@
 package com.innim.okkycopy.domain.board.knowledge;
 
 import com.innim.okkycopy.domain.board.dto.request.WriteCommentRequest;
+import com.innim.okkycopy.domain.board.dto.request.WriteReCommentRequest;
 import com.innim.okkycopy.domain.board.dto.request.write.WriteRequest;
 import com.innim.okkycopy.domain.board.dto.response.comments.CommentResponse;
 import com.innim.okkycopy.domain.board.dto.response.comments.CommentsResponse;
@@ -136,6 +137,22 @@ public class KnowledgeService {
         Collections.sort(commentResponses);
 
         return new CommentsResponse(commentResponses);
+    }
+
+    @Transactional
+    public void saveKnowledgeReComment(
+        CustomUserDetails customUserDetails,
+        long postId,
+        long commentId,
+        WriteReCommentRequest writeReCommentRequest) {
+        Member mergedMember = entityManager.merge(customUserDetails.getMember());
+        KnowledgePost knowledgePost = knowledgePostRepository.findByPostId(postId).orElseThrow(() -> new NoSuchPostException(ErrorCode._400_NO_SUCH_POST));
+        knowledgeCommentRepository.findByCommentId(commentId).orElseThrow(() -> new NoSuchCommentException(ErrorCode._400_NO_SUCH_COMMENT));
+
+        KnowledgeComment reComment = KnowledgeComment.createKnowledgeReComment(knowledgePost, mergedMember,
+            commentId, writeReCommentRequest);
+
+        entityManager.persist(reComment);
     }
 
 
