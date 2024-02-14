@@ -65,7 +65,8 @@ public class SecurityConfig {
                     .requestMatchers(HttpMethod.GET,
                         "/board/topics",
                         "/board/knowledge/posts/{id}",
-                        "/member/info").permitAll()
+                        "/member/info",
+                        "/board/knowledge/posts/{id}/comments").permitAll()
                     .requestMatchers(HttpMethod.POST, "/member/signup").permitAll();
             })
             .apply(new CustomDsl());
