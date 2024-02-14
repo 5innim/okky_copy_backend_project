@@ -2,6 +2,8 @@ package com.innim.okkycopy.domain.board.knowledge;
 
 import com.innim.okkycopy.domain.board.dto.request.WriteCommentRequest;
 import com.innim.okkycopy.domain.board.dto.request.write.WriteRequest;
+import com.innim.okkycopy.domain.board.dto.response.comments.CommentResponse;
+import com.innim.okkycopy.domain.board.dto.response.comments.CommentsResponse;
 import com.innim.okkycopy.domain.board.dto.response.post.detail.PostDetailResponse;
 import com.innim.okkycopy.domain.board.entity.BoardTopic;
 import com.innim.okkycopy.domain.board.knowledge.entity.KnowledgeComment;
@@ -20,6 +22,9 @@ import com.innim.okkycopy.global.error.exception.NoSuchTopicException;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -108,6 +113,27 @@ public class KnowledgeService {
 
         if (comment.getMember().getMemberId() != mergedMember.getMemberId()) throw new NoAuthorityException(ErrorCode._403_NO_AUTHORITY);
         entityManager.remove(comment);
+    }
+
+    @Transactional
+    public CommentsResponse selectKnowledgeComments(long postId) {
+        KnowledgePost knowledgePost = knowledgePostRepository.findByPostId(postId).orElseThrow(() -> new NoSuchPostException(ErrorCode._400_NO_SUCH_POST));
+        List<KnowledgeComment> parentComments = knowledgePost.getCommentList().stream()
+            .filter(comment -> ((KnowledgeComment) comment).getParentId() == null)
+            .map(comment -> (KnowledgeComment) comment)
+            .collect(Collectors.toList());
+
+        List<CommentResponse> commentResponses = new ArrayList<>();
+        for (KnowledgeComment comment : parentComments) {
+            commentResponses.add(
+                CommentResponse.toCommentResponseDto(
+                    comment,
+                    comment.getContent(),
+                    comment.getLikes())
+            );
+        }
+
+        return new CommentsResponse(commentResponses);
     }
 
 
