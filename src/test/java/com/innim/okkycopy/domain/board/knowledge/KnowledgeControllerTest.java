@@ -6,7 +6,7 @@ import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.times;
 
 import com.innim.okkycopy.common.WithMockCustomUserSecurityContextFactory;
-import com.innim.okkycopy.domain.board.dto.request.CommentRequest;
+import com.innim.okkycopy.domain.board.dto.request.WriteCommentRequest;
 import com.innim.okkycopy.domain.board.dto.request.write.WriteRequest;
 import com.innim.okkycopy.domain.board.dto.response.post.detail.PostDetailResponse;
 import com.innim.okkycopy.global.auth.CustomUserDetails;
@@ -91,13 +91,14 @@ class KnowledgeControllerTest {
         // given
         long id = 1l;
         CustomUserDetails customUserDetails = WithMockCustomUserSecurityContextFactory.customUserDetailsMock();
-        CommentRequest commentRequest = commentRequest();
+        WriteCommentRequest writeCommentRequest = commentRequest();
 
         // when
-        ResponseEntity response = controller.writeKnowledgeComment(customUserDetails, commentRequest, id);
+        ResponseEntity response = controller.writeKnowledgeComment(customUserDetails,
+            writeCommentRequest, id);
 
         // then
-        then(service).should(times(1)).saveKnowledgeComment(customUserDetails, commentRequest, id);
+        then(service).should(times(1)).saveKnowledgeComment(customUserDetails, writeCommentRequest, id);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
     }
 
@@ -106,13 +107,15 @@ class KnowledgeControllerTest {
         // given
         long id = 1l;
         CustomUserDetails customUserDetails = WithMockCustomUserSecurityContextFactory.customUserDetailsMock();
-        CommentRequest commentRequest = commentRequest();
+        WriteCommentRequest writeCommentRequest = commentRequest();
 
         // when
-        ResponseEntity response = controller.editKnowledgeComment(customUserDetails, commentRequest, id);
+        ResponseEntity response = controller.editKnowledgeComment(customUserDetails,
+            writeCommentRequest, id);
 
         // then
-        then(service).should(times(1)).updateKnowledgeComment(customUserDetails, commentRequest, id);
+        then(service).should(times(1)).updateKnowledgeComment(customUserDetails,
+            writeCommentRequest, id);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
     }
 
@@ -148,7 +151,7 @@ class KnowledgeControllerTest {
             .build();
     }
 
-    CommentRequest commentRequest() {
-        return new CommentRequest("test comment");
+    WriteCommentRequest commentRequest() {
+        return new WriteCommentRequest("test comment");
     }
 }

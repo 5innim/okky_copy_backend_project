@@ -1,6 +1,6 @@
 package com.innim.okkycopy.domain.board.knowledge;
 
-import com.innim.okkycopy.domain.board.dto.request.CommentRequest;
+import com.innim.okkycopy.domain.board.dto.request.WriteCommentRequest;
 import com.innim.okkycopy.domain.board.dto.request.write.WriteRequest;
 import com.innim.okkycopy.global.auth.CustomUserDetails;
 import jakarta.validation.Valid;

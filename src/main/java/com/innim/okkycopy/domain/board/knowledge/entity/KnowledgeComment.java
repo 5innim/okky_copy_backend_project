@@ -1,6 +1,6 @@
 package com.innim.okkycopy.domain.board.knowledge.entity;
 
-import com.innim.okkycopy.domain.board.dto.request.CommentRequest;
+import com.innim.okkycopy.domain.board.dto.request.WriteCommentRequest;
 import com.innim.okkycopy.domain.board.entity.Comment;
 import com.innim.okkycopy.domain.board.entity.Post;
 import com.innim.okkycopy.domain.member.entity.Member;
@@ -31,9 +31,9 @@ public class KnowledgeComment extends Comment {
     @Column(name = "parent_id")
     private Long parentId;
 
-    public static KnowledgeComment createKnowledgeComment(Post post, Member member, CommentRequest commentRequest) {
+    public static KnowledgeComment createKnowledgeComment(Post post, Member member, WriteCommentRequest writeCommentRequest) {
         KnowledgeComment comment = KnowledgeComment.builder()
-            .content(commentRequest.getContent())
+            .content(writeCommentRequest.getContent())
             .build();
         comment.setPost(post);
         comment.setMember(member);

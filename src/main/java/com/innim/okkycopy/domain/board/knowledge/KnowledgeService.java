@@ -1,6 +1,6 @@
 package com.innim.okkycopy.domain.board.knowledge;
 
-import com.innim.okkycopy.domain.board.dto.request.CommentRequest;
+import com.innim.okkycopy.domain.board.dto.request.WriteCommentRequest;
 import com.innim.okkycopy.domain.board.dto.request.write.WriteRequest;
 import com.innim.okkycopy.domain.board.dto.response.post.detail.PostDetailResponse;
 import com.innim.okkycopy.domain.board.entity.BoardTopic;
@@ -77,12 +77,13 @@ public class KnowledgeService {
 
     @Transactional
     public void saveKnowledgeComment(CustomUserDetails customUserDetails,
-        CommentRequest commentRequest,
+        WriteCommentRequest writeCommentRequest,
         long postId) {
         Member mergedMember = entityManager.merge(customUserDetails.getMember());
         KnowledgePost knowledgePost = knowledgePostRepository.findByPostId(postId).orElseThrow(() -> new NoSuchPostException(ErrorCode._400_NO_SUCH_POST));
 
-        KnowledgeComment comment = KnowledgeComment.createKnowledgeComment(knowledgePost, mergedMember, commentRequest);
+        KnowledgeComment comment = KnowledgeComment.createKnowledgeComment(knowledgePost, mergedMember,
+            writeCommentRequest);
         entityManager.persist(comment);
 
         knowledgePost.setComments(knowledgePost.getComments() + 1);
@@ -90,13 +91,13 @@ public class KnowledgeService {
 
     @Transactional
     public void updateKnowledgeComment(CustomUserDetails customUserDetails,
-        CommentRequest commentRequest,
+        WriteCommentRequest writeCommentRequest,
         long commentId) {
         Member mergedMember = entityManager.merge(customUserDetails.getMember());
         KnowledgeComment comment = knowledgeCommentRepository.findByCommentId(commentId).orElseThrow(() -> new NoSuchCommentException(ErrorCode._400_NO_SUCH_COMMENT));
 
         if (comment.getMember().getMemberId() != mergedMember.getMemberId()) throw new NoAuthorityException(ErrorCode._403_NO_AUTHORITY);
-        comment.setContent(commentRequest.getContent());
+        comment.setContent(writeCommentRequest.getContent());
         comment.setLastUpdate(LocalDateTime.now());
     }
 
