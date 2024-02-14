@@ -20,18 +20,18 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 @Slf4j
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
-    @Override
-    public ResponseEntity<Object> handleMethodArgumentNotValid(
-        MethodArgumentNotValidException ex, HttpHeaders headers, HttpStatusCode status,
-        WebRequest request) {
-
-        String field = ex.getBindingResult().getFieldErrors().get(0).getField();
-        ErrorCode errorCode = SignupRequest.retreiveErrorCode(field);
-
-        return ResponseEntity
-            .status(errorCode.getStatus())
-            .body(new ErrorResponse(errorCode.getCode(), errorCode.getMessage()));
-    }
+//    @Override
+//    public ResponseEntity<Object> handleMethodArgumentNotValid(
+//        MethodArgumentNotValidException ex, HttpHeaders headers, HttpStatusCode status,
+//        WebRequest request) {
+//
+//        String field = ex.getBindingResult().getFieldErrors().get(0).getField();
+//        ErrorCode errorCode = SignupRequest.retreiveErrorCode(field);
+//
+//        return ResponseEntity
+//            .status(errorCode.getStatus())
+//            .body(new ErrorResponse(errorCode.getCode(), errorCode.getMessage()));
+//    }
 
     @ExceptionHandler(ServiceException.class)
     public ResponseEntity<ErrorResponse> handleServiceException(ServiceException ex) {
