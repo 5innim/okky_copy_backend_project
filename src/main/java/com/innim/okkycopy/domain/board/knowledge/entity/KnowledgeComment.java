@@ -32,6 +32,8 @@ public class KnowledgeComment extends Comment {
     private String content;
     @Column(name = "parent_id")
     private Long parentId;
+    @Column(name = "mentioned_member")
+    private Long mentionedMember;
 
     public static KnowledgeComment createKnowledgeComment(Post post, Member member, WriteCommentRequest writeCommentRequest) {
         KnowledgeComment comment = KnowledgeComment.builder()
