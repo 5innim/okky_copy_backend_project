@@ -7,15 +7,18 @@ import static org.mockito.Mockito.times;
 
 import com.innim.okkycopy.common.WithMockCustomUserSecurityContextFactory;
 import com.innim.okkycopy.domain.board.dto.request.write.WriteRequest;
+import com.innim.okkycopy.domain.board.dto.response.comments.CommentsResponse;
 import com.innim.okkycopy.domain.board.dto.response.post.detail.PostDetailResponse;
 import com.innim.okkycopy.domain.board.entity.BoardTopic;
 import com.innim.okkycopy.domain.board.entity.BoardType;
 import com.innim.okkycopy.domain.board.entity.Post;
+import com.innim.okkycopy.domain.board.knowledge.entity.KnowledgeComment;
 import com.innim.okkycopy.domain.board.knowledge.entity.KnowledgePost;
 import com.innim.okkycopy.domain.board.knowledge.repository.KnowledgePostRepository;
 import com.innim.okkycopy.domain.member.MemberRepository;
 import com.innim.okkycopy.domain.member.entity.Member;
 import com.innim.okkycopy.global.error.exception.NoSuchPostException;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -97,6 +100,54 @@ class KnowledgeServiceTest {
                 .boardType(BoardType.builder()
                     .build())
                 .build();
+        }
+    }
+
+    @Nested
+    class selectKnowledgeComments {
+        @Test
+        void given_notExistPostId_then_throwNoSuchPostException() {
+            // given
+            long notExistPostId = 1l;
+            given(knowledgePostRepository.findByPostId(notExistPostId)).willReturn(Optional.empty());
+
+            // when
+            Throwable thrown = catchThrowable(() -> {
+                knowledgeService.selectKnowledgeComments(notExistPostId);
+            });
+
+            // then
+            then(knowledgePostRepository).should(times(1)).findByPostId(notExistPostId);
+            assertThat(thrown).isInstanceOf(NoSuchPostException.class);
+        }
+
+        @Test
+        void given_correctInfo_then_returnCommentsResponse() {
+            // given
+            long existPostId = 1l;
+            KnowledgeComment existComment = KnowledgeComment.builder()
+                .likes(0l)
+                .content("test content")
+                .member(WithMockCustomUserSecurityContextFactory.customUserDetailsMock()
+                    .getMember())
+                .commentId(1l)
+                .createdDate(LocalDateTime.now())
+                .lastUpdate(LocalDateTime.now())
+                .build();
+
+            KnowledgePost existPost = KnowledgePost.builder()
+                .commentList(Arrays.asList(existComment))
+                .build();
+
+            given(knowledgePostRepository.findByPostId(existPostId)).willReturn(Optional.of(existPost));
+
+            // when
+            CommentsResponse response = knowledgeService.selectKnowledgeComments(existPostId);
+
+            // then
+            then(knowledgePostRepository).should(times(1)).findByPostId(existPostId);
+            assertThat(response.getComments().get(0).getContent()).isEqualTo(existComment.getContent());
+
         }
     }
 

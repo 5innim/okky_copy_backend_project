@@ -8,6 +8,7 @@ import static org.mockito.Mockito.times;
 import com.innim.okkycopy.common.WithMockCustomUserSecurityContextFactory;
 import com.innim.okkycopy.domain.board.dto.request.WriteCommentRequest;
 import com.innim.okkycopy.domain.board.dto.request.write.WriteRequest;
+import com.innim.okkycopy.domain.board.dto.response.comments.CommentsResponse;
 import com.innim.okkycopy.domain.board.dto.response.post.detail.PostDetailResponse;
 import com.innim.okkycopy.global.auth.CustomUserDetails;
 import java.time.LocalDateTime;
@@ -131,6 +132,19 @@ class KnowledgeControllerTest {
         // then
         then(service).should(times(1)).deleteKnowledgeComment(customUserDetails, id);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
+    }
+
+    @Test
+    void getKnowledgePostComments() {
+        // given
+        long id = 1l;
+        given(service.selectKnowledgeComments(id)).willReturn(new CommentsResponse(Arrays.asList()));
+
+        // when
+        ResponseEntity response = controller.getKnowledgePostComments(id);
+
+        // then
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     }
 
     WriteRequest writeRequest() {
