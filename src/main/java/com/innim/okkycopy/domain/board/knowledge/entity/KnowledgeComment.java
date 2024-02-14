@@ -10,17 +10,17 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.DynamicUpdate;
 
 @Entity
 @Table(name = "knowledge_comment")
 @Getter
 @Setter
-@Builder
+@SuperBuilder
 @DiscriminatorValue(value = "knowledge")
 @DynamicUpdate
 @AllArgsConstructor

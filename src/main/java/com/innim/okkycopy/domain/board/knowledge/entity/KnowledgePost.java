@@ -19,12 +19,14 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.DynamicUpdate;
 
 @DynamicUpdate
 @Entity
 @Setter
 @Getter
+@SuperBuilder
 @Table(name = "knowledge_post")
 @DiscriminatorValue(value = "knowledge")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
