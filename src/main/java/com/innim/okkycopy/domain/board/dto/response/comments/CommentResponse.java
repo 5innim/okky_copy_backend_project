@@ -12,7 +12,7 @@ import lombok.Setter;
 @Setter
 @Builder
 @AllArgsConstructor
-public class CommentResponse {
+public class CommentResponse implements Comparable<CommentResponse> {
     private Long commentId;
     private WriterInfoResponse writerInfoResponse;
     private String content;
@@ -30,4 +30,15 @@ public class CommentResponse {
             .commentId(comment.getCommentId())
             .build();
     }
+
+    @Override
+    public int compareTo(CommentResponse c) {
+        if (this.createdDate.isBefore(c.createdDate)) {
+            return -1;
+        } else if (this.createdDate.isAfter(c.createdDate)) {
+            return 1;
+        }
+        return 0;
+    }
+
 }

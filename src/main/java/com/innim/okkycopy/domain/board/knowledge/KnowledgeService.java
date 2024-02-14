@@ -23,6 +23,7 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -131,6 +132,8 @@ public class KnowledgeService {
                     comment.getLikes())
             );
         }
+
+        Collections.sort(commentResponses);
 
         return new CommentsResponse(commentResponses);
     }
