@@ -80,4 +80,9 @@ public class KnowledgeController {
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
+    @GetMapping("/posts/{id}/comments")
+    public ResponseEntity<Object> getKnowledgePostComments(@PathVariable long id) {
+        return ResponseEntity.ok(knowledgeService.selectKnowledgeComments(id));
+    }
+
 }
