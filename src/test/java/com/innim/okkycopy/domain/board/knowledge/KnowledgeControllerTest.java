@@ -7,6 +7,7 @@ import static org.mockito.Mockito.times;
 
 import com.innim.okkycopy.common.WithMockCustomUserSecurityContextFactory;
 import com.innim.okkycopy.domain.board.dto.request.WriteCommentRequest;
+import com.innim.okkycopy.domain.board.dto.request.WriteReCommentRequest;
 import com.innim.okkycopy.domain.board.dto.request.write.WriteRequest;
 import com.innim.okkycopy.domain.board.dto.response.comments.CommentsResponse;
 import com.innim.okkycopy.domain.board.dto.response.post.detail.PostDetailResponse;
@@ -145,6 +146,35 @@ class KnowledgeControllerTest {
 
         // then
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+    }
+
+    @Test
+    void writeKnowledgeReComment() {
+        // given
+        long postId = 1l;
+        long commentId = 1l;
+        CustomUserDetails customUserDetails = WithMockCustomUserSecurityContextFactory.customUserDetailsMock();
+        WriteReCommentRequest writeReCommentRequest = WriteReCommentRequest.builder()
+            .mentionId(1l)
+            .content("test")
+            .build();
+
+        // when
+        ResponseEntity response = controller.writeKnowledgeReComment(
+            customUserDetails,
+            postId,
+            commentId,
+            writeReCommentRequest
+        );
+
+        // then
+        then(service).should(times(1)).saveKnowledgeReComment(
+            customUserDetails,
+            postId,
+            commentId,
+            writeReCommentRequest
+        );
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
     }
 
     WriteRequest writeRequest() {
