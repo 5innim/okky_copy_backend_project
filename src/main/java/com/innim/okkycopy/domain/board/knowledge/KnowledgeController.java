@@ -57,18 +57,18 @@ public class KnowledgeController {
     @PostMapping("/posts/{id}/comment")
     public ResponseEntity<Object> writeKnowledgeComment(
         @AuthenticationPrincipal CustomUserDetails customUserDetails,
-        @RequestBody @Valid CommentRequest commentRequest,
+        @RequestBody @Valid WriteCommentRequest writeCommentRequest,
         @PathVariable("id") long id) {
-        knowledgeService.saveKnowledgeComment(customUserDetails, commentRequest, id);
+        knowledgeService.saveKnowledgeComment(customUserDetails, writeCommentRequest, id);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @PutMapping("/comments/{id}")
     public ResponseEntity<Object> editKnowledgeComment(
         @AuthenticationPrincipal CustomUserDetails customUserDetails,
-        @RequestBody @Valid CommentRequest commentRequest,
+        @RequestBody @Valid WriteCommentRequest writeCommentRequest,
         @PathVariable("id") long id) {
-        knowledgeService.updateKnowledgeComment(customUserDetails, commentRequest, id);
+        knowledgeService.updateKnowledgeComment(customUserDetails, writeCommentRequest, id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
