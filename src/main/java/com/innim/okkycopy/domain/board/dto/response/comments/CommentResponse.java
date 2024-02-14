@@ -13,6 +13,7 @@ import lombok.Setter;
 @Builder
 @AllArgsConstructor
 public class CommentResponse {
+    private Long commentId;
     private WriterInfoResponse writerInfoResponse;
     private String content;
     private LocalDateTime createdDate;
@@ -26,6 +27,7 @@ public class CommentResponse {
             .createdDate(comment.getCreatedDate())
             .lastUpdate(comment.getLastUpdate())
             .likes(likes)
+            .commentId(comment.getCommentId())
             .build();
     }
 }
