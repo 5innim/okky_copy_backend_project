@@ -54,7 +54,8 @@ public class SecurityConfig {
                 request.requestMatchers(HttpMethod.POST,
                         "/board/knowledge/write",
                         "/board/post/scrap",
-                        "/board/knowledge/posts/{id}/comment").hasAnyAuthority(Role.USER.getValue(), Role.ADMIN.getValue())
+                        "/board/knowledge/posts/{id}/comment",
+                        "/board/knowledge/posts/{postId}/comments/{commentId}/recomment").hasAnyAuthority(Role.USER.getValue(), Role.ADMIN.getValue())
                     .requestMatchers(HttpMethod.DELETE,
                         "/board/post/scrap",
                         "/board/knowledge/posts/{id}",
