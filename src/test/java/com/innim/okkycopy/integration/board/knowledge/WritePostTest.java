@@ -27,7 +27,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
 
 @SpringBootTest
-public class WriteTest {
+public class WritePostTest {
 
     @Autowired
     WebApplicationContext context;
