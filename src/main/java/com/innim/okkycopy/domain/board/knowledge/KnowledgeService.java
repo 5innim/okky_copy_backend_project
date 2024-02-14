@@ -115,7 +115,6 @@ public class KnowledgeService {
         entityManager.remove(comment);
     }
 
-    @Transactional
     public CommentsResponse selectKnowledgeComments(long postId) {
         KnowledgePost knowledgePost = knowledgePostRepository.findByPostId(postId).orElseThrow(() -> new NoSuchPostException(ErrorCode._400_NO_SUCH_POST));
         List<KnowledgeComment> parentComments = knowledgePost.getCommentList().stream()
