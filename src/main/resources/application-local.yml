@@ -14,8 +14,8 @@ spring:
   # postgresql
   datasource:
     driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://localhost:5432/okky_dev
-    username: for_dev
+    url: jdbc:postgresql://localhost:5432/okky_local
+    username: for_local
     password: okky1234
 
   # jpa
