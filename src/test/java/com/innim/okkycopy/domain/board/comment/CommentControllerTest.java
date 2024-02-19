@@ -56,7 +56,7 @@ public class CommentControllerTest {
             writeCommentRequest, id);
 
         // then
-        then(commentService).should(times(1)).updateKnowledgeComment(customUserDetails,
+        then(commentService).should(times(1)).updateComment(customUserDetails,
             writeCommentRequest, id);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
     }
@@ -79,7 +79,7 @@ public class CommentControllerTest {
     void getComments() {
         // given
         long id = 1l;
-        given(commentService.selectKnowledgeComments(id)).willReturn(new CommentsResponse(Arrays.asList()));
+        given(commentService.selectComments(id)).willReturn(new CommentsResponse(Arrays.asList()));
 
         // when
         ResponseEntity response = commentController.getComments(id);

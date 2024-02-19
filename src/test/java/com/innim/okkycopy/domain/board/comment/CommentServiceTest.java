@@ -41,7 +41,7 @@ public class CommentServiceTest {
 
             // when
             Throwable thrown = catchThrowable(() -> {
-                commentService.selectKnowledgeComments(notExistPostId);
+                commentService.selectComments(notExistPostId);
             });
 
             // then
@@ -70,7 +70,7 @@ public class CommentServiceTest {
             given(postRepository.findByPostId(existPostId)).willReturn(Optional.of(existPost));
 
             // when
-            CommentsResponse response = commentService.selectKnowledgeComments(existPostId);
+            CommentsResponse response = commentService.selectComments(existPostId);
 
             // then
             then(postRepository).should(times(1)).findByPostId(existPostId);

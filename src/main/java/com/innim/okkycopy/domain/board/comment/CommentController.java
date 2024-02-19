@@ -33,7 +33,7 @@ public class CommentController {
             @AuthenticationPrincipal CustomUserDetails customUserDetails,
             @RequestBody @Valid WriteCommentRequest writeCommentRequest,
             @PathVariable("id") long id) {
-        commentService.updateKnowledgeComment(customUserDetails, writeCommentRequest, id);
+        commentService.updateComment(customUserDetails, writeCommentRequest, id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
@@ -47,7 +47,7 @@ public class CommentController {
 
     @GetMapping("/posts/{id}/comments")
     public ResponseEntity<Object> getComments(@PathVariable long id) {
-        return ResponseEntity.ok(commentService.selectKnowledgeComments(id));
+        return ResponseEntity.ok(commentService.selectComments(id));
     }
 
     @PostMapping("/posts/{postId}/comments/{commentId}/recomment")

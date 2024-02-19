@@ -46,9 +46,9 @@ public class CommentService {
     }
 
     @Transactional
-    public void updateKnowledgeComment(CustomUserDetails customUserDetails,
-                                       WriteCommentRequest writeCommentRequest,
-                                       long commentId) {
+    public void updateComment(CustomUserDetails customUserDetails,
+                              WriteCommentRequest writeCommentRequest,
+                              long commentId) {
         Member mergedMember = entityManager.merge(customUserDetails.getMember());
         Comment comment = commentRepository.findByCommentId(commentId).orElseThrow(() -> new NoSuchCommentException(ErrorCode._400_NO_SUCH_COMMENT));
 
@@ -67,7 +67,7 @@ public class CommentService {
         Comment.removeComment(comment, entityManager);
     }
 
-    public CommentsResponse selectKnowledgeComments(long postId) {
+    public CommentsResponse selectComments(long postId) {
         Post post = postRepository.findByPostId(postId).orElseThrow(() -> new NoSuchPostException(ErrorCode._400_NO_SUCH_POST));
         List<Comment> parentComments = post.getCommentList().stream()
                 .filter(comment -> (comment.getParentId() == null))
