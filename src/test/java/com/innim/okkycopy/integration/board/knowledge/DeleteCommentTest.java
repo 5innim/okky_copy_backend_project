@@ -61,7 +61,7 @@ public class DeleteCommentTest {
 
         // when
         ResultActions resultActions = mockMvc.perform(
-            MockMvcRequestBuilders.delete("/board/knowledge/comments/" + commentId)
+            MockMvcRequestBuilders.delete("/board/comments/" + commentId)
         );
 
         // then
@@ -76,7 +76,7 @@ public class DeleteCommentTest {
 
         // when
         ResultActions resultActions = mockMvc.perform(
-            MockMvcRequestBuilders.delete("/board/knowledge/comments/" + commentId)
+            MockMvcRequestBuilders.delete("/board/comments/" + commentId)
         );
 
         // then
@@ -91,7 +91,7 @@ public class DeleteCommentTest {
 
         // when
         MockHttpServletResponse response = mockMvc.perform(
-            MockMvcRequestBuilders.delete("/board/knowledge/comments/" + commentId)
+            MockMvcRequestBuilders.delete("/board/comments/" + commentId)
         ).andReturn().getResponse();
 
         // then

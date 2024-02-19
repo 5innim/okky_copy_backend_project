@@ -36,7 +36,7 @@ public class GetCommentsTest {
 
         // when
         ResultActions resultActions = mockMvc.perform(
-            MockMvcRequestBuilders.get("/board/knowledge/posts/" + postId + "/comments")
+            MockMvcRequestBuilders.get("/board/posts/" + postId + "/comments")
         );
 
         // then
@@ -50,7 +50,7 @@ public class GetCommentsTest {
 
         // when
         MockHttpServletResponse response = mockMvc.perform(
-            MockMvcRequestBuilders.get("/board/knowledge/posts/" + postId + "/comments")
+            MockMvcRequestBuilders.get("/board/posts/" + postId + "/comments")
         ).andReturn().getResponse();
 
         // then

@@ -1,6 +1,6 @@
 package com.innim.okkycopy.domain.member.entity;
 
-import com.innim.okkycopy.domain.board.entity.Comment;
+import com.innim.okkycopy.domain.board.comment.Comment;
 import com.innim.okkycopy.domain.board.entity.Post;
 import com.innim.okkycopy.domain.board.entity.Scrap;
 import com.innim.okkycopy.domain.member.dto.request.SignupRequest;

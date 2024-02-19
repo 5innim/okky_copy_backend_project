@@ -54,20 +54,20 @@ public class SecurityConfig {
                 request.requestMatchers(HttpMethod.POST,
                         "/board/knowledge/write",
                         "/board/post/scrap",
-                        "/board/knowledge/posts/{id}/comment",
-                        "/board/knowledge/posts/{postId}/comments/{commentId}/recomment").hasAnyAuthority(Role.USER.getValue(), Role.ADMIN.getValue())
+                        "/board/posts/{id}/comment",
+                        "/board/posts/{postId}/comments/{commentId}/recomment").hasAnyAuthority(Role.USER.getValue(), Role.ADMIN.getValue())
                     .requestMatchers(HttpMethod.DELETE,
                         "/board/post/scrap",
                         "/board/knowledge/posts/{id}",
-                        "/board/knowledge/comments/{id}").hasAnyAuthority(Role.USER.getValue(), Role.ADMIN.getValue())
+                        "/board/comments/{id}").hasAnyAuthority(Role.USER.getValue(), Role.ADMIN.getValue())
                     .requestMatchers(HttpMethod.PUT,
                         "/board/knowledge/posts/{id}",
-                        "/board/knowledge/comments/{id}").hasAnyAuthority(Role.USER.getValue(), Role.ADMIN.getValue())
+                        "/board/comments/{id}").hasAnyAuthority(Role.USER.getValue(), Role.ADMIN.getValue())
                     .requestMatchers(HttpMethod.GET,
                         "/board/topics",
                         "/board/knowledge/posts/{id}",
                         "/member/info",
-                        "/board/knowledge/posts/{id}/comments").permitAll()
+                        "/board/posts/{id}/comments").permitAll()
                     .requestMatchers(HttpMethod.POST, "/member/signup").permitAll();
             })
             .apply(new CustomDsl());

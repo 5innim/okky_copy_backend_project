@@ -66,7 +66,7 @@ public class WriteReCommentTest {
 
         // when
         ResultActions resultActions = mockMvc.perform(
-            MockMvcRequestBuilders.post("/board/knowledge/posts/" + postId + "/comments/" + commentId + "/recomment")
+            MockMvcRequestBuilders.post("/board/posts/" + postId + "/comments/" + commentId + "/recomment")
                 .contentType(MediaType.APPLICATION_JSON)
                 .characterEncoding("UTF-8")
                 .content(new Gson().toJson(writeReCommentRequest))
@@ -87,7 +87,7 @@ public class WriteReCommentTest {
 
         // when
         ResultActions resultActions = mockMvc.perform(
-            MockMvcRequestBuilders.post("/board/knowledge/posts/" + postId + "/comments/" + commentId + "/recomment")
+            MockMvcRequestBuilders.post("/board/posts/" + postId + "/comments/" + commentId + "/recomment")
                 .contentType(MediaType.APPLICATION_JSON)
                 .characterEncoding("UTF-8")
                 .content(new Gson().toJson(writeReCommentRequest))
@@ -107,7 +107,7 @@ public class WriteReCommentTest {
 
         // when
         ResultActions resultActions = mockMvc.perform(
-            MockMvcRequestBuilders.post("/board/knowledge/posts/" + postId + "/comments/" + commentId + "/recomment")
+            MockMvcRequestBuilders.post("/board/posts/" + postId + "/comments/" + commentId + "/recomment")
                 .contentType(MediaType.APPLICATION_JSON)
                 .characterEncoding("UTF-8")
                 .content(new Gson().toJson(writeReCommentRequest()))
@@ -126,7 +126,7 @@ public class WriteReCommentTest {
 
         // when
         ResultActions resultActions = mockMvc.perform(
-            MockMvcRequestBuilders.post("/board/knowledge/posts/" + postId + "/comments/" + commentId + "/recomment")
+            MockMvcRequestBuilders.post("/board/posts/" + postId + "/comments/" + commentId + "/recomment")
                 .contentType(MediaType.APPLICATION_JSON)
                 .characterEncoding("UTF-8")
                 .content(new Gson().toJson(writeReCommentRequest()))
@@ -145,7 +145,7 @@ public class WriteReCommentTest {
 
         // when
         MockHttpServletResponse response = mockMvc.perform(
-            MockMvcRequestBuilders.post("/board/knowledge/posts/" + postId + "/comments/" + commentId + "/recomment")
+            MockMvcRequestBuilders.post("/board/posts/" + postId + "/comments/" + commentId + "/recomment")
                 .contentType(MediaType.APPLICATION_JSON)
                 .characterEncoding("UTF-8")
                 .content(new Gson().toJson(writeReCommentRequest()))

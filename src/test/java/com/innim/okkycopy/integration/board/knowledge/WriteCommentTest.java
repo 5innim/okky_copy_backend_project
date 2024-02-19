@@ -61,7 +61,7 @@ public class WriteCommentTest {
 
         // when
         ResultActions resultActions = mockMvc.perform(
-            MockMvcRequestBuilders.post("/board/knowledge/posts/" + postId + "/comment")
+            MockMvcRequestBuilders.post("/board/posts/" + postId + "/comment")
                 .contentType(MediaType.APPLICATION_JSON)
                 .characterEncoding("UTF-8")
                 .content(new Gson().toJson(commentRequest()))
