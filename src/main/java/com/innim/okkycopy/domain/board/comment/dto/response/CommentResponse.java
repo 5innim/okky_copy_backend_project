@@ -14,21 +14,23 @@ import lombok.Setter;
 @AllArgsConstructor
 public class CommentResponse implements Comparable<CommentResponse> {
     private Long commentId;
+    private String mentionedNickname;
     private WriterInfoResponse writerInfoResponse;
     private String content;
     private LocalDateTime createdDate;
     private LocalDateTime lastUpdate;
     private Long likes;
 
-    public static CommentResponse toCommentResponseDto(Comment comment, String content, long likes) {
+    public static CommentResponse toCommentResponseDto(Comment comment, String mentionedNickname) {
         return CommentResponse.builder()
-            .writerInfoResponse((comment.getMember()==null) ? null:WriterInfoResponse.toWriterInfoRequestDto(comment.getMember()))
-            .content(content)
-            .createdDate(comment.getCreatedDate())
-            .lastUpdate(comment.getLastUpdate())
-            .likes(likes)
-            .commentId(comment.getCommentId())
-            .build();
+                .writerInfoResponse((comment.getMember()==null) ? null:WriterInfoResponse.toWriterInfoRequestDto(comment.getMember()))
+                .mentionedNickname(mentionedNickname)
+                .content(comment.getContent())
+                .createdDate(comment.getCreatedDate())
+                .lastUpdate(comment.getLastUpdate())
+                .likes(comment.getLikes())
+                .commentId(comment.getCommentId())
+                .build();
     }
 
     @Override
