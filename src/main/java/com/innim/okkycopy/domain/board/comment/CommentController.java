@@ -1,7 +1,7 @@
 package com.innim.okkycopy.domain.board.comment;
 
-import com.innim.okkycopy.domain.board.dto.request.WriteCommentRequest;
-import com.innim.okkycopy.domain.board.dto.request.WriteReCommentRequest;
+import com.innim.okkycopy.domain.board.comment.dto.request.WriteCommentRequest;
+import com.innim.okkycopy.domain.board.comment.dto.request.WriteReCommentRequest;
 import com.innim.okkycopy.global.auth.CustomUserDetails;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

@@ -1,7 +1,7 @@
 package com.innim.okkycopy.domain.board.comment;
 
 import com.innim.okkycopy.common.WithMockCustomUserSecurityContextFactory;
-import com.innim.okkycopy.domain.board.dto.response.comments.CommentsResponse;
+import com.innim.okkycopy.domain.board.comment.dto.response.CommentsResponse;
 import com.innim.okkycopy.domain.board.entity.Post;
 import com.innim.okkycopy.domain.board.repository.PostRepository;
 import com.innim.okkycopy.global.error.exception.NoSuchPostException;

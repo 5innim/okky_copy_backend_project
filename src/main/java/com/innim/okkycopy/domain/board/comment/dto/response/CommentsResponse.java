@@ -1,4 +1,4 @@
-package com.innim.okkycopy.domain.board.dto.response.comments;
+package com.innim.okkycopy.domain.board.comment.dto.response;
 
 import java.util.List;
 import lombok.AllArgsConstructor;

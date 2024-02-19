@@ -6,10 +6,7 @@ import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.times;
 
 import com.innim.okkycopy.common.WithMockCustomUserSecurityContextFactory;
-import com.innim.okkycopy.domain.board.dto.request.WriteCommentRequest;
-import com.innim.okkycopy.domain.board.dto.request.WriteReCommentRequest;
 import com.innim.okkycopy.domain.board.dto.request.write.WriteRequest;
-import com.innim.okkycopy.domain.board.dto.response.comments.CommentsResponse;
 import com.innim.okkycopy.domain.board.dto.response.post.detail.PostDetailResponse;
 import com.innim.okkycopy.global.auth.CustomUserDetails;
 import java.time.LocalDateTime;
