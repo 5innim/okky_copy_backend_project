@@ -1,4 +1,4 @@
-package com.innim.okkycopy.integration.board.knowledge;
+package com.innim.okkycopy.integration.board.comment;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;

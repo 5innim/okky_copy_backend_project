@@ -1,6 +1,5 @@
-package com.innim.okkycopy.integration.board.knowledge;
+package com.innim.okkycopy.integration.board.comment;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
@@ -13,9 +12,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
@@ -28,7 +25,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
 
 @SpringBootTest
-public class EditCommentTest {
+public class WriteCommentTest {
     @Autowired
     WebApplicationContext context;
     @Autowired
@@ -58,62 +55,24 @@ public class EditCommentTest {
 
     @Test
     @Transactional
-    void given_noExistComment_then_responseErrorCode() throws Exception {
+    void given_noExistPost_then_responseErrorCode() throws Exception {
         // given
-        long commentId = 1000l;
-        WriteCommentRequest writeCommentRequest = commentRequest();
+        long postId = 1000l;
 
         // when
         ResultActions resultActions = mockMvc.perform(
-            MockMvcRequestBuilders.put("/board/comments/" + commentId)
+            MockMvcRequestBuilders.post("/board/posts/" + postId + "/comment")
                 .contentType(MediaType.APPLICATION_JSON)
                 .characterEncoding("UTF-8")
-                .content(new Gson().toJson(writeCommentRequest))
+                .content(new Gson().toJson(commentRequest()))
         );
 
         // then
-        resultActions.andExpect(jsonPath("code").value(400023));
-    }
-
-    @Test
-    @Transactional
-    void given_noEqualCommentWriterWithAuthenticationPrincipal_then_responseErrorCode() throws Exception {
-        // given
-        WriteCommentRequest writeCommentRequest = commentRequest();
-        long commentId = 2l;
-
-        // when
-        ResultActions resultActions = mockMvc.perform(
-            MockMvcRequestBuilders.put("/board/comments/" + commentId)
-                .contentType(MediaType.APPLICATION_JSON)
-                .characterEncoding("UTF-8")
-                .content(new Gson().toJson(writeCommentRequest))
-        );
-
-        // then
-        resultActions.andExpect(jsonPath("code").value(403002));
-    }
-
-    @Test
-    @Transactional
-    void given_correctUpdateInfo_then_response204() throws Exception {
-        // given
-        WriteCommentRequest writeCommentRequest = commentRequest();
-        long commentId = 1l;
-
-        // when
-        MockHttpServletResponse response = mockMvc.perform(
-            MockMvcRequestBuilders.put("/board/comments/" + commentId)
-                .contentType(MediaType.APPLICATION_JSON)
-                .characterEncoding("UTF-8")
-                .content(new Gson().toJson(writeCommentRequest))
-        ).andReturn().getResponse();
-
-        // then
-        assertThat(response.getStatus()).isEqualTo(HttpStatus.NO_CONTENT.value());
+        resultActions.andExpect(jsonPath("code").value(400021));
     }
 
     WriteCommentRequest commentRequest() {
         return new WriteCommentRequest("test comment");
     }
+
 }

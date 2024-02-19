@@ -1,11 +1,11 @@
-package com.innim.okkycopy.integration.board.knowledge;
+package com.innim.okkycopy.integration.board.comment;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
 import com.google.gson.Gson;
-import com.innim.okkycopy.domain.board.comment.dto.request.WriteReCommentRequest;
+import com.innim.okkycopy.domain.board.comment.dto.request.WriteCommentRequest;
 import com.innim.okkycopy.domain.member.MemberRepository;
 import com.innim.okkycopy.domain.member.entity.Member;
 import com.innim.okkycopy.global.auth.CustomUserDetails;
@@ -28,11 +28,12 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
 
 @SpringBootTest
-public class WriteReCommentTest {
+public class EditCommentTest {
     @Autowired
     WebApplicationContext context;
     @Autowired
     MemberRepository memberRepository;
+
     MockMvc mockMvc;
 
     @BeforeEach
@@ -57,79 +58,17 @@ public class WriteReCommentTest {
 
     @Test
     @Transactional
-    void given_invalidContent_then_response400() throws Exception {
-        // given
-        long postId = 1l;
-        long commentId = 1l;
-        WriteReCommentRequest writeReCommentRequest = writeReCommentRequest();
-        writeReCommentRequest.setContent("");
-
-        // when
-        ResultActions resultActions = mockMvc.perform(
-            MockMvcRequestBuilders.post("/board/posts/" + postId + "/comments/" + commentId + "/recomment")
-                .contentType(MediaType.APPLICATION_JSON)
-                .characterEncoding("UTF-8")
-                .content(new Gson().toJson(writeReCommentRequest))
-        );
-
-        // then
-        resultActions.andExpect(jsonPath("status").value(400));
-    }
-
-    @Test
-    @Transactional
-    void given_invalidMentionId_then_response400() throws Exception {
-        // given
-        long postId = 1l;
-        long commentId = 1l;
-        WriteReCommentRequest writeReCommentRequest = writeReCommentRequest();
-        writeReCommentRequest.setMentionId(0l);
-
-        // when
-        ResultActions resultActions = mockMvc.perform(
-            MockMvcRequestBuilders.post("/board/posts/" + postId + "/comments/" + commentId + "/recomment")
-                .contentType(MediaType.APPLICATION_JSON)
-                .characterEncoding("UTF-8")
-                .content(new Gson().toJson(writeReCommentRequest))
-        );
-
-        // then
-        resultActions.andExpect(jsonPath("status").value(400));
-    }
-
-
-    @Test
-    @Transactional
-    void given_noExistPost_then_responseErrorCode() throws Exception {
-        // given
-        long postId = 1000l;
-        long commentId = 1l;
-
-        // when
-        ResultActions resultActions = mockMvc.perform(
-            MockMvcRequestBuilders.post("/board/posts/" + postId + "/comments/" + commentId + "/recomment")
-                .contentType(MediaType.APPLICATION_JSON)
-                .characterEncoding("UTF-8")
-                .content(new Gson().toJson(writeReCommentRequest()))
-        );
-
-        // then
-        resultActions.andExpect(jsonPath("code").value(400021));
-    }
-
-    @Test
-    @Transactional
     void given_noExistComment_then_responseErrorCode() throws Exception {
         // given
-        long postId = 1l;
         long commentId = 1000l;
+        WriteCommentRequest writeCommentRequest = commentRequest();
 
         // when
         ResultActions resultActions = mockMvc.perform(
-            MockMvcRequestBuilders.post("/board/posts/" + postId + "/comments/" + commentId + "/recomment")
+            MockMvcRequestBuilders.put("/board/comments/" + commentId)
                 .contentType(MediaType.APPLICATION_JSON)
                 .characterEncoding("UTF-8")
-                .content(new Gson().toJson(writeReCommentRequest()))
+                .content(new Gson().toJson(writeCommentRequest))
         );
 
         // then
@@ -138,29 +77,43 @@ public class WriteReCommentTest {
 
     @Test
     @Transactional
-    void given_correctInfo_then_response201() throws Exception {
+    void given_noEqualCommentWriterWithAuthenticationPrincipal_then_responseErrorCode() throws Exception {
         // given
-        long postId = 1l;
+        WriteCommentRequest writeCommentRequest = commentRequest();
+        long commentId = 2l;
+
+        // when
+        ResultActions resultActions = mockMvc.perform(
+            MockMvcRequestBuilders.put("/board/comments/" + commentId)
+                .contentType(MediaType.APPLICATION_JSON)
+                .characterEncoding("UTF-8")
+                .content(new Gson().toJson(writeCommentRequest))
+        );
+
+        // then
+        resultActions.andExpect(jsonPath("code").value(403002));
+    }
+
+    @Test
+    @Transactional
+    void given_correctUpdateInfo_then_response204() throws Exception {
+        // given
+        WriteCommentRequest writeCommentRequest = commentRequest();
         long commentId = 1l;
 
         // when
         MockHttpServletResponse response = mockMvc.perform(
-            MockMvcRequestBuilders.post("/board/posts/" + postId + "/comments/" + commentId + "/recomment")
+            MockMvcRequestBuilders.put("/board/comments/" + commentId)
                 .contentType(MediaType.APPLICATION_JSON)
                 .characterEncoding("UTF-8")
-                .content(new Gson().toJson(writeReCommentRequest()))
+                .content(new Gson().toJson(writeCommentRequest))
         ).andReturn().getResponse();
 
         // then
-        assertThat(response.getStatus()).isEqualTo(HttpStatus.CREATED.value());
+        assertThat(response.getStatus()).isEqualTo(HttpStatus.NO_CONTENT.value());
     }
 
-    WriteReCommentRequest writeReCommentRequest() {
-        return WriteReCommentRequest.builder()
-            .content("test content")
-            .mentionId(1l)
-            .build();
+    WriteCommentRequest commentRequest() {
+        return new WriteCommentRequest("test comment");
     }
-
-
 }
