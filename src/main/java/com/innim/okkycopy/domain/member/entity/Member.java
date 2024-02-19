@@ -1,14 +1,22 @@
 package com.innim.okkycopy.domain.member.entity;
 
+import com.innim.okkycopy.domain.board.entity.Comment;
+import com.innim.okkycopy.domain.board.entity.Post;
+import com.innim.okkycopy.domain.board.entity.Scrap;
 import com.innim.okkycopy.domain.member.dto.request.SignupRequest;
 import com.innim.okkycopy.global.auth.enums.Role;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import java.time.LocalDateTime;
+import java.util.List;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -31,7 +39,7 @@ public class Member {
     @Id
     @Column(name = "member_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long memberId;
+    private Long memberId;
 
     @Column(nullable = false, unique = true)
     private String id;
@@ -55,13 +63,28 @@ public class Member {
     @CreationTimestamp
     private LocalDateTime createdDate;
 
+    @Enumerated(EnumType.ORDINAL)
     @Column(nullable = false)
-    private String role;
+    private Role role;
+
+    @Column
+    private String profile;
 
     @Column(name = "login_date")
     private LocalDateTime loginDate;
 
-    public static Member toUserEntity(SignupRequest request) {
+    @OneToMany(mappedBy = "member")
+    private List<Post> posts;
+
+    @OneToMany(mappedBy = "member", cascade = {CascadeType.REMOVE})
+    private List<Scrap> scrapList;
+
+    @OneToMany(mappedBy = "member")
+    private List<Comment> comments;
+
+
+
+    public static Member toMemberEntity(SignupRequest request) {
         return Member.builder()
             .id(request.getId())
             .password(request.getPassword())
@@ -69,7 +92,8 @@ public class Member {
             .name(request.getName())
             .nickname(request.getNickname())
             .emailCheck(request.isEmailCheck())
-            .role(Role.USER.getValue())
+            .role(Role.USER)
+            .profile(null)
             .build();
     }
 

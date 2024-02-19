@@ -1,6 +1,5 @@
 package com.innim.okkycopy.global.util;
 
-
 import com.innim.okkycopy.global.error.exception.FailValidationJwtException;
 import com.innim.okkycopy.global.error.exception.TokenGenerateException;
 import com.innim.okkycopy.global.util.property.JwtProperty;
@@ -27,7 +26,7 @@ public class JwtUtil {
         return generateToken(userId, expiredDate, loginDate, "refresh");
     }
 
-    private static String generateToken(Long userId, Date expiredDate, Date loginDate, String tokenSub) throws TokenGenerateException{
+    public static String generateToken(Long userId, Date expiredDate, Date loginDate, String tokenSub) throws TokenGenerateException{
 
         String generatedToken;
         try {

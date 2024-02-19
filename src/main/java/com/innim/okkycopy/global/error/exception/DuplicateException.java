@@ -6,9 +6,7 @@ import lombok.Getter;
 @Getter
 public class DuplicateException extends ServiceException {
 
-    private ErrorCode errorCode;
     public DuplicateException(ErrorCode errorCode) {
         super(errorCode);
-        this.errorCode = errorCode;
     }
 }

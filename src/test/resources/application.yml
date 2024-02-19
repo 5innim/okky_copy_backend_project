@@ -1,0 +1,48 @@
+# server setting
+server:
+  port: 8070
+
+# logging
+logging:
+  level:
+    com.innim.okkycopy: trace
+    org:
+      springframework.security: trace
+      hibernate.orm.jdbc.bind: trace
+
+# spring
+spring:
+
+  # profile
+  profiles:
+    active: test
+
+  # devtools
+  devtools:
+    restart:
+      enabled: true
+      additional-exclude: resources/**
+
+  # postgresql
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/okky_dev
+    username: for_dev
+    password: okky1234
+
+  # jpa
+  jpa:
+    hibernate:
+      ddl-auto: create
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format-sql: true
+    show-sql: true
+    defer-datasource-initialization: true
+    open-in-view: true
+
+  # sql
+  sql:
+    init:
+      mode: always

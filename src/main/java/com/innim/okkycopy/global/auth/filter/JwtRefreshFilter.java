@@ -4,6 +4,7 @@ import com.innim.okkycopy.global.auth.AuthService;
 import com.innim.okkycopy.global.error.ErrorCode;
 import com.innim.okkycopy.global.error.exception.FailValidationJwtException;
 import com.innim.okkycopy.global.error.exception.InvalidTokenValueException;
+import com.innim.okkycopy.global.error.exception.UserIdNotFoundException;
 import com.innim.okkycopy.global.util.JwtUtil;
 import com.innim.okkycopy.global.util.RequestResponseUtil;
 import com.innim.okkycopy.global.util.property.JwtProperty;
@@ -70,7 +71,7 @@ public class JwtRefreshFilter extends OncePerRequestFilter {
         filterChain.doFilter(request, response);
     }
 
-    private boolean requiresRefresh(HttpServletRequest request) {
+    protected boolean requiresRefresh(HttpServletRequest request) {
         if (requiresAuthenticationRequestMatcher.matches(request)) {
             return true;
         }
@@ -121,6 +122,8 @@ public class JwtRefreshFilter extends OncePerRequestFilter {
             throw ex;
         } catch (FailValidationJwtException ex) {
             throw ex;
+        } catch (UserIdNotFoundException ex) {
+            throw new FailValidationJwtException(ex.getMessage());
         }
     }
 }
