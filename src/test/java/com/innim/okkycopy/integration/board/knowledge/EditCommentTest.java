@@ -65,7 +65,7 @@ public class EditCommentTest {
 
         // when
         ResultActions resultActions = mockMvc.perform(
-            MockMvcRequestBuilders.put("/board/knowledge/comments/" + commentId)
+            MockMvcRequestBuilders.put("/board/comments/" + commentId)
                 .contentType(MediaType.APPLICATION_JSON)
                 .characterEncoding("UTF-8")
                 .content(new Gson().toJson(writeCommentRequest))
@@ -84,7 +84,7 @@ public class EditCommentTest {
 
         // when
         ResultActions resultActions = mockMvc.perform(
-            MockMvcRequestBuilders.put("/board/knowledge/comments/" + commentId)
+            MockMvcRequestBuilders.put("/board/comments/" + commentId)
                 .contentType(MediaType.APPLICATION_JSON)
                 .characterEncoding("UTF-8")
                 .content(new Gson().toJson(writeCommentRequest))
@@ -103,7 +103,7 @@ public class EditCommentTest {
 
         // when
         MockHttpServletResponse response = mockMvc.perform(
-            MockMvcRequestBuilders.put("/board/knowledge/comments/" + commentId)
+            MockMvcRequestBuilders.put("/board/comments/" + commentId)
                 .contentType(MediaType.APPLICATION_JSON)
                 .characterEncoding("UTF-8")
                 .content(new Gson().toJson(writeCommentRequest))
