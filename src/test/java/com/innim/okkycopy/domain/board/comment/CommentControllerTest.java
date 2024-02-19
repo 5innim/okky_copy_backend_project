@@ -117,6 +117,19 @@ public class CommentControllerTest {
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
     }
 
+    @Test
+    void getReCommentsTest() {
+        // given
+        long id = 1l;
+        given(commentService.selectReComments(id)).willReturn(new CommentsResponse(Arrays.asList()));
+
+        // when
+        ResponseEntity response = commentController.getReComments(id);
+
+        // then
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+    }
+
     WriteCommentRequest commentRequest() {
         return new WriteCommentRequest("test comment");
     }
