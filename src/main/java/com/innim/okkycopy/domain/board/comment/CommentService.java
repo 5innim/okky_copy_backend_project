@@ -6,6 +6,7 @@ import com.innim.okkycopy.domain.board.comment.dto.response.CommentResponse;
 import com.innim.okkycopy.domain.board.comment.dto.response.CommentsResponse;
 import com.innim.okkycopy.domain.board.entity.Post;
 import com.innim.okkycopy.domain.board.repository.PostRepository;
+import com.innim.okkycopy.domain.member.MemberRepository;
 import com.innim.okkycopy.domain.member.entity.Member;
 import com.innim.okkycopy.global.auth.CustomUserDetails;
 import com.innim.okkycopy.global.error.ErrorCode;
@@ -29,6 +30,7 @@ public class CommentService {
 
     private final PostRepository postRepository;
     private final CommentRepository commentRepository;
+    private final MemberRepository memberRepository;
 
     @PersistenceContext
     private final EntityManager entityManager;
@@ -78,8 +80,8 @@ public class CommentService {
             commentResponses.add(
                     CommentResponse.toCommentResponseDto(
                             comment,
-                            comment.getContent(),
-                            comment.getLikes())
+                            null
+                    )
             );
         }
 
@@ -102,5 +104,29 @@ public class CommentService {
                 commentId, writeReCommentRequest);
 
         entityManager.persist(reComment);
+    }
+
+    public CommentsResponse selectReComments(long commentId) {
+        commentRepository.findByCommentId(commentId).orElseThrow(() -> new NoSuchCommentException(ErrorCode._400_NO_SUCH_COMMENT));
+
+        List<Comment> comments = commentRepository.findByParentId(commentId);
+        List<CommentResponse> commentResponses = new ArrayList<>();
+
+        for (Comment comment : comments) {
+            String mentionedNickname = null;
+
+            if (comment.getMentionedMember() != null) {
+                Member member = memberRepository.findByMemberId(comment.getMentionedMember()).orElseGet(() -> null);
+                mentionedNickname = (member == null) ? "(unknown)":member.getNickname();
+            }
+
+            commentResponses.add(
+                    CommentResponse.toCommentResponseDto(comment, mentionedNickname)
+            );
+        }
+
+        Collections.sort(commentResponses);
+
+        return new CommentsResponse(commentResponses);
     }
 }
