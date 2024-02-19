@@ -60,4 +60,9 @@ public class CommentController {
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
+    @GetMapping("/comments/{id}/recomments")
+    public ResponseEntity<Object> getReComments(@PathVariable long id) {
+        return ResponseEntity.status(HttpStatus.OK).body(commentService.selectReComments(id));
+    }
+
 }
