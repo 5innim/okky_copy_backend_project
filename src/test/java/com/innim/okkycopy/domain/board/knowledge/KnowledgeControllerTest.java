@@ -88,94 +88,94 @@ class KnowledgeControllerTest {
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
     }
 
-    @Test
-    void writeKnowledgeCommentTest() {
-        // given
-        long id = 1l;
-        CustomUserDetails customUserDetails = WithMockCustomUserSecurityContextFactory.customUserDetailsMock();
-        WriteCommentRequest writeCommentRequest = commentRequest();
-
-        // when
-        ResponseEntity response = controller.writeKnowledgeComment(customUserDetails,
-            writeCommentRequest, id);
-
-        // then
-        then(service).should(times(1)).saveKnowledgeComment(customUserDetails, writeCommentRequest, id);
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
-    }
-
-    @Test
-    void editKnowledgeCommentTest() {
-        // given
-        long id = 1l;
-        CustomUserDetails customUserDetails = WithMockCustomUserSecurityContextFactory.customUserDetailsMock();
-        WriteCommentRequest writeCommentRequest = commentRequest();
-
-        // when
-        ResponseEntity response = controller.editKnowledgeComment(customUserDetails,
-            writeCommentRequest, id);
-
-        // then
-        then(service).should(times(1)).updateKnowledgeComment(customUserDetails,
-            writeCommentRequest, id);
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
-    }
-
-    @Test
-    void deleteKnowledgeCommentTest() {
-        // given
-        long id = 1l;
-        CustomUserDetails customUserDetails = WithMockCustomUserSecurityContextFactory.customUserDetailsMock();
-
-        // when
-        ResponseEntity response = controller.deleteKnowledgeComment(customUserDetails, id);
-
-        // then
-        then(service).should(times(1)).deleteKnowledgeComment(customUserDetails, id);
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
-    }
-
-    @Test
-    void getKnowledgePostComments() {
-        // given
-        long id = 1l;
-        given(service.selectKnowledgeComments(id)).willReturn(new CommentsResponse(Arrays.asList()));
-
-        // when
-        ResponseEntity response = controller.getKnowledgePostComments(id);
-
-        // then
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-    }
-
-    @Test
-    void writeKnowledgeReComment() {
-        // given
-        long postId = 1l;
-        long commentId = 1l;
-        CustomUserDetails customUserDetails = WithMockCustomUserSecurityContextFactory.customUserDetailsMock();
-        WriteReCommentRequest writeReCommentRequest = WriteReCommentRequest.builder()
-            .mentionId(1l)
-            .content("test")
-            .build();
-
-        // when
-        ResponseEntity response = controller.writeKnowledgeReComment(
-            customUserDetails,
-            postId,
-            commentId,
-            writeReCommentRequest
-        );
-
-        // then
-        then(service).should(times(1)).saveKnowledgeReComment(
-            customUserDetails,
-            postId,
-            commentId,
-            writeReCommentRequest
-        );
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
-    }
+//    @Test
+//    void writeKnowledgeCommentTest() {
+//        // given
+//        long id = 1l;
+//        CustomUserDetails customUserDetails = WithMockCustomUserSecurityContextFactory.customUserDetailsMock();
+//        WriteCommentRequest writeCommentRequest = commentRequest();
+//
+//        // when
+//        ResponseEntity response = controller.writeKnowledgeComment(customUserDetails,
+//            writeCommentRequest, id);
+//
+//        // then
+//        then(service).should(times(1)).saveKnowledgeComment(customUserDetails, writeCommentRequest, id);
+//        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
+//    }
+//
+//    @Test
+//    void editKnowledgeCommentTest() {
+//        // given
+//        long id = 1l;
+//        CustomUserDetails customUserDetails = WithMockCustomUserSecurityContextFactory.customUserDetailsMock();
+//        WriteCommentRequest writeCommentRequest = commentRequest();
+//
+//        // when
+//        ResponseEntity response = controller.editKnowledgeComment(customUserDetails,
+//            writeCommentRequest, id);
+//
+//        // then
+//        then(service).should(times(1)).updateKnowledgeComment(customUserDetails,
+//            writeCommentRequest, id);
+//        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
+//    }
+//
+//    @Test
+//    void deleteKnowledgeCommentTest() {
+//        // given
+//        long id = 1l;
+//        CustomUserDetails customUserDetails = WithMockCustomUserSecurityContextFactory.customUserDetailsMock();
+//
+//        // when
+//        ResponseEntity response = controller.deleteKnowledgeComment(customUserDetails, id);
+//
+//        // then
+//        then(service).should(times(1)).deleteKnowledgeComment(customUserDetails, id);
+//        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
+//    }
+//
+//    @Test
+//    void getKnowledgePostComments() {
+//        // given
+//        long id = 1l;
+//        given(service.selectKnowledgeComments(id)).willReturn(new CommentsResponse(Arrays.asList()));
+//
+//        // when
+//        ResponseEntity response = controller.getKnowledgePostComments(id);
+//
+//        // then
+//        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+//    }
+//
+//    @Test
+//    void writeKnowledgeReComment() {
+//        // given
+//        long postId = 1l;
+//        long commentId = 1l;
+//        CustomUserDetails customUserDetails = WithMockCustomUserSecurityContextFactory.customUserDetailsMock();
+//        WriteReCommentRequest writeReCommentRequest = WriteReCommentRequest.builder()
+//            .mentionId(1l)
+//            .content("test")
+//            .build();
+//
+//        // when
+//        ResponseEntity response = controller.writeKnowledgeReComment(
+//            customUserDetails,
+//            postId,
+//            commentId,
+//            writeReCommentRequest
+//        );
+//
+//        // then
+//        then(service).should(times(1)).saveKnowledgeReComment(
+//            customUserDetails,
+//            postId,
+//            commentId,
+//            writeReCommentRequest
+//        );
+//        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
+//    }
 
     WriteRequest writeRequest() {
         return WriteRequest.builder()

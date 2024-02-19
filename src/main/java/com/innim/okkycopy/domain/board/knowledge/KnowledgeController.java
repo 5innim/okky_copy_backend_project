@@ -1,7 +1,5 @@
 package com.innim.okkycopy.domain.board.knowledge;
 
-import com.innim.okkycopy.domain.board.dto.request.WriteCommentRequest;
-import com.innim.okkycopy.domain.board.dto.request.WriteReCommentRequest;
 import com.innim.okkycopy.domain.board.dto.request.write.WriteRequest;
 import com.innim.okkycopy.global.auth.CustomUserDetails;
 import jakarta.validation.Valid;
@@ -53,47 +51,6 @@ public class KnowledgeController {
         @PathVariable("id") long id) {
         knowledgeService.deleteKnowledgePost(customUserDetails, id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
-    }
-
-    @PostMapping("/posts/{id}/comment")
-    public ResponseEntity<Object> writeKnowledgeComment(
-        @AuthenticationPrincipal CustomUserDetails customUserDetails,
-        @RequestBody @Valid WriteCommentRequest writeCommentRequest,
-        @PathVariable("id") long id) {
-        knowledgeService.saveKnowledgeComment(customUserDetails, writeCommentRequest, id);
-        return ResponseEntity.status(HttpStatus.CREATED).build();
-    }
-
-    @PutMapping("/comments/{id}")
-    public ResponseEntity<Object> editKnowledgeComment(
-        @AuthenticationPrincipal CustomUserDetails customUserDetails,
-        @RequestBody @Valid WriteCommentRequest writeCommentRequest,
-        @PathVariable("id") long id) {
-        knowledgeService.updateKnowledgeComment(customUserDetails, writeCommentRequest, id);
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
-    }
-
-    @DeleteMapping("/comments/{id}")
-    public ResponseEntity<Object> deleteKnowledgeComment(
-        @AuthenticationPrincipal CustomUserDetails customUserDetails,
-        @PathVariable("id") long id) {
-        knowledgeService.deleteKnowledgeComment(customUserDetails, id);
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
-    }
-
-    @GetMapping("/posts/{id}/comments")
-    public ResponseEntity<Object> getKnowledgePostComments(@PathVariable long id) {
-        return ResponseEntity.ok(knowledgeService.selectKnowledgeComments(id));
-    }
-
-    @PostMapping("/posts/{postId}/comments/{commentId}/recomment")
-    public ResponseEntity<Object> writeKnowledgeReComment(
-        @AuthenticationPrincipal CustomUserDetails customUserDetails,
-        @PathVariable long postId,
-        @PathVariable long commentId,
-        @RequestBody @Valid WriteReCommentRequest writeReCommentRequest) {
-        knowledgeService.saveKnowledgeReComment(customUserDetails, postId, commentId, writeReCommentRequest);
-        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
 }

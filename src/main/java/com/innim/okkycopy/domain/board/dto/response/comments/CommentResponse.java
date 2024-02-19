@@ -1,7 +1,7 @@
 package com.innim.okkycopy.domain.board.dto.response.comments;
 
 import com.innim.okkycopy.domain.board.dto.response.post.detail.WriterInfoResponse;
-import com.innim.okkycopy.domain.board.entity.Comment;
+import com.innim.okkycopy.domain.board.comment.Comment;
 import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
