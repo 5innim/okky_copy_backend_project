@@ -43,13 +43,13 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-            .sessionManagement(configure -> sessionManagementConfigure(configure))
-            .headers(configure -> headersConfigure(configure))
-            .csrf(configure -> csrfConfigure(configure))
-            .logout(configure -> logoutConfigure(configure))
-            .servletApi(configure -> servletApiConfigure(configure))
-            .anonymous(configure -> anonymousConfigure(configure))
-            .exceptionHandling(configure -> exceptionHandlingConfigure(configure))
+            .sessionManagement(this::sessionManagementConfigure)
+            .headers(this::headersConfigure)
+            .csrf(this::csrfConfigure)
+            .logout(this::logoutConfigure)
+            .servletApi(this::servletApiConfigure)
+            .anonymous(this::anonymousConfigure)
+            .exceptionHandling(this::exceptionHandlingConfigure)
             .authorizeHttpRequests(request -> {
                 request.requestMatchers(HttpMethod.POST,
                         "/board/knowledge/write",
