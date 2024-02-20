@@ -20,7 +20,6 @@ public class BoardController {
 
     @GetMapping("/topics")
     public ResponseEntity serveTopics() {
-
         return ResponseEntity.ok(boardService.findAllBoardTopics());
     }
 
