@@ -10,7 +10,7 @@ import lombok.Setter;
 @Builder
 @AllArgsConstructor
 public class PostRequesterInfoResponse {
-    private boolean isScraped;
-    private boolean isLiked;
-    private boolean isHated;
+    private boolean scrap;
+    private boolean like;
+    private boolean hate;
 }

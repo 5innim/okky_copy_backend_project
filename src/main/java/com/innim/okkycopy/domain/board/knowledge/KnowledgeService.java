@@ -58,9 +58,9 @@ public class KnowledgeService {
             Member requester = customUserDetails.getMember();
             response.setPostRequesterInfoResponse(
                     PostRequesterInfoResponse.builder()
-                            .isScraped(scrapRepository.findByMemberAndPost(knowledgePost, requester).isPresent())
-                            .isLiked(postLikeRepository.findByMemberAndPost(knowledgePost, requester).isPresent())
-                            .isHated(postHateRepository.findByMemberAndPost(knowledgePost, requester).isPresent())
+                            .scrap(scrapRepository.findByMemberAndPost(knowledgePost, requester).isPresent())
+                            .like(postLikeRepository.findByMemberAndPost(knowledgePost, requester).isPresent())
+                            .hate(postHateRepository.findByMemberAndPost(knowledgePost, requester).isPresent())
                             .build()
             );
         }
