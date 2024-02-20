@@ -32,8 +32,10 @@ public class KnowledgeController {
     }
 
     @GetMapping("/posts/{id}")
-    public ResponseEntity<Object> getKnowledgePost(@PathVariable("id") long id) {
-        return ResponseEntity.ok(knowledgeService.selectKnowledgePost(id));
+    public ResponseEntity<Object> getKnowledgePost(
+            @AuthenticationPrincipal CustomUserDetails customUserDetails,
+            @PathVariable("id") long id) {
+        return ResponseEntity.ok(knowledgeService.selectKnowledgePost(customUserDetails, id));
     }
 
     @PutMapping("/posts/{id}")
