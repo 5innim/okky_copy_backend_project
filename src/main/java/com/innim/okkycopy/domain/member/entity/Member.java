@@ -4,6 +4,8 @@ import com.innim.okkycopy.domain.board.comment.entity.Comment;
 import com.innim.okkycopy.domain.board.comment.entity.CommentHate;
 import com.innim.okkycopy.domain.board.comment.entity.CommentLike;
 import com.innim.okkycopy.domain.board.entity.Post;
+import com.innim.okkycopy.domain.board.entity.PostHate;
+import com.innim.okkycopy.domain.board.entity.PostLike;
 import com.innim.okkycopy.domain.board.entity.Scrap;
 import com.innim.okkycopy.domain.member.dto.request.SignupRequest;
 import com.innim.okkycopy.global.auth.enums.Role;
@@ -37,54 +39,46 @@ import org.hibernate.annotations.DynamicUpdate;
 @Getter
 @Setter
 public class Member {
-
     @Id
     @Column(name = "member_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long memberId;
-
     @Column(nullable = false, unique = true)
     private String id;
-
     @Column(nullable = false)
     private String password;
-
     @Column(nullable = false, unique = true)
     private String email;
-
     @Column(nullable = false)
     private String name;
-
     @Column(nullable = false, unique = true)
     private String nickname;
-
     @Column(nullable = false, name = "email_check")
     private boolean emailCheck;
-
     @Column(nullable = false, name = "created_date")
     @CreationTimestamp
     private LocalDateTime createdDate;
-
     @Enumerated(EnumType.ORDINAL)
     @Column(nullable = false)
     private Role role;
-
     @Column
     private String profile;
-
     @Column(name = "login_date")
     private LocalDateTime loginDate;
-
     @OneToMany(mappedBy = "member")
     private List<Post> posts;
-
     @OneToMany(mappedBy = "member", cascade = {CascadeType.REMOVE})
     private List<Scrap> scrapList;
-
+    @OneToMany(mappedBy = "member", cascade = {CascadeType.REMOVE})
+    private List<PostLike> postLikeList;
+    @OneToMany(mappedBy = "member", cascade = {CascadeType.REMOVE})
+    private List<PostHate> postHateList;
+    @OneToMany(mappedBy = "member", cascade = {CascadeType.REMOVE})
+    private List<CommentLike> commentLikeList;
+    @OneToMany(mappedBy = "member", cascade = {CascadeType.REMOVE})
+    private List<CommentHate> commentHateList;
     @OneToMany(mappedBy = "member")
     private List<Comment> comments;
-
-
 
     public static Member toMemberEntity(SignupRequest request) {
         return Member.builder()

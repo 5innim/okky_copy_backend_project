@@ -8,6 +8,7 @@ import com.innim.okkycopy.domain.member.entity.Member;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -40,13 +41,16 @@ public class Comment {
     private Long parentId;
     @Column(name = "mentioned_member")
     private Long mentionedMember;
-
     @ManyToOne
     @JoinColumn(name = "post_id", nullable = false)
     private Post post;
     @ManyToOne
     @JoinColumn(name = "member_id")
     private Member member;
+    @OneToMany(mappedBy = "comment", cascade = {CascadeType.REMOVE})
+    private List<CommentLike> commentLikeList;
+    @OneToMany(mappedBy = "comment", cascade = {CascadeType.REMOVE})
+    private List<CommentHate> commentHateList;
 
     public static Comment createComment(Post post, Member member, WriteCommentRequest writeCommentRequest) {
         Comment comment = Comment.builder()
@@ -70,16 +74,14 @@ public class Comment {
     }
 
     public static Comment createReComment(Post post, Member member, long parentId, WriteReCommentRequest writeReCommentRequest) {
-        Comment comment = Comment.builder()
-            .content(writeReCommentRequest.getContent())
-            .mentionedMember(writeReCommentRequest.getMentionId())
-            .parentId(parentId)
-            .post(post)
-            .member(member)
-            .likes(0L)
-            .build();
-
-        return comment;
+        return Comment.builder()
+                .content(writeReCommentRequest.getContent())
+                .mentionedMember(writeReCommentRequest.getMentionId())
+                .parentId(parentId)
+                .post(post)
+                .member(member)
+                .likes(0L)
+                .build();
     }
 
 }

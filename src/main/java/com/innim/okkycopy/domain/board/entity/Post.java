@@ -58,7 +58,10 @@ public class Post {
     @OneToMany(mappedBy = "post", cascade = {CascadeType.REMOVE})
     private List<Scrap> scrapList;
     @OneToMany(mappedBy = "post", cascade = {CascadeType.REMOVE})
+    private List<PostLike> postLikeList;
+    @OneToMany(mappedBy = "post", cascade = {CascadeType.REMOVE})
+    private List<PostHate> postHateList;
+    @OneToMany(mappedBy = "post", cascade = {CascadeType.REMOVE})
     private List<Comment> commentList;
-
 
 }
