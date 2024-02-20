@@ -1,5 +1,6 @@
 package com.innim.okkycopy.domain.board.comment;
 
+import com.innim.okkycopy.domain.board.comment.entity.Comment;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

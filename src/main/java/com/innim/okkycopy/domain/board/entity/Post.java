@@ -1,6 +1,6 @@
 package com.innim.okkycopy.domain.board.entity;
 
-import com.innim.okkycopy.domain.board.comment.Comment;
+import com.innim.okkycopy.domain.board.comment.entity.Comment;
 import com.innim.okkycopy.domain.member.entity.Member;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;

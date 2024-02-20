@@ -1,4 +1,4 @@
-package com.innim.okkycopy.domain.board.comment;
+package com.innim.okkycopy.domain.board.comment.entity;
 
 import com.innim.okkycopy.domain.board.comment.dto.request.WriteCommentRequest;
 import com.innim.okkycopy.domain.board.comment.dto.request.WriteReCommentRequest;
