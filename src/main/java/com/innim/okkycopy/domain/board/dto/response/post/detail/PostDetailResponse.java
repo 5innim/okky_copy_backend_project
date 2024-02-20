@@ -9,8 +9,10 @@ import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.Setter;
 
 @Getter
+@Setter
 @AllArgsConstructor
 @Builder
 public class PostDetailResponse {
@@ -21,6 +23,8 @@ public class PostDetailResponse {
     private int views;
     private int likes;
     private LocalDateTime createdDate;
+    private PostRequesterInfoResponse postRequesterInfoResponse;
+
 
     public static PostDetailResponse toPostDetailResponseDto(KnowledgePost knowledgePost, Member member) {
         List<String> tags = new ArrayList<>();
