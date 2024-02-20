@@ -46,7 +46,7 @@ class KnowledgeServiceTest {
 
             // when
             Throwable thrown = catchThrowable(() -> {
-               knowledgeService.selectKnowledgePost(notExistPostId);
+               knowledgeService.selectKnowledgePost(null, notExistPostId);
             });
 
             // then
@@ -63,7 +63,7 @@ class KnowledgeServiceTest {
             given(memberRepository.findByMemberId(knowledgePost.getMember().getMemberId())).willReturn(Optional.empty());
 
             // when
-            PostDetailResponse postDetailResponse = knowledgeService.selectKnowledgePost(postId);
+            PostDetailResponse postDetailResponse = knowledgeService.selectKnowledgePost(null, postId);
 
             // then
             then(knowledgePostRepository).should(times(1)).findByPostId(postId);

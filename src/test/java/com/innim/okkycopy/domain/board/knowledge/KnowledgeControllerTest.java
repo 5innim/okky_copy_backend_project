@@ -46,10 +46,10 @@ class KnowledgeControllerTest {
         // given
         long id = 1l;
         PostDetailResponse postDetailResponse = postDetailRequest();
-        given(service.selectKnowledgePost(id)).willReturn(postDetailResponse);
+        given(service.selectKnowledgePost(null, id)).willReturn(postDetailResponse);
 
         // when
-        ResponseEntity response = controller.getKnowledgePost(id);
+        ResponseEntity response = controller.getKnowledgePost(null, id);
 
         // then
         assertThat(response.getBody()).isEqualTo(postDetailResponse);
