@@ -1,4 +1,4 @@
-package com.innim.okkycopy.domain.board.comment;
+package com.innim.okkycopy.domain.board.comment.repository;
 
 import com.innim.okkycopy.domain.board.comment.entity.Comment;
 import org.springframework.data.jpa.repository.JpaRepository;
