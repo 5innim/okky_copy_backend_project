@@ -36,6 +36,8 @@ public class CommentService {
     private final PostRepository postRepository;
     private final CommentRepository commentRepository;
     private final MemberRepository memberRepository;
+    private final CommentLikeRepository commentLikeRepository;
+    private final CommentHateRepository commentHateRepository;
 
     @PersistenceContext
     private final EntityManager entityManager;
@@ -81,11 +83,19 @@ public class CommentService {
                 .toList();
 
         List<CommentResponse> commentResponses = new ArrayList<>();
+        Member requester = (customUserDetails == null) ? null:customUserDetails.getMember();
         for (Comment comment : parentComments) {
+            CommentRequesterInfoResponse commentRequesterInfoResponse =
+                    (requester == null) ? null:CommentRequesterInfoResponse.builder()
+                            .like(commentLikeRepository.findByMemberAndComment(comment, requester).isPresent())
+                            .hate(commentHateRepository.findByMemberAndComment(comment, requester).isPresent())
+                            .build();
+
             commentResponses.add(
                     CommentResponse.toCommentResponseDto(
                             comment,
-                            null
+                            null,
+                            commentRequesterInfoResponse
                     )
             );
         }
@@ -117,6 +127,7 @@ public class CommentService {
         List<Comment> comments = commentRepository.findByParentId(commentId);
         List<CommentResponse> commentResponses = new ArrayList<>();
 
+        Member requester = (customUserDetails == null) ? null:customUserDetails.getMember();
         for (Comment comment : comments) {
             String mentionedNickname = null;
 
@@ -125,8 +136,14 @@ public class CommentService {
                 mentionedNickname = (member == null) ? "(unknown)":member.getNickname();
             }
 
+            CommentRequesterInfoResponse commentRequesterInfoResponse =
+                    (requester == null) ? null:CommentRequesterInfoResponse.builder()
+                            .like(commentLikeRepository.findByMemberAndComment(comment, requester).isPresent())
+                            .hate(commentHateRepository.findByMemberAndComment(comment, requester).isPresent())
+                            .build();
+
             commentResponses.add(
-                    CommentResponse.toCommentResponseDto(comment, mentionedNickname)
+                    CommentResponse.toCommentResponseDto(comment, mentionedNickname, commentRequesterInfoResponse)
             );
         }
 
