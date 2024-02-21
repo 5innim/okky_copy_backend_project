@@ -20,8 +20,12 @@ public class CommentResponse implements Comparable<CommentResponse> {
     private LocalDateTime createdDate;
     private LocalDateTime lastUpdate;
     private Long likes;
+    private CommentRequesterInfoResponse commentRequesterInfoResponse;
 
-    public static CommentResponse toCommentResponseDto(Comment comment, String mentionedNickname) {
+    public static CommentResponse toCommentResponseDto(
+            Comment comment,
+            String mentionedNickname,
+            CommentRequesterInfoResponse commentRequesterInfoResponse) {
         return CommentResponse.builder()
                 .writerInfoResponse((comment.getMember()==null) ? null:WriterInfoResponse.toWriterInfoRequestDto(comment.getMember()))
                 .mentionedNickname(mentionedNickname)
@@ -30,6 +34,7 @@ public class CommentResponse implements Comparable<CommentResponse> {
                 .lastUpdate(comment.getLastUpdate())
                 .likes(comment.getLikes())
                 .commentId(comment.getCommentId())
+                .commentRequesterInfoResponse(commentRequesterInfoResponse)
                 .build();
     }
 
