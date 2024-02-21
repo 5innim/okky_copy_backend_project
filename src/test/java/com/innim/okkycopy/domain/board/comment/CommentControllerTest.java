@@ -79,10 +79,10 @@ public class CommentControllerTest {
     void getComments() {
         // given
         long id = 1l;
-        given(commentService.selectComments(id)).willReturn(new CommentsResponse(Arrays.asList()));
+        given(commentService.selectComments(null, id)).willReturn(new CommentsResponse(Arrays.asList()));
 
         // when
-        ResponseEntity response = commentController.getComments(id);
+        ResponseEntity response = commentController.getComments(null, id);
 
         // then
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
@@ -121,10 +121,10 @@ public class CommentControllerTest {
     void getReCommentsTest() {
         // given
         long id = 1l;
-        given(commentService.selectReComments(id)).willReturn(new CommentsResponse(Arrays.asList()));
+        given(commentService.selectReComments(null, id)).willReturn(new CommentsResponse(Arrays.asList()));
 
         // when
-        ResponseEntity response = commentController.getReComments(id);
+        ResponseEntity response = commentController.getReComments(null, id);
 
         // then
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);

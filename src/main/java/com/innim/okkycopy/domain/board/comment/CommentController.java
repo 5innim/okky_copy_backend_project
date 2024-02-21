@@ -46,8 +46,10 @@ public class CommentController {
     }
 
     @GetMapping("/posts/{id}/comments")
-    public ResponseEntity<Object> getComments(@PathVariable long id) {
-        return ResponseEntity.ok(commentService.selectComments(id));
+    public ResponseEntity<Object> getComments(
+            @AuthenticationPrincipal CustomUserDetails customUserDetails,
+            @PathVariable long id) {
+        return ResponseEntity.ok(commentService.selectComments(customUserDetails, id));
     }
 
     @PostMapping("/posts/{postId}/comments/{commentId}/recomment")
@@ -61,8 +63,10 @@ public class CommentController {
     }
 
     @GetMapping("/comments/{id}/recomments")
-    public ResponseEntity<Object> getReComments(@PathVariable long id) {
-        return ResponseEntity.status(HttpStatus.OK).body(commentService.selectReComments(id));
+    public ResponseEntity<Object> getReComments(
+            @AuthenticationPrincipal CustomUserDetails customUserDetails,
+            @PathVariable long id) {
+        return ResponseEntity.status(HttpStatus.OK).body(commentService.selectReComments(customUserDetails, id));
     }
 
 }

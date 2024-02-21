@@ -49,7 +49,7 @@ public class CommentServiceTest {
 
             // when
             Throwable thrown = catchThrowable(() -> {
-                commentService.selectComments(notExistPostId);
+                commentService.selectComments(null, notExistPostId);
             });
 
             // then
@@ -78,7 +78,7 @@ public class CommentServiceTest {
             given(postRepository.findByPostId(existPostId)).willReturn(Optional.of(existPost));
 
             // when
-            CommentsResponse response = commentService.selectComments(existPostId);
+            CommentsResponse response = commentService.selectComments(null, existPostId);
 
             // then
             then(postRepository).should(times(1)).findByPostId(existPostId);
@@ -97,7 +97,7 @@ public class CommentServiceTest {
 
             // when
             Throwable thrown = catchThrowable(() -> {
-                commentService.selectReComments(notExistCommentId);
+                commentService.selectReComments(null, notExistCommentId);
             });
 
             // then
@@ -124,7 +124,7 @@ public class CommentServiceTest {
             given(commentRepository.findByParentId(existCommentId)).willReturn(Arrays.asList());
 
             // when
-            CommentsResponse response = commentService.selectReComments(existCommentId);
+            CommentsResponse response = commentService.selectReComments(null, existCommentId);
 
             // then
             then(commentRepository).should(times(1)).findByCommentId(existCommentId);
