@@ -20,8 +20,9 @@ public class PostDetailResponse {
     private String title;
     private String content;
     private List<String> tags;
-    private int views;
-    private int likes;
+    private Integer views;
+    private Integer likes;
+    private Integer hates;
     private LocalDateTime createdDate;
     private PostRequesterInfoResponse postRequesterInfoResponse;
 
@@ -33,17 +34,17 @@ public class PostDetailResponse {
         }
 
         return PostDetailResponse.builder()
-            .writerInfo(WriterInfoResponse.builder()
-                    .memberId(member.getMemberId())
-                    .nickName(member.getNickname())
-                    .profile(member.getProfile()).build())
-            .title(knowledgePost.getTitle())
-            .content(knowledgePost.getContent())
-            .tags(tags)
-            .views(knowledgePost.getViews())
-            .likes(knowledgePost.getLikes())
-            .createdDate(knowledgePost.getCreatedDate())
-            .build();
+                .writerInfo(WriterInfoResponse.builder()
+                        .memberId(member.getMemberId())
+                        .nickName(member.getNickname())
+                        .profile(member.getProfile()).build())
+                .title(knowledgePost.getTitle())
+                .content(knowledgePost.getContent())
+                .tags(tags).views(knowledgePost.getViews())
+                .likes(knowledgePost.getLikes())
+                .hates(knowledgePost.getHates())
+                .createdDate(knowledgePost.getCreatedDate())
+                .build();
     }
 
 }

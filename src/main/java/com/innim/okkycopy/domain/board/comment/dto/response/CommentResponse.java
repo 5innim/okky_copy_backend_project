@@ -19,7 +19,8 @@ public class CommentResponse implements Comparable<CommentResponse> {
     private String content;
     private LocalDateTime createdDate;
     private LocalDateTime lastUpdate;
-    private Long likes;
+    private Integer likes;
+    private Integer hates;
     private CommentRequesterInfoResponse commentRequesterInfoResponse;
 
     public static CommentResponse toCommentResponseDto(
@@ -33,6 +34,7 @@ public class CommentResponse implements Comparable<CommentResponse> {
                 .createdDate(comment.getCreatedDate())
                 .lastUpdate(comment.getLastUpdate())
                 .likes(comment.getLikes())
+                .hates(comment.getHates())
                 .commentId(comment.getCommentId())
                 .commentRequesterInfoResponse(commentRequesterInfoResponse)
                 .build();

@@ -62,7 +62,7 @@ public class CommentServiceTest {
             // given
             long existPostId = 1l;
             Comment existComment = Comment.builder()
-                .likes(0l)
+                .likes(0)
                 .content("test content")
                 .member(WithMockCustomUserSecurityContextFactory.customUserDetailsMock()
                     .getMember())
@@ -111,7 +111,7 @@ public class CommentServiceTest {
             long existCommentId = 1L;
 
             Comment existComment = Comment.builder()
-                    .likes(0l)
+                    .likes(0)
                     .content("test content")
                     .member(WithMockCustomUserSecurityContextFactory.customUserDetailsMock()
                             .getMember())

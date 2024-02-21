@@ -34,7 +34,9 @@ public class Comment {
     @Column(name = "last_update")
     private LocalDateTime lastUpdate;
     @Column(name = "likes", nullable = false)
-    private Long likes;
+    private Integer likes;
+    @Column(name = "hates", nullable = false)
+    private Integer hates;
     @Column(name = "content", nullable = false, length = 20000)
     private String content;
     @Column(name = "parent_id")
@@ -55,7 +57,8 @@ public class Comment {
     public static Comment createComment(Post post, Member member, WriteCommentRequest writeCommentRequest) {
         Comment comment = Comment.builder()
                 .content(writeCommentRequest.getContent())
-                .likes(0L)
+                .likes(0)
+                .hates(0)
                 .post(post)
                 .member(member).build();
 
@@ -80,7 +83,8 @@ public class Comment {
                 .parentId(parentId)
                 .post(post)
                 .member(member)
-                .likes(0L)
+                .likes(0)
+                .hates(0)
                 .build();
     }
 

@@ -38,6 +38,8 @@ public class KnowledgePost extends Post {
     @Column(nullable = false)
     private Integer likes;
     @Column(nullable = false)
+    private Integer hates;
+    @Column(nullable = false)
     private Integer scraps;
     @Column(nullable = false)
     private Integer views;
@@ -45,24 +47,25 @@ public class KnowledgePost extends Post {
     private Integer comments;
 
     public static KnowledgePost createKnowledgePost(WriteRequest writeRequest, BoardTopic boardTopic, Member member) {
-        KnowledgePost knowledgePost = new KnowledgePost();
+        KnowledgePost knowledgePost = KnowledgePost.builder()
+                .member(member)
+                .content(writeRequest.getContent())
+                .title(writeRequest.getTitle())
+                .lastUpdate(null)
+                .boardTopic(boardTopic)
+                .likes(0)
+                .hates(0)
+                .scraps(0)
+                .views(0)
+                .comments(0)
+                .build();
+
         List<Tag> tags = new ArrayList<>();
         for (TagRequest tag : writeRequest.getTags()) {
             tags.add(KnowledgeTag.createKnowledgeTag(knowledgePost, boardTopic, tag.getName()));
         }
-
         member.getPosts().add((Post) knowledgePost);
-
-        knowledgePost.setMember(member);
-        knowledgePost.setContent(writeRequest.getContent());
         knowledgePost.setTags(tags);
-        knowledgePost.setTitle(writeRequest.getTitle());
-        knowledgePost.setLastUpdate(null);
-        knowledgePost.setBoardTopic(boardTopic);
-        knowledgePost.setLikes(0);
-        knowledgePost.setScraps(0);
-        knowledgePost.setViews(0);
-        knowledgePost.setComments(0);
 
         return knowledgePost;
     }
