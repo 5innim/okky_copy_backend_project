@@ -40,5 +40,15 @@ public class PostExpression {
                 .build();
     }
 
+    public static void removePostExpression(
+            EntityManager entityManager,
+            PostExpression postExpression,
+            Post post,
+            ExpressionType type) {
+        if (type.equals(ExpressionType.LIKE)) post.decreaseLikes();
+        else if (type.equals(ExpressionType.HATE)) post.decreaseHates();
+        entityManager.remove(postExpression);
+    }
+
 
 }
