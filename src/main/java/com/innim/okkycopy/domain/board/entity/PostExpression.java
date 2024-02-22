@@ -3,17 +3,18 @@ package com.innim.okkycopy.domain.board.entity;
 import com.innim.okkycopy.domain.board.enums.ExpressionType;
 import com.innim.okkycopy.domain.member.entity.Member;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.DynamicInsert;
 
 @Entity
+@Getter
+@Setter
+@Builder
 @Table(name = "post_expression", uniqueConstraints = {
         @UniqueConstraint(columnNames = {"member_id", "post_id"})})
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
 @DynamicInsert
-@Getter
 public class PostExpression {
     @Id
     @Column(name = "expression_id")
@@ -28,6 +29,16 @@ public class PostExpression {
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private Member member;
+
+    public static PostExpression createPostExpression(Post post, Member member, ExpressionType type) {
+        if (type.equals(ExpressionType.LIKE)) post.increaseLikes();
+        else if (type.equals(ExpressionType.HATE)) post.increaseHates();
+        return PostExpression.builder()
+                .post(post)
+                .member(member)
+                .expressionType(type)
+                .build();
+    }
 
 
 }
