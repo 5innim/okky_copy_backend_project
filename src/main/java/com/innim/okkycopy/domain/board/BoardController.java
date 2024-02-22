@@ -44,6 +44,17 @@ public class BoardController {
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
+    @DeleteMapping("/posts/{id}/like")
+    public ResponseEntity<Object> removeLikeExpression(@AuthenticationPrincipal CustomUserDetails customUserDetails, @PathVariable long id) {
+        boardService.deletePostExpression(customUserDetails.getMember(), id, ExpressionType.LIKE);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
+
+    @DeleteMapping("/posts/{id}/hate")
+    public ResponseEntity<Object> removeHateExpression(@AuthenticationPrincipal CustomUserDetails customUserDetails, @PathVariable long id) {
+        boardService.deletePostExpression(customUserDetails.getMember(), id, ExpressionType.HATE);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
 
 
 }
