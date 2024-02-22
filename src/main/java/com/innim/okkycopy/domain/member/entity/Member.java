@@ -3,10 +3,7 @@ package com.innim.okkycopy.domain.member.entity;
 import com.innim.okkycopy.domain.board.comment.entity.Comment;
 import com.innim.okkycopy.domain.board.comment.entity.CommentHate;
 import com.innim.okkycopy.domain.board.comment.entity.CommentLike;
-import com.innim.okkycopy.domain.board.entity.Post;
-import com.innim.okkycopy.domain.board.entity.PostHate;
-import com.innim.okkycopy.domain.board.entity.PostLike;
-import com.innim.okkycopy.domain.board.entity.Scrap;
+import com.innim.okkycopy.domain.board.entity.*;
 import com.innim.okkycopy.domain.member.dto.request.SignupRequest;
 import com.innim.okkycopy.global.auth.enums.Role;
 import jakarta.persistence.CascadeType;
@@ -70,9 +67,7 @@ public class Member {
     @OneToMany(mappedBy = "member", cascade = {CascadeType.REMOVE})
     private List<Scrap> scrapList;
     @OneToMany(mappedBy = "member", cascade = {CascadeType.REMOVE})
-    private List<PostLike> postLikeList;
-    @OneToMany(mappedBy = "member", cascade = {CascadeType.REMOVE})
-    private List<PostHate> postHateList;
+    private List<PostExpression> postExpressionList;
     @OneToMany(mappedBy = "member", cascade = {CascadeType.REMOVE})
     private List<CommentLike> commentLikeList;
     @OneToMany(mappedBy = "member", cascade = {CascadeType.REMOVE})

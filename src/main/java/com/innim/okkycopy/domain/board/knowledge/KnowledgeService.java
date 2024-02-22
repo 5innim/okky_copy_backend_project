@@ -4,11 +4,12 @@ import com.innim.okkycopy.domain.board.dto.request.write.WriteRequest;
 import com.innim.okkycopy.domain.board.dto.response.post.detail.PostDetailResponse;
 import com.innim.okkycopy.domain.board.dto.response.post.detail.PostRequesterInfoResponse;
 import com.innim.okkycopy.domain.board.entity.BoardTopic;
+import com.innim.okkycopy.domain.board.entity.PostExpression;
+import com.innim.okkycopy.domain.board.enums.ExpressionType;
 import com.innim.okkycopy.domain.board.knowledge.entity.KnowledgePost;
 import com.innim.okkycopy.domain.board.knowledge.repository.KnowledgePostRepository;
 import com.innim.okkycopy.domain.board.repository.BoardTopicRepository;
-import com.innim.okkycopy.domain.board.repository.PostHateRepository;
-import com.innim.okkycopy.domain.board.repository.PostLikeRepository;
+import com.innim.okkycopy.domain.board.repository.PostExpressionRepository;
 import com.innim.okkycopy.domain.board.repository.ScrapRepository;
 import com.innim.okkycopy.domain.member.MemberRepository;
 import com.innim.okkycopy.domain.member.entity.Member;
@@ -31,8 +32,7 @@ public class KnowledgeService {
     private final KnowledgePostRepository knowledgePostRepository;
     private final MemberRepository memberRepository;
     private final ScrapRepository scrapRepository;
-    private final PostLikeRepository postLikeRepository;
-    private final PostHateRepository postHateRepository;
+    private final PostExpressionRepository postExpressionRepository;
 
     @PersistenceContext
     private EntityManager entityManager;
@@ -56,11 +56,12 @@ public class KnowledgeService {
         PostDetailResponse response = PostDetailResponse.toPostDetailResponseDto(knowledgePost, member);
         if (customUserDetails != null) {
             Member requester = customUserDetails.getMember();
+            PostExpression postExpression = postExpressionRepository.findByMemberAndPost(knowledgePost, requester).orElseGet(() -> null);
             response.setPostRequesterInfoResponse(
                     PostRequesterInfoResponse.builder()
                             .scrap(scrapRepository.findByMemberAndPost(knowledgePost, requester).isPresent())
-                            .like(postLikeRepository.findByMemberAndPost(knowledgePost, requester).isPresent())
-                            .hate(postHateRepository.findByMemberAndPost(knowledgePost, requester).isPresent())
+                            .like(postExpression != null && postExpression.getExpressionType().equals(ExpressionType.LIKE))
+                            .hate(postExpression != null && postExpression.getExpressionType().equals(ExpressionType.HATE))
                             .build()
             );
         }
