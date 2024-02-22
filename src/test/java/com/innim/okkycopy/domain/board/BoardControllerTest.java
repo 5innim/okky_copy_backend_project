@@ -101,6 +101,36 @@ class BoardControllerTest {
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
     }
 
+    @Test
+    void removeLikeExpressionTest() {
+        // given
+        CustomUserDetails customUserDetails = WithMockCustomUserSecurityContextFactory.customUserDetailsMock();
+        long id = 1L;
+
+        // when
+        ResponseEntity<Object> response = boardController.removeLikeExpression(customUserDetails, id);
+
+        // then
+        then(boardService).should(times(1))
+                .deletePostExpression(customUserDetails.getMember(), id, ExpressionType.LIKE);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
+    }
+
+    @Test
+    void removeHateExpressionTest() {
+        // given
+        CustomUserDetails customUserDetails = WithMockCustomUserSecurityContextFactory.customUserDetailsMock();
+        long id = 1L;
+
+        // when
+        ResponseEntity<Object> response = boardController.removeHateExpression(customUserDetails, id);
+
+        // then
+        then(boardService).should(times(1))
+                .deletePostExpression(customUserDetails.getMember(), id, ExpressionType.HATE);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
+    }
+
 
     private TopicsResponse topicsResponse() {
         TopicResponse tr1 = new TopicResponse("topic1");
