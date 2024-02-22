@@ -12,8 +12,10 @@ import com.innim.okkycopy.domain.board.dto.request.ScrapRequest;
 import com.innim.okkycopy.domain.board.dto.response.topics.TopicResponse;
 import com.innim.okkycopy.domain.board.dto.response.topics.TopicsResponse;
 import com.innim.okkycopy.domain.board.dto.response.topics.TypeResponse;
+import com.innim.okkycopy.domain.board.enums.ExpressionType;
 import com.innim.okkycopy.domain.member.entity.Member;
 import java.util.Arrays;
+import com.innim.okkycopy.global.auth.CustomUserDetails;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -67,6 +69,36 @@ class BoardControllerTest {
 
         // then
         then(boardService).should(times(1)).cancelScrap(any(Member.class), anyLong());
+    }
+
+    @Test
+    void makeLikeExpressionTest() {
+        // given
+        CustomUserDetails customUserDetails = WithMockCustomUserSecurityContextFactory.customUserDetailsMock();
+        long id = 1L;
+
+        // when
+        ResponseEntity<Object> response = boardController.makeLikeExpression(customUserDetails, id);
+
+        // then
+        then(boardService).should(times(1))
+                .insertPostExpression(customUserDetails.getMember(), id, ExpressionType.LIKE);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
+    }
+
+    @Test
+    void makeHateExpressionTest() {
+        // given
+        CustomUserDetails customUserDetails = WithMockCustomUserSecurityContextFactory.customUserDetailsMock();
+        long id = 1L;
+
+        // when
+        ResponseEntity<Object> response = boardController.makeHateExpression(customUserDetails, id);
+
+        // then
+        then(boardService).should(times(1))
+                .insertPostExpression(customUserDetails.getMember(), id, ExpressionType.HATE);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
     }
 
 
