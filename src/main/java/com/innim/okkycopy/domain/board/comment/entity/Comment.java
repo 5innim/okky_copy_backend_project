@@ -6,10 +6,8 @@ import com.innim.okkycopy.domain.board.entity.Post;
 import com.innim.okkycopy.domain.board.knowledge.entity.KnowledgePost;
 import com.innim.okkycopy.domain.member.entity.Member;
 import jakarta.persistence.*;
-
 import java.time.LocalDateTime;
 import java.util.List;
-
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.DynamicInsert;
@@ -50,9 +48,7 @@ public class Comment {
     @JoinColumn(name = "member_id")
     private Member member;
     @OneToMany(mappedBy = "comment", cascade = {CascadeType.REMOVE})
-    private List<CommentLike> commentLikeList;
-    @OneToMany(mappedBy = "comment", cascade = {CascadeType.REMOVE})
-    private List<CommentHate> commentHateList;
+    private List<CommentExpression> commentExpressionList;
 
     public static Comment createComment(Post post, Member member, WriteCommentRequest writeCommentRequest) {
         Comment comment = Comment.builder()

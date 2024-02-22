@@ -1,8 +1,7 @@
 package com.innim.okkycopy.domain.member.entity;
 
 import com.innim.okkycopy.domain.board.comment.entity.Comment;
-import com.innim.okkycopy.domain.board.comment.entity.CommentHate;
-import com.innim.okkycopy.domain.board.comment.entity.CommentLike;
+import com.innim.okkycopy.domain.board.comment.entity.CommentExpression;
 import com.innim.okkycopy.domain.board.entity.*;
 import com.innim.okkycopy.domain.member.dto.request.SignupRequest;
 import com.innim.okkycopy.global.auth.enums.Role;
@@ -69,9 +68,7 @@ public class Member {
     @OneToMany(mappedBy = "member", cascade = {CascadeType.REMOVE})
     private List<PostExpression> postExpressionList;
     @OneToMany(mappedBy = "member", cascade = {CascadeType.REMOVE})
-    private List<CommentLike> commentLikeList;
-    @OneToMany(mappedBy = "member", cascade = {CascadeType.REMOVE})
-    private List<CommentHate> commentHateList;
+    private List<CommentExpression> commentExpressionList;
     @OneToMany(mappedBy = "member")
     private List<Comment> comments;
 

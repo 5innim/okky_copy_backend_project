@@ -6,10 +6,11 @@ import com.innim.okkycopy.domain.board.comment.dto.response.CommentRequesterInfo
 import com.innim.okkycopy.domain.board.comment.dto.response.CommentResponse;
 import com.innim.okkycopy.domain.board.comment.dto.response.CommentsResponse;
 import com.innim.okkycopy.domain.board.comment.entity.Comment;
-import com.innim.okkycopy.domain.board.comment.repository.CommentHateRepository;
-import com.innim.okkycopy.domain.board.comment.repository.CommentLikeRepository;
+import com.innim.okkycopy.domain.board.comment.entity.CommentExpression;
+import com.innim.okkycopy.domain.board.comment.repository.CommentExpressionRepository;
 import com.innim.okkycopy.domain.board.comment.repository.CommentRepository;
 import com.innim.okkycopy.domain.board.entity.Post;
+import com.innim.okkycopy.domain.board.enums.ExpressionType;
 import com.innim.okkycopy.domain.board.repository.PostRepository;
 import com.innim.okkycopy.domain.member.MemberRepository;
 import com.innim.okkycopy.domain.member.entity.Member;
@@ -23,7 +24,6 @@ import jakarta.persistence.PersistenceContext;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -36,8 +36,7 @@ public class CommentService {
     private final PostRepository postRepository;
     private final CommentRepository commentRepository;
     private final MemberRepository memberRepository;
-    private final CommentLikeRepository commentLikeRepository;
-    private final CommentHateRepository commentHateRepository;
+    private final CommentExpressionRepository commentExpressionRepository;
 
     @PersistenceContext
     private final EntityManager entityManager;
@@ -85,10 +84,13 @@ public class CommentService {
         List<CommentResponse> commentResponses = new ArrayList<>();
         Member requester = (customUserDetails == null) ? null:customUserDetails.getMember();
         for (Comment comment : parentComments) {
+            CommentExpression commentExpression = (requester == null) ? null:commentExpressionRepository
+                    .findByMemberAndComment(comment, requester)
+                    .orElseGet(() -> null);
             CommentRequesterInfoResponse commentRequesterInfoResponse =
                     (requester == null) ? null:CommentRequesterInfoResponse.builder()
-                            .like(commentLikeRepository.findByMemberAndComment(comment, requester).isPresent())
-                            .hate(commentHateRepository.findByMemberAndComment(comment, requester).isPresent())
+                            .like(commentExpression != null && commentExpression.getExpressionType().equals(ExpressionType.LIKE))
+                            .hate(commentExpression != null && commentExpression.getExpressionType().equals(ExpressionType.HATE))
                             .build();
 
             commentResponses.add(
@@ -135,11 +137,14 @@ public class CommentService {
                 Member member = memberRepository.findByMemberId(comment.getMentionedMember()).orElseGet(() -> null);
                 mentionedNickname = (member == null) ? "(unknown)":member.getNickname();
             }
+            CommentExpression commentExpression = commentExpressionRepository
+                    .findByMemberAndComment(comment, requester)
+                    .orElseGet(() -> null);
 
             CommentRequesterInfoResponse commentRequesterInfoResponse =
                     (requester == null) ? null:CommentRequesterInfoResponse.builder()
-                            .like(commentLikeRepository.findByMemberAndComment(comment, requester).isPresent())
-                            .hate(commentHateRepository.findByMemberAndComment(comment, requester).isPresent())
+                            .like(commentExpression != null && commentExpression.getExpressionType().equals(ExpressionType.LIKE))
+                            .hate(commentExpression != null && commentExpression.getExpressionType().equals(ExpressionType.HATE))
                             .build();
 
             commentResponses.add(
