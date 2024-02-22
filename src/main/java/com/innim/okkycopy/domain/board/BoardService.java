@@ -12,10 +12,7 @@ import com.innim.okkycopy.domain.board.repository.PostRepository;
 import com.innim.okkycopy.domain.board.repository.ScrapRepository;
 import com.innim.okkycopy.domain.member.entity.Member;
 import com.innim.okkycopy.global.error.ErrorCode;
-import com.innim.okkycopy.global.error.exception.AlreadyExistExpressionException;
-import com.innim.okkycopy.global.error.exception.FailInitializationException;
-import com.innim.okkycopy.global.error.exception.NoSuchPostException;
-import com.innim.okkycopy.global.error.exception.NoSuchScrapException;
+import com.innim.okkycopy.global.error.exception.*;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import java.util.List;
@@ -71,6 +68,16 @@ public class BoardService {
             throw new AlreadyExistExpressionException(ErrorCode._400_ALREADY_EXIST_EXPRESSION);
         PostExpression postExpression = PostExpression.createPostExpression(post, mergedMember, type);
         entityManager.persist(postExpression);
+    }
+
+    @Transactional
+    public void deletePostExpression(Member member, long postId, ExpressionType type) {
+        Member mergedMember = entityManager.merge(member);
+        Post post = postRepository.findByPostId(postId).orElseThrow(() -> new NoSuchPostException(ErrorCode._400_NO_SUCH_POST));
+        PostExpression postExpression = postExpressionRepository.findByMemberAndPost(post, mergedMember).orElseGet(() -> null);
+        if (postExpression == null || !postExpression.getExpressionType().equals(type))
+            throw new NotRegisteredBeforeException(ErrorCode._400_NOT_REGISTERED_BEFORE);
+        PostExpression.removePostExpression(entityManager, postExpression, post, type);
     }
 
 }
