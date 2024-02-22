@@ -43,47 +43,48 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-            .sessionManagement(this::sessionManagementConfigure)
-            .headers(this::headersConfigure)
-            .csrf(this::csrfConfigure)
-            .logout(this::logoutConfigure)
-            .servletApi(this::servletApiConfigure)
-            .anonymous(this::anonymousConfigure)
-            .exceptionHandling(this::exceptionHandlingConfigure)
-            .authorizeHttpRequests(request -> {
-                request.requestMatchers(HttpMethod.POST,
-                        "/board/knowledge/write",
-                        "/board/post/scrap",
-                        "/board/posts/{id}/comment",
-                        "/board/posts/{postId}/comments/{commentId}/recomment").hasAnyAuthority(Role.USER.getValue(), Role.ADMIN.getValue())
-                    .requestMatchers(HttpMethod.DELETE,
-                        "/board/post/scrap",
-                        "/board/knowledge/posts/{id}",
-                        "/board/comments/{id}").hasAnyAuthority(Role.USER.getValue(), Role.ADMIN.getValue())
-                    .requestMatchers(HttpMethod.PUT,
-                        "/board/knowledge/posts/{id}",
-                        "/board/comments/{id}").hasAnyAuthority(Role.USER.getValue(), Role.ADMIN.getValue())
-                    .requestMatchers(HttpMethod.GET,
-                        "/board/topics",
-                        "/board/knowledge/posts/{id}",
-                        "/member/info",
-                        "/board/posts/{id}/comments",
-                        "/board/comments/{id}/recomments").permitAll()
-                    .requestMatchers(HttpMethod.POST, "/member/signup").permitAll();
-            })
-            .apply(new CustomDsl());
+                .sessionManagement(this::sessionManagementConfigure)
+                .headers(this::headersConfigure)
+                .csrf(this::csrfConfigure)
+                .logout(this::logoutConfigure)
+                .servletApi(this::servletApiConfigure)
+                .anonymous(this::anonymousConfigure)
+                .exceptionHandling(this::exceptionHandlingConfigure)
+                .authorizeHttpRequests(request -> {
+                    request.requestMatchers(HttpMethod.POST,
+                                    "/board/knowledge/write",
+                                    "/board/post/scrap",
+                                    "/board/posts/{id}/comment",
+                                    "/board/posts/{postId}/comments/{commentId}/recomment",
+                                    "/board/posts/{id}/like",
+                                    "/board/posts/{id}/hate").hasAnyAuthority(Role.USER.getValue(), Role.ADMIN.getValue())
+                            .requestMatchers(HttpMethod.DELETE,
+                                    "/board/post/scrap",
+                                    "/board/knowledge/posts/{id}",
+                                    "/board/comments/{id}").hasAnyAuthority(Role.USER.getValue(), Role.ADMIN.getValue())
+                            .requestMatchers(HttpMethod.PUT,
+                                    "/board/knowledge/posts/{id}",
+                                    "/board/comments/{id}").hasAnyAuthority(Role.USER.getValue(), Role.ADMIN.getValue())
+                            .requestMatchers(HttpMethod.GET,
+                                    "/board/topics",
+                                    "/board/knowledge/posts/{id}",
+                                    "/member/info",
+                                    "/board/posts/{id}/comments",
+                                    "/board/comments/{id}/recomments").permitAll()
+                            .requestMatchers(HttpMethod.POST, "/member/signup").permitAll();
+                }).apply(new CustomDsl());
 
         return http.build();
     }
 
     private SessionManagementConfigurer<HttpSecurity> sessionManagementConfigure(
-        SessionManagementConfigurer<HttpSecurity> configure) {
+            SessionManagementConfigurer<HttpSecurity> configure) {
         configure.disable();
         return configure;
     }
 
     private HeadersConfigurer<HttpSecurity> headersConfigure(
-        HeadersConfigurer<HttpSecurity> configure) {
+            HeadersConfigurer<HttpSecurity> configure) {
         configure.disable();
         return configure;
     }
@@ -94,25 +95,25 @@ public class SecurityConfig {
     }
 
     private LogoutConfigurer<HttpSecurity> logoutConfigure(
-        LogoutConfigurer<HttpSecurity> configure) {
+            LogoutConfigurer<HttpSecurity> configure) {
         configure.disable();
         return configure;
     }
 
     private ServletApiConfigurer<HttpSecurity> servletApiConfigure(
-        ServletApiConfigurer<HttpSecurity> configure) {
+            ServletApiConfigurer<HttpSecurity> configure) {
         configure.disable();
         return configure;
     }
 
     private AnonymousConfigurer<HttpSecurity> anonymousConfigure(
-        AnonymousConfigurer<HttpSecurity> configure) {
+            AnonymousConfigurer<HttpSecurity> configure) {
         configure.disable();
         return configure;
     }
 
     private ExceptionHandlingConfigurer<HttpSecurity> exceptionHandlingConfigure(
-        ExceptionHandlingConfigurer<HttpSecurity> configure) {
+            ExceptionHandlingConfigurer<HttpSecurity> configure) {
         configure.disable();
         return configure;
     }
@@ -122,12 +123,12 @@ public class SecurityConfig {
         @Override
         public void configure(HttpSecurity http) throws Exception {
             http.addFilterAt(new IdPasswordAuthenticationFilter(http.getSharedObject(
-                        AuthenticationManager.class), authService),
-                    UsernamePasswordAuthenticationFilter.class)
-                .addFilterAfter(new JwtAuthenticationFilter(userDetailsService),
-                    IdPasswordAuthenticationFilter.class)
-                .addFilterAfter(new JwtRefreshFilter(authService),
-                    JwtAuthenticationFilter.class);
+                                    AuthenticationManager.class), authService),
+                            UsernamePasswordAuthenticationFilter.class)
+                    .addFilterAfter(new JwtAuthenticationFilter(userDetailsService),
+                            IdPasswordAuthenticationFilter.class)
+                    .addFilterAfter(new JwtRefreshFilter(authService),
+                            JwtAuthenticationFilter.class);
         }
 
     }
