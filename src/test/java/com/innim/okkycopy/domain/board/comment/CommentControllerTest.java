@@ -4,6 +4,7 @@ import com.innim.okkycopy.common.WithMockCustomUserSecurityContextFactory;
 import com.innim.okkycopy.domain.board.comment.dto.request.WriteCommentRequest;
 import com.innim.okkycopy.domain.board.comment.dto.request.WriteReCommentRequest;
 import com.innim.okkycopy.domain.board.comment.dto.response.CommentsResponse;
+import com.innim.okkycopy.domain.board.enums.ExpressionType;
 import com.innim.okkycopy.global.auth.CustomUserDetails;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -128,6 +129,36 @@ public class CommentControllerTest {
 
         // then
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+    }
+
+    @Test
+    void makeLikeExpressionTest() {
+        // given
+        CustomUserDetails customUserDetails = WithMockCustomUserSecurityContextFactory.customUserDetailsMock();
+        long id = 1L;
+
+        // when
+        ResponseEntity<Object> response = commentController.makeLikeExpression(customUserDetails, id);
+
+        // then
+        then(commentService).should(times(1))
+                .insertCommentExpression(customUserDetails.getMember(), id, ExpressionType.LIKE);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
+    }
+
+    @Test
+    void makeHateExpressionTest() {
+        // given
+        CustomUserDetails customUserDetails = WithMockCustomUserSecurityContextFactory.customUserDetailsMock();
+        long id = 1L;
+
+        // when
+        ResponseEntity<Object> response = commentController.makeHateExpression(customUserDetails, id);
+
+        // then
+        then(commentService).should(times(1))
+                .insertCommentExpression(customUserDetails.getMember(), id, ExpressionType.HATE);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
     }
 
     WriteCommentRequest commentRequest() {
