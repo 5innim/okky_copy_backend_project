@@ -161,6 +161,36 @@ public class CommentControllerTest {
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
     }
 
+    @Test
+    void removeLikeExpressionTest() {
+        // given
+        CustomUserDetails customUserDetails = WithMockCustomUserSecurityContextFactory.customUserDetailsMock();
+        long id = 1L;
+
+        // when
+        ResponseEntity<Object> response = commentController.removeLikeExpression(customUserDetails, id);
+
+        // then
+        then(commentService).should(times(1))
+                .deleteCommentExpression(customUserDetails.getMember(), id, ExpressionType.LIKE);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
+    }
+
+    @Test
+    void removeHateExpressionTest() {
+        // given
+        CustomUserDetails customUserDetails = WithMockCustomUserSecurityContextFactory.customUserDetailsMock();
+        long id = 1L;
+
+        // when
+        ResponseEntity<Object> response = commentController.removeHateExpression(customUserDetails, id);
+
+        // then
+        then(commentService).should(times(1))
+                .deleteCommentExpression(customUserDetails.getMember(), id, ExpressionType.HATE);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
+    }
+
     WriteCommentRequest commentRequest() {
         return new WriteCommentRequest("test comment");
     }
