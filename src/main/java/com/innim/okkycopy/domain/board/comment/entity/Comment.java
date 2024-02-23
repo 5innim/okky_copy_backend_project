@@ -84,4 +84,22 @@ public class Comment {
                 .build();
     }
 
+    public void increaseLikes() {
+        this.likes += 1;
+    }
+
+    public void decreaseLikes() {
+        this.likes -= 1;
+    }
+
+    public void increaseHates() {
+        this.hates += 1;
+    }
+
+    public void decreaseHates() {
+        this.hates -= 1;
+    }
+
+
+
 }
