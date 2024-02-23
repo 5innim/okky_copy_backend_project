@@ -49,6 +49,16 @@ public class CommentExpression {
 
         return true;
     }
+
+    public static void removeCommentExpression(
+            EntityManager entityManager,
+            CommentExpression commentExpression,
+            Comment comment,
+            ExpressionType type) {
+        if (type.equals(ExpressionType.LIKE)) comment.decreaseLikes();
+        else if (type.equals(ExpressionType.HATE)) comment.decreaseHates();
+        entityManager.remove(commentExpression);
+    }
 }
 
 
