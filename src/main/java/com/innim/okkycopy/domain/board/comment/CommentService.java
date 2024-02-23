@@ -16,9 +16,7 @@ import com.innim.okkycopy.domain.member.MemberRepository;
 import com.innim.okkycopy.domain.member.entity.Member;
 import com.innim.okkycopy.global.auth.CustomUserDetails;
 import com.innim.okkycopy.global.error.ErrorCode;
-import com.innim.okkycopy.global.error.exception.NoAuthorityException;
-import com.innim.okkycopy.global.error.exception.NoSuchCommentException;
-import com.innim.okkycopy.global.error.exception.NoSuchPostException;
+import com.innim.okkycopy.global.error.exception.*;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import lombok.RequiredArgsConstructor;
@@ -101,7 +99,6 @@ public class CommentService {
                     )
             );
         }
-
         Collections.sort(commentResponses);
 
         return new CommentsResponse(commentResponses);
@@ -132,7 +129,6 @@ public class CommentService {
         Member requester = (customUserDetails == null) ? null:customUserDetails.getMember();
         for (Comment comment : comments) {
             String mentionedNickname = null;
-
             if (comment.getMentionedMember() != null) {
                 Member member = memberRepository.findByMemberId(comment.getMentionedMember()).orElseGet(() -> null);
                 mentionedNickname = (member == null) ? "(unknown)":member.getNickname();
@@ -151,9 +147,20 @@ public class CommentService {
                     CommentResponse.toCommentResponseDto(comment, mentionedNickname, commentRequesterInfoResponse)
             );
         }
-
         Collections.sort(commentResponses);
 
         return new CommentsResponse(commentResponses);
+    }
+
+    @Transactional
+    public void insertCommentExpression(Member member, long commentId, ExpressionType type) {
+        Member mergedMember = entityManager.merge(member);
+        Comment comment = commentRepository
+                .findByCommentId(commentId)
+                .orElseThrow(() -> new NoSuchCommentException(ErrorCode._400_NO_SUCH_COMMENT));
+        if (commentExpressionRepository.findByMemberAndComment(comment, mergedMember).isPresent())
+            throw new AlreadyExistExpressionException(ErrorCode._400_ALREADY_EXIST_EXPRESSION);
+        if (CommentExpression.isNotSupportedCase(comment)) throw new NotSupportedCase(ErrorCode._400_NOT_SUPPORTED_CASE);
+        entityManager.persist(CommentExpression.createCommentExpression(comment, mergedMember, type));
     }
 }
