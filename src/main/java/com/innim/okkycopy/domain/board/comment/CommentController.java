@@ -84,4 +84,16 @@ public class CommentController {
         commentService.insertCommentExpression(customUserDetails.getMember(), id, ExpressionType.HATE);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
+
+    @DeleteMapping("/comments/{id}/like")
+    public ResponseEntity<Object> removeLikeExpression(@AuthenticationPrincipal CustomUserDetails customUserDetails, @PathVariable long id) {
+        commentService.deleteCommentExpression(customUserDetails.getMember(), id, ExpressionType.LIKE);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
+
+    @DeleteMapping("/comments/{id}/hate")
+    public ResponseEntity<Object> removeHateExpression(@AuthenticationPrincipal CustomUserDetails customUserDetails, @PathVariable long id) {
+        commentService.deleteCommentExpression(customUserDetails.getMember(), id, ExpressionType.HATE);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
 }
