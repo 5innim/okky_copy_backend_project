@@ -163,4 +163,14 @@ public class CommentService {
         if (CommentExpression.isNotSupportedCase(comment)) throw new NotSupportedCase(ErrorCode._400_NOT_SUPPORTED_CASE);
         entityManager.persist(CommentExpression.createCommentExpression(comment, mergedMember, type));
     }
+
+    @Transactional
+    public void deleteCommentExpression(Member member, long commentId, ExpressionType type) {
+        Member mergedMember = entityManager.merge(member);
+        Comment comment = commentRepository.findByCommentId(commentId).orElseThrow(() -> new NoSuchCommentException(ErrorCode._400_NO_SUCH_COMMENT));
+        CommentExpression commentExpression = commentExpressionRepository.findByMemberAndComment(comment, mergedMember).orElseGet(() -> null);
+        if (commentExpression == null || !commentExpression.getExpressionType().equals(type))
+            throw new NotRegisteredBeforeException(ErrorCode._400_NOT_REGISTERED_BEFORE);
+        CommentExpression.removeCommentExpression(entityManager, commentExpression, comment, type);
+    }
 }
