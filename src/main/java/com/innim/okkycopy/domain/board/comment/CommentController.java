@@ -2,6 +2,7 @@ package com.innim.okkycopy.domain.board.comment;
 
 import com.innim.okkycopy.domain.board.comment.dto.request.WriteCommentRequest;
 import com.innim.okkycopy.domain.board.comment.dto.request.WriteReCommentRequest;
+import com.innim.okkycopy.domain.board.enums.ExpressionType;
 import com.innim.okkycopy.global.auth.CustomUserDetails;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -68,4 +69,19 @@ public class CommentController {
         return ResponseEntity.status(HttpStatus.OK).body(commentService.selectReComments(customUserDetails, id));
     }
 
+    @PostMapping("/comments/{id}/like")
+    public ResponseEntity<Object> makeLikeExpression(
+            @AuthenticationPrincipal CustomUserDetails customUserDetails,
+            @PathVariable long id) {
+        commentService.insertCommentExpression(customUserDetails.getMember(), id, ExpressionType.LIKE);
+        return ResponseEntity.status(HttpStatus.CREATED).build();
+    }
+
+    @PostMapping("/comments/{id}/hate")
+    public ResponseEntity<Object> makeHateExpression(
+            @AuthenticationPrincipal CustomUserDetails customUserDetails,
+            @PathVariable long id) {
+        commentService.insertCommentExpression(customUserDetails.getMember(), id, ExpressionType.HATE);
+        return ResponseEntity.status(HttpStatus.CREATED).build();
+    }
 }
