@@ -1,6 +1,7 @@
 package com.innim.okkycopy.domain.board.knowledge;
 
 import com.innim.okkycopy.domain.board.dto.request.write.WriteRequest;
+import com.innim.okkycopy.domain.board.dto.response.post.brief.PostsResponse;
 import com.innim.okkycopy.domain.board.dto.response.post.detail.PostDetailResponse;
 import com.innim.okkycopy.domain.board.dto.response.post.detail.PostRequesterInfoResponse;
 import com.innim.okkycopy.domain.board.entity.BoardTopic;
@@ -18,9 +19,12 @@ import com.innim.okkycopy.global.error.ErrorCode;
 import com.innim.okkycopy.global.error.exception.NoAuthorityException;
 import com.innim.okkycopy.global.error.exception.NoSuchPostException;
 import com.innim.okkycopy.global.error.exception.NoSuchTopicException;
+import com.innim.okkycopy.global.error.exception.NotSupportedCase;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -87,5 +91,20 @@ public class KnowledgeService {
 
         if (knowledgePost.getMember().getMemberId() != mergedMember.getMemberId()) throw new NoAuthorityException(ErrorCode._403_NO_AUTHORITY);
         entityManager.remove(knowledgePost);
+    }
+
+    public PostsResponse selectKnowledgePostsByCondition(Long topicId, String keyword, Pageable pageable) {
+        Page<KnowledgePost> knowledgePostPage;
+        if (topicId == null) {
+            knowledgePostPage = knowledgePostRepository.findAll((keyword == null) ? "":keyword, pageable);
+        } else {
+            BoardTopic boardTopic = boardTopicRepository
+                    .findByTopicId(topicId)
+                    .orElseThrow(() -> new NoSuchTopicException(ErrorCode._400_NO_SUCH_TOPIC));
+            if (boardTopic.getBoardType().getTypeId() != 2) throw new NotSupportedCase(ErrorCode._400_NOT_SUPPORTED_CASE);
+            knowledgePostPage = knowledgePostRepository.findByTopicId(boardTopic, (keyword == null) ? "":keyword, pageable);
+        }
+
+        return PostsResponse.createPostsResponse(knowledgePostPage);
     }
 }
