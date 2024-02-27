@@ -31,6 +31,7 @@ public class BoardService {
     @PersistenceContext
     private EntityManager entityManager;
 
+    @Transactional(readOnly = true)
     public TopicsResponse findAllBoardTopics() {
         List<BoardType> boardTypes = boardTypeRepository.findAll();
 

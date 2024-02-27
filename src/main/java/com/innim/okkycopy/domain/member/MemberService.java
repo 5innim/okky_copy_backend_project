@@ -47,7 +47,7 @@ public class MemberService {
         return BriefMemberInfo.toDto(member);
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     public MemberInfo selectMember(Member member) {
         Member mergedMember = entityManager.merge(member);
 

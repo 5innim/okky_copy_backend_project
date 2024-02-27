@@ -9,6 +9,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -17,6 +18,7 @@ public class CustomUserDetailsService implements UserDetailsService {
     private final MemberRepository memberRepository;
 
     @Override
+    @Transactional(readOnly = true)
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
         Optional<Member> member = memberRepository.findById(username);
@@ -25,6 +27,7 @@ public class CustomUserDetailsService implements UserDetailsService {
         return new CustomUserDetails(member.get());
     }
 
+    @Transactional(readOnly = true)
     public UserDetails loadUserByUserId(Long userId) throws UserIdNotFoundException {
         Optional<Member> member = memberRepository.findByMemberId(userId);
         if (member.isEmpty()) throw new UserIdNotFoundException("can not find user with " + "[" + userId + "]");

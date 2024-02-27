@@ -73,6 +73,7 @@ public class CommentService {
         Comment.removeComment(comment, entityManager);
     }
 
+    @Transactional(readOnly = true)
     public CommentsResponse selectComments(CustomUserDetails customUserDetails, long postId) {
         Post post = postRepository.findByPostId(postId).orElseThrow(() -> new NoSuchPostException(ErrorCode._400_NO_SUCH_POST));
         List<Comment> parentComments = post.getCommentList().stream()
@@ -120,6 +121,7 @@ public class CommentService {
         entityManager.persist(reComment);
     }
 
+    @Transactional(readOnly = true)
     public CommentsResponse selectReComments(CustomUserDetails customUserDetails, long commentId) {
         commentRepository.findByCommentId(commentId).orElseThrow(() -> new NoSuchCommentException(ErrorCode._400_NO_SUCH_COMMENT));
 
