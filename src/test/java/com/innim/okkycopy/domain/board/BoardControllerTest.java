@@ -133,12 +133,12 @@ class BoardControllerTest {
 
 
     private TopicsResponse topicsResponse() {
-        TopicResponse tr1 = new TopicResponse("topic1");
-        TopicResponse tr2 = new TopicResponse("topic2");
-        TopicResponse tr3 = new TopicResponse("topic3");
+        TopicResponse tr1 = new TopicResponse("topic1", 1);
+        TopicResponse tr2 = new TopicResponse("topic2", 2);
+        TopicResponse tr3 = new TopicResponse("topic3", 3);
 
-        TypeResponse typeResponse1 = new TypeResponse(Arrays.asList(tr1, tr2));
-        TypeResponse typeResponse2 = new TypeResponse(Arrays.asList(tr3));
+        TypeResponse typeResponse1 = new TypeResponse("type1", 1, Arrays.asList(tr1, tr2));
+        TypeResponse typeResponse2 = new TypeResponse("type2", 2, Arrays.asList(tr3));
 
         return new TopicsResponse(Arrays.asList(typeResponse1, typeResponse2));
     }

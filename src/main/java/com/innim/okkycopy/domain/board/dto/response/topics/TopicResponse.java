@@ -7,4 +7,5 @@ import lombok.Getter;
 @AllArgsConstructor
 public class TopicResponse {
     String name;
+    long topicId;
 }

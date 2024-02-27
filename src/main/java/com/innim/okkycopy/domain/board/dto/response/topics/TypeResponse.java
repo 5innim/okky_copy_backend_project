@@ -12,14 +12,17 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 public class TypeResponse {
-    private List<TopicResponse> topics;
+    String name;
+    long typeId;
+    List<TopicResponse> topics;
 
     public static TypeResponse toDto(BoardType boardType) {
         List<TopicResponse> topicList = new ArrayList<>();
+
         for (BoardTopic boardTopic : boardType.getBoardTopics()) {
-            topicList.add(new TopicResponse(boardTopic.getName()));
+            topicList.add(new TopicResponse(boardTopic.getName(), boardTopic.getTopicId()));
         }
-        return new TypeResponse(topicList);
+        return new TypeResponse(boardType.getName(), boardType.getTypeId(), topicList);
     }
 
 }
