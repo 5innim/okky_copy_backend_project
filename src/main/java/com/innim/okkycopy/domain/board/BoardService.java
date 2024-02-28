@@ -45,12 +45,7 @@ public class BoardService {
     public void scrapPost(Member member, long postId) {
         Member mergedMember = entityManager.merge(member);
         Post post = postRepository.findByPostId(postId).orElseThrow(() -> new NoSuchPostException(ErrorCode._400_NO_SUCH_POST));
-        Scrap scrap = Scrap.builder()
-            .post(post)
-            .member(mergedMember)
-            .build();
-
-        entityManager.persist(scrap);
+        entityManager.persist(Scrap.createScrap(post,mergedMember));
     }
 
     @Transactional
@@ -58,7 +53,7 @@ public class BoardService {
         Member mergedMember = entityManager.merge(member);
         Post post = postRepository.findByPostId(postId).orElseThrow(() -> new NoSuchPostException(ErrorCode._400_NO_SUCH_POST));
         Scrap scrap = scrapRepository.findByMemberAndPost(post, mergedMember).orElseThrow(() -> new NoSuchScrapException(ErrorCode._400_NO_SUCH_SCRAP));
-        entityManager.remove(scrap);
+        Scrap.removeScrap(entityManager, scrap);
     }
 
     @Transactional

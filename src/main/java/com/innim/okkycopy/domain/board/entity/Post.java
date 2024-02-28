@@ -82,4 +82,14 @@ public class Post {
         if (this instanceof KnowledgePost)
             ((KnowledgePost) this).setHates(((KnowledgePost) this).getHates() - 1);
     }
+
+    public void increaseScraps() {
+        if (this instanceof KnowledgePost)
+            ((KnowledgePost) this).setScraps(((KnowledgePost) this).getScraps() - 1);
+    }
+
+    public void decreaseScraps() {
+        if (this instanceof KnowledgePost)
+            ((KnowledgePost) this).setScraps(((KnowledgePost) this).getScraps() - 1);
+    }
 }
