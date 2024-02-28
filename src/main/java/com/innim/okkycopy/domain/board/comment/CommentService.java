@@ -68,8 +68,12 @@ public class CommentService {
         Comment comment = commentRepository.findByCommentId(commentId).orElseThrow(() -> new NoSuchCommentException(ErrorCode._400_NO_SUCH_COMMENT));
 
         if (comment.getMember().getMemberId() != mergedMember.getMemberId()) throw new NoAuthorityException(ErrorCode._403_NO_AUTHORITY);
-
+        List<Comment> commentList = commentRepository.findByParentId(comment.getCommentId());
+        for (Comment c : commentList) {
+            Comment.removeComment(c, entityManager);
+        }
         Comment.removeComment(comment, entityManager);
+
     }
 
     @Transactional(readOnly = true)
