@@ -19,7 +19,7 @@ import com.innim.okkycopy.global.error.ErrorCode;
 import com.innim.okkycopy.global.error.exception.NoAuthorityException;
 import com.innim.okkycopy.global.error.exception.NoSuchPostException;
 import com.innim.okkycopy.global.error.exception.NoSuchTopicException;
-import com.innim.okkycopy.global.error.exception.NotSupportedCase;
+import com.innim.okkycopy.global.error.exception.NotSupportedCaseException;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import lombok.RequiredArgsConstructor;
@@ -103,7 +103,7 @@ public class KnowledgeService {
             BoardTopic boardTopic = boardTopicRepository
                     .findByTopicId(topicId)
                     .orElseThrow(() -> new NoSuchTopicException(ErrorCode._400_NO_SUCH_TOPIC));
-            if (boardTopic.getBoardType().getTypeId() != 2) throw new NotSupportedCase(ErrorCode._400_NOT_SUPPORTED_CASE);
+            if (boardTopic.getBoardType().getTypeId() != 2) throw new NotSupportedCaseException(ErrorCode._400_NOT_SUPPORTED_CASE);
             knowledgePostPage = knowledgePostRepository.findByTopicId(boardTopic, (keyword == null) ? "":keyword, pageable);
         }
 

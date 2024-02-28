@@ -2,9 +2,9 @@ package com.innim.okkycopy.global.error.exception;
 
 import com.innim.okkycopy.global.error.ErrorCode;
 
-public class NotSupportedCase extends ServiceException {
+public class NotSupportedCaseException extends ServiceException {
 
-    public NotSupportedCase(ErrorCode errorCode) {
+    public NotSupportedCaseException(ErrorCode errorCode) {
         super(errorCode);
     }
 }

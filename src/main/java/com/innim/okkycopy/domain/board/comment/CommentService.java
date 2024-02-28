@@ -162,7 +162,7 @@ public class CommentService {
                 .orElseThrow(() -> new NoSuchCommentException(ErrorCode._400_NO_SUCH_COMMENT));
         if (commentExpressionRepository.findByMemberAndComment(comment, mergedMember).isPresent())
             throw new AlreadyExistExpressionException(ErrorCode._400_ALREADY_EXIST_EXPRESSION);
-        if (CommentExpression.isNotSupportedCase(comment)) throw new NotSupportedCase(ErrorCode._400_NOT_SUPPORTED_CASE);
+        if (CommentExpression.isNotSupportedCase(comment)) throw new NotSupportedCaseException(ErrorCode._400_NOT_SUPPORTED_CASE);
         entityManager.persist(CommentExpression.createCommentExpression(comment, mergedMember, type));
     }
 
