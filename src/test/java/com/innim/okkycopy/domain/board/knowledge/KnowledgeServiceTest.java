@@ -13,6 +13,7 @@ import com.innim.okkycopy.domain.board.entity.BoardType;
 import com.innim.okkycopy.domain.board.entity.Post;
 import com.innim.okkycopy.domain.board.knowledge.entity.KnowledgePost;
 import com.innim.okkycopy.domain.board.knowledge.repository.KnowledgePostRepository;
+import com.innim.okkycopy.domain.board.repository.BoardTopicRepository;
 import com.innim.okkycopy.domain.member.MemberRepository;
 import com.innim.okkycopy.domain.member.entity.Member;
 import com.innim.okkycopy.global.error.exception.NoSuchPostException;
@@ -20,17 +21,23 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+
+import com.innim.okkycopy.global.error.exception.NoSuchTopicException;
+import com.innim.okkycopy.global.error.exception.NotSupportedCaseException;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Pageable;
 
 @ExtendWith(MockitoExtension.class)
 class KnowledgeServiceTest {
     @Mock
     KnowledgePostRepository knowledgePostRepository;
+    @Mock
+    BoardTopicRepository boardTopicRepository;
     @Mock
     MemberRepository memberRepository;
     @InjectMocks
@@ -97,6 +104,50 @@ class KnowledgeServiceTest {
                 .boardType(BoardType.builder()
                     .build())
                 .build();
+        }
+    }
+
+    @Nested
+    class selectKnowledgePostsByCondition {
+        @Test
+        void given_topicIdAndNotExistTopic_then_throwNoSuchTopicException() {
+            // given
+            long topicId = 1;
+            String keyword = "test_keyword";
+            Pageable pageable = null;
+            given(boardTopicRepository.findByTopicId(topicId)).willReturn(Optional.empty());
+
+            // when
+            Throwable thrown = catchThrowable(() -> {
+                knowledgeService.selectKnowledgePostsByCondition(topicId, keyword, pageable);
+            });
+
+            // then
+            then(boardTopicRepository).should(times(1)).findByTopicId(topicId);
+            assertThat(thrown).isInstanceOf(NoSuchTopicException.class);
+        }
+
+        @Test
+        void given_topicIdOfExistTopicButNotInKnowledgeType_then_throwNotSupportedCaseException() {
+            // given
+            long topicId = 1L;
+            String keyword = "test_keyword";
+            Pageable pageable = null;
+            given(boardTopicRepository.findByTopicId(topicId)).willReturn(Optional.ofNullable(BoardTopic.builder()
+                    .topicId(topicId)
+                    .boardType(BoardType.builder()
+                            .typeId(1L)
+                            .build())
+                    .build()));
+
+            // when
+            Throwable thrown = catchThrowable(() -> {
+                knowledgeService.selectKnowledgePostsByCondition(topicId, keyword, pageable);
+            });
+
+            // then
+            then(boardTopicRepository).should(times(1)).findByTopicId(topicId);
+            assertThat(thrown).isInstanceOf(NotSupportedCaseException.class);
         }
     }
 }
