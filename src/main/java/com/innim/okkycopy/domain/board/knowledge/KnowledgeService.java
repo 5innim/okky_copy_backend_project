@@ -52,7 +52,7 @@ public class KnowledgeService {
         entityManager.persist(knowledgePost);
     }
 
-    @Transactional(readOnly = true)
+    @Transactional
     public PostDetailResponse selectKnowledgePost(CustomUserDetails customUserDetails, long postId) {
         KnowledgePost knowledgePost = knowledgePostRepository.findByPostId(postId).orElseThrow(() -> new NoSuchPostException(ErrorCode._400_NO_SUCH_POST));
         Member member = memberRepository.findByMemberId(knowledgePost.getMember().getMemberId()).orElseGet(() -> null);
