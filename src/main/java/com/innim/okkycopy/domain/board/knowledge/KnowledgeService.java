@@ -55,8 +55,7 @@ public class KnowledgeService {
     @Transactional(readOnly = true)
     public PostDetailResponse selectKnowledgePost(CustomUserDetails customUserDetails, long postId) {
         KnowledgePost knowledgePost = knowledgePostRepository.findByPostId(postId).orElseThrow(() -> new NoSuchPostException(ErrorCode._400_NO_SUCH_POST));
-        Member member = memberRepository.findByMemberId(knowledgePost.getMember().getMemberId()).orElseGet(() -> Member.builder().memberId(0L)
-            .build());
+        Member member = memberRepository.findByMemberId(knowledgePost.getMember().getMemberId()).orElseGet(() -> null);
 
         PostDetailResponse response = PostDetailResponse.toPostDetailResponseDto(knowledgePost, member);
         if (customUserDetails != null) {

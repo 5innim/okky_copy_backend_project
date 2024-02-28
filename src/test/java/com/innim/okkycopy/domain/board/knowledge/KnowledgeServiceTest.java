@@ -75,7 +75,7 @@ class KnowledgeServiceTest {
             // then
             then(knowledgePostRepository).should(times(1)).findByPostId(postId);
             then(memberRepository).should(times(1)).findByMemberId(knowledgePost.getMember().getMemberId());
-            assertThat(postDetailResponse.getWriterInfo().getMemberId()).isEqualTo(0);
+            assertThat(postDetailResponse.getWriterInfo()).isEqualTo(null);
         }
 
         KnowledgePost knowledgePost() {

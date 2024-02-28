@@ -34,7 +34,7 @@ public class PostDetailResponse {
         }
 
         return PostDetailResponse.builder()
-                .writerInfo(WriterInfoResponse.builder()
+                .writerInfo((member == null) ? null:WriterInfoResponse.builder()
                         .memberId(member.getMemberId())
                         .nickName(member.getNickname())
                         .profile(member.getProfile()).build())
