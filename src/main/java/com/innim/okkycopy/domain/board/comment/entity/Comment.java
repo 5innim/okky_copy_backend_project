@@ -50,6 +50,11 @@ public class Comment {
     @OneToMany(mappedBy = "comment", cascade = {CascadeType.REMOVE})
     private List<CommentExpression> commentExpressionList;
 
+    public void updateComment(String content) {
+        this.content = content;
+        this.lastUpdate = LocalDateTime.now();
+    }
+
     public static Comment createComment(Post post, Member member, WriteCommentRequest writeCommentRequest) {
         Comment comment = Comment.builder()
                 .content(writeCommentRequest.getContent())

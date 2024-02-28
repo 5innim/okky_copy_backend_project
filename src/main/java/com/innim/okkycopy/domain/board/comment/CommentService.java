@@ -59,8 +59,7 @@ public class CommentService {
         Comment comment = commentRepository.findByCommentId(commentId).orElseThrow(() -> new NoSuchCommentException(ErrorCode._400_NO_SUCH_COMMENT));
 
         if (comment.getMember().getMemberId() != mergedMember.getMemberId()) throw new NoAuthorityException(ErrorCode._403_NO_AUTHORITY);
-        comment.setContent(writeCommentRequest.getContent());
-        comment.setLastUpdate(LocalDateTime.now());
+        comment.updateComment(writeCommentRequest.getContent());
     }
 
     @Transactional
