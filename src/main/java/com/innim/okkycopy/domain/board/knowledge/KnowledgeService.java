@@ -69,6 +69,7 @@ public class KnowledgeService {
                             .build()
             );
         }
+        knowledgePost.setViews(knowledgePost.getViews() + 1);
 
         return response;
     }
