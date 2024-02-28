@@ -12,6 +12,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.AccessLevel;
@@ -74,6 +76,7 @@ public class KnowledgePost extends Post {
         this.setTitle(updateRequest.getTitle());
         this.setContent(updateRequest.getContent());
         this.setBoardTopic(boardTopic);
+        this.setLastUpdate(LocalDateTime.now());
 
         List<Tag> tags = this.getTags();
         tags.clear();
