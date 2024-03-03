@@ -6,17 +6,25 @@ server:
 # logging
 logging:
   level:
-    com.innim.okkycopy: debug
+    com.innim.okkycopy: trace
+    org:
+      springframework.security: trace
+      hibernate.orm.jdbc.bind: trace
 
-
-
+# spring
 spring:
+  # devtools
+  devtools:
+    restart:
+      enabled: true
+      additional-exclude: resources/**
+
   # postgresql
   datasource:
     driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://localhost:5432/okky_local
-    username: for_local
-    password: okky1234
+    url: jdbc:postgresql://ec2-43-202-216-151.ap-northeast-2.compute.amazonaws.com:5432/okky_dev
+    username: postgres
+    password: 952000
 
   # jpa
   jpa:
@@ -28,6 +36,7 @@ spring:
         format-sql: true
     show-sql: true
     defer-datasource-initialization: true
+    open-in-view: true
 
   # sql
   sql:

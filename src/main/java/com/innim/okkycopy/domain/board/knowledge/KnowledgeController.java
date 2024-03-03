@@ -1,0 +1,62 @@
+package com.innim.okkycopy.domain.board.knowledge;
+
+import com.innim.okkycopy.domain.board.dto.request.write.WriteRequest;
+import com.innim.okkycopy.global.auth.CustomUserDetails;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.*;
+
+@RestController
+@RequestMapping("/board/knowledge")
+@RequiredArgsConstructor
+public class KnowledgeController {
+
+    private final KnowledgeService knowledgeService;
+
+    @PostMapping("/write")
+    public ResponseEntity<Object> writeKnowledgePost(@RequestBody @Valid WriteRequest writeRequest,
+        @AuthenticationPrincipal CustomUserDetails customUserDetails) {
+        knowledgeService.saveKnowledgePost(writeRequest, customUserDetails);
+
+        return ResponseEntity.status(HttpStatus.CREATED).build();
+    }
+
+    @GetMapping("/posts/{id}")
+    public ResponseEntity<Object> getKnowledgePost(
+            @AuthenticationPrincipal CustomUserDetails customUserDetails,
+            @PathVariable("id") long id) {
+        return ResponseEntity.ok(knowledgeService.selectKnowledgePost(customUserDetails, id));
+    }
+
+    @PutMapping("/posts/{id}")
+    public ResponseEntity<Object> editKnowledgePost(
+        @AuthenticationPrincipal CustomUserDetails customUserDetails,
+        @RequestBody @Valid WriteRequest updateRequest,
+        @PathVariable("id") long id) {
+        knowledgeService.updateKnowledgePost(customUserDetails, updateRequest, id);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
+
+    @DeleteMapping("/posts/{id}")
+    public ResponseEntity<Object> deleteKnowledgePost(
+        @AuthenticationPrincipal CustomUserDetails customUserDetails,
+        @PathVariable("id") long id) {
+        knowledgeService.deleteKnowledgePost(customUserDetails, id);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
+
+    @GetMapping("/posts")
+    public ResponseEntity<Object> getBriefPosts(
+            @RequestParam(required = false) Long topicId,
+            @RequestParam(required = false) String keyword,
+            @PageableDefault(size = 20, sort = "createdDate", direction = Sort.Direction.DESC) Pageable pageable) {
+        return ResponseEntity.ok().body(knowledgeService.selectKnowledgePostsByCondition(topicId, keyword, pageable));
+    }
+
+}

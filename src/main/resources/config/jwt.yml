@@ -1,0 +1,10 @@
+# jwt
+jwt:
+  secret: "it's a secret for generating secret key"
+  header:
+    key: "Authorization"
+    prefix: "Bearer "
+  signature-algorithm: "HS256"
+  valid-time:
+    access-limit-milliseconds: 1_800_000
+    refresh-limit-milliseconds: 86_400_000

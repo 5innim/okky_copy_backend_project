@@ -6,7 +6,7 @@ server:
 # logging
 logging:
   level:
-    com.innim.okkycopy: debug
+    com.innim.okkycopy: info
 
 
 
@@ -14,8 +14,8 @@ spring:
   # postgresql
   datasource:
     driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://localhost:5432/okky_local
-    username: for_local
+    url: jdbc:postgresql://localhost:5432/okky_prod
+    username: for_prod
     password: okky1234
 
   # jpa
@@ -27,9 +27,4 @@ spring:
         dialect: org.hibernate.dialect.PostgreSQLDialect
         format-sql: true
     show-sql: true
-    defer-datasource-initialization: true
 
-  # sql
-  sql:
-    init:
-      mode: always

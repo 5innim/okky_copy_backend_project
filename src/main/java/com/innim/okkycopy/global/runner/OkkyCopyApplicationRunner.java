@@ -1,4 +1,4 @@
-package com.innim.okkycopy.runner;
+package com.innim.okkycopy.global.runner;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -15,7 +15,7 @@ public class OkkyCopyApplicationRunner implements ApplicationRunner {
 
     @Override
     public void run(ApplicationArguments args) throws Exception {
-        log.info(activeProfile);
+        log.info("active_profile: " + activeProfile);
 
     }
 }
