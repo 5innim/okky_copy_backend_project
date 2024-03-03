@@ -1,9 +1,10 @@
 package com.innim.okkycopy.domain.board.comment;
 
 import com.innim.okkycopy.common.WithMockCustomUserSecurityContextFactory;
-import com.innim.okkycopy.domain.board.dto.request.WriteCommentRequest;
-import com.innim.okkycopy.domain.board.dto.request.WriteReCommentRequest;
-import com.innim.okkycopy.domain.board.dto.response.comments.CommentsResponse;
+import com.innim.okkycopy.domain.board.comment.dto.request.WriteCommentRequest;
+import com.innim.okkycopy.domain.board.comment.dto.request.WriteReCommentRequest;
+import com.innim.okkycopy.domain.board.comment.dto.response.CommentsResponse;
+import com.innim.okkycopy.domain.board.enums.ExpressionType;
 import com.innim.okkycopy.global.auth.CustomUserDetails;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -56,7 +57,7 @@ public class CommentControllerTest {
             writeCommentRequest, id);
 
         // then
-        then(commentService).should(times(1)).updateKnowledgeComment(customUserDetails,
+        then(commentService).should(times(1)).updateComment(customUserDetails,
             writeCommentRequest, id);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
     }
@@ -79,10 +80,10 @@ public class CommentControllerTest {
     void getComments() {
         // given
         long id = 1l;
-        given(commentService.selectKnowledgeComments(id)).willReturn(new CommentsResponse(Arrays.asList()));
+        given(commentService.selectComments(null, id)).willReturn(new CommentsResponse(Arrays.asList()));
 
         // when
-        ResponseEntity response = commentController.getComments(id);
+        ResponseEntity response = commentController.getComments(null, id);
 
         // then
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
@@ -115,6 +116,79 @@ public class CommentControllerTest {
             writeReCommentRequest
         );
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
+    }
+
+    @Test
+    void getReCommentsTest() {
+        // given
+        long id = 1l;
+        given(commentService.selectReComments(null, id)).willReturn(new CommentsResponse(Arrays.asList()));
+
+        // when
+        ResponseEntity response = commentController.getReComments(null, id);
+
+        // then
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+    }
+
+    @Test
+    void makeLikeExpressionTest() {
+        // given
+        CustomUserDetails customUserDetails = WithMockCustomUserSecurityContextFactory.customUserDetailsMock();
+        long id = 1L;
+
+        // when
+        ResponseEntity<Object> response = commentController.makeLikeExpression(customUserDetails, id);
+
+        // then
+        then(commentService).should(times(1))
+                .insertCommentExpression(customUserDetails.getMember(), id, ExpressionType.LIKE);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
+    }
+
+    @Test
+    void makeHateExpressionTest() {
+        // given
+        CustomUserDetails customUserDetails = WithMockCustomUserSecurityContextFactory.customUserDetailsMock();
+        long id = 1L;
+
+        // when
+        ResponseEntity<Object> response = commentController.makeHateExpression(customUserDetails, id);
+
+        // then
+        then(commentService).should(times(1))
+                .insertCommentExpression(customUserDetails.getMember(), id, ExpressionType.HATE);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
+    }
+
+    @Test
+    void removeLikeExpressionTest() {
+        // given
+        CustomUserDetails customUserDetails = WithMockCustomUserSecurityContextFactory.customUserDetailsMock();
+        long id = 1L;
+
+        // when
+        ResponseEntity<Object> response = commentController.removeLikeExpression(customUserDetails, id);
+
+        // then
+        then(commentService).should(times(1))
+                .deleteCommentExpression(customUserDetails.getMember(), id, ExpressionType.LIKE);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
+    }
+
+    @Test
+    void removeHateExpressionTest() {
+        // given
+        CustomUserDetails customUserDetails = WithMockCustomUserSecurityContextFactory.customUserDetailsMock();
+        long id = 1L;
+
+        // when
+        ResponseEntity<Object> response = commentController.removeHateExpression(customUserDetails, id);
+
+        // then
+        then(commentService).should(times(1))
+                .deleteCommentExpression(customUserDetails.getMember(), id, ExpressionType.HATE);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
     }
 
     WriteCommentRequest commentRequest() {

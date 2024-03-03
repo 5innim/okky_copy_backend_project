@@ -1,16 +1,7 @@
 package com.innim.okkycopy.domain.board.entity;
 
 import com.innim.okkycopy.domain.member.entity.Member;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
-import jakarta.persistence.UniqueConstraint;
+import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -43,5 +34,17 @@ public class Scrap {
     @JoinColumn(name = "member_id")
     private Member member;
 
+    public static Scrap createScrap(Post post, Member member) {
+        post.increaseScraps();
+        return Scrap.builder()
+                .member(member)
+                .post(post)
+                .build();
+    }
+
+    public static void removeScrap(EntityManager entityManager, Scrap scrap) {
+        scrap.getPost().decreaseScraps();
+        entityManager.remove(scrap);
+    }
 
 }

@@ -1,11 +1,11 @@
 package com.innim.okkycopy.domain.board.comment;
 
-import com.innim.okkycopy.domain.board.dto.request.WriteCommentRequest;
-import com.innim.okkycopy.domain.board.dto.request.WriteReCommentRequest;
+import com.innim.okkycopy.domain.board.comment.dto.request.WriteCommentRequest;
+import com.innim.okkycopy.domain.board.comment.dto.request.WriteReCommentRequest;
+import com.innim.okkycopy.domain.board.enums.ExpressionType;
 import com.innim.okkycopy.global.auth.CustomUserDetails;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -33,7 +33,7 @@ public class CommentController {
             @AuthenticationPrincipal CustomUserDetails customUserDetails,
             @RequestBody @Valid WriteCommentRequest writeCommentRequest,
             @PathVariable("id") long id) {
-        commentService.updateKnowledgeComment(customUserDetails, writeCommentRequest, id);
+        commentService.updateComment(customUserDetails, writeCommentRequest, id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
@@ -46,8 +46,10 @@ public class CommentController {
     }
 
     @GetMapping("/posts/{id}/comments")
-    public ResponseEntity<Object> getComments(@PathVariable long id) {
-        return ResponseEntity.ok(commentService.selectKnowledgeComments(id));
+    public ResponseEntity<Object> getComments(
+            @AuthenticationPrincipal CustomUserDetails customUserDetails,
+            @PathVariable long id) {
+        return ResponseEntity.ok(commentService.selectComments(customUserDetails, id));
     }
 
     @PostMapping("/posts/{postId}/comments/{commentId}/recomment")
@@ -60,4 +62,38 @@ public class CommentController {
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
+    @GetMapping("/comments/{id}/recomments")
+    public ResponseEntity<Object> getReComments(
+            @AuthenticationPrincipal CustomUserDetails customUserDetails,
+            @PathVariable long id) {
+        return ResponseEntity.status(HttpStatus.OK).body(commentService.selectReComments(customUserDetails, id));
+    }
+
+    @PostMapping("/comments/{id}/like")
+    public ResponseEntity<Object> makeLikeExpression(
+            @AuthenticationPrincipal CustomUserDetails customUserDetails,
+            @PathVariable long id) {
+        commentService.insertCommentExpression(customUserDetails.getMember(), id, ExpressionType.LIKE);
+        return ResponseEntity.status(HttpStatus.CREATED).build();
+    }
+
+    @PostMapping("/comments/{id}/hate")
+    public ResponseEntity<Object> makeHateExpression(
+            @AuthenticationPrincipal CustomUserDetails customUserDetails,
+            @PathVariable long id) {
+        commentService.insertCommentExpression(customUserDetails.getMember(), id, ExpressionType.HATE);
+        return ResponseEntity.status(HttpStatus.CREATED).build();
+    }
+
+    @DeleteMapping("/comments/{id}/like")
+    public ResponseEntity<Object> removeLikeExpression(@AuthenticationPrincipal CustomUserDetails customUserDetails, @PathVariable long id) {
+        commentService.deleteCommentExpression(customUserDetails.getMember(), id, ExpressionType.LIKE);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
+
+    @DeleteMapping("/comments/{id}/hate")
+    public ResponseEntity<Object> removeHateExpression(@AuthenticationPrincipal CustomUserDetails customUserDetails, @PathVariable long id) {
+        commentService.deleteCommentExpression(customUserDetails.getMember(), id, ExpressionType.HATE);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
 }

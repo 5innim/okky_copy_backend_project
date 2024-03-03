@@ -1,6 +1,7 @@
 package com.innim.okkycopy.domain.board.entity;
 
-import com.innim.okkycopy.domain.board.comment.Comment;
+import com.innim.okkycopy.domain.board.comment.entity.Comment;
+import com.innim.okkycopy.domain.board.knowledge.entity.KnowledgePost;
 import com.innim.okkycopy.domain.member.entity.Member;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -58,7 +59,37 @@ public class Post {
     @OneToMany(mappedBy = "post", cascade = {CascadeType.REMOVE})
     private List<Scrap> scrapList;
     @OneToMany(mappedBy = "post", cascade = {CascadeType.REMOVE})
+    private List<PostExpression> postExpressionList;
+    @OneToMany(mappedBy = "post", cascade = {CascadeType.REMOVE})
     private List<Comment> commentList;
 
+    public void increaseLikes() {
+        if (this instanceof KnowledgePost)
+            ((KnowledgePost) this).setLikes(((KnowledgePost) this).getLikes() + 1);
+    }
 
+    public void decreaseLikes() {
+        if (this instanceof KnowledgePost)
+            ((KnowledgePost) this).setLikes(((KnowledgePost) this).getLikes() - 1);
+    }
+
+    public void increaseHates() {
+        if (this instanceof KnowledgePost)
+            ((KnowledgePost) this).setHates(((KnowledgePost) this).getHates() + 1);
+    }
+
+    public void decreaseHates() {
+        if (this instanceof KnowledgePost)
+            ((KnowledgePost) this).setHates(((KnowledgePost) this).getHates() - 1);
+    }
+
+    public void increaseScraps() {
+        if (this instanceof KnowledgePost)
+            ((KnowledgePost) this).setScraps(((KnowledgePost) this).getScraps() - 1);
+    }
+
+    public void decreaseScraps() {
+        if (this instanceof KnowledgePost)
+            ((KnowledgePost) this).setScraps(((KnowledgePost) this).getScraps() - 1);
+    }
 }

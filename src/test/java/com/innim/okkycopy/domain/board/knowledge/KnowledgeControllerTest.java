@@ -6,10 +6,7 @@ import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.times;
 
 import com.innim.okkycopy.common.WithMockCustomUserSecurityContextFactory;
-import com.innim.okkycopy.domain.board.dto.request.WriteCommentRequest;
-import com.innim.okkycopy.domain.board.dto.request.WriteReCommentRequest;
 import com.innim.okkycopy.domain.board.dto.request.write.WriteRequest;
-import com.innim.okkycopy.domain.board.dto.response.comments.CommentsResponse;
 import com.innim.okkycopy.domain.board.dto.response.post.detail.PostDetailResponse;
 import com.innim.okkycopy.global.auth.CustomUserDetails;
 import java.time.LocalDateTime;
@@ -19,6 +16,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
@@ -49,10 +47,10 @@ class KnowledgeControllerTest {
         // given
         long id = 1l;
         PostDetailResponse postDetailResponse = postDetailRequest();
-        given(service.selectKnowledgePost(id)).willReturn(postDetailResponse);
+        given(service.selectKnowledgePost(null, id)).willReturn(postDetailResponse);
 
         // when
-        ResponseEntity response = controller.getKnowledgePost(id);
+        ResponseEntity response = controller.getKnowledgePost(null, id);
 
         // then
         assertThat(response.getBody()).isEqualTo(postDetailResponse);
@@ -86,6 +84,22 @@ class KnowledgeControllerTest {
         // then
         then(service).should(times(1)).deleteKnowledgePost(customUserDetails, id);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
+    }
+
+    @Test
+    void getBriefPostsTest() {
+        // given
+        long topicId = 1;
+        String keyword = "test_keyword";
+        Pageable pageable = null;
+        given(service.selectKnowledgePostsByCondition(topicId, keyword, pageable)).willReturn(null);
+
+        // when
+        ResponseEntity<Object> response = controller.getBriefPosts(topicId, keyword, pageable);
+
+        // then
+        then(service).should(times(1)).selectKnowledgePostsByCondition(topicId, keyword, pageable);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     }
 
 

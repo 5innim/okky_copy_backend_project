@@ -4,17 +4,13 @@ import com.innim.okkycopy.domain.board.dto.request.write.WriteRequest;
 import com.innim.okkycopy.global.auth.CustomUserDetails;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/board/knowledge")
@@ -32,8 +28,10 @@ public class KnowledgeController {
     }
 
     @GetMapping("/posts/{id}")
-    public ResponseEntity<Object> getKnowledgePost(@PathVariable("id") long id) {
-        return ResponseEntity.ok(knowledgeService.selectKnowledgePost(id));
+    public ResponseEntity<Object> getKnowledgePost(
+            @AuthenticationPrincipal CustomUserDetails customUserDetails,
+            @PathVariable("id") long id) {
+        return ResponseEntity.ok(knowledgeService.selectKnowledgePost(customUserDetails, id));
     }
 
     @PutMapping("/posts/{id}")
@@ -51,6 +49,14 @@ public class KnowledgeController {
         @PathVariable("id") long id) {
         knowledgeService.deleteKnowledgePost(customUserDetails, id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
+
+    @GetMapping("/posts")
+    public ResponseEntity<Object> getBriefPosts(
+            @RequestParam(required = false) Long topicId,
+            @RequestParam(required = false) String keyword,
+            @PageableDefault(size = 20, sort = "createdDate", direction = Sort.Direction.DESC) Pageable pageable) {
+        return ResponseEntity.ok().body(knowledgeService.selectKnowledgePostsByCondition(topicId, keyword, pageable));
     }
 
 }

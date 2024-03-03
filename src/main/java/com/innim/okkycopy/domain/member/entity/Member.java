@@ -1,8 +1,8 @@
 package com.innim.okkycopy.domain.member.entity;
 
-import com.innim.okkycopy.domain.board.comment.Comment;
-import com.innim.okkycopy.domain.board.entity.Post;
-import com.innim.okkycopy.domain.board.entity.Scrap;
+import com.innim.okkycopy.domain.board.comment.entity.Comment;
+import com.innim.okkycopy.domain.board.comment.entity.CommentExpression;
+import com.innim.okkycopy.domain.board.entity.*;
 import com.innim.okkycopy.domain.member.dto.request.SignupRequest;
 import com.innim.okkycopy.global.auth.enums.Role;
 import jakarta.persistence.CascadeType;
@@ -35,54 +35,42 @@ import org.hibernate.annotations.DynamicUpdate;
 @Getter
 @Setter
 public class Member {
-
     @Id
     @Column(name = "member_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long memberId;
-
     @Column(nullable = false, unique = true)
     private String id;
-
     @Column(nullable = false)
     private String password;
-
     @Column(nullable = false, unique = true)
     private String email;
-
     @Column(nullable = false)
     private String name;
-
     @Column(nullable = false, unique = true)
     private String nickname;
-
     @Column(nullable = false, name = "email_check")
     private boolean emailCheck;
-
     @Column(nullable = false, name = "created_date")
     @CreationTimestamp
     private LocalDateTime createdDate;
-
     @Enumerated(EnumType.ORDINAL)
     @Column(nullable = false)
     private Role role;
-
     @Column
     private String profile;
-
     @Column(name = "login_date")
     private LocalDateTime loginDate;
-
     @OneToMany(mappedBy = "member")
     private List<Post> posts;
-
     @OneToMany(mappedBy = "member", cascade = {CascadeType.REMOVE})
     private List<Scrap> scrapList;
-
+    @OneToMany(mappedBy = "member", cascade = {CascadeType.REMOVE})
+    private List<PostExpression> postExpressionList;
+    @OneToMany(mappedBy = "member", cascade = {CascadeType.REMOVE})
+    private List<CommentExpression> commentExpressionList;
     @OneToMany(mappedBy = "member")
     private List<Comment> comments;
-
-
 
     public static Member toMemberEntity(SignupRequest request) {
         return Member.builder()
