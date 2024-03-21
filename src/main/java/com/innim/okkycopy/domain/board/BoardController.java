@@ -1,5 +1,6 @@
 package com.innim.okkycopy.domain.board;
 
+import com.innim.okkycopy.domain.board.dto.request.FileRequest;
 import com.innim.okkycopy.domain.board.dto.request.ScrapRequest;
 import com.innim.okkycopy.domain.board.enums.ExpressionType;
 import com.innim.okkycopy.global.auth.CustomUserDetails;
@@ -8,6 +9,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
+import java.io.InputStream;
 
 @RestController
 @RequestMapping("/board")
@@ -56,5 +61,11 @@ public class BoardController {
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
+    @PostMapping("/file/upload")
+    public ResponseEntity<Object> saveFile(@RequestParam("file") MultipartFile file) throws IOException {
+        InputStream stream = file.getInputStream();
+
+        return ResponseEntity.ok(null);
+    }
 
 }
