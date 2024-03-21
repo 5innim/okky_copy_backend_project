@@ -1,6 +1,5 @@
 package com.innim.okkycopy.domain.board;
 
-import com.innim.okkycopy.domain.board.dto.request.FileRequest;
 import com.innim.okkycopy.domain.board.dto.request.ScrapRequest;
 import com.innim.okkycopy.domain.board.enums.ExpressionType;
 import com.innim.okkycopy.global.auth.CustomUserDetails;
