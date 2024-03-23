@@ -14,8 +14,11 @@ import com.innim.okkycopy.domain.board.dto.response.topics.TopicsResponse;
 import com.innim.okkycopy.domain.board.dto.response.topics.TypeResponse;
 import com.innim.okkycopy.domain.board.enums.ExpressionType;
 import com.innim.okkycopy.domain.member.entity.Member;
+
+import java.io.IOException;
 import java.util.Arrays;
 import com.innim.okkycopy.global.auth.CustomUserDetails;
+import com.innim.okkycopy.global.commons.S3Uploader;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -23,11 +26,14 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.multipart.MultipartFile;
 
 @ExtendWith(MockitoExtension.class)
 class BoardControllerTest {
     @Mock
     BoardService boardService;
+    @Mock
+    S3Uploader s3Uploader;
     @InjectMocks
     BoardController boardController;
 
@@ -129,6 +135,18 @@ class BoardControllerTest {
         then(boardService).should(times(1))
                 .deletePostExpression(customUserDetails.getMember(), id, ExpressionType.HATE);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
+    }
+
+    @Test
+    void saveFileTest() throws IOException {
+        // given
+        MultipartFile file = null;
+
+        // when
+        boardController.saveFile(file);
+
+        // then
+        then(s3Uploader).should(times(1)).uploadFileToS3(file);
     }
 
 
