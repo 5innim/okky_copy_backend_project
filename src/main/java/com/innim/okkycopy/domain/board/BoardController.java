@@ -1,8 +1,11 @@
 package com.innim.okkycopy.domain.board;
 
 import com.innim.okkycopy.domain.board.dto.request.ScrapRequest;
+import com.innim.okkycopy.domain.board.dto.response.FileResponse;
 import com.innim.okkycopy.domain.board.enums.ExpressionType;
 import com.innim.okkycopy.global.auth.CustomUserDetails;
+import com.innim.okkycopy.global.commons.S3Uploader;
+import com.innim.okkycopy.global.error.exception.ServiceException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,13 +14,13 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.io.InputStream;
 
 @RestController
 @RequestMapping("/board")
 @RequiredArgsConstructor
 public class BoardController {
     private final BoardService boardService;
+    private final S3Uploader s3Uploader;
 
     @GetMapping("/topics")
     public ResponseEntity<Object> serveTopics() {
@@ -61,10 +64,8 @@ public class BoardController {
     }
 
     @PostMapping("/file/upload")
-    public ResponseEntity<Object> saveFile(@RequestParam("file") MultipartFile file) throws IOException {
-        InputStream stream = file.getInputStream();
-
-        return ResponseEntity.ok(null);
+    public ResponseEntity<Object> saveFile(@RequestParam("file") MultipartFile file) throws ServiceException, IOException {
+            return ResponseEntity.ok(new FileResponse(s3Uploader.uploadFileToS3(file)));
     }
 
 }
