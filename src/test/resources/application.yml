@@ -46,3 +46,15 @@ spring:
   sql:
     init:
       mode: always
+
+# cloud
+cloud:
+  aws:
+    s3:
+      bucket: okky-copy-backend-dev
+      folder-path: static/image
+    stack.auto: false
+    region.static: ap-northeast-2
+    credentials:
+      access-key: AKIA43MJDZISSDPJ2I4Y
+      secret-key: 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
