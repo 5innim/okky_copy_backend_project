@@ -27,8 +27,9 @@ public enum ErrorCode {
     _409_DUPLICATE_ID (HttpStatus.CONFLICT, "409001", "input value of 'id' is duplicated"),
     _409_DUPLICATE_EMAIL (HttpStatus.CONFLICT, "409002", "input value of 'email' is duplicated"),
     _500_GENERATE_TOKEN (HttpStatus.INTERNAL_SERVER_ERROR, "500001", "can not generate token"),
-    _500_FAIL_INITIALIZATION (HttpStatus.INTERNAL_SERVER_ERROR, "500002", "database was not initialized");
-
+    _500_FAIL_INITIALIZATION (HttpStatus.INTERNAL_SERVER_ERROR, "500002", "database was not initialized"),
+    _500_FILE_NOT_CREATED (HttpStatus.INTERNAL_SERVER_ERROR, "500003", "temporal file is can not created"),
+    _500_FAIL_PUT_S3 (HttpStatus.INTERNAL_SERVER_ERROR, "500004", "fail file put to S3");
     private final HttpStatus status;
     private final String code;
     private final String message;
