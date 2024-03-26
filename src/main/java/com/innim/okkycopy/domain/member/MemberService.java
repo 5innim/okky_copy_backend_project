@@ -33,11 +33,13 @@ public class MemberService {
     @Transactional(propagation = Propagation.REQUIRES_NEW, isolation = Isolation.SERIALIZABLE)
     public BriefMemberInfo insertMember(SignupRequest signupRequest) {
 
-        if (memberRepository.existsById(signupRequest.getId()))
+        if (memberRepository.existsById(signupRequest.getId())) {
             throw new DuplicateException(ErrorCode._409_DUPLICATE_ID);
+        }
 
-        if (memberRepository.existsByEmail(signupRequest.getEmail()))
+        if (memberRepository.existsByEmail(signupRequest.getEmail())) {
             throw new DuplicateException(ErrorCode._409_DUPLICATE_EMAIL);
+        }
 
         signupRequest.encodePassword(passwordEncoder);
 

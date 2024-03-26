@@ -9,6 +9,7 @@ import lombok.Getter;
 @AllArgsConstructor
 @Builder
 public class WriterInfoResponse {
+
     private long memberId;
     private String nickName;
     private String profile;

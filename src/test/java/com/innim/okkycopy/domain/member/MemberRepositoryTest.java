@@ -1,6 +1,6 @@
 package com.innim.okkycopy.domain.member;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.innim.okkycopy.domain.member.dto.request.SignupRequest;
 import com.innim.okkycopy.domain.member.entity.Member;

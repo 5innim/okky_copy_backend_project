@@ -12,7 +12,6 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -34,6 +33,7 @@ import org.hibernate.annotations.DynamicUpdate;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 public class KnowledgePost extends Post {
+
     @ManyToOne(optional = false)
     @JoinColumn(name = "topic_id")
     private BoardTopic boardTopic;
@@ -50,17 +50,17 @@ public class KnowledgePost extends Post {
 
     public static KnowledgePost createKnowledgePost(WriteRequest writeRequest, BoardTopic boardTopic, Member member) {
         KnowledgePost knowledgePost = KnowledgePost.builder()
-                .member(member)
-                .content(writeRequest.getContent())
-                .title(writeRequest.getTitle())
-                .lastUpdate(null)
-                .boardTopic(boardTopic)
-                .likes(0)
-                .hates(0)
-                .scraps(0)
-                .views(0)
-                .comments(0)
-                .build();
+            .member(member)
+            .content(writeRequest.getContent())
+            .title(writeRequest.getTitle())
+            .lastUpdate(null)
+            .boardTopic(boardTopic)
+            .likes(0)
+            .hates(0)
+            .scraps(0)
+            .views(0)
+            .comments(0)
+            .build();
 
         List<Tag> tags = new ArrayList<>();
         for (TagRequest tag : writeRequest.getTags()) {

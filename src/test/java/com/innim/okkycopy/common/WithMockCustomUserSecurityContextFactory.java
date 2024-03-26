@@ -22,7 +22,8 @@ public class WithMockCustomUserSecurityContextFactory implements
         CustomUserDetails principal = customUserDetailsMock();
 
         Authentication auth =
-            UsernamePasswordAuthenticationToken.authenticated(principal, principal.getPassword(), principal.getAuthorities());
+            UsernamePasswordAuthenticationToken.authenticated(principal, principal.getPassword(),
+                principal.getAuthorities());
         context.setAuthentication(auth);
 
         return context;

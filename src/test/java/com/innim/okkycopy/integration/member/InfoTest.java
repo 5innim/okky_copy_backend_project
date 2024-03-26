@@ -45,7 +45,8 @@ public class InfoTest {
         CustomUserDetails principal = new CustomUserDetails(testMember);
 
         Authentication auth =
-            UsernamePasswordAuthenticationToken.authenticated(principal, principal.getPassword(), principal.getAuthorities());
+            UsernamePasswordAuthenticationToken.authenticated(principal, principal.getPassword(),
+                principal.getAuthorities());
         context.setAuthentication(auth);
         SecurityContextHolder.setContext(context);
     }
@@ -59,10 +60,10 @@ public class InfoTest {
 
         // then
         resultActions.andExpectAll(
-            jsonPath("memberId", 1l).exists(),
+            jsonPath("memberId", 1L).exists(),
             jsonPath("nickname", "test_nickname").exists(),
             jsonPath("scrappedPost", new ArrayList()).exists()
-            );
+        );
     }
 
 }

@@ -2,7 +2,6 @@ package com.innim.okkycopy.domain.member;
 
 import com.innim.okkycopy.domain.member.dto.request.SignupRequest;
 import com.innim.okkycopy.domain.member.dto.response.BriefMemberInfo;
-
 import com.innim.okkycopy.domain.member.dto.response.MemberInfo;
 import com.innim.okkycopy.global.auth.CustomUserDetails;
 import jakarta.validation.Valid;

@@ -29,6 +29,7 @@ import org.springframework.web.context.WebApplicationContext;
 
 @SpringBootTest
 public class WriteReCommentTest {
+
     @Autowired
     WebApplicationContext context;
     @Autowired
@@ -50,7 +51,8 @@ public class WriteReCommentTest {
         CustomUserDetails principal = new CustomUserDetails(testMember);
 
         Authentication auth =
-            UsernamePasswordAuthenticationToken.authenticated(principal, principal.getPassword(), principal.getAuthorities());
+            UsernamePasswordAuthenticationToken.authenticated(principal, principal.getPassword(),
+                principal.getAuthorities());
         context.setAuthentication(auth);
         SecurityContextHolder.setContext(context);
     }
@@ -59,8 +61,8 @@ public class WriteReCommentTest {
     @Transactional
     void given_invalidContent_then_response400() throws Exception {
         // given
-        long postId = 1l;
-        long commentId = 1l;
+        long postId = 1L;
+        long commentId = 1L;
         WriteReCommentRequest writeReCommentRequest = writeReCommentRequest();
         writeReCommentRequest.setContent("");
 
@@ -80,10 +82,10 @@ public class WriteReCommentTest {
     @Transactional
     void given_invalidMentionId_then_response400() throws Exception {
         // given
-        long postId = 1l;
-        long commentId = 1l;
+        long postId = 1L;
+        long commentId = 1L;
         WriteReCommentRequest writeReCommentRequest = writeReCommentRequest();
-        writeReCommentRequest.setMentionId(0l);
+        writeReCommentRequest.setMentionId(0L);
 
         // when
         ResultActions resultActions = mockMvc.perform(
@@ -102,8 +104,8 @@ public class WriteReCommentTest {
     @Transactional
     void given_noExistPost_then_responseErrorCode() throws Exception {
         // given
-        long postId = 1000l;
-        long commentId = 1l;
+        long postId = 1000L;
+        long commentId = 1L;
 
         // when
         ResultActions resultActions = mockMvc.perform(
@@ -121,8 +123,8 @@ public class WriteReCommentTest {
     @Transactional
     void given_noExistComment_then_responseErrorCode() throws Exception {
         // given
-        long postId = 1l;
-        long commentId = 1000l;
+        long postId = 1L;
+        long commentId = 1000L;
 
         // when
         ResultActions resultActions = mockMvc.perform(
@@ -140,8 +142,8 @@ public class WriteReCommentTest {
     @Transactional
     void given_correctInfo_then_response201() throws Exception {
         // given
-        long postId = 1l;
-        long commentId = 1l;
+        long postId = 1L;
+        long commentId = 1L;
 
         // when
         MockHttpServletResponse response = mockMvc.perform(
@@ -158,7 +160,7 @@ public class WriteReCommentTest {
     WriteReCommentRequest writeReCommentRequest() {
         return WriteReCommentRequest.builder()
             .content("test content")
-            .mentionId(1l)
+            .mentionId(1L)
             .build();
     }
 

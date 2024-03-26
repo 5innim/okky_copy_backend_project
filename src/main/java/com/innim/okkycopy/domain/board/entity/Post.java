@@ -38,6 +38,7 @@ import org.hibernate.annotations.DynamicUpdate;
 @DiscriminatorColumn(name = "dtype")
 @DynamicUpdate
 public class Post {
+
     @Id
     @Column(name = "post_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -64,32 +65,38 @@ public class Post {
     private List<Comment> commentList;
 
     public void increaseLikes() {
-        if (this instanceof KnowledgePost)
+        if (this instanceof KnowledgePost) {
             ((KnowledgePost) this).setLikes(((KnowledgePost) this).getLikes() + 1);
+        }
     }
 
     public void decreaseLikes() {
-        if (this instanceof KnowledgePost)
+        if (this instanceof KnowledgePost) {
             ((KnowledgePost) this).setLikes(((KnowledgePost) this).getLikes() - 1);
+        }
     }
 
     public void increaseHates() {
-        if (this instanceof KnowledgePost)
+        if (this instanceof KnowledgePost) {
             ((KnowledgePost) this).setHates(((KnowledgePost) this).getHates() + 1);
+        }
     }
 
     public void decreaseHates() {
-        if (this instanceof KnowledgePost)
+        if (this instanceof KnowledgePost) {
             ((KnowledgePost) this).setHates(((KnowledgePost) this).getHates() - 1);
+        }
     }
 
     public void increaseScraps() {
-        if (this instanceof KnowledgePost)
+        if (this instanceof KnowledgePost) {
             ((KnowledgePost) this).setScraps(((KnowledgePost) this).getScraps() - 1);
+        }
     }
 
     public void decreaseScraps() {
-        if (this instanceof KnowledgePost)
+        if (this instanceof KnowledgePost) {
             ((KnowledgePost) this).setScraps(((KnowledgePost) this).getScraps() - 1);
+        }
     }
 }

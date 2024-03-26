@@ -20,9 +20,11 @@ import org.springframework.web.context.WebApplicationContext;
 
 @SpringBootTest
 public class SignupTest {
+
     @Autowired
     WebApplicationContext context;
     MockMvc mockMvc;
+
     @BeforeEach
     void init() {
         mockMvc = MockMvcBuilders.webAppContextSetup(context)
@@ -32,7 +34,8 @@ public class SignupTest {
 
     @Nested
     @Transactional
-    class validateInputTest {
+    class ValidateInputTest {
+
         @Test
         void given_invalidId_then_response400() throws Exception {
             // given
@@ -127,24 +130,6 @@ public class SignupTest {
     /**
      * insertMember(SignupRequest signupRequest) in MemberService is Propagation.REQUIRES_NEW
      */
-//    @Test
-//    @Transactional
-//    void given_correctUserInfo_then_returnBriefInfo() throws Exception {
-//        // given
-//        SignupRequest request = signupRequest();
-//
-//        // when
-//        ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.post("/member/signup")
-//            .characterEncoding("UTF-8")
-//            .contentType(MediaType.APPLICATION_JSON)
-//            .content(new Gson().toJson(request)));
-//
-//        // then
-//        resultActions.andExpectAll(
-//            jsonPath("nickname", "testNickname").exists(),
-//            jsonPath("name", "testName").exists(),
-//            jsonPath("email", "test@test.com").exists());
-//    }
 
     private SignupRequest signupRequest() {
         return SignupRequest.builder()

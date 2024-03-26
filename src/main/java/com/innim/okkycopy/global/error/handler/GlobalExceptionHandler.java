@@ -36,8 +36,8 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     public ResponseEntity<Object> handleMaxUploadSizeExceededException(MaxUploadSizeExceededException ex) {
         ErrorCode errorCode = ErrorCode._400_FILE_SIZE_EXCEEDED;
         return ResponseEntity
-                .status(errorCode.getStatus())
-                .body(new ErrorResponse(errorCode.getCode(), errorCode.getMessage()));
+            .status(errorCode.getStatus())
+            .body(new ErrorResponse(errorCode.getCode(), errorCode.getMessage()));
     }
 
 }

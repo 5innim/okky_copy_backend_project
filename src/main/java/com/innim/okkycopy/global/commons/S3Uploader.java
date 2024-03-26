@@ -5,22 +5,22 @@ import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.innim.okkycopy.global.error.ErrorCode;
 import com.innim.okkycopy.global.error.exception.ServiceException;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.Optional;
+import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.util.Optional;
-import java.util.UUID;
-
 @Component
 @RequiredArgsConstructor
 @Slf4j
 public class S3Uploader {
+
     private final AmazonS3Client amazonS3Client;
     @Value("${cloud.aws.s3.bucket}")
     private String bucket;
@@ -29,12 +29,12 @@ public class S3Uploader {
 
     public String uploadFileToS3(MultipartFile multipartFile) throws ServiceException, IOException {
         File uploadFile = convert(multipartFile)
-                .orElseThrow(() -> new ServiceException(ErrorCode._500_FILE_NOT_CREATED));
+            .orElseThrow(() -> new ServiceException(ErrorCode._500_FILE_NOT_CREATED));
 
         try {
             String filePath = folderPath + "/" + UUID.randomUUID();
             return putFileToS3(uploadFile, filePath);
-        } catch(Exception ex) {
+        } catch (Exception ex) {
             throw new ServiceException(ErrorCode._500_FAIL_PUT_S3);
         } finally {
             removeNewFile(uploadFile);
@@ -43,7 +43,7 @@ public class S3Uploader {
 
     public String putFileToS3(File uploadFile, String filePath) {
         amazonS3Client.putObject(new PutObjectRequest(bucket, filePath, uploadFile).withCannedAcl(
-                CannedAccessControlList.PublicRead));
+            CannedAccessControlList.PublicRead));
         return amazonS3Client.getUrl(bucket, filePath).toString();
     }
 

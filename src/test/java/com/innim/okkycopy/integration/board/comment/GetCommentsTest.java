@@ -1,8 +1,8 @@
 package com.innim.okkycopy.integration.board.comment;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.assertj.core.api.Assertions.*;
 
 import com.innim.okkycopy.domain.member.MemberRepository;
 import com.innim.okkycopy.domain.member.entity.Member;
@@ -25,6 +25,7 @@ import org.springframework.web.context.WebApplicationContext;
 
 @SpringBootTest
 public class GetCommentsTest {
+
     @Autowired
     WebApplicationContext context;
     @Autowired
@@ -41,7 +42,7 @@ public class GetCommentsTest {
     @Test
     void given_noExistPost_then_responseErrorCode() throws Exception {
         // given
-        long postId = 1000l;
+        long postId = 1000L;
 
         // when
         ResultActions resultActions = mockMvc.perform(
@@ -55,7 +56,7 @@ public class GetCommentsTest {
     @Test
     void given_correctPostId_then_responseCommentsInfo() throws Exception {
         // given
-        long postId = 1l;
+        long postId = 1L;
 
         // when
         MockHttpServletResponse response = mockMvc.perform(
@@ -69,11 +70,11 @@ public class GetCommentsTest {
     @Test
     void given_requestWithoutToken_then_responseWithoutRequesterInfo() throws Exception {
         // given
-        long postId = 1l;
+        long postId = 1L;
 
         // when
-        ResultActions resultActions= mockMvc.perform(
-                MockMvcRequestBuilders.get("/board/posts/" + postId + "/comments")
+        ResultActions resultActions = mockMvc.perform(
+            MockMvcRequestBuilders.get("/board/posts/" + postId + "/comments")
         );
         MockHttpServletResponse response = resultActions.andReturn().getResponse();
 
@@ -85,12 +86,12 @@ public class GetCommentsTest {
     @Test
     void given_requestWithToken_then_responseWithRequesterInfo() throws Exception {
         // given
-        long postId = 1l;
+        long postId = 1L;
         initSecurityContext();
 
         // when
-        ResultActions resultActions= mockMvc.perform(
-                MockMvcRequestBuilders.get("/board/posts/" + postId + "/comments")
+        ResultActions resultActions = mockMvc.perform(
+            MockMvcRequestBuilders.get("/board/posts/" + postId + "/comments")
         );
         MockHttpServletResponse response = resultActions.andReturn().getResponse();
 
@@ -107,7 +108,8 @@ public class GetCommentsTest {
         CustomUserDetails principal = new CustomUserDetails(testMember);
 
         Authentication auth =
-                UsernamePasswordAuthenticationToken.authenticated(principal, principal.getPassword(), principal.getAuthorities());
+            UsernamePasswordAuthenticationToken.authenticated(principal, principal.getPassword(),
+                principal.getAuthorities());
         context.setAuthentication(auth);
         SecurityContextHolder.setContext(context);
     }

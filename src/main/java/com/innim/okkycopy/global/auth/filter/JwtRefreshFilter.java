@@ -47,15 +47,15 @@ public class JwtRefreshFilter extends OncePerRequestFilter {
             try {
                 String token = extractToken(authorization);
                 memberId = validateToken(token);
-            } catch(InvalidTokenValueException ex) {
+            } catch (InvalidTokenValueException ex) {
                 RequestResponseUtil.makeExceptionResponseForFilter(response,
                     ErrorCode._400_INVALID_TOKEN_VALUE);
                 return;
-            } catch(ExpiredJwtException ex) {
+            } catch (ExpiredJwtException ex) {
                 RequestResponseUtil.makeExceptionResponseForFilter(response,
                     ErrorCode._403_TOKEN_EXPIRED);
                 return;
-            } catch(FailValidationJwtException ex) {
+            } catch (FailValidationJwtException ex) {
                 RequestResponseUtil.makeExceptionResponseForFilter(response,
                     ErrorCode._401_TOKEN_AUTHENTICATION_FAIL);
                 return;

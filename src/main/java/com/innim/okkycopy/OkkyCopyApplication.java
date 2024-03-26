@@ -8,8 +8,9 @@ import org.springframework.context.annotation.PropertySource;
 @SpringBootApplication
 @PropertySource(value = "classpath:/config/jwt.yml", factory = YamlLoadFactory.class)
 public class OkkyCopyApplication {
-	public static void main(String[] args) {
-		SpringApplication.run(OkkyCopyApplication.class, args);
-	}
+
+    public static void main(String[] args) {
+        SpringApplication.run(OkkyCopyApplication.class, args);
+    }
 
 }

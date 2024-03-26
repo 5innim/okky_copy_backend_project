@@ -26,6 +26,7 @@ import org.springframework.web.context.WebApplicationContext;
 
 @SpringBootTest
 public class DeleteTest {
+
     @Autowired
     WebApplicationContext context;
     @Autowired
@@ -47,7 +48,8 @@ public class DeleteTest {
         CustomUserDetails principal = new CustomUserDetails(testMember);
 
         Authentication auth =
-            UsernamePasswordAuthenticationToken.authenticated(principal, principal.getPassword(), principal.getAuthorities());
+            UsernamePasswordAuthenticationToken.authenticated(principal, principal.getPassword(),
+                principal.getAuthorities());
         context.setAuthentication(auth);
         SecurityContextHolder.setContext(context);
     }
@@ -56,7 +58,7 @@ public class DeleteTest {
     @Transactional
     void given_noExistPost_then_responseErrorCode() throws Exception {
         // given
-        long postId = 1000l;
+        long postId = 1000L;
 
         // when
         ResultActions resultActions = mockMvc.perform(
@@ -71,7 +73,7 @@ public class DeleteTest {
     @Transactional
     void given_noEqualPostWriterWithAuthenticationPrincipal_then_responseErrorCode() throws Exception {
         // given
-        long postId = 2l;
+        long postId = 2L;
 
         // when
         ResultActions resultActions = mockMvc.perform(
@@ -86,7 +88,7 @@ public class DeleteTest {
     @Transactional
     void given_correctDeleteInfo_then_response204() throws Exception {
         // given
-        long postId = 1l;
+        long postId = 1L;
 
         // when
         MockHttpServletResponse response = mockMvc.perform(

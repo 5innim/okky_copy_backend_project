@@ -16,6 +16,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @Builder
 public class WriteRequest {
+
     @Size(min = 1)
     private String topic;
     @Size(min = 1, max = 30)

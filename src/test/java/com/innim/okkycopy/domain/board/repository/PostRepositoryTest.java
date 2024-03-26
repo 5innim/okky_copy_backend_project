@@ -1,6 +1,6 @@
 package com.innim.okkycopy.domain.board.repository;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.innim.okkycopy.domain.board.entity.Post;
 import org.junit.jupiter.api.Test;
@@ -22,7 +22,7 @@ class PostRepositoryTest {
         // init_test_data procedure success
 
         // when
-        Post savedPost = postRepository.findByPostId(1l).get();
+        Post savedPost = postRepository.findByPostId(1L).get();
 
         // then
         assertThat(savedPost.getPostId()).isEqualTo(1);

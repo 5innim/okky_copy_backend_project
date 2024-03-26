@@ -11,6 +11,7 @@ public class ListSizeValidator implements ConstraintValidator<ListSize, List<?>>
 
     private int min;
     private int max;
+
     @Override
     public boolean isValid(List<?> value, ConstraintValidatorContext context) {
         if (value.size() <= max && value.size() >= min) {

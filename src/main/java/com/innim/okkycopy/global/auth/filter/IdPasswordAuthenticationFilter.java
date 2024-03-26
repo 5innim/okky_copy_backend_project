@@ -28,6 +28,7 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 @Slf4j
 public class IdPasswordAuthenticationFilter extends AbstractAuthenticationProcessingFilter {
+
     private static final AntPathRequestMatcher DEFAULT_ANT_PATH_REQUEST_MATCHER = new AntPathRequestMatcher("/login",
         "POST");
     private AuthService authService;
@@ -47,8 +48,12 @@ public class IdPasswordAuthenticationFilter extends AbstractAuthenticationProces
             throw new AuthenticationServiceException("Authentication method not supported: " + request.getMethod());
         }
         LoginRequest requestBody = obtainBody(request);
-        if (requestBody.getId() == null) requestBody.setId("");
-        if (requestBody.getPassword() == null) requestBody.setPassword("");
+        if (requestBody.getId() == null) {
+            requestBody.setId("");
+        }
+        if (requestBody.getPassword() == null) {
+            requestBody.setPassword("");
+        }
 
         UsernamePasswordAuthenticationToken authRequest = UsernamePasswordAuthenticationToken.unauthenticated(
             requestBody.getId(),
@@ -80,7 +85,7 @@ public class IdPasswordAuthenticationFilter extends AbstractAuthenticationProces
             LocalDateTime localDateTime = LocalDateTime.ofInstant(loginDate.toInstant(), ZoneId.systemDefault());
             authService.updateMemberLoginDate(userId, localDateTime);
 
-        } catch(TokenGenerateException | UserIdNotFoundException ex) {
+        } catch (TokenGenerateException | UserIdNotFoundException ex) {
             RequestResponseUtil.makeExceptionResponseForFilter(response,
                 ErrorCode._500_GENERATE_TOKEN);
             return;

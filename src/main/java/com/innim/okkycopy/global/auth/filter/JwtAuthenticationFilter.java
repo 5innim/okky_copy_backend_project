@@ -116,13 +116,14 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
             return new UsernamePasswordAuthenticationToken(
                 userDetails, null, userDetails.getAuthorities());
-        } catch(UserIdNotFoundException ex) {
+        } catch (UserIdNotFoundException ex) {
             throw new FailValidationJwtException(ex.getMessage());
         }
 
     }
 
-    private void onSuccessfulAuthentication(Authentication authResult, HttpServletRequest request, HttpServletResponse response) {
+    private void onSuccessfulAuthentication(Authentication authResult, HttpServletRequest request,
+        HttpServletResponse response) {
         SecurityContext securityContext = securityContextHolderStrategy.createEmptyContext();
         securityContext.setAuthentication(authResult);
         securityContextRepository.saveContext(securityContext, request, response);

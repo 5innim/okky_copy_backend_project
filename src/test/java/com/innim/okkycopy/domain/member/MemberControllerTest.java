@@ -1,10 +1,10 @@
 package com.innim.okkycopy.domain.member;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.times;
-import static org.assertj.core.api.Assertions.*;
 
 import com.innim.okkycopy.common.WithMockCustomUserSecurityContextFactory;
 import com.innim.okkycopy.domain.member.dto.request.SignupRequest;
@@ -83,7 +83,7 @@ class MemberControllerTest {
 
     private MemberInfo memberInfo() {
         return MemberInfo.builder()
-            .memberId(1l)
+            .memberId(1L)
             .nickname("testNickname")
             .scrappedPost(new ArrayList<>())
             .build();

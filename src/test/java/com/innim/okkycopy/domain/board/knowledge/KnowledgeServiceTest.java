@@ -1,7 +1,8 @@
 package com.innim.okkycopy.domain.board.knowledge;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.catchThrowable;
 import static org.mockito.BDDMockito.given;
-import static org.assertj.core.api.Assertions.*;
 import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.times;
 
@@ -17,13 +18,12 @@ import com.innim.okkycopy.domain.board.repository.BoardTopicRepository;
 import com.innim.okkycopy.domain.member.MemberRepository;
 import com.innim.okkycopy.domain.member.entity.Member;
 import com.innim.okkycopy.global.error.exception.NoSuchPostException;
+import com.innim.okkycopy.global.error.exception.NoSuchTopicException;
+import com.innim.okkycopy.global.error.exception.NotSupportedCaseException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
-
-import com.innim.okkycopy.global.error.exception.NoSuchTopicException;
-import com.innim.okkycopy.global.error.exception.NotSupportedCaseException;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -34,6 +34,7 @@ import org.springframework.data.domain.Pageable;
 
 @ExtendWith(MockitoExtension.class)
 class KnowledgeServiceTest {
+
     @Mock
     KnowledgePostRepository knowledgePostRepository;
     @Mock
@@ -44,16 +45,17 @@ class KnowledgeServiceTest {
     KnowledgeService knowledgeService;
 
     @Nested
-    class selectKnowledgePostTest {
+    class SelectKnowledgePostTest {
+
         @Test
         void given_notExistPostId_then_throwNoSuchPostException() {
             // given
-            long notExistPostId = 1l;
+            long notExistPostId = 1L;
             given(knowledgePostRepository.findByPostId(notExistPostId)).willReturn(Optional.empty());
 
             // when
             Throwable thrown = catchThrowable(() -> {
-               knowledgeService.selectKnowledgePost(null, notExistPostId);
+                knowledgeService.selectKnowledgePost(null, notExistPostId);
             });
 
             // then
@@ -64,10 +66,11 @@ class KnowledgeServiceTest {
         @Test
         void given_postIdWrittenByUnKnownMember_then_returnEmptyMember() {
             // given
-            long postId = 1l;
+            long postId = 1L;
             KnowledgePost knowledgePost = knowledgePost();
             given(knowledgePostRepository.findByPostId(postId)).willReturn(Optional.of(knowledgePost));
-            given(memberRepository.findByMemberId(knowledgePost.getMember().getMemberId())).willReturn(Optional.empty());
+            given(memberRepository.findByMemberId(knowledgePost.getMember().getMemberId())).willReturn(
+                Optional.empty());
 
             // when
             PostDetailResponse postDetailResponse = knowledgeService.selectKnowledgePost(null, postId);
@@ -99,7 +102,7 @@ class KnowledgeServiceTest {
             return BoardTopic.builder()
                 .knowledgePosts(Arrays.asList())
                 .knowledgeTags(Arrays.asList())
-                .topicId(1l)
+                .topicId(1L)
                 .name("test_topic")
                 .boardType(BoardType.builder()
                     .build())
@@ -108,7 +111,8 @@ class KnowledgeServiceTest {
     }
 
     @Nested
-    class selectKnowledgePostsByCondition {
+    class SelectKnowledgePostsByCondition {
+
         @Test
         void given_topicIdAndNotExistTopic_then_throwNoSuchTopicException() {
             // given
@@ -134,11 +138,11 @@ class KnowledgeServiceTest {
             String keyword = "test_keyword";
             Pageable pageable = null;
             given(boardTopicRepository.findByTopicId(topicId)).willReturn(Optional.ofNullable(BoardTopic.builder()
-                    .topicId(topicId)
-                    .boardType(BoardType.builder()
-                            .typeId(1L)
-                            .build())
-                    .build()));
+                .topicId(topicId)
+                .boardType(BoardType.builder()
+                    .typeId(1L)
+                    .build())
+                .build()));
 
             // when
             Throwable thrown = catchThrowable(() -> {

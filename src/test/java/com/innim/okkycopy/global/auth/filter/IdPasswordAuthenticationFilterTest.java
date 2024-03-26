@@ -1,6 +1,7 @@
 package com.innim.okkycopy.global.auth.filter;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.catchThrowable;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
@@ -25,6 +26,7 @@ import org.springframework.security.core.Authentication;
 
 @ExtendWith(MockitoExtension.class)
 class IdPasswordAuthenticationFilterTest {
+
     @Mock
     AuthenticationManager authenticationManager;
     @Mock
@@ -33,7 +35,8 @@ class IdPasswordAuthenticationFilterTest {
     IdPasswordAuthenticationFilter filter;
 
     @Nested
-    class attemptAuthenticationTest {
+    class AttemptAuthenticationTest {
+
         @Test
         public void given_notPostRequest_then_throwAuthenticationServiceException()
             throws IOException {
@@ -55,10 +58,12 @@ class IdPasswordAuthenticationFilterTest {
         public void given_postRequest_then_callAuthenticateMethod() throws IOException {
             // given
             MockHttpServletRequest request = new MockHttpServletRequest();
-            MockHttpServletResponse response = new MockHttpServletResponse();
             request.setMethod("POST");
             request.setContentType("application/json");
             request.setContent(new Gson().toJson(loginRequest()).getBytes());
+
+            MockHttpServletResponse response = new MockHttpServletResponse();
+
             given(authenticationManager.authenticate(any(UsernamePasswordAuthenticationToken.class)))
                 .willReturn(mock(Authentication.class));
 

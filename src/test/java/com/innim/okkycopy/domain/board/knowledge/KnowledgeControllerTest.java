@@ -1,6 +1,6 @@
 package com.innim.okkycopy.domain.board.knowledge;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.times;
@@ -45,7 +45,7 @@ class KnowledgeControllerTest {
     @Test
     void getKnowledgePostTest() {
         // given
-        long id = 1l;
+        long id = 1L;
         PostDetailResponse postDetailResponse = postDetailRequest();
         given(service.selectKnowledgePost(null, id)).willReturn(postDetailResponse);
 
@@ -60,7 +60,7 @@ class KnowledgeControllerTest {
     @Test
     void editKnowledgePostTest() {
         // given
-        long id = 1l;
+        long id = 1L;
         WriteRequest writeRequest = writeRequest();
         CustomUserDetails customUserDetails = WithMockCustomUserSecurityContextFactory.customUserDetailsMock();
 
@@ -75,7 +75,7 @@ class KnowledgeControllerTest {
     @Test
     void deleteKnowledgePostTest() {
         // given
-        long id = 1l;
+        long id = 1L;
         CustomUserDetails customUserDetails = WithMockCustomUserSecurityContextFactory.customUserDetailsMock();
 
         // when
@@ -101,7 +101,6 @@ class KnowledgeControllerTest {
         then(service).should(times(1)).selectKnowledgePostsByCondition(topicId, keyword, pageable);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     }
-
 
 
     WriteRequest writeRequest() {

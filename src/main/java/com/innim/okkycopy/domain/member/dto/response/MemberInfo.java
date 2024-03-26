@@ -9,6 +9,7 @@ import lombok.Setter;
 @Setter
 @Builder
 public class MemberInfo {
+
     private long memberId;
     private String nickname;
     private List<Long> scrappedPost;

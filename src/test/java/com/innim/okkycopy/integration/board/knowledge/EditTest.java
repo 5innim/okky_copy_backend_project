@@ -1,7 +1,7 @@
 package com.innim.okkycopy.integration.board.knowledge;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
-import static org.assertj.core.api.Assertions.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
 import com.google.gson.Gson;
@@ -53,7 +53,8 @@ public class EditTest {
         CustomUserDetails principal = new CustomUserDetails(testMember);
 
         Authentication auth =
-            UsernamePasswordAuthenticationToken.authenticated(principal, principal.getPassword(), principal.getAuthorities());
+            UsernamePasswordAuthenticationToken.authenticated(principal, principal.getPassword(),
+                principal.getAuthorities());
         context.setAuthentication(auth);
         SecurityContextHolder.setContext(context);
     }
@@ -63,7 +64,7 @@ public class EditTest {
     void given_noExistPost_then_responseErrorCode() throws Exception {
         // given
         WriteRequest updateRequest = writeRequest();
-        long postId = 1000l;
+        long postId = 1000L;
 
         // when
         ResultActions resultActions = mockMvc.perform(
@@ -83,7 +84,7 @@ public class EditTest {
         // given
         WriteRequest updateRequest = writeRequest();
         updateRequest.setTopic("기술");
-        long postId = 2l;
+        long postId = 2L;
 
         // when
         ResultActions resultActions = mockMvc.perform(
@@ -102,7 +103,7 @@ public class EditTest {
     void given_noExistTopic_then_responseErrorCode() throws Exception {
         // given
         WriteRequest updateRequest = writeRequest();
-        long postId = 1l;
+        long postId = 1L;
 
         // when
         ResultActions resultActions = mockMvc.perform(
@@ -123,7 +124,7 @@ public class EditTest {
         // given
         WriteRequest updateRequest = writeRequest();
         updateRequest.setTopic("Tech 뉴스");
-        long postId = 1l;
+        long postId = 1L;
 
         // when
         MockHttpServletResponse response = mockMvc.perform(

@@ -1,7 +1,7 @@
 package com.innim.okkycopy.domain.board.comment.dto.response;
 
-import com.innim.okkycopy.domain.board.dto.response.post.detail.WriterInfoResponse;
 import com.innim.okkycopy.domain.board.comment.entity.Comment;
+import com.innim.okkycopy.domain.board.dto.response.post.detail.WriterInfoResponse;
 import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -28,7 +28,8 @@ public class CommentResponse implements Comparable<CommentResponse> {
             String mentionedNickname,
             CommentRequesterInfoResponse commentRequesterInfoResponse) {
         return CommentResponse.builder()
-                .writerInfoResponse((comment.getMember()==null) ? null:WriterInfoResponse.toWriterInfoRequestDto(comment.getMember()))
+                .writerInfoResponse((comment.getMember() == null)
+                        ? null : WriterInfoResponse.toWriterInfoRequestDto(comment.getMember()))
                 .mentionedNickname(mentionedNickname)
                 .content(comment.getContent())
                 .createdDate(comment.getCreatedDate())

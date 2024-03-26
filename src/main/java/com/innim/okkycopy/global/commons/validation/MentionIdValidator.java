@@ -8,7 +8,9 @@ public class MentionIdValidator implements ConstraintValidator<MentionId, Long> 
 
     @Override
     public boolean isValid(Long value, ConstraintValidatorContext context) {
-        if (value == null || value >= 1l) return true;
+        if (value == null || value >= 1L) {
+            return true;
+        }
 
         context.disableDefaultConstraintViolation();
         context.buildConstraintViolationWithTemplate(

@@ -13,12 +13,12 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = Replace.NONE)
 public class BoardTypeRepositoryTest {
+
     @Autowired
     BoardTypeRepository repository;
 
     /**
-     * filndAllTest() method can't return empty list
-     * because board_topic, board_type table will be initialized.
+     * filndAllTest() method can't return empty list because board_topic, board_type table will be initialized.
      */
     @Test
     void findAllTest() {

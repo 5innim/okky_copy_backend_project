@@ -1,7 +1,8 @@
 package com.innim.okkycopy.integration.auth;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.catchThrowable;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
-import static org.assertj.core.api.Assertions.*;
 
 import com.google.gson.Gson;
 import com.innim.okkycopy.global.util.JwtUtil;
@@ -18,6 +19,7 @@ import org.springframework.web.context.WebApplicationContext;
 
 @SpringBootTest
 public class LoginTest {
+
     @Autowired
     WebApplicationContext context;
     MockMvc mockMvc;
@@ -55,6 +57,7 @@ public class LoginTest {
     }
 
     private class LoginContent {
+
         String id;
         String password;
 

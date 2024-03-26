@@ -5,10 +5,27 @@ import com.innim.okkycopy.domain.board.comment.dto.request.WriteReCommentRequest
 import com.innim.okkycopy.domain.board.entity.Post;
 import com.innim.okkycopy.domain.board.knowledge.entity.KnowledgePost;
 import com.innim.okkycopy.domain.member.entity.Member;
-import jakarta.persistence.*;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Inheritance;
+import jakarta.persistence.InheritanceType;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
 import java.time.LocalDateTime;
 import java.util.List;
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.DynamicInsert;
 
@@ -22,6 +39,7 @@ import org.hibernate.annotations.DynamicInsert;
 @Inheritance(strategy = InheritanceType.JOINED)
 @DynamicInsert
 public class Comment {
+
     @Id
     @Column(name = "comment_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -57,36 +75,39 @@ public class Comment {
 
     public static Comment createComment(Post post, Member member, WriteCommentRequest writeCommentRequest) {
         Comment comment = Comment.builder()
-                .content(writeCommentRequest.getContent())
-                .likes(0)
-                .hates(0)
-                .post(post)
-                .member(member).build();
+            .content(writeCommentRequest.getContent())
+            .likes(0)
+            .hates(0)
+            .post(post)
+            .member(member).build();
 
-        if (post instanceof KnowledgePost)
+        if (post instanceof KnowledgePost) {
             ((KnowledgePost) post).setComments(((KnowledgePost) post).getComments() + 1);
+        }
 
         return comment;
     }
 
     public static void removeComment(Comment comment, EntityManager entityManager) {
         Post post = comment.getPost();
-        if (post instanceof KnowledgePost)
+        if (post instanceof KnowledgePost) {
             ((KnowledgePost) post).setComments(((KnowledgePost) post).getComments() - 1);
+        }
 
         entityManager.remove(comment);
     }
 
-    public static Comment createReComment(Post post, Member member, long parentId, WriteReCommentRequest writeReCommentRequest) {
+    public static Comment createReComment(Post post, Member member, long parentId,
+        WriteReCommentRequest writeReCommentRequest) {
         return Comment.builder()
-                .content(writeReCommentRequest.getContent())
-                .mentionedMember(writeReCommentRequest.getMentionId())
-                .parentId(parentId)
-                .post(post)
-                .member(member)
-                .likes(0)
-                .hates(0)
-                .build();
+            .content(writeReCommentRequest.getContent())
+            .mentionedMember(writeReCommentRequest.getMentionId())
+            .parentId(parentId)
+            .post(post)
+            .member(member)
+            .likes(0)
+            .hates(0)
+            .build();
     }
 
     public void increaseLikes() {
@@ -104,7 +125,6 @@ public class Comment {
     public void decreaseHates() {
         this.hates -= 1;
     }
-
 
 
 }

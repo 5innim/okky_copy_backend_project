@@ -19,6 +19,7 @@ public class JwtProperty {
     public static Key secretKey;
     public static SignatureAlgorithm signatureAlgorithm;
     public static String prefix;
+
     @Value("#{environment['jwt.signature-algorithm']}")
     public void setAlgorithm(String algorithm) {
         this.algorithm = algorithm;

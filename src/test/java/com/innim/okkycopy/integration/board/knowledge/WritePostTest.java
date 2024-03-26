@@ -1,7 +1,7 @@
 package com.innim.okkycopy.integration.board.knowledge;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
-import static org.assertj.core.api.Assertions.*;
 
 import com.google.gson.Gson;
 import com.innim.okkycopy.domain.board.dto.request.write.WriteRequest;
@@ -50,14 +50,15 @@ public class WritePostTest {
         CustomUserDetails principal = new CustomUserDetails(testMember);
 
         Authentication auth =
-            UsernamePasswordAuthenticationToken.authenticated(principal, principal.getPassword(), principal.getAuthorities());
+            UsernamePasswordAuthenticationToken.authenticated(principal, principal.getPassword(),
+                principal.getAuthorities());
         context.setAuthentication(auth);
         SecurityContextHolder.setContext(context);
     }
 
     @Test
     @Transactional
-    void writeKnowledgePost() throws Exception  {
+    void writeKnowledgePost() throws Exception {
         // given
         WriteRequest writeRequest = writeRequest();
 

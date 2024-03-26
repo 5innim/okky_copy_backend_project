@@ -12,10 +12,15 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Constraint(validatedBy = ListSizeValidator.class)
 public @interface ListSize {
-    String message() default  "";
+
+    String message() default "";
+
     int max() default 2;
+
     int min() default 0;
+
     Class<?>[] groups() default {};
+
     Class<? extends Payload>[] payload() default {};
 
 }

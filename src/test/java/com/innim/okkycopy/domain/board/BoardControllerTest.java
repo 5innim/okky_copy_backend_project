@@ -1,11 +1,11 @@
 package com.innim.okkycopy.domain.board;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.times;
-import static org.assertj.core.api.Assertions.*;
 
 import com.innim.okkycopy.common.WithMockCustomUserSecurityContextFactory;
 import com.innim.okkycopy.domain.board.dto.request.ScrapRequest;
@@ -14,11 +14,11 @@ import com.innim.okkycopy.domain.board.dto.response.topics.TopicsResponse;
 import com.innim.okkycopy.domain.board.dto.response.topics.TypeResponse;
 import com.innim.okkycopy.domain.board.enums.ExpressionType;
 import com.innim.okkycopy.domain.member.entity.Member;
-
-import java.io.IOException;
-import java.util.Arrays;
 import com.innim.okkycopy.global.auth.CustomUserDetails;
 import com.innim.okkycopy.global.commons.S3Uploader;
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -30,6 +30,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 @ExtendWith(MockitoExtension.class)
 class BoardControllerTest {
+
     @Mock
     BoardService boardService;
     @Mock
@@ -44,7 +45,7 @@ class BoardControllerTest {
         given(boardService.findAllBoardTopics()).willReturn(topicsResponse);
 
         // when
-        ResponseEntity response =  boardController.serveTopics();
+        ResponseEntity response = boardController.serveTopics();
 
         // then
         then(boardService).should(times(1)).findAllBoardTopics();
@@ -88,7 +89,7 @@ class BoardControllerTest {
 
         // then
         then(boardService).should(times(1))
-                .insertPostExpression(customUserDetails.getMember(), id, ExpressionType.LIKE);
+            .insertPostExpression(customUserDetails.getMember(), id, ExpressionType.LIKE);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
     }
 
@@ -103,7 +104,7 @@ class BoardControllerTest {
 
         // then
         then(boardService).should(times(1))
-                .insertPostExpression(customUserDetails.getMember(), id, ExpressionType.HATE);
+            .insertPostExpression(customUserDetails.getMember(), id, ExpressionType.HATE);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
     }
 
@@ -118,7 +119,7 @@ class BoardControllerTest {
 
         // then
         then(boardService).should(times(1))
-                .deletePostExpression(customUserDetails.getMember(), id, ExpressionType.LIKE);
+            .deletePostExpression(customUserDetails.getMember(), id, ExpressionType.LIKE);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
     }
 
@@ -133,7 +134,7 @@ class BoardControllerTest {
 
         // then
         then(boardService).should(times(1))
-                .deletePostExpression(customUserDetails.getMember(), id, ExpressionType.HATE);
+            .deletePostExpression(customUserDetails.getMember(), id, ExpressionType.HATE);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
     }
 
@@ -156,13 +157,13 @@ class BoardControllerTest {
         TopicResponse tr3 = new TopicResponse("topic3", 3);
 
         TypeResponse typeResponse1 = new TypeResponse("type1", 1, Arrays.asList(tr1, tr2));
-        TypeResponse typeResponse2 = new TypeResponse("type2", 2, Arrays.asList(tr3));
+        TypeResponse typeResponse2 = new TypeResponse("type2", 2, List.of(tr3));
 
         return new TopicsResponse(Arrays.asList(typeResponse1, typeResponse2));
     }
 
     private ScrapRequest scrapRequest() {
-        return new ScrapRequest(1l);
+        return new ScrapRequest(1L);
     }
 
 }

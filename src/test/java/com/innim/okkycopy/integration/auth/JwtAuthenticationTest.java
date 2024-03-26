@@ -1,8 +1,8 @@
 package com.innim.okkycopy.integration.auth;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.assertj.core.api.Assertions.*;
 
 import com.google.gson.Gson;
 import com.innim.okkycopy.domain.member.dto.request.SignupRequest;
@@ -109,7 +109,6 @@ public class JwtAuthenticationTest {
         String prefix = JwtProperty.prefix;
         String accessToken = notExistMemberToken();
 
-
         // when
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.get("/member/info")
             .header("Authorization", prefix + accessToken)
@@ -145,24 +144,25 @@ public class JwtAuthenticationTest {
     String correctToken() {
         Date loginDate = new Date();
         Date expiredDate = new Date(loginDate.getTime() + JwtProperty.accessValidTime);
-        return JwtUtil.generateToken(1l, expiredDate, loginDate, "access");
+        return JwtUtil.generateToken(1L, expiredDate, loginDate, "access");
     }
 
     String notExistMemberToken() {
         Date loginDate = new Date();
         Date expiredDate = new Date(loginDate.getTime() + JwtProperty.accessValidTime);
-        return JwtUtil.generateToken(1111l, expiredDate, loginDate, "access");
+        return JwtUtil.generateToken(1111L, expiredDate, loginDate, "access");
     }
 
     String expiredToken() {
         Date loginDate = new Date();
         Date expiredDate = new Date(loginDate.getTime() - JwtProperty.accessValidTime);
-        return JwtUtil.generateToken(1l, expiredDate, loginDate, "access");
+        return JwtUtil.generateToken(1L, expiredDate, loginDate, "access");
     }
 
     String unCorrectSecretToken() {
         String generatedToken;
-        Key unCorrectSecretKey = Keys.hmacShaKeyFor(Base64.getEncoder().encode("it's not a correct secret for generating secret key".getBytes()));
+        Key unCorrectSecretKey = Keys.hmacShaKeyFor(
+            Base64.getEncoder().encode("it's not a correct secret for generating secret key".getBytes()));
         Date loginDate = new Date();
         Date expiredDate = new Date(loginDate.getTime() + JwtProperty.accessValidTime);
         try {
@@ -170,12 +170,12 @@ public class JwtAuthenticationTest {
                 .setHeader(Map.of("alg", JwtProperty.algorithm, "typ", "JWT"))
                 .setExpiration(expiredDate)
                 .setSubject("access")
-                .addClaims(Map.of("uid", 1l))
+                .addClaims(Map.of("uid", 1L))
                 .addClaims(Map.of("lat", loginDate))
                 .signWith(unCorrectSecretKey, JwtProperty.signatureAlgorithm)
                 .compact();
-        } catch(Exception ex) {
-            throw new TokenGenerateException("can not generate token with userId: " + "[" + 1l + "]");
+        } catch (Exception ex) {
+            throw new TokenGenerateException("can not generate token with userId: " + "[" + 1L + "]");
         }
 
         return generatedToken;

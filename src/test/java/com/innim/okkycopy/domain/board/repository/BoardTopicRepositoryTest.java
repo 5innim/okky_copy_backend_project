@@ -1,6 +1,6 @@
 package com.innim.okkycopy.domain.board.repository;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.innim.okkycopy.domain.board.entity.BoardTopic;
 import com.innim.okkycopy.domain.board.entity.BoardType;
@@ -16,6 +16,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = Replace.NONE)
 public class BoardTopicRepositoryTest {
+
     @Autowired
     BoardTypeRepository boardTypeRepository;
     @Autowired
@@ -29,12 +30,12 @@ public class BoardTopicRepositoryTest {
     void findByNameTest() {
         // given
         // execute procedure by data.sql
-        List<BoardType> list =  boardTypeRepository.findAll();
+        List<BoardType> list = boardTypeRepository.findAll();
         BoardType type = list.get(0);
         BoardTopic topic = type.getBoardTopics().get(0);
 
         // when
-        Optional<BoardTopic> optional =  boardTopicRepository.findByName(topic.getName());
+        Optional<BoardTopic> optional = boardTopicRepository.findByName(topic.getName());
 
         // then
         assertThat(optional.isEmpty()).isFalse();

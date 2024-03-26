@@ -11,6 +11,7 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 public class TopicsResponse {
+
     List<TypeResponse> types;
 
     public static TopicsResponse toDto(List<BoardType> boardTypes) {

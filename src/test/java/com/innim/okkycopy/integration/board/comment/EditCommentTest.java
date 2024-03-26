@@ -29,6 +29,7 @@ import org.springframework.web.context.WebApplicationContext;
 
 @SpringBootTest
 public class EditCommentTest {
+
     @Autowired
     WebApplicationContext context;
     @Autowired
@@ -51,7 +52,8 @@ public class EditCommentTest {
         CustomUserDetails principal = new CustomUserDetails(testMember);
 
         Authentication auth =
-            UsernamePasswordAuthenticationToken.authenticated(principal, principal.getPassword(), principal.getAuthorities());
+            UsernamePasswordAuthenticationToken.authenticated(principal, principal.getPassword(),
+                principal.getAuthorities());
         context.setAuthentication(auth);
         SecurityContextHolder.setContext(context);
     }
@@ -60,7 +62,7 @@ public class EditCommentTest {
     @Transactional
     void given_noExistComment_then_responseErrorCode() throws Exception {
         // given
-        long commentId = 1000l;
+        long commentId = 1000L;
         WriteCommentRequest writeCommentRequest = commentRequest();
 
         // when
@@ -80,7 +82,7 @@ public class EditCommentTest {
     void given_noEqualCommentWriterWithAuthenticationPrincipal_then_responseErrorCode() throws Exception {
         // given
         WriteCommentRequest writeCommentRequest = commentRequest();
-        long commentId = 2l;
+        long commentId = 2L;
 
         // when
         ResultActions resultActions = mockMvc.perform(
@@ -99,7 +101,7 @@ public class EditCommentTest {
     void given_correctUpdateInfo_then_response204() throws Exception {
         // given
         WriteCommentRequest writeCommentRequest = commentRequest();
-        long commentId = 1l;
+        long commentId = 1L;
 
         // when
         MockHttpServletResponse response = mockMvc.perform(

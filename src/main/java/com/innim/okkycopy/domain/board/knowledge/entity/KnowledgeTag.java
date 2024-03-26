@@ -18,6 +18,7 @@ import lombok.Setter;
 @Setter
 @DiscriminatorValue(value = "knowledge")
 public class KnowledgeTag extends Tag {
+
     @ManyToOne(optional = false)
     @JoinColumn(name = "topic_id")
     private BoardTopic boardTopic;

@@ -9,6 +9,7 @@ import lombok.Setter;
 @Setter
 @Builder
 public class BriefMemberInfo {
+
     private String nickname;
     private String name;
     private String email;

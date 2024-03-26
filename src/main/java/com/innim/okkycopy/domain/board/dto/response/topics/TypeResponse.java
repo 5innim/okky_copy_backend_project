@@ -12,6 +12,7 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 public class TypeResponse {
+
     String name;
     long typeId;
     List<TopicResponse> topics;

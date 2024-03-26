@@ -16,6 +16,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @Builder
 public class PostDetailResponse {
+
     private WriterInfoResponse writerInfo;
     private String title;
     private String content;
@@ -34,17 +35,17 @@ public class PostDetailResponse {
         }
 
         return PostDetailResponse.builder()
-                .writerInfo((member == null) ? null:WriterInfoResponse.builder()
-                        .memberId(member.getMemberId())
-                        .nickName(member.getNickname())
-                        .profile(member.getProfile()).build())
-                .title(knowledgePost.getTitle())
-                .content(knowledgePost.getContent())
-                .tags(tags).views(knowledgePost.getViews())
-                .likes(knowledgePost.getLikes())
-                .hates(knowledgePost.getHates())
-                .createdDate(knowledgePost.getCreatedDate())
-                .build();
+            .writerInfo((member == null) ? null : WriterInfoResponse.builder()
+                .memberId(member.getMemberId())
+                .nickName(member.getNickname())
+                .profile(member.getProfile()).build())
+            .title(knowledgePost.getTitle())
+            .content(knowledgePost.getContent())
+            .tags(tags).views(knowledgePost.getViews())
+            .likes(knowledgePost.getLikes())
+            .hates(knowledgePost.getHates())
+            .createdDate(knowledgePost.getCreatedDate())
+            .build();
     }
 
 }

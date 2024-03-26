@@ -4,11 +4,14 @@ import com.innim.okkycopy.domain.board.dto.response.post.detail.WriterInfoRespon
 import com.innim.okkycopy.domain.board.entity.Post;
 import com.innim.okkycopy.domain.board.entity.Tag;
 import com.innim.okkycopy.domain.board.knowledge.entity.KnowledgePost;
-import lombok.*;
-
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Setter
 @Getter
@@ -16,6 +19,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class BriefPostResponse {
+
     long postId;
     String title;
     WriterInfoResponse writerInfo;
@@ -32,12 +36,12 @@ public class BriefPostResponse {
         }
 
         BriefPostResponse response = BriefPostResponse.builder()
-                .postId(post.getPostId())
-                .title(post.getTitle())
-                .writerInfo(WriterInfoResponse.toWriterInfoRequestDto(post.getMember()))
-                .createdDate(post.getCreatedDate())
-                .tags(tags)
-                .build();
+            .postId(post.getPostId())
+            .title(post.getTitle())
+            .writerInfo(WriterInfoResponse.toWriterInfoRequestDto(post.getMember()))
+            .createdDate(post.getCreatedDate())
+            .tags(tags)
+            .build();
 
         if (post instanceof KnowledgePost) {
             response.setViews(((KnowledgePost) post).getViews());
