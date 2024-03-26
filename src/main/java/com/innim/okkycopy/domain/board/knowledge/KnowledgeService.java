@@ -15,11 +15,9 @@ import com.innim.okkycopy.domain.board.repository.ScrapRepository;
 import com.innim.okkycopy.domain.member.MemberRepository;
 import com.innim.okkycopy.domain.member.entity.Member;
 import com.innim.okkycopy.global.auth.CustomUserDetails;
-import com.innim.okkycopy.global.error.ErrorCode;
-import com.innim.okkycopy.global.error.exception.NoAuthorityException;
-import com.innim.okkycopy.global.error.exception.NoSuchPostException;
-import com.innim.okkycopy.global.error.exception.NoSuchTopicException;
-import com.innim.okkycopy.global.error.exception.NotSupportedCaseException;
+import com.innim.okkycopy.global.error.ErrorCase;
+import com.innim.okkycopy.global.error.exception.StatusCode400Exception;
+import com.innim.okkycopy.global.error.exception.StatusCode403Exception;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import lombok.RequiredArgsConstructor;
@@ -46,8 +44,8 @@ public class KnowledgeService {
         Member member = entityManager.merge(customUserDetails.getMember());
 
         BoardTopic boardTopic = boardTopicRepository.findByName(writeRequest.getTopic())
-            .orElseThrow(() -> new NoSuchTopicException(
-                ErrorCode._400_NO_SUCH_TOPIC));
+            .orElseThrow(() -> new StatusCode400Exception(
+                ErrorCase._400_NO_SUCH_TOPIC));
 
         KnowledgePost knowledgePost = KnowledgePost.create(writeRequest, boardTopic, member);
         entityManager.persist(knowledgePost);
@@ -56,7 +54,7 @@ public class KnowledgeService {
     @Transactional
     public PostDetailResponse findKnowledgePost(CustomUserDetails customUserDetails, long postId) {
         KnowledgePost knowledgePost = knowledgePostRepository.findByPostId(postId)
-            .orElseThrow(() -> new NoSuchPostException(ErrorCode._400_NO_SUCH_POST));
+            .orElseThrow(() -> new StatusCode400Exception(ErrorCase._400_NO_SUCH_POST));
         Member member = memberRepository.findByMemberId(knowledgePost.getMember().getMemberId()).orElseGet(() -> null);
 
         PostDetailResponse response = PostDetailResponse.toPostDetailResponseDto(knowledgePost, member);
@@ -81,13 +79,13 @@ public class KnowledgeService {
     public void modifyKnowledgePost(CustomUserDetails customUserDetails, WriteRequest updateRequest, long postId) {
         Member mergedMember = entityManager.merge(customUserDetails.getMember());
         KnowledgePost knowledgePost = knowledgePostRepository.findByPostId(postId)
-            .orElseThrow(() -> new NoSuchPostException(ErrorCode._400_NO_SUCH_POST));
+            .orElseThrow(() -> new StatusCode400Exception(ErrorCase._400_NO_SUCH_POST));
         BoardTopic boardTopic = boardTopicRepository.findByName(updateRequest.getTopic())
-            .orElseThrow(() -> new NoSuchTopicException(
-                ErrorCode._400_NO_SUCH_TOPIC));
+            .orElseThrow(() -> new StatusCode400Exception(
+                ErrorCase._400_NO_SUCH_TOPIC));
 
         if (knowledgePost.getMember().getMemberId() != mergedMember.getMemberId()) {
-            throw new NoAuthorityException(ErrorCode._403_NO_AUTHORITY);
+            throw new StatusCode403Exception(ErrorCase._403_NO_AUTHORITY);
         }
         knowledgePost.update(updateRequest, boardTopic);
     }
@@ -96,10 +94,10 @@ public class KnowledgeService {
     public void removeKnowledgePost(CustomUserDetails customUserDetails, long postId) {
         Member mergedMember = entityManager.merge(customUserDetails.getMember());
         KnowledgePost knowledgePost = knowledgePostRepository.findByPostId(postId)
-            .orElseThrow(() -> new NoSuchPostException(ErrorCode._400_NO_SUCH_POST));
+            .orElseThrow(() -> new StatusCode400Exception(ErrorCase._400_NO_SUCH_POST));
 
         if (knowledgePost.getMember().getMemberId() != mergedMember.getMemberId()) {
-            throw new NoAuthorityException(ErrorCode._403_NO_AUTHORITY);
+            throw new StatusCode403Exception(ErrorCase._403_NO_AUTHORITY);
         }
         entityManager.remove(knowledgePost);
     }
@@ -113,9 +111,9 @@ public class KnowledgeService {
         } else {
             BoardTopic boardTopic = boardTopicRepository
                 .findByTopicId(topicId)
-                .orElseThrow(() -> new NoSuchTopicException(ErrorCode._400_NO_SUCH_TOPIC));
+                .orElseThrow(() -> new StatusCode400Exception(ErrorCase._400_NO_SUCH_TOPIC));
             if (boardTopic.getBoardType().getTypeId() != 2) {
-                throw new NotSupportedCaseException(ErrorCode._400_NOT_SUPPORTED_CASE);
+                throw new StatusCode400Exception(ErrorCase._400_NOT_SUPPORTED_CASE);
             }
             knowledgePostPage = knowledgePostRepository.findByTopicId(boardTopic, (keyword == null) ? "" : keyword,
                 pageable);

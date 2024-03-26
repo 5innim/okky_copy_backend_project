@@ -13,8 +13,7 @@ import com.innim.okkycopy.domain.board.comment.repository.CommentRepository;
 import com.innim.okkycopy.domain.board.entity.Post;
 import com.innim.okkycopy.domain.board.repository.PostRepository;
 import com.innim.okkycopy.domain.member.MemberRepository;
-import com.innim.okkycopy.global.error.exception.NoSuchCommentException;
-import com.innim.okkycopy.global.error.exception.NoSuchPostException;
+import com.innim.okkycopy.global.error.exception.StatusCode400Exception;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Optional;
@@ -43,7 +42,7 @@ public class CommentServiceTest {
     class SelectComments {
 
         @Test
-        void given_notExistPostId_then_throwNoSuchPostException() {
+        void given_notExistPostId_then_throwStatusCode400Exception() {
             // given
             long notExistPostId = 1L;
             given(postRepository.findByPostId(notExistPostId)).willReturn(Optional.empty());
@@ -55,7 +54,7 @@ public class CommentServiceTest {
 
             // then
             then(postRepository).should(times(1)).findByPostId(notExistPostId);
-            assertThat(thrown).isInstanceOf(NoSuchPostException.class);
+            assertThat(thrown).isInstanceOf(StatusCode400Exception.class);
         }
 
         @Test
@@ -92,7 +91,7 @@ public class CommentServiceTest {
     class SelectReComments {
 
         @Test
-        void given_notExistCommentId_then_throwNoSuchCommentException() {
+        void given_notExistCommentId_then_throwStatusCode400Exception() {
             // given
             long notExistCommentId = 1L;
             given(commentRepository.findByCommentId(notExistCommentId)).willReturn(Optional.empty());
@@ -104,7 +103,7 @@ public class CommentServiceTest {
 
             // then
             then(commentRepository).should(times(1)).findByCommentId(notExistCommentId);
-            assertThat(thrown).isInstanceOf(NoSuchCommentException.class);
+            assertThat(thrown).isInstanceOf(StatusCode400Exception.class);
         }
 
         @Test

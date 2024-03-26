@@ -10,7 +10,7 @@ import com.innim.okkycopy.domain.board.dto.response.topics.TopicsResponse;
 import com.innim.okkycopy.domain.board.entity.BoardTopic;
 import com.innim.okkycopy.domain.board.entity.BoardType;
 import com.innim.okkycopy.domain.board.repository.BoardTypeRepository;
-import com.innim.okkycopy.global.error.exception.FailInitializationException;
+import com.innim.okkycopy.global.error.exception.StatusCode500Exception;
 import java.util.Arrays;
 import java.util.List;
 import org.junit.jupiter.api.Nested;
@@ -46,7 +46,7 @@ public class BoardServiceTest {
         }
 
         @Test
-        void given_emptyTypes_then_throwFailInitializationException() {
+        void given_emptyTypes_then_throwStatusCode500Exception() {
             // given
             given(boardTypeRepository.findAll()).willReturn(Arrays.asList());
 
@@ -56,7 +56,7 @@ public class BoardServiceTest {
             });
 
             // then
-            assertThat(thrown).isInstanceOf(FailInitializationException.class);
+            assertThat(thrown).isInstanceOf(StatusCode500Exception.class);
         }
 
         List<BoardType> boardTypes() {

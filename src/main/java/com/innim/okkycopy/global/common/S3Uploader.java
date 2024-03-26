@@ -3,8 +3,8 @@ package com.innim.okkycopy.global.common;
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.PutObjectRequest;
-import com.innim.okkycopy.global.error.ErrorCode;
-import com.innim.okkycopy.global.error.exception.ServiceException;
+import com.innim.okkycopy.global.error.ErrorCase;
+import com.innim.okkycopy.global.error.exception.StatusCodeException;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -27,15 +27,15 @@ public class S3Uploader {
     @Value("${cloud.aws.s3.folder-path}")
     private String folderPath;
 
-    public String uploadFileToS3(MultipartFile multipartFile) throws ServiceException, IOException {
+    public String uploadFileToS3(MultipartFile multipartFile) throws StatusCodeException, IOException {
         File uploadFile = convert(multipartFile)
-            .orElseThrow(() -> new ServiceException(ErrorCode._500_FILE_NOT_CREATED));
+            .orElseThrow(() -> new StatusCodeException(ErrorCase._500_FILE_NOT_CREATED));
 
         try {
             String filePath = folderPath + "/" + UUID.randomUUID();
             return putFileToS3(uploadFile, filePath);
         } catch (Exception ex) {
-            throw new ServiceException(ErrorCode._500_FAIL_PUT_S3);
+            throw new StatusCodeException(ErrorCase._500_FAIL_PUT_S3);
         } finally {
             removeNewFile(uploadFile);
         }

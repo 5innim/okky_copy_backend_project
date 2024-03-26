@@ -5,8 +5,8 @@ import com.innim.okkycopy.domain.member.dto.request.SignupRequest;
 import com.innim.okkycopy.domain.member.dto.response.BriefMemberResponse;
 import com.innim.okkycopy.domain.member.dto.response.MemberResponse;
 import com.innim.okkycopy.domain.member.entity.Member;
-import com.innim.okkycopy.global.error.ErrorCode;
-import com.innim.okkycopy.global.error.exception.DuplicateException;
+import com.innim.okkycopy.global.error.ErrorCase;
+import com.innim.okkycopy.global.error.exception.StatusCode409Exception;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import java.util.ArrayList;
@@ -34,11 +34,11 @@ public class MemberService {
     public BriefMemberResponse addMember(SignupRequest signupRequest) {
 
         if (memberRepository.existsById(signupRequest.getId())) {
-            throw new DuplicateException(ErrorCode._409_DUPLICATE_ID);
+            throw new StatusCode409Exception(ErrorCase._409_DUPLICATE_ID);
         }
 
         if (memberRepository.existsByEmail(signupRequest.getEmail())) {
-            throw new DuplicateException(ErrorCode._409_DUPLICATE_EMAIL);
+            throw new StatusCode409Exception(ErrorCase._409_DUPLICATE_EMAIL);
         }
 
         signupRequest.encodePassword(passwordEncoder);

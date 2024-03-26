@@ -5,7 +5,7 @@ import com.innim.okkycopy.domain.board.dto.response.FileResponse;
 import com.innim.okkycopy.domain.board.enums.ExpressionType;
 import com.innim.okkycopy.global.auth.CustomUserDetails;
 import com.innim.okkycopy.global.common.S3Uploader;
-import com.innim.okkycopy.global.error.exception.ServiceException;
+import com.innim.okkycopy.global.error.exception.StatusCodeException;
 import java.io.IOException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -83,7 +83,7 @@ public class BoardController {
 
     @PostMapping("/file/upload")
     public ResponseEntity<Object> fileAdd(@RequestParam("file") MultipartFile file)
-            throws ServiceException, IOException {
+            throws StatusCodeException, IOException {
         return ResponseEntity.ok(new FileResponse(s3Uploader.uploadFileToS3(file)));
     }
 

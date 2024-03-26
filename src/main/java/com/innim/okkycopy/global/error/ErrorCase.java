@@ -7,7 +7,7 @@ import org.springframework.http.HttpStatus;
 
 @Getter
 @AllArgsConstructor
-public enum ErrorCode {
+public enum ErrorCase {
     _400_BAD_CREDENTIALS(HttpStatus.BAD_REQUEST, "400011", "'id' or 'password' is incorrect"),
     _400_AUTHENTICATION_FAILED(HttpStatus.BAD_REQUEST, "400012", "authentication is failed"),
     _400_INVALID_TOKEN_VALUE(HttpStatus.BAD_REQUEST, "400013", "invalid token value"),

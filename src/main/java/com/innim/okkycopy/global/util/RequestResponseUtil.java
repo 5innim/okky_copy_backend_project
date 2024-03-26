@@ -2,7 +2,7 @@ package com.innim.okkycopy.global.util;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.innim.okkycopy.global.error.ErrorCode;
+import com.innim.okkycopy.global.error.ErrorCase;
 import com.innim.okkycopy.global.error.ErrorResponse;
 import jakarta.servlet.ServletInputStream;
 import jakarta.servlet.http.Cookie;
@@ -27,12 +27,12 @@ public class RequestResponseUtil {
         response.setCharacterEncoding("UTF-8");
     }
 
-    public static void makeExceptionResponseForFilter(HttpServletResponse response, ErrorCode errorCode)
+    public static void makeExceptionResponseForFilter(HttpServletResponse response, ErrorCase errorCase)
         throws IOException {
         makeJsonResponseHeader(response);
-        response.setStatus(errorCode.getStatus().value());
+        response.setStatus(errorCase.getStatus().value());
 
-        String body = objectToJson(new ErrorResponse(errorCode.getCode(), errorCode.getMessage()));
+        String body = objectToJson(new ErrorResponse(errorCase.getCode(), errorCase.getMessage()));
         response.getWriter().write(body);
     }
 

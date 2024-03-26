@@ -17,9 +17,7 @@ import com.innim.okkycopy.domain.board.knowledge.repository.KnowledgePostReposit
 import com.innim.okkycopy.domain.board.repository.BoardTopicRepository;
 import com.innim.okkycopy.domain.member.MemberRepository;
 import com.innim.okkycopy.domain.member.entity.Member;
-import com.innim.okkycopy.global.error.exception.NoSuchPostException;
-import com.innim.okkycopy.global.error.exception.NoSuchTopicException;
-import com.innim.okkycopy.global.error.exception.NotSupportedCaseException;
+import com.innim.okkycopy.global.error.exception.StatusCode400Exception;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -48,7 +46,7 @@ class KnowledgeServiceTest {
     class SelectKnowledgePostTest {
 
         @Test
-        void given_notExistPostId_then_throwNoSuchPostException() {
+        void given_notExistPostId_then_throwStatusCode400Exception() {
             // given
             long notExistPostId = 1L;
             given(knowledgePostRepository.findByPostId(notExistPostId)).willReturn(Optional.empty());
@@ -60,7 +58,7 @@ class KnowledgeServiceTest {
 
             // then
             then(knowledgePostRepository).should(times(1)).findByPostId(notExistPostId);
-            assertThat(thrown).isInstanceOf(NoSuchPostException.class);
+            assertThat(thrown).isInstanceOf(StatusCode400Exception.class);
         }
 
         @Test
@@ -128,11 +126,11 @@ class KnowledgeServiceTest {
 
             // then
             then(boardTopicRepository).should(times(1)).findByTopicId(topicId);
-            assertThat(thrown).isInstanceOf(NoSuchTopicException.class);
+            assertThat(thrown).isInstanceOf(StatusCode400Exception.class);
         }
 
         @Test
-        void given_topicIdOfExistTopicButNotInKnowledgeType_then_throwNotSupportedCaseException() {
+        void given_topicIdOfExistTopicButNotInKnowledgeType_then_throwStatusCode400Exception() {
             // given
             long topicId = 1L;
             String keyword = "test_keyword";
@@ -151,7 +149,7 @@ class KnowledgeServiceTest {
 
             // then
             then(boardTopicRepository).should(times(1)).findByTopicId(topicId);
-            assertThat(thrown).isInstanceOf(NotSupportedCaseException.class);
+            assertThat(thrown).isInstanceOf(StatusCode400Exception.class);
         }
     }
 }
