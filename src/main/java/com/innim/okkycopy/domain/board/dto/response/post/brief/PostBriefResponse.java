@@ -18,7 +18,7 @@ import lombok.Setter;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class BriefPostResponse {
+public class PostBriefResponse {
 
     long postId;
     String title;
@@ -29,16 +29,16 @@ public class BriefPostResponse {
     int comments;
     int likes;
 
-    public static <T extends Post> BriefPostResponse createBriefPostResponse(T post) {
+    public static <T extends Post> PostBriefResponse create(T post) {
         List<String> tags = new ArrayList<>();
         for (Tag tag : post.getTags()) {
             tags.add(tag.getName());
         }
 
-        BriefPostResponse response = BriefPostResponse.builder()
+        PostBriefResponse response = PostBriefResponse.builder()
             .postId(post.getPostId())
             .title(post.getTitle())
-            .writerInfo(WriterInfo.toWriterInfoRequestDto(post.getMember()))
+            .writerInfo(WriterInfo.of(post.getMember()))
             .createdDate(post.getCreatedDate())
             .tags(tags)
             .build();

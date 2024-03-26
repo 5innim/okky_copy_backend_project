@@ -3,7 +3,7 @@ package com.innim.okkycopy.domain.board.knowledge;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.innim.okkycopy.common.WithMockCustomUserSecurityContextFactory;
-import com.innim.okkycopy.domain.board.dto.request.write.WriteRequest;
+import com.innim.okkycopy.domain.board.dto.request.write.PostAddRequest;
 import com.innim.okkycopy.domain.board.entity.BoardTopic;
 import com.innim.okkycopy.domain.board.entity.Post;
 import com.innim.okkycopy.domain.board.knowledge.entity.KnowledgePost;
@@ -37,12 +37,12 @@ class KnowledgePostRepositoryTest {
     void findByPostIdTest() {
         // given
         Member member = WithMockCustomUserSecurityContextFactory.customUserDetailsMock().getMember();
-        WriteRequest writeRequest = writeRequest();
-        BoardTopic boardTopic = boardTopicRepository.findByName(writeRequest.getTopic()).get();
+        PostAddRequest postAddRequest = writeRequest();
+        BoardTopic boardTopic = boardTopicRepository.findByName(postAddRequest.getTopic()).get();
 
         List<Post> posts = new ArrayList<>();
         member.setPosts(posts);
-        KnowledgePost knowledgePost = KnowledgePost.create(writeRequest, boardTopic, member);
+        KnowledgePost knowledgePost = KnowledgePost.create(postAddRequest, boardTopic, member);
 
         entityManager.merge(member);
         entityManager.persist(knowledgePost);
@@ -54,8 +54,8 @@ class KnowledgePostRepositoryTest {
         assertThat(post.getTitle()).isEqualTo(knowledgePost.getTitle());
     }
 
-    WriteRequest writeRequest() {
-        return WriteRequest.builder()
+    PostAddRequest writeRequest() {
+        return PostAddRequest.builder()
             .title("test_title")
             .content("test_content")
             .topic("컬럼")

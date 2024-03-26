@@ -72,7 +72,7 @@ public class CommentExpression {
         return true;
     }
 
-    public static void removeCommentExpression(
+    public static void remove(
         EntityManager entityManager,
         CommentExpression commentExpression,
         Comment comment,

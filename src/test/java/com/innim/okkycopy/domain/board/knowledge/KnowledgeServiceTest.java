@@ -7,8 +7,8 @@ import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.times;
 
 import com.innim.okkycopy.common.WithMockCustomUserSecurityContextFactory;
-import com.innim.okkycopy.domain.board.dto.request.write.WriteRequest;
-import com.innim.okkycopy.domain.board.dto.response.post.detail.PostDetailResponse;
+import com.innim.okkycopy.domain.board.dto.request.write.PostAddRequest;
+import com.innim.okkycopy.domain.board.dto.response.post.detail.PostDetailsResponse;
 import com.innim.okkycopy.domain.board.entity.BoardTopic;
 import com.innim.okkycopy.domain.board.entity.BoardType;
 import com.innim.okkycopy.domain.board.entity.Post;
@@ -71,12 +71,12 @@ class KnowledgeServiceTest {
                 Optional.empty());
 
             // when
-            PostDetailResponse postDetailResponse = knowledgeService.findKnowledgePost(null, postId);
+            PostDetailsResponse postDetailsResponse = knowledgeService.findKnowledgePost(null, postId);
 
             // then
             then(knowledgePostRepository).should(times(1)).findByPostId(postId);
             then(memberRepository).should(times(1)).findByMemberId(knowledgePost.getMember().getMemberId());
-            assertThat(postDetailResponse.getWriterInfo()).isEqualTo(null);
+            assertThat(postDetailsResponse.getWriterInfo()).isEqualTo(null);
         }
 
         KnowledgePost knowledgePost() {
@@ -87,8 +87,8 @@ class KnowledgeServiceTest {
             return KnowledgePost.create(writeRequest(), boardTopic(), member);
         }
 
-        WriteRequest writeRequest() {
-            return WriteRequest.builder()
+        PostAddRequest writeRequest() {
+            return PostAddRequest.builder()
                 .topic("test_topic")
                 .tags(Arrays.asList())
                 .title("test_title")

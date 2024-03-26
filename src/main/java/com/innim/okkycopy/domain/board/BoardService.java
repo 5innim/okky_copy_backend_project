@@ -1,6 +1,6 @@
 package com.innim.okkycopy.domain.board;
 
-import com.innim.okkycopy.domain.board.dto.response.topics.TopicsResponse;
+import com.innim.okkycopy.domain.board.dto.response.topics.TopicListResponse;
 import com.innim.okkycopy.domain.board.entity.BoardType;
 import com.innim.okkycopy.domain.board.entity.Post;
 import com.innim.okkycopy.domain.board.entity.PostExpression;
@@ -34,14 +34,14 @@ public class BoardService {
     private EntityManager entityManager;
 
     @Transactional(readOnly = true)
-    public TopicsResponse findBoardTopics() {
+    public TopicListResponse findBoardTopics() {
         List<BoardType> boardTypes = boardTypeRepository.findAll();
 
         if (boardTypes.isEmpty()) {
             throw new StatusCode500Exception(ErrorCase._500_FAIL_INITIALIZATION);
         }
 
-        return TopicsResponse.toDto(boardTypes);
+        return TopicListResponse.of(boardTypes);
     }
 
     @Transactional

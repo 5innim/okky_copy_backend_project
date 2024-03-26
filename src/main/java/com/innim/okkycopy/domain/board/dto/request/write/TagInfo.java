@@ -10,7 +10,7 @@ import lombok.Setter;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class TagRequest {
+public class TagInfo {
 
     @Size(min = 1, max = 10)
     private String name;

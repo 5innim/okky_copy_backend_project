@@ -1,8 +1,8 @@
 package com.innim.okkycopy.domain.board.knowledge;
 
-import com.innim.okkycopy.domain.board.dto.request.write.WriteRequest;
-import com.innim.okkycopy.domain.board.dto.response.post.brief.PostsResponse;
-import com.innim.okkycopy.domain.board.dto.response.post.detail.PostDetailResponse;
+import com.innim.okkycopy.domain.board.dto.request.write.PostAddRequest;
+import com.innim.okkycopy.domain.board.dto.response.post.brief.PostListResponse;
+import com.innim.okkycopy.domain.board.dto.response.post.detail.PostDetailsResponse;
 import com.innim.okkycopy.domain.board.dto.response.post.detail.RequesterInfo;
 import com.innim.okkycopy.domain.board.entity.BoardTopic;
 import com.innim.okkycopy.domain.board.entity.PostExpression;
@@ -40,24 +40,24 @@ public class KnowledgeService {
     private EntityManager entityManager;
 
     @Transactional
-    public void addKnowledgePost(WriteRequest writeRequest, CustomUserDetails customUserDetails) {
+    public void addKnowledgePost(PostAddRequest postAddRequest, CustomUserDetails customUserDetails) {
         Member member = entityManager.merge(customUserDetails.getMember());
 
-        BoardTopic boardTopic = boardTopicRepository.findByName(writeRequest.getTopic())
+        BoardTopic boardTopic = boardTopicRepository.findByName(postAddRequest.getTopic())
             .orElseThrow(() -> new StatusCode400Exception(
                 ErrorCase._400_NO_SUCH_TOPIC));
 
-        KnowledgePost knowledgePost = KnowledgePost.create(writeRequest, boardTopic, member);
+        KnowledgePost knowledgePost = KnowledgePost.create(postAddRequest, boardTopic, member);
         entityManager.persist(knowledgePost);
     }
 
     @Transactional
-    public PostDetailResponse findKnowledgePost(CustomUserDetails customUserDetails, long postId) {
+    public PostDetailsResponse findKnowledgePost(CustomUserDetails customUserDetails, long postId) {
         KnowledgePost knowledgePost = knowledgePostRepository.findByPostId(postId)
             .orElseThrow(() -> new StatusCode400Exception(ErrorCase._400_NO_SUCH_POST));
         Member member = memberRepository.findByMemberId(knowledgePost.getMember().getMemberId()).orElseGet(() -> null);
 
-        PostDetailResponse response = PostDetailResponse.toPostDetailResponseDto(knowledgePost, member);
+        PostDetailsResponse response = PostDetailsResponse.of(knowledgePost, member);
         if (customUserDetails != null) {
             Member requester = customUserDetails.getMember();
             PostExpression postExpression = postExpressionRepository.findByMemberAndPost(knowledgePost, requester)
@@ -76,7 +76,7 @@ public class KnowledgeService {
     }
 
     @Transactional
-    public void modifyKnowledgePost(CustomUserDetails customUserDetails, WriteRequest updateRequest, long postId) {
+    public void modifyKnowledgePost(CustomUserDetails customUserDetails, PostAddRequest updateRequest, long postId) {
         Member mergedMember = entityManager.merge(customUserDetails.getMember());
         KnowledgePost knowledgePost = knowledgePostRepository.findByPostId(postId)
             .orElseThrow(() -> new StatusCode400Exception(ErrorCase._400_NO_SUCH_POST));
@@ -103,7 +103,7 @@ public class KnowledgeService {
     }
 
     @Transactional(readOnly = true)
-    public PostsResponse findKnowledgePostsByKeywordAndPageable(Long topicId, String keyword, Pageable pageable) {
+    public PostListResponse findKnowledgePostsByKeywordAndPageable(Long topicId, String keyword, Pageable pageable) {
         Page<KnowledgePost> knowledgePostPage;
         if (topicId == null) {
             knowledgePostPage = knowledgePostRepository.findAllByKeywordAndPageable((keyword == null) ? "" : keyword,
@@ -119,6 +119,6 @@ public class KnowledgeService {
                 pageable);
         }
 
-        return PostsResponse.createPostsResponse(knowledgePostPage);
+        return PostListResponse.create(knowledgePostPage);
     }
 }

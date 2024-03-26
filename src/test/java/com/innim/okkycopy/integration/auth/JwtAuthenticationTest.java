@@ -5,7 +5,7 @@ import static org.springframework.security.test.web.servlet.setup.SecurityMockMv
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
 import com.google.gson.Gson;
-import com.innim.okkycopy.domain.member.dto.request.SignupRequest;
+import com.innim.okkycopy.domain.member.dto.request.MemberAddRequest;
 import com.innim.okkycopy.global.error.exception.TokenGenerateException;
 import com.innim.okkycopy.global.util.JwtUtil;
 import com.innim.okkycopy.global.util.property.JwtProperty;
@@ -125,11 +125,11 @@ public class JwtAuthenticationTest {
         String prefix = JwtProperty.prefix;
         String accessToken = correctToken();
 
-        SignupRequest signupRequest = signupRequest();
+        MemberAddRequest memberAddRequest = signupRequest();
         mockMvc.perform(MockMvcRequestBuilders.post("/member/signup")
             .characterEncoding("UTF-8")
             .contentType(MediaType.APPLICATION_JSON)
-            .content(new Gson().toJson(signupRequest)));
+            .content(new Gson().toJson(memberAddRequest)));
 
         // when
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.get("/member/info")
@@ -181,8 +181,8 @@ public class JwtAuthenticationTest {
         return generatedToken;
     }
 
-    private SignupRequest signupRequest() {
-        return SignupRequest.builder()
+    private MemberAddRequest signupRequest() {
+        return MemberAddRequest.builder()
             .id("test1234")
             .password("test1234**")
             .email("test@test.com")

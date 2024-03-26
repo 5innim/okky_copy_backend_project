@@ -15,14 +15,14 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class WriteRequest {
+public class PostAddRequest {
 
     @Size(min = 1)
     private String topic;
     @Size(min = 1, max = 30)
     private String title;
     @ListSize(max = 3)
-    private List<@Valid TagRequest> tags;
+    private List<@Valid TagInfo> tags;
     @Size(min = 1, max = 20000)
     private String content;
 }

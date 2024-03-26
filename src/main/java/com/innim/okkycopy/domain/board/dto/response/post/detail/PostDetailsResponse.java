@@ -16,7 +16,7 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @Builder
-public class PostDetailResponse {
+public class PostDetailsResponse {
 
     private WriterInfo writerInfo;
     private String title;
@@ -29,13 +29,13 @@ public class PostDetailResponse {
     private RequesterInfo requesterInfo;
 
 
-    public static PostDetailResponse toPostDetailResponseDto(KnowledgePost knowledgePost, Member member) {
+    public static PostDetailsResponse of(KnowledgePost knowledgePost, Member member) {
         List<String> tags = new ArrayList<>();
         for (Tag tag : knowledgePost.getTags()) {
             tags.add(tag.getName());
         }
 
-        return PostDetailResponse.builder()
+        return PostDetailsResponse.builder()
             .writerInfo((member == null) ? null : WriterInfo.builder()
                 .memberId(member.getMemberId())
                 .nickName(member.getNickname())

@@ -6,7 +6,7 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.times;
 
-import com.innim.okkycopy.domain.board.dto.response.topics.TopicsResponse;
+import com.innim.okkycopy.domain.board.dto.response.topics.TopicListResponse;
 import com.innim.okkycopy.domain.board.entity.BoardTopic;
 import com.innim.okkycopy.domain.board.entity.BoardType;
 import com.innim.okkycopy.domain.board.repository.BoardTypeRepository;
@@ -38,11 +38,11 @@ public class BoardServiceTest {
             given(boardTypeRepository.findAll()).willReturn(boardTypes);
 
             // when
-            TopicsResponse topicsResponse = boardService.findBoardTopics();
+            TopicListResponse topicListResponse = boardService.findBoardTopics();
 
             // then
             then(boardTypeRepository).should(times(1)).findAll();
-            assertThat(topicsResponse.getTypes().get(0).getTopics().get(0).getName()).isEqualTo("test_topic");
+            assertThat(topicListResponse.getTypes().get(0).getTopics().get(0).getName()).isEqualTo("test_topic");
         }
 
         @Test

@@ -7,9 +7,9 @@ import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.times;
 
 import com.innim.okkycopy.common.WithMockCustomUserSecurityContextFactory;
-import com.innim.okkycopy.domain.member.dto.request.SignupRequest;
-import com.innim.okkycopy.domain.member.dto.response.BriefMemberResponse;
-import com.innim.okkycopy.domain.member.dto.response.MemberResponse;
+import com.innim.okkycopy.domain.member.dto.request.MemberAddRequest;
+import com.innim.okkycopy.domain.member.dto.response.MemberBriefResponse;
+import com.innim.okkycopy.domain.member.dto.response.MemberDetailsResponse;
 import com.innim.okkycopy.domain.member.entity.Member;
 import com.innim.okkycopy.global.auth.CustomUserDetails;
 import java.util.ArrayList;
@@ -31,25 +31,25 @@ class MemberControllerTest {
     @Test
     void signupTest() {
         // given
-        SignupRequest request = signupRequest();
-        BriefMemberResponse briefMemberInfo = briefMemberInfo();
+        MemberAddRequest request = signupRequest();
+        MemberBriefResponse briefMemberInfo = briefMemberInfo();
 
-        given(memberService.addMember(any(SignupRequest.class))).willReturn(briefMemberInfo);
+        given(memberService.addMember(any(MemberAddRequest.class))).willReturn(briefMemberInfo);
 
         // when
         ResponseEntity response = memberController.memberAdd(request);
 
         // then
-        then(memberService).should(times(1)).addMember(any(SignupRequest.class));
+        then(memberService).should(times(1)).addMember(any(MemberAddRequest.class));
         then(memberService).shouldHaveNoMoreInteractions();
-        assertThat(response.getBody()).isInstanceOf(BriefMemberResponse.class).isEqualTo(briefMemberInfo);
+        assertThat(response.getBody()).isInstanceOf(MemberBriefResponse.class).isEqualTo(briefMemberInfo);
     }
 
     @Test
     void serveMemberInfo() {
         // given
         CustomUserDetails request = WithMockCustomUserSecurityContextFactory.customUserDetailsMock();
-        MemberResponse memberInfo = memberInfo();
+        MemberDetailsResponse memberInfo = memberInfo();
 
         given(memberService.findMember(any(Member.class))).willReturn(memberInfo);
 
@@ -59,11 +59,11 @@ class MemberControllerTest {
         // then
         then(memberService).should(times(1)).findMember(any(Member.class));
         then(memberService).shouldHaveNoMoreInteractions();
-        assertThat(response.getBody()).isInstanceOf(MemberResponse.class).isEqualTo(memberInfo);
+        assertThat(response.getBody()).isInstanceOf(MemberDetailsResponse.class).isEqualTo(memberInfo);
     }
 
-    private SignupRequest signupRequest() {
-        return SignupRequest.builder()
+    private MemberAddRequest signupRequest() {
+        return MemberAddRequest.builder()
             .id("test1234")
             .password("test1234**")
             .email("test@test.com")
@@ -73,16 +73,16 @@ class MemberControllerTest {
             .build();
     }
 
-    private BriefMemberResponse briefMemberInfo() {
-        return BriefMemberResponse.builder()
+    private MemberBriefResponse briefMemberInfo() {
+        return MemberBriefResponse.builder()
             .name("testName")
             .nickname("testNickname")
             .email("test@test.com")
             .build();
     }
 
-    private MemberResponse memberInfo() {
-        return MemberResponse.builder()
+    private MemberDetailsResponse memberInfo() {
+        return MemberDetailsResponse.builder()
             .memberId(1L)
             .nickname("testNickname")
             .scrappedPost(new ArrayList<>())

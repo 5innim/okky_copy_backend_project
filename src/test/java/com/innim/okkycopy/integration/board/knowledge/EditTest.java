@@ -5,7 +5,7 @@ import static org.springframework.security.test.web.servlet.setup.SecurityMockMv
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
 import com.google.gson.Gson;
-import com.innim.okkycopy.domain.board.dto.request.write.WriteRequest;
+import com.innim.okkycopy.domain.board.dto.request.write.PostAddRequest;
 import com.innim.okkycopy.domain.member.MemberRepository;
 import com.innim.okkycopy.domain.member.entity.Member;
 import com.innim.okkycopy.global.auth.CustomUserDetails;
@@ -63,7 +63,7 @@ public class EditTest {
     @Transactional
     void given_noExistPost_then_responseErrorCode() throws Exception {
         // given
-        WriteRequest updateRequest = writeRequest();
+        PostAddRequest updateRequest = writeRequest();
         long postId = 1000L;
 
         // when
@@ -82,7 +82,7 @@ public class EditTest {
     @Transactional
     void given_noEqualPostWriterWithAuthenticationPrincipal_then_responseErrorCode() throws Exception {
         // given
-        WriteRequest updateRequest = writeRequest();
+        PostAddRequest updateRequest = writeRequest();
         updateRequest.setTopic("기술");
         long postId = 2L;
 
@@ -102,7 +102,7 @@ public class EditTest {
     @Transactional
     void given_noExistTopic_then_responseErrorCode() throws Exception {
         // given
-        WriteRequest updateRequest = writeRequest();
+        PostAddRequest updateRequest = writeRequest();
         long postId = 1L;
 
         // when
@@ -122,7 +122,7 @@ public class EditTest {
     @Transactional
     void given_correctUpdateInfo_then_response204() throws Exception {
         // given
-        WriteRequest updateRequest = writeRequest();
+        PostAddRequest updateRequest = writeRequest();
         updateRequest.setTopic("Tech 뉴스");
         long postId = 1L;
 
@@ -138,8 +138,8 @@ public class EditTest {
         assertThat(response.getStatus()).isEqualTo(HttpStatus.NO_CONTENT.value());
     }
 
-    WriteRequest writeRequest() {
-        return WriteRequest.builder()
+    PostAddRequest writeRequest() {
+        return PostAddRequest.builder()
             .title("test_title")
             .topic("test_topic")
             .tags(Arrays.asList())

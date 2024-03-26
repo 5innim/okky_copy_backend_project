@@ -1,8 +1,8 @@
 package com.innim.okkycopy.domain.member;
 
-import com.innim.okkycopy.domain.member.dto.request.SignupRequest;
-import com.innim.okkycopy.domain.member.dto.response.BriefMemberResponse;
-import com.innim.okkycopy.domain.member.dto.response.MemberResponse;
+import com.innim.okkycopy.domain.member.dto.request.MemberAddRequest;
+import com.innim.okkycopy.domain.member.dto.response.MemberBriefResponse;
+import com.innim.okkycopy.domain.member.dto.response.MemberDetailsResponse;
 import com.innim.okkycopy.global.auth.CustomUserDetails;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -25,14 +25,15 @@ public class MemberController {
     private final MemberService memberService;
 
     @PostMapping("/signup")
-    public ResponseEntity<BriefMemberResponse> memberAdd(@Valid @RequestBody SignupRequest signupRequest) {
+    public ResponseEntity<MemberBriefResponse> memberAdd(@Valid @RequestBody MemberAddRequest memberAddRequest) {
         return ResponseEntity
             .status(HttpStatus.CREATED)
-            .body(memberService.addMember(signupRequest));
+            .body(memberService.addMember(memberAddRequest));
     }
 
     @GetMapping("/info")
-    public ResponseEntity<MemberResponse> memberDetails(@AuthenticationPrincipal CustomUserDetails customUserDetails) {
+    public ResponseEntity<MemberDetailsResponse> memberDetails(
+        @AuthenticationPrincipal CustomUserDetails customUserDetails) {
         return ResponseEntity.ok(memberService.findMember(customUserDetails.getMember()));
     }
 

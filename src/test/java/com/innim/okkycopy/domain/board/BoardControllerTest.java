@@ -9,9 +9,9 @@ import static org.mockito.Mockito.times;
 
 import com.innim.okkycopy.common.WithMockCustomUserSecurityContextFactory;
 import com.innim.okkycopy.domain.board.dto.request.ScrapRequest;
-import com.innim.okkycopy.domain.board.dto.response.topics.TopicResponse;
-import com.innim.okkycopy.domain.board.dto.response.topics.TopicsResponse;
-import com.innim.okkycopy.domain.board.dto.response.topics.TypeResponse;
+import com.innim.okkycopy.domain.board.dto.response.topics.TopicDetailsResponse;
+import com.innim.okkycopy.domain.board.dto.response.topics.TopicListResponse;
+import com.innim.okkycopy.domain.board.dto.response.topics.TypeDetailsResponse;
 import com.innim.okkycopy.domain.board.enums.ExpressionType;
 import com.innim.okkycopy.domain.member.entity.Member;
 import com.innim.okkycopy.global.auth.CustomUserDetails;
@@ -41,8 +41,8 @@ class BoardControllerTest {
     @Test
     void serveTopicsTest() throws Exception {
         // given
-        TopicsResponse topicsResponse = topicsResponse();
-        given(boardService.findBoardTopics()).willReturn(topicsResponse);
+        TopicListResponse topicListResponse = topicsResponse();
+        given(boardService.findBoardTopics()).willReturn(topicListResponse);
 
         // when
         ResponseEntity response = boardController.boardTopicList();
@@ -50,7 +50,7 @@ class BoardControllerTest {
         // then
         then(boardService).should(times(1)).findBoardTopics();
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-        assertThat(response.getBody()).isInstanceOf(TopicsResponse.class);
+        assertThat(response.getBody()).isInstanceOf(TopicListResponse.class);
     }
 
     @Test
@@ -151,15 +151,15 @@ class BoardControllerTest {
     }
 
 
-    private TopicsResponse topicsResponse() {
-        TopicResponse tr1 = new TopicResponse("topic1", 1);
-        TopicResponse tr2 = new TopicResponse("topic2", 2);
-        TopicResponse tr3 = new TopicResponse("topic3", 3);
+    private TopicListResponse topicsResponse() {
+        TopicDetailsResponse tr1 = new TopicDetailsResponse("topic1", 1);
+        TopicDetailsResponse tr2 = new TopicDetailsResponse("topic2", 2);
+        TopicDetailsResponse tr3 = new TopicDetailsResponse("topic3", 3);
 
-        TypeResponse typeResponse1 = new TypeResponse("type1", 1, Arrays.asList(tr1, tr2));
-        TypeResponse typeResponse2 = new TypeResponse("type2", 2, List.of(tr3));
+        TypeDetailsResponse typeDetailsResponse1 = new TypeDetailsResponse("type1", 1, Arrays.asList(tr1, tr2));
+        TypeDetailsResponse typeDetailsResponse2 = new TypeDetailsResponse("type2", 2, List.of(tr3));
 
-        return new TopicsResponse(Arrays.asList(typeResponse1, typeResponse2));
+        return new TopicListResponse(Arrays.asList(typeDetailsResponse1, typeDetailsResponse2));
     }
 
     private ScrapRequest scrapRequest() {

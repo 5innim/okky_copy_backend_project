@@ -24,13 +24,13 @@ public class CommentDetailsResponse implements Comparable<CommentDetailsResponse
     private Integer hates;
     private RequesterInfo requesterInfo;
 
-    public static CommentDetailsResponse toCommentResponseDto(
+    public static CommentDetailsResponse of(
         Comment comment,
         String mentionedNickname,
         RequesterInfo requesterInfo) {
         return CommentDetailsResponse.builder()
             .writerInfo((comment.getMember() == null)
-                ? null : WriterInfo.toWriterInfoRequestDto(comment.getMember()))
+                ? null : WriterInfo.of(comment.getMember()))
             .mentionedNickname(mentionedNickname)
             .content(comment.getContent())
             .createdDate(comment.getCreatedDate())

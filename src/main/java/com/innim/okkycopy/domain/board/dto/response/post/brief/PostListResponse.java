@@ -15,18 +15,18 @@ import org.springframework.data.domain.Page;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class PostsResponse {
+public class PostListResponse {
 
-    List<BriefPostResponse> posts;
+    List<PostBriefResponse> posts;
     int totalPages;
 
-    public static <T extends Post> PostsResponse createPostsResponse(Page<T> postsPage) {
-        ArrayList<BriefPostResponse> briefPosts = new ArrayList<>();
+    public static <T extends Post> PostListResponse create(Page<T> postsPage) {
+        ArrayList<PostBriefResponse> briefPosts = new ArrayList<>();
         for (T post : postsPage.getContent()) {
-            briefPosts.add(BriefPostResponse.createBriefPostResponse(post));
+            briefPosts.add(PostBriefResponse.create(post));
         }
 
-        return PostsResponse.builder()
+        return PostListResponse.builder()
             .totalPages(postsPage.getTotalPages())
             .posts(briefPosts)
             .build();

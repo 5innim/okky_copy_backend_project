@@ -10,16 +10,16 @@ import lombok.Setter;
 @Getter
 @Setter
 @AllArgsConstructor
-public class TopicsResponse {
+public class TopicListResponse {
 
-    List<TypeResponse> types;
+    List<TypeDetailsResponse> types;
 
-    public static TopicsResponse toDto(List<BoardType> boardTypes) {
-        List<TypeResponse> typeList = new ArrayList<>();
+    public static TopicListResponse of(List<BoardType> boardTypes) {
+        List<TypeDetailsResponse> typeList = new ArrayList<>();
         for (BoardType boardType : boardTypes) {
-            typeList.add(TypeResponse.toDto(boardType));
+            typeList.add(TypeDetailsResponse.of(boardType));
         }
 
-        return new TopicsResponse(typeList);
+        return new TopicListResponse(typeList);
     }
 }

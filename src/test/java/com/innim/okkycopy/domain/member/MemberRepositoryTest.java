@@ -2,7 +2,7 @@ package com.innim.okkycopy.domain.member;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.innim.okkycopy.domain.member.dto.request.SignupRequest;
+import com.innim.okkycopy.domain.member.dto.request.MemberAddRequest;
 import com.innim.okkycopy.domain.member.entity.Member;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,10 +23,10 @@ class MemberRepositoryTest {
     void saveAndExistsByTest() {
 
         // given
-        SignupRequest signupRequest = signupRequest();
+        MemberAddRequest memberAddRequest = signupRequest();
 
         // when
-        memberRepository.save(Member.toMemberEntity(signupRequest));
+        memberRepository.save(Member.of(memberAddRequest));
 
         // then
         assertThat(memberRepository.existsById("test1")).isTrue();
@@ -37,17 +37,17 @@ class MemberRepositoryTest {
     @Transactional
     void when_saveEntity_then_autoGenerateTimestamp() {
         // given
-        SignupRequest signupRequest = signupRequest();
+        MemberAddRequest memberAddRequest = signupRequest();
 
         // when
-        Member member = memberRepository.save(Member.toMemberEntity(signupRequest));
+        Member member = memberRepository.save(Member.of(memberAddRequest));
 
         // then
         assertThat(member.getCreatedDate()).isNotNull();
     }
 
-    private SignupRequest signupRequest() {
-        return SignupRequest.builder()
+    private MemberAddRequest signupRequest() {
+        return MemberAddRequest.builder()
             .id("test1")
             .password("test1234**")
             .email("test1@test.com")

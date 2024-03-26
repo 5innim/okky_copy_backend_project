@@ -15,7 +15,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class SignupRequest {
+public class MemberAddRequest {
 
     @Size(min = 4, max = 15)
     private String id;

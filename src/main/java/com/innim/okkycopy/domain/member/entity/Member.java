@@ -5,7 +5,7 @@ import com.innim.okkycopy.domain.board.comment.entity.CommentExpression;
 import com.innim.okkycopy.domain.board.entity.Post;
 import com.innim.okkycopy.domain.board.entity.PostExpression;
 import com.innim.okkycopy.domain.board.entity.Scrap;
-import com.innim.okkycopy.domain.member.dto.request.SignupRequest;
+import com.innim.okkycopy.domain.member.dto.request.MemberAddRequest;
 import com.innim.okkycopy.global.auth.enums.Role;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -75,7 +75,7 @@ public class Member {
     @OneToMany(mappedBy = "member")
     private List<Comment> comments;
 
-    public static Member toMemberEntity(SignupRequest request) {
+    public static Member of(MemberAddRequest request) {
         return Member.builder()
             .id(request.getId())
             .password(request.getPassword())
