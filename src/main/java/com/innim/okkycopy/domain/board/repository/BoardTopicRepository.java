@@ -6,6 +6,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 
 public interface BoardTopicRepository extends JpaRepository<BoardTopic, Long> {
+
     Optional<BoardTopic> findByName(String name);
+
     Optional<BoardTopic> findByTopicId(Long topicId);
 }

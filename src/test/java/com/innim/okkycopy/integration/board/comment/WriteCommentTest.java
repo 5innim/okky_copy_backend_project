@@ -4,7 +4,7 @@ import static org.springframework.security.test.web.servlet.setup.SecurityMockMv
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
 import com.google.gson.Gson;
-import com.innim.okkycopy.domain.board.comment.dto.request.WriteCommentRequest;
+import com.innim.okkycopy.domain.board.comment.dto.request.CommentAddRequest;
 import com.innim.okkycopy.domain.member.MemberRepository;
 import com.innim.okkycopy.domain.member.entity.Member;
 import com.innim.okkycopy.global.auth.CustomUserDetails;
@@ -26,6 +26,7 @@ import org.springframework.web.context.WebApplicationContext;
 
 @SpringBootTest
 public class WriteCommentTest {
+
     @Autowired
     WebApplicationContext context;
     @Autowired
@@ -48,7 +49,8 @@ public class WriteCommentTest {
         CustomUserDetails principal = new CustomUserDetails(testMember);
 
         Authentication auth =
-            UsernamePasswordAuthenticationToken.authenticated(principal, principal.getPassword(), principal.getAuthorities());
+            UsernamePasswordAuthenticationToken.authenticated(principal, principal.getPassword(),
+                principal.getAuthorities());
         context.setAuthentication(auth);
         SecurityContextHolder.setContext(context);
     }
@@ -57,7 +59,7 @@ public class WriteCommentTest {
     @Transactional
     void given_noExistPost_then_responseErrorCode() throws Exception {
         // given
-        long postId = 1000l;
+        long postId = 1000L;
 
         // when
         ResultActions resultActions = mockMvc.perform(
@@ -71,8 +73,8 @@ public class WriteCommentTest {
         resultActions.andExpect(jsonPath("code").value(400021));
     }
 
-    WriteCommentRequest commentRequest() {
-        return new WriteCommentRequest("test comment");
+    CommentAddRequest commentRequest() {
+        return new CommentAddRequest("test comment");
     }
 
 }

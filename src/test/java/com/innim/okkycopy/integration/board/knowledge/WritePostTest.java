@@ -1,10 +1,10 @@
 package com.innim.okkycopy.integration.board.knowledge;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
-import static org.assertj.core.api.Assertions.*;
 
 import com.google.gson.Gson;
-import com.innim.okkycopy.domain.board.dto.request.write.WriteRequest;
+import com.innim.okkycopy.domain.board.dto.request.write.PostAddRequest;
 import com.innim.okkycopy.domain.member.MemberRepository;
 import com.innim.okkycopy.domain.member.entity.Member;
 import com.innim.okkycopy.global.auth.CustomUserDetails;
@@ -50,23 +50,24 @@ public class WritePostTest {
         CustomUserDetails principal = new CustomUserDetails(testMember);
 
         Authentication auth =
-            UsernamePasswordAuthenticationToken.authenticated(principal, principal.getPassword(), principal.getAuthorities());
+            UsernamePasswordAuthenticationToken.authenticated(principal, principal.getPassword(),
+                principal.getAuthorities());
         context.setAuthentication(auth);
         SecurityContextHolder.setContext(context);
     }
 
     @Test
     @Transactional
-    void writeKnowledgePost() throws Exception  {
+    void writeKnowledgePost() throws Exception {
         // given
-        WriteRequest writeRequest = writeRequest();
+        PostAddRequest postAddRequest = writeRequest();
 
         // when
         MockHttpServletResponse response = mockMvc.perform(
             MockMvcRequestBuilders.post("/board/knowledge/write")
                 .contentType(MediaType.APPLICATION_JSON)
                 .characterEncoding("UTF-8")
-                .content(new Gson().toJson(writeRequest))
+                .content(new Gson().toJson(postAddRequest))
         ).andReturn().getResponse();
 
         // then
@@ -87,8 +88,8 @@ public class WritePostTest {
         assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());
     }
 
-    WriteRequest writeRequest() {
-        return WriteRequest.builder()
+    PostAddRequest writeRequest() {
+        return PostAddRequest.builder()
             .title("test_title")
             .topic("Tech 뉴스")
             .tags(Arrays.asList())

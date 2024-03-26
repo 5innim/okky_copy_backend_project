@@ -8,6 +8,7 @@ import org.springframework.util.unit.DataSize;
 
 @Configuration
 public class MultipartConfig {
+
     @Bean
     public MultipartConfigElement multipartConfigElement() {
         MultipartConfigFactory factory = new MultipartConfigFactory();

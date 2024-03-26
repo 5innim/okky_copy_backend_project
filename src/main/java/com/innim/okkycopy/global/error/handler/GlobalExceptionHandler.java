@@ -1,8 +1,8 @@
 package com.innim.okkycopy.global.error.handler;
 
-import com.innim.okkycopy.global.error.ErrorCode;
+import com.innim.okkycopy.global.error.ErrorCase;
 import com.innim.okkycopy.global.error.ErrorResponse;
-import com.innim.okkycopy.global.error.exception.ServiceException;
+import com.innim.okkycopy.global.error.exception.StatusCodeException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
@@ -16,28 +16,29 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 @Slf4j
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
-    @ExceptionHandler(ServiceException.class)
-    public ResponseEntity<ErrorResponse> handleServiceException(ServiceException ex) {
-        ErrorCode errorCode = ex.getErrorCode();
+    @ExceptionHandler(StatusCodeException.class)
+    public ResponseEntity<ErrorResponse> handleStatusCodeException(StatusCodeException ex) {
+        ErrorCase errorCase = ex.getErrorCase();
         return ResponseEntity
-            .status(errorCode.getStatus())
-            .body(new ErrorResponse(errorCode.getCode(), errorCode.getMessage()));
+            .status(errorCase.getStatus())
+            .body(new ErrorResponse(errorCase.getCode(), errorCase.getMessage()));
     }
+
 
     @ExceptionHandler(DataIntegrityViolationException.class)
     public ResponseEntity<ErrorResponse> handleDataIntegrityViolationException(DataIntegrityViolationException ex) {
 
         return ResponseEntity
             .status(HttpStatus.BAD_REQUEST)
-            .body(new ErrorResponse(ErrorCode._400_DATA_INTEGRITY_VIOLATION.getCode(), ex.getMessage()));
+            .body(new ErrorResponse(ErrorCase._400_DATA_INTEGRITY_VIOLATION.getCode(), ex.getMessage()));
     }
 
     @ExceptionHandler(MaxUploadSizeExceededException.class)
     public ResponseEntity<Object> handleMaxUploadSizeExceededException(MaxUploadSizeExceededException ex) {
-        ErrorCode errorCode = ErrorCode._400_FILE_SIZE_EXCEEDED;
+        ErrorCase errorCase = ErrorCase._400_FILE_SIZE_EXCEEDED;
         return ResponseEntity
-                .status(errorCode.getStatus())
-                .body(new ErrorResponse(errorCode.getCode(), errorCode.getMessage()));
+            .status(errorCase.getStatus())
+            .body(new ErrorResponse(errorCase.getCode(), errorCase.getMessage()));
     }
 
 }

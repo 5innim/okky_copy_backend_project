@@ -1,9 +1,9 @@
 package com.innim.okkycopy.global.auth.filter;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
-import static org.assertj.core.api.Assertions.*;
 
 import com.innim.okkycopy.global.auth.AuthService;
 import jakarta.servlet.FilterChain;
@@ -27,7 +27,8 @@ class JwtRefreshFilterTest {
     JwtRefreshFilter filter;
 
     @Nested
-    class doFilterInternalTest {
+    class DoFilterInternalTest {
+
         @Test
         void given_noAuthorizationHeader_then_noAuthenticate() throws ServletException, IOException {
             // given
@@ -47,7 +48,8 @@ class JwtRefreshFilterTest {
     }
 
     @Nested
-    class requiresRefreshTest {
+    class RequiresRefreshTest {
+
         @Test
         void given_postAndRefreshUri_then_returnTrue() {
             // given

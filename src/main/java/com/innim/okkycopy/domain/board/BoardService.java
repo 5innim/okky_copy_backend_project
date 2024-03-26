@@ -1,6 +1,6 @@
 package com.innim.okkycopy.domain.board;
 
-import com.innim.okkycopy.domain.board.dto.response.topics.TopicsResponse;
+import com.innim.okkycopy.domain.board.dto.response.topics.TopicListResponse;
 import com.innim.okkycopy.domain.board.entity.BoardType;
 import com.innim.okkycopy.domain.board.entity.Post;
 import com.innim.okkycopy.domain.board.entity.PostExpression;
@@ -11,8 +11,9 @@ import com.innim.okkycopy.domain.board.repository.PostExpressionRepository;
 import com.innim.okkycopy.domain.board.repository.PostRepository;
 import com.innim.okkycopy.domain.board.repository.ScrapRepository;
 import com.innim.okkycopy.domain.member.entity.Member;
-import com.innim.okkycopy.global.error.ErrorCode;
-import com.innim.okkycopy.global.error.exception.*;
+import com.innim.okkycopy.global.error.ErrorCase;
+import com.innim.okkycopy.global.error.exception.StatusCode400Exception;
+import com.innim.okkycopy.global.error.exception.StatusCode500Exception;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import java.util.List;
@@ -23,6 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @RequiredArgsConstructor
 public class BoardService {
+
     private final BoardTypeRepository boardTypeRepository;
     private final PostRepository postRepository;
     private final ScrapRepository scrapRepository;
@@ -32,48 +34,57 @@ public class BoardService {
     private EntityManager entityManager;
 
     @Transactional(readOnly = true)
-    public TopicsResponse findAllBoardTopics() {
+    public TopicListResponse findBoardTopics() {
         List<BoardType> boardTypes = boardTypeRepository.findAll();
 
-        if (boardTypes.isEmpty())
-            throw new FailInitializationException(ErrorCode._500_FAIL_INITIALIZATION);
+        if (boardTypes.isEmpty()) {
+            throw new StatusCode500Exception(ErrorCase._500_FAIL_INITIALIZATION);
+        }
 
-        return TopicsResponse.toDto(boardTypes);
+        return TopicListResponse.of(boardTypes);
     }
 
     @Transactional
-    public void scrapPost(Member member, long postId) {
+    public void addScrap(Member member, long postId) {
         Member mergedMember = entityManager.merge(member);
-        Post post = postRepository.findByPostId(postId).orElseThrow(() -> new NoSuchPostException(ErrorCode._400_NO_SUCH_POST));
-        entityManager.persist(Scrap.createScrap(post,mergedMember));
+        Post post = postRepository.findByPostId(postId)
+            .orElseThrow(() -> new StatusCode400Exception(ErrorCase._400_NO_SUCH_POST));
+        entityManager.persist(Scrap.create(post, mergedMember));
     }
 
     @Transactional
-    public void cancelScrap(Member member, long postId) {
+    public void removeScrap(Member member, long postId) {
         Member mergedMember = entityManager.merge(member);
-        Post post = postRepository.findByPostId(postId).orElseThrow(() -> new NoSuchPostException(ErrorCode._400_NO_SUCH_POST));
-        Scrap scrap = scrapRepository.findByMemberAndPost(post, mergedMember).orElseThrow(() -> new NoSuchScrapException(ErrorCode._400_NO_SUCH_SCRAP));
-        Scrap.removeScrap(entityManager, scrap);
+        Post post = postRepository.findByPostId(postId)
+            .orElseThrow(() -> new StatusCode400Exception(ErrorCase._400_NO_SUCH_POST));
+        Scrap scrap = scrapRepository.findByMemberAndPost(post, mergedMember)
+            .orElseThrow(() -> new StatusCode400Exception(ErrorCase._400_NO_SUCH_SCRAP));
+        Scrap.remove(entityManager, scrap);
     }
 
     @Transactional
-    public void insertPostExpression(Member member, long postId, ExpressionType type) {
+    public void addPostExpression(Member member, long postId, ExpressionType type) {
         Member mergedMember = entityManager.merge(member);
-        Post post = postRepository.findByPostId(postId).orElseThrow(() -> new NoSuchPostException(ErrorCode._400_NO_SUCH_POST));
-        if (postExpressionRepository.findByMemberAndPost(post, mergedMember).isPresent())
-            throw new AlreadyExistExpressionException(ErrorCode._400_ALREADY_EXIST_EXPRESSION);
-        PostExpression postExpression = PostExpression.createPostExpression(post, mergedMember, type);
+        Post post = postRepository.findByPostId(postId)
+            .orElseThrow(() -> new StatusCode400Exception(ErrorCase._400_NO_SUCH_POST));
+        if (postExpressionRepository.findByMemberAndPost(post, mergedMember).isPresent()) {
+            throw new StatusCode400Exception(ErrorCase._400_ALREADY_EXIST_EXPRESSION);
+        }
+        PostExpression postExpression = PostExpression.create(post, mergedMember, type);
         entityManager.persist(postExpression);
     }
 
     @Transactional
-    public void deletePostExpression(Member member, long postId, ExpressionType type) {
+    public void removePostExpression(Member member, long postId, ExpressionType type) {
         Member mergedMember = entityManager.merge(member);
-        Post post = postRepository.findByPostId(postId).orElseThrow(() -> new NoSuchPostException(ErrorCode._400_NO_SUCH_POST));
-        PostExpression postExpression = postExpressionRepository.findByMemberAndPost(post, mergedMember).orElseGet(() -> null);
-        if (postExpression == null || !postExpression.getExpressionType().equals(type))
-            throw new NotRegisteredBeforeException(ErrorCode._400_NOT_REGISTERED_BEFORE);
-        PostExpression.removePostExpression(entityManager, postExpression, post, type);
+        Post post = postRepository.findByPostId(postId)
+            .orElseThrow(() -> new StatusCode400Exception(ErrorCase._400_NO_SUCH_POST));
+        PostExpression postExpression = postExpressionRepository.findByMemberAndPost(post, mergedMember)
+            .orElseGet(() -> null);
+        if (postExpression == null || !postExpression.getExpressionType().equals(type)) {
+            throw new StatusCode400Exception(ErrorCase._400_NOT_REGISTERED_BEFORE);
+        }
+        PostExpression.remove(entityManager, postExpression, post, type);
     }
 
 }

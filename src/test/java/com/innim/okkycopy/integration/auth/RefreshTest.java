@@ -164,7 +164,6 @@ public class RefreshTest {
         String prefix = JwtProperty.prefix;
         String refreshToken = loginResult.andReturn().getResponse().getCookie("refreshToken").getValue();
 
-
         // when
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.post("/refresh")
             .header("Authorization", prefix + refreshToken)
@@ -179,12 +178,13 @@ public class RefreshTest {
     String expiredToken() {
         Date loginDate = new Date();
         Date expiredDate = new Date(loginDate.getTime() - JwtProperty.refreshValidTime);
-        return JwtUtil.generateToken(1l, expiredDate, loginDate, "refresh");
+        return JwtUtil.generateToken(1L, expiredDate, loginDate, "refresh");
     }
 
     String unCorrectSecretToken() {
         String generatedToken;
-        Key unCorrectSecretKey = Keys.hmacShaKeyFor(Base64.getEncoder().encode("it's not a correct secret for generating secret key".getBytes()));
+        Key unCorrectSecretKey = Keys.hmacShaKeyFor(
+            Base64.getEncoder().encode("it's not a correct secret for generating secret key".getBytes()));
         Date loginDate = new Date();
         Date expiredDate = new Date(loginDate.getTime() + JwtProperty.refreshValidTime);
         try {
@@ -192,12 +192,12 @@ public class RefreshTest {
                 .setHeader(Map.of("alg", JwtProperty.algorithm, "typ", "JWT"))
                 .setExpiration(expiredDate)
                 .setSubject("refresh")
-                .addClaims(Map.of("uid", 1l))
+                .addClaims(Map.of("uid", 1L))
                 .addClaims(Map.of("lat", loginDate))
                 .signWith(unCorrectSecretKey, JwtProperty.signatureAlgorithm)
                 .compact();
-        } catch(Exception ex) {
-            throw new TokenGenerateException("can not generate token with userId: " + "[" + 1l + "]");
+        } catch (Exception ex) {
+            throw new TokenGenerateException("can not generate token with userId: " + "[" + 1L + "]");
         }
 
         return generatedToken;
@@ -206,22 +206,23 @@ public class RefreshTest {
     String correctToken() {
         Date loginDate = new Date();
         Date expiredDate = new Date(loginDate.getTime() + JwtProperty.refreshValidTime);
-        return JwtUtil.generateToken(1l, expiredDate, loginDate, "refresh");
+        return JwtUtil.generateToken(1L, expiredDate, loginDate, "refresh");
     }
 
     String accessToken() {
         Date loginDate = new Date();
         Date expiredDate = new Date(loginDate.getTime() + JwtProperty.refreshValidTime);
-        return JwtUtil.generateToken(1l, expiredDate, loginDate, "access");
+        return JwtUtil.generateToken(1L, expiredDate, loginDate, "access");
     }
 
     String notExistMemberToken() {
         Date loginDate = new Date();
         Date expiredDate = new Date(loginDate.getTime() + JwtProperty.accessValidTime);
-        return JwtUtil.generateToken(1111l, expiredDate, loginDate, "access");
+        return JwtUtil.generateToken(1111L, expiredDate, loginDate, "access");
     }
 
     private class LoginContent {
+
         String id;
         String password;
 

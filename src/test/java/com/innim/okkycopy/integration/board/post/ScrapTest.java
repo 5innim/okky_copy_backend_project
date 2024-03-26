@@ -1,7 +1,7 @@
 package com.innim.okkycopy.integration.board.post;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
-import static org.assertj.core.api.Assertions.*;
 
 import com.google.gson.Gson;
 import com.innim.okkycopy.domain.board.dto.request.ScrapRequest;
@@ -50,7 +50,8 @@ public class ScrapTest {
         CustomUserDetails principal = new CustomUserDetails(testMember);
 
         Authentication auth =
-            UsernamePasswordAuthenticationToken.authenticated(principal, principal.getPassword(), principal.getAuthorities());
+            UsernamePasswordAuthenticationToken.authenticated(principal, principal.getPassword(),
+                principal.getAuthorities());
         context.setAuthentication(auth);
         SecurityContextHolder.setContext(context);
     }
@@ -99,6 +100,6 @@ public class ScrapTest {
 
 
     ScrapRequest scrapRequest() {
-        return new ScrapRequest(1l);
+        return new ScrapRequest(1L);
     }
 }

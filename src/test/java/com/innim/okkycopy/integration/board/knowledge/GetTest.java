@@ -1,5 +1,9 @@
 package com.innim.okkycopy.integration.board.knowledge;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+
 import com.innim.okkycopy.domain.member.MemberRepository;
 import com.innim.okkycopy.domain.member.entity.Member;
 import com.innim.okkycopy.global.auth.CustomUserDetails;
@@ -19,23 +23,22 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
-import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
-import static org.assertj.core.api.Assertions.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
 @SpringBootTest
 public class GetTest {
+
     @Autowired
     WebApplicationContext context;
     @Autowired
     MemberRepository memberRepository;
 
     MockMvc mockMvc;
+
     @BeforeEach
     void init() {
         mockMvc = MockMvcBuilders.webAppContextSetup(context)
-                .apply(springSecurity())
-                .build();
+            .apply(springSecurity())
+            .build();
     }
 
     @Test
@@ -49,7 +52,7 @@ public class GetTest {
 
         // then
         assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());
-        resultActions.andExpect(jsonPath("postRequesterInfoResponse").isEmpty());
+        resultActions.andExpect(jsonPath("requesterInfo").isEmpty());
     }
 
     @Test
@@ -64,7 +67,7 @@ public class GetTest {
 
         // then
         assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());
-        resultActions.andExpect(jsonPath("postRequesterInfoResponse").isNotEmpty());
+        resultActions.andExpect(jsonPath("requesterInfo").isNotEmpty());
 
         clearSecurityContext();
     }
@@ -75,7 +78,8 @@ public class GetTest {
         CustomUserDetails principal = new CustomUserDetails(testMember);
 
         Authentication auth =
-                UsernamePasswordAuthenticationToken.authenticated(principal, principal.getPassword(), principal.getAuthorities());
+            UsernamePasswordAuthenticationToken.authenticated(principal, principal.getPassword(),
+                principal.getAuthorities());
         context.setAuthentication(auth);
         SecurityContextHolder.setContext(context);
     }

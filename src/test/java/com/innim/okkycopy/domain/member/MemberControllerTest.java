@@ -1,15 +1,15 @@
 package com.innim.okkycopy.domain.member;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.times;
-import static org.assertj.core.api.Assertions.*;
 
 import com.innim.okkycopy.common.WithMockCustomUserSecurityContextFactory;
-import com.innim.okkycopy.domain.member.dto.request.SignupRequest;
-import com.innim.okkycopy.domain.member.dto.response.BriefMemberInfo;
-import com.innim.okkycopy.domain.member.dto.response.MemberInfo;
+import com.innim.okkycopy.domain.member.dto.request.MemberAddRequest;
+import com.innim.okkycopy.domain.member.dto.response.MemberBriefResponse;
+import com.innim.okkycopy.domain.member.dto.response.MemberDetailsResponse;
 import com.innim.okkycopy.domain.member.entity.Member;
 import com.innim.okkycopy.global.auth.CustomUserDetails;
 import java.util.ArrayList;
@@ -31,39 +31,39 @@ class MemberControllerTest {
     @Test
     void signupTest() {
         // given
-        SignupRequest request = signupRequest();
-        BriefMemberInfo briefMemberInfo = briefMemberInfo();
+        MemberAddRequest request = signupRequest();
+        MemberBriefResponse briefMemberInfo = briefMemberInfo();
 
-        given(memberService.insertMember(any(SignupRequest.class))).willReturn(briefMemberInfo);
+        given(memberService.addMember(any(MemberAddRequest.class))).willReturn(briefMemberInfo);
 
         // when
-        ResponseEntity response = memberController.signup(request);
+        ResponseEntity response = memberController.memberAdd(request);
 
         // then
-        then(memberService).should(times(1)).insertMember(any(SignupRequest.class));
+        then(memberService).should(times(1)).addMember(any(MemberAddRequest.class));
         then(memberService).shouldHaveNoMoreInteractions();
-        assertThat(response.getBody()).isInstanceOf(BriefMemberInfo.class).isEqualTo(briefMemberInfo);
+        assertThat(response.getBody()).isInstanceOf(MemberBriefResponse.class).isEqualTo(briefMemberInfo);
     }
 
     @Test
     void serveMemberInfo() {
         // given
         CustomUserDetails request = WithMockCustomUserSecurityContextFactory.customUserDetailsMock();
-        MemberInfo memberInfo = memberInfo();
+        MemberDetailsResponse memberInfo = memberInfo();
 
-        given(memberService.selectMember(any(Member.class))).willReturn(memberInfo);
+        given(memberService.findMember(any(Member.class))).willReturn(memberInfo);
 
         // when
-        ResponseEntity response = memberController.serveMemberInfo(request);
+        ResponseEntity response = memberController.memberDetails(request);
 
         // then
-        then(memberService).should(times(1)).selectMember(any(Member.class));
+        then(memberService).should(times(1)).findMember(any(Member.class));
         then(memberService).shouldHaveNoMoreInteractions();
-        assertThat(response.getBody()).isInstanceOf(MemberInfo.class).isEqualTo(memberInfo);
+        assertThat(response.getBody()).isInstanceOf(MemberDetailsResponse.class).isEqualTo(memberInfo);
     }
 
-    private SignupRequest signupRequest() {
-        return SignupRequest.builder()
+    private MemberAddRequest signupRequest() {
+        return MemberAddRequest.builder()
             .id("test1234")
             .password("test1234**")
             .email("test@test.com")
@@ -73,17 +73,17 @@ class MemberControllerTest {
             .build();
     }
 
-    private BriefMemberInfo briefMemberInfo() {
-        return BriefMemberInfo.builder()
+    private MemberBriefResponse briefMemberInfo() {
+        return MemberBriefResponse.builder()
             .name("testName")
             .nickname("testNickname")
             .email("test@test.com")
             .build();
     }
 
-    private MemberInfo memberInfo() {
-        return MemberInfo.builder()
-            .memberId(1l)
+    private MemberDetailsResponse memberInfo() {
+        return MemberDetailsResponse.builder()
+            .memberId(1L)
             .nickname("testNickname")
             .scrappedPost(new ArrayList<>())
             .build();

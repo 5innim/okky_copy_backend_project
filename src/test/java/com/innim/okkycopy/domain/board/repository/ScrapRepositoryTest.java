@@ -1,6 +1,6 @@
 package com.innim.okkycopy.domain.board.repository;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.innim.okkycopy.domain.board.entity.Post;
 import com.innim.okkycopy.domain.board.entity.Scrap;
@@ -17,6 +17,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = Replace.NONE)
 class ScrapRepositoryTest {
+
     @Autowired
     ScrapRepository scrapRepository;
     @Autowired
@@ -30,8 +31,8 @@ class ScrapRepositoryTest {
     void findByMemberAndPostTest() {
         // given
         // init_test_data procedure success
-        Post post = postRepository.findByPostId(1l).get();
-        Member member = memberRepository.findByMemberId(1l).get();
+        Post post = postRepository.findByPostId(1L).get();
+        Member member = memberRepository.findByMemberId(1L).get();
 
         Scrap scrap = Scrap.builder()
             .post(post)

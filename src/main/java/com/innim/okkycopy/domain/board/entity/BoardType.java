@@ -24,6 +24,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class BoardType {
+
     @Id
     @Column(name = "type_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -35,8 +36,6 @@ public class BoardType {
 
     @Column(nullable = false, unique = true)
     private String name;
-
-
 
 
 }

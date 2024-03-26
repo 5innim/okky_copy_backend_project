@@ -22,7 +22,9 @@ public class CustomUserDetailsService implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
         Optional<Member> member = memberRepository.findById(username);
-        if (member.isEmpty()) throw new UsernameNotFoundException("can not find user with " + "[" + username + "]");
+        if (member.isEmpty()) {
+            throw new UsernameNotFoundException("can not find user with " + "[" + username + "]");
+        }
 
         return new CustomUserDetails(member.get());
     }
@@ -30,7 +32,9 @@ public class CustomUserDetailsService implements UserDetailsService {
     @Transactional(readOnly = true)
     public UserDetails loadUserByUserId(Long userId) throws UserIdNotFoundException {
         Optional<Member> member = memberRepository.findByMemberId(userId);
-        if (member.isEmpty()) throw new UserIdNotFoundException("can not find user with " + "[" + userId + "]");
+        if (member.isEmpty()) {
+            throw new UserIdNotFoundException("can not find user with " + "[" + userId + "]");
+        }
 
         return new CustomUserDetails(member.get());
     }

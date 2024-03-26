@@ -4,7 +4,7 @@ import static org.springframework.security.test.web.servlet.setup.SecurityMockMv
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
 import com.google.gson.Gson;
-import com.innim.okkycopy.domain.member.dto.request.SignupRequest;
+import com.innim.okkycopy.domain.member.dto.request.MemberAddRequest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -20,9 +20,11 @@ import org.springframework.web.context.WebApplicationContext;
 
 @SpringBootTest
 public class SignupTest {
+
     @Autowired
     WebApplicationContext context;
     MockMvc mockMvc;
+
     @BeforeEach
     void init() {
         mockMvc = MockMvcBuilders.webAppContextSetup(context)
@@ -32,11 +34,12 @@ public class SignupTest {
 
     @Nested
     @Transactional
-    class validateInputTest {
+    class ValidateInputTest {
+
         @Test
         void given_invalidId_then_response400() throws Exception {
             // given
-            SignupRequest request = signupRequest();
+            MemberAddRequest request = signupRequest();
             request.setId("id");
 
             // when
@@ -54,7 +57,7 @@ public class SignupTest {
         @Test
         void given_invalidPwd_then_response400() throws Exception {
             // given
-            SignupRequest request = signupRequest();
+            MemberAddRequest request = signupRequest();
             request.setPassword("pwd");
 
             // when
@@ -72,7 +75,7 @@ public class SignupTest {
         @Test
         void given_invalidEmail_then_response400() throws Exception {
             // given
-            SignupRequest request = signupRequest();
+            MemberAddRequest request = signupRequest();
             request.setEmail("test_email");
 
             // when
@@ -90,7 +93,7 @@ public class SignupTest {
         @Test
         void given_invalidName_then_response400() throws Exception {
             // given
-            SignupRequest request = signupRequest();
+            MemberAddRequest request = signupRequest();
             request.setName("t");
 
             // when
@@ -108,7 +111,7 @@ public class SignupTest {
         @Test
         void given_invalidNickname_then_response400() throws Exception {
             // given
-            SignupRequest request = signupRequest();
+            MemberAddRequest request = signupRequest();
             request.setNickname("t");
 
             // when
@@ -127,27 +130,9 @@ public class SignupTest {
     /**
      * insertMember(SignupRequest signupRequest) in MemberService is Propagation.REQUIRES_NEW
      */
-//    @Test
-//    @Transactional
-//    void given_correctUserInfo_then_returnBriefInfo() throws Exception {
-//        // given
-//        SignupRequest request = signupRequest();
-//
-//        // when
-//        ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.post("/member/signup")
-//            .characterEncoding("UTF-8")
-//            .contentType(MediaType.APPLICATION_JSON)
-//            .content(new Gson().toJson(request)));
-//
-//        // then
-//        resultActions.andExpectAll(
-//            jsonPath("nickname", "testNickname").exists(),
-//            jsonPath("name", "testName").exists(),
-//            jsonPath("email", "test@test.com").exists());
-//    }
 
-    private SignupRequest signupRequest() {
-        return SignupRequest.builder()
+    private MemberAddRequest signupRequest() {
+        return MemberAddRequest.builder()
             .id("test1234")
             .password("test1234**")
             .email("test@test.com")

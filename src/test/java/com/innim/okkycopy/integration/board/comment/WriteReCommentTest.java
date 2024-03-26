@@ -5,7 +5,7 @@ import static org.springframework.security.test.web.servlet.setup.SecurityMockMv
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
 import com.google.gson.Gson;
-import com.innim.okkycopy.domain.board.comment.dto.request.WriteReCommentRequest;
+import com.innim.okkycopy.domain.board.comment.dto.request.ReCommentAddRequest;
 import com.innim.okkycopy.domain.member.MemberRepository;
 import com.innim.okkycopy.domain.member.entity.Member;
 import com.innim.okkycopy.global.auth.CustomUserDetails;
@@ -29,6 +29,7 @@ import org.springframework.web.context.WebApplicationContext;
 
 @SpringBootTest
 public class WriteReCommentTest {
+
     @Autowired
     WebApplicationContext context;
     @Autowired
@@ -50,7 +51,8 @@ public class WriteReCommentTest {
         CustomUserDetails principal = new CustomUserDetails(testMember);
 
         Authentication auth =
-            UsernamePasswordAuthenticationToken.authenticated(principal, principal.getPassword(), principal.getAuthorities());
+            UsernamePasswordAuthenticationToken.authenticated(principal, principal.getPassword(),
+                principal.getAuthorities());
         context.setAuthentication(auth);
         SecurityContextHolder.setContext(context);
     }
@@ -59,17 +61,17 @@ public class WriteReCommentTest {
     @Transactional
     void given_invalidContent_then_response400() throws Exception {
         // given
-        long postId = 1l;
-        long commentId = 1l;
-        WriteReCommentRequest writeReCommentRequest = writeReCommentRequest();
-        writeReCommentRequest.setContent("");
+        long postId = 1L;
+        long commentId = 1L;
+        ReCommentAddRequest reCommentAddRequest = reCommentRequest();
+        reCommentAddRequest.setContent("");
 
         // when
         ResultActions resultActions = mockMvc.perform(
             MockMvcRequestBuilders.post("/board/posts/" + postId + "/comments/" + commentId + "/recomment")
                 .contentType(MediaType.APPLICATION_JSON)
                 .characterEncoding("UTF-8")
-                .content(new Gson().toJson(writeReCommentRequest))
+                .content(new Gson().toJson(reCommentAddRequest))
         );
 
         // then
@@ -80,17 +82,17 @@ public class WriteReCommentTest {
     @Transactional
     void given_invalidMentionId_then_response400() throws Exception {
         // given
-        long postId = 1l;
-        long commentId = 1l;
-        WriteReCommentRequest writeReCommentRequest = writeReCommentRequest();
-        writeReCommentRequest.setMentionId(0l);
+        long postId = 1L;
+        long commentId = 1L;
+        ReCommentAddRequest reCommentAddRequest = reCommentRequest();
+        reCommentAddRequest.setMentionId(0L);
 
         // when
         ResultActions resultActions = mockMvc.perform(
             MockMvcRequestBuilders.post("/board/posts/" + postId + "/comments/" + commentId + "/recomment")
                 .contentType(MediaType.APPLICATION_JSON)
                 .characterEncoding("UTF-8")
-                .content(new Gson().toJson(writeReCommentRequest))
+                .content(new Gson().toJson(reCommentAddRequest))
         );
 
         // then
@@ -102,15 +104,15 @@ public class WriteReCommentTest {
     @Transactional
     void given_noExistPost_then_responseErrorCode() throws Exception {
         // given
-        long postId = 1000l;
-        long commentId = 1l;
+        long postId = 1000L;
+        long commentId = 1L;
 
         // when
         ResultActions resultActions = mockMvc.perform(
             MockMvcRequestBuilders.post("/board/posts/" + postId + "/comments/" + commentId + "/recomment")
                 .contentType(MediaType.APPLICATION_JSON)
                 .characterEncoding("UTF-8")
-                .content(new Gson().toJson(writeReCommentRequest()))
+                .content(new Gson().toJson(reCommentRequest()))
         );
 
         // then
@@ -121,15 +123,15 @@ public class WriteReCommentTest {
     @Transactional
     void given_noExistComment_then_responseErrorCode() throws Exception {
         // given
-        long postId = 1l;
-        long commentId = 1000l;
+        long postId = 1L;
+        long commentId = 1000L;
 
         // when
         ResultActions resultActions = mockMvc.perform(
             MockMvcRequestBuilders.post("/board/posts/" + postId + "/comments/" + commentId + "/recomment")
                 .contentType(MediaType.APPLICATION_JSON)
                 .characterEncoding("UTF-8")
-                .content(new Gson().toJson(writeReCommentRequest()))
+                .content(new Gson().toJson(reCommentRequest()))
         );
 
         // then
@@ -140,25 +142,25 @@ public class WriteReCommentTest {
     @Transactional
     void given_correctInfo_then_response201() throws Exception {
         // given
-        long postId = 1l;
-        long commentId = 1l;
+        long postId = 1L;
+        long commentId = 1L;
 
         // when
         MockHttpServletResponse response = mockMvc.perform(
             MockMvcRequestBuilders.post("/board/posts/" + postId + "/comments/" + commentId + "/recomment")
                 .contentType(MediaType.APPLICATION_JSON)
                 .characterEncoding("UTF-8")
-                .content(new Gson().toJson(writeReCommentRequest()))
+                .content(new Gson().toJson(reCommentRequest()))
         ).andReturn().getResponse();
 
         // then
         assertThat(response.getStatus()).isEqualTo(HttpStatus.CREATED.value());
     }
 
-    WriteReCommentRequest writeReCommentRequest() {
-        return WriteReCommentRequest.builder()
+    ReCommentAddRequest reCommentRequest() {
+        return ReCommentAddRequest.builder()
             .content("test content")
-            .mentionId(1l)
+            .mentionId(1L)
             .build();
     }
 

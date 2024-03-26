@@ -1,7 +1,7 @@
 package com.innim.okkycopy.global.auth.filter;
 
 import com.innim.okkycopy.global.auth.CustomUserDetailsService;
-import com.innim.okkycopy.global.error.ErrorCode;
+import com.innim.okkycopy.global.error.ErrorCase;
 import com.innim.okkycopy.global.error.exception.FailValidationJwtException;
 import com.innim.okkycopy.global.error.exception.InvalidTokenValueException;
 import com.innim.okkycopy.global.error.exception.UserIdNotFoundException;
@@ -52,7 +52,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             token = extractToken(authorization);
         } catch (InvalidTokenValueException ex) {
             RequestResponseUtil.makeExceptionResponseForFilter(response,
-                ErrorCode._400_INVALID_TOKEN_VALUE);
+                ErrorCase._400_INVALID_TOKEN_VALUE);
             return;
         }
 
@@ -66,11 +66,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             }
         } catch (ExpiredJwtException ex) {
             RequestResponseUtil.makeExceptionResponseForFilter(response,
-                ErrorCode._403_TOKEN_EXPIRED);
+                ErrorCase._403_TOKEN_EXPIRED);
             return;
         } catch (FailValidationJwtException ex) {
             RequestResponseUtil.makeExceptionResponseForFilter(response,
-                ErrorCode._401_TOKEN_AUTHENTICATION_FAIL);
+                ErrorCase._401_TOKEN_AUTHENTICATION_FAIL);
             return;
         }
 
@@ -116,13 +116,14 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
             return new UsernamePasswordAuthenticationToken(
                 userDetails, null, userDetails.getAuthorities());
-        } catch(UserIdNotFoundException ex) {
+        } catch (UserIdNotFoundException ex) {
             throw new FailValidationJwtException(ex.getMessage());
         }
 
     }
 
-    private void onSuccessfulAuthentication(Authentication authResult, HttpServletRequest request, HttpServletResponse response) {
+    private void onSuccessfulAuthentication(Authentication authResult, HttpServletRequest request,
+        HttpServletResponse response) {
         SecurityContext securityContext = securityContextHolderStrategy.createEmptyContext();
         securityContext.setAuthentication(authResult);
         securityContextRepository.saveContext(securityContext, request, response);

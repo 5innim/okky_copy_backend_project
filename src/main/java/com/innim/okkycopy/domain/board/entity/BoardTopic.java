@@ -28,6 +28,7 @@ import lombok.Setter;
 @Entity
 @Table(name = "board_topic")
 public class BoardTopic {
+
     @Id
     @Column(name = "topic_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)

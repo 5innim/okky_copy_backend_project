@@ -1,7 +1,7 @@
 package com.innim.okkycopy.domain.board.knowledge.entity;
 
-import com.innim.okkycopy.domain.board.dto.request.write.TagRequest;
-import com.innim.okkycopy.domain.board.dto.request.write.WriteRequest;
+import com.innim.okkycopy.domain.board.dto.request.write.PostAddRequest;
+import com.innim.okkycopy.domain.board.dto.request.write.TagInfo;
 import com.innim.okkycopy.domain.board.entity.BoardTopic;
 import com.innim.okkycopy.domain.board.entity.Post;
 import com.innim.okkycopy.domain.board.entity.Tag;
@@ -12,7 +12,6 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -34,6 +33,7 @@ import org.hibernate.annotations.DynamicUpdate;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 public class KnowledgePost extends Post {
+
     @ManyToOne(optional = false)
     @JoinColumn(name = "topic_id")
     private BoardTopic boardTopic;
@@ -48,23 +48,23 @@ public class KnowledgePost extends Post {
     @Column(nullable = false)
     private Integer comments;
 
-    public static KnowledgePost createKnowledgePost(WriteRequest writeRequest, BoardTopic boardTopic, Member member) {
+    public static KnowledgePost create(PostAddRequest postAddRequest, BoardTopic boardTopic, Member member) {
         KnowledgePost knowledgePost = KnowledgePost.builder()
-                .member(member)
-                .content(writeRequest.getContent())
-                .title(writeRequest.getTitle())
-                .lastUpdate(null)
-                .boardTopic(boardTopic)
-                .likes(0)
-                .hates(0)
-                .scraps(0)
-                .views(0)
-                .comments(0)
-                .build();
+            .member(member)
+            .content(postAddRequest.getContent())
+            .title(postAddRequest.getTitle())
+            .lastUpdate(null)
+            .boardTopic(boardTopic)
+            .likes(0)
+            .hates(0)
+            .scraps(0)
+            .views(0)
+            .comments(0)
+            .build();
 
         List<Tag> tags = new ArrayList<>();
-        for (TagRequest tag : writeRequest.getTags()) {
-            tags.add(KnowledgeTag.createKnowledgeTag(knowledgePost, boardTopic, tag.getName()));
+        for (TagInfo tag : postAddRequest.getTags()) {
+            tags.add(KnowledgeTag.create(knowledgePost, boardTopic, tag.getName()));
         }
         member.getPosts().add((Post) knowledgePost);
         knowledgePost.setTags(tags);
@@ -72,7 +72,7 @@ public class KnowledgePost extends Post {
         return knowledgePost;
     }
 
-    public void updateKnowledgePost(WriteRequest updateRequest, BoardTopic boardTopic) {
+    public void update(PostAddRequest updateRequest, BoardTopic boardTopic) {
         this.setTitle(updateRequest.getTitle());
         this.setContent(updateRequest.getContent());
         this.setBoardTopic(boardTopic);
@@ -81,8 +81,8 @@ public class KnowledgePost extends Post {
         List<Tag> tags = this.getTags();
         tags.clear();
 
-        for (TagRequest tag : updateRequest.getTags()) {
-            tags.add(KnowledgeTag.createKnowledgeTag(this, boardTopic, tag.getName()));
+        for (TagInfo tag : updateRequest.getTags()) {
+            tags.add(KnowledgeTag.create(this, boardTopic, tag.getName()));
         }
     }
 

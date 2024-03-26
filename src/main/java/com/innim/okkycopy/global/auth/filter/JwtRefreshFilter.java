@@ -1,7 +1,7 @@
 package com.innim.okkycopy.global.auth.filter;
 
 import com.innim.okkycopy.global.auth.AuthService;
-import com.innim.okkycopy.global.error.ErrorCode;
+import com.innim.okkycopy.global.error.ErrorCase;
 import com.innim.okkycopy.global.error.exception.FailValidationJwtException;
 import com.innim.okkycopy.global.error.exception.InvalidTokenValueException;
 import com.innim.okkycopy.global.error.exception.UserIdNotFoundException;
@@ -47,17 +47,17 @@ public class JwtRefreshFilter extends OncePerRequestFilter {
             try {
                 String token = extractToken(authorization);
                 memberId = validateToken(token);
-            } catch(InvalidTokenValueException ex) {
+            } catch (InvalidTokenValueException ex) {
                 RequestResponseUtil.makeExceptionResponseForFilter(response,
-                    ErrorCode._400_INVALID_TOKEN_VALUE);
+                    ErrorCase._400_INVALID_TOKEN_VALUE);
                 return;
-            } catch(ExpiredJwtException ex) {
+            } catch (ExpiredJwtException ex) {
                 RequestResponseUtil.makeExceptionResponseForFilter(response,
-                    ErrorCode._403_TOKEN_EXPIRED);
+                    ErrorCase._403_TOKEN_EXPIRED);
                 return;
-            } catch(FailValidationJwtException ex) {
+            } catch (FailValidationJwtException ex) {
                 RequestResponseUtil.makeExceptionResponseForFilter(response,
-                    ErrorCode._401_TOKEN_AUTHENTICATION_FAIL);
+                    ErrorCase._401_TOKEN_AUTHENTICATION_FAIL);
                 return;
             }
 
@@ -108,7 +108,7 @@ public class JwtRefreshFilter extends OncePerRequestFilter {
             claims = JwtUtil.validateToken(token);
             if (claims.getSubject().equals("refresh")) {
                 Long userId = Long.valueOf((Integer) claims.get("uid"));
-                Date loginDate = authService.selectMemberLoginDate(userId);
+                Date loginDate = authService.findMemberLoginDate(userId);
                 Date lat = new Date((Long) claims.get("lat"));
                 if (lat.equals(loginDate)) {
                     return userId;

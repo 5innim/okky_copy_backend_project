@@ -19,13 +19,15 @@ import org.springframework.mock.web.MockHttpServletResponse;
 
 @ExtendWith(MockitoExtension.class)
 class JwtAuthenticationFilterTest {
+
     @Mock
     CustomUserDetailsService customUserDetailsService;
     @InjectMocks
     JwtAuthenticationFilter filter;
 
     @Nested
-    class doFilterInternalTest {
+    class DoFilterInternalTest {
+
         @Test
         public void given_noAuthorizationHeader_then_noAuthenticate()
             throws ServletException, IOException {

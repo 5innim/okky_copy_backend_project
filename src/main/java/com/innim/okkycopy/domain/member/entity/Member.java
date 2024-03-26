@@ -2,8 +2,10 @@ package com.innim.okkycopy.domain.member.entity;
 
 import com.innim.okkycopy.domain.board.comment.entity.Comment;
 import com.innim.okkycopy.domain.board.comment.entity.CommentExpression;
-import com.innim.okkycopy.domain.board.entity.*;
-import com.innim.okkycopy.domain.member.dto.request.SignupRequest;
+import com.innim.okkycopy.domain.board.entity.Post;
+import com.innim.okkycopy.domain.board.entity.PostExpression;
+import com.innim.okkycopy.domain.board.entity.Scrap;
+import com.innim.okkycopy.domain.member.dto.request.MemberAddRequest;
 import com.innim.okkycopy.global.auth.enums.Role;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -35,6 +37,7 @@ import org.hibernate.annotations.DynamicUpdate;
 @Getter
 @Setter
 public class Member {
+
     @Id
     @Column(name = "member_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -72,7 +75,7 @@ public class Member {
     @OneToMany(mappedBy = "member")
     private List<Comment> comments;
 
-    public static Member toMemberEntity(SignupRequest request) {
+    public static Member of(MemberAddRequest request) {
         return Member.builder()
             .id(request.getId())
             .password(request.getPassword())

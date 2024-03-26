@@ -1,24 +1,24 @@
 package com.innim.okkycopy.domain.board;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.times;
-import static org.assertj.core.api.Assertions.*;
 
 import com.innim.okkycopy.common.WithMockCustomUserSecurityContextFactory;
 import com.innim.okkycopy.domain.board.dto.request.ScrapRequest;
-import com.innim.okkycopy.domain.board.dto.response.topics.TopicResponse;
-import com.innim.okkycopy.domain.board.dto.response.topics.TopicsResponse;
-import com.innim.okkycopy.domain.board.dto.response.topics.TypeResponse;
+import com.innim.okkycopy.domain.board.dto.response.topics.TopicDetailsResponse;
+import com.innim.okkycopy.domain.board.dto.response.topics.TopicListResponse;
+import com.innim.okkycopy.domain.board.dto.response.topics.TypeDetailsResponse;
 import com.innim.okkycopy.domain.board.enums.ExpressionType;
 import com.innim.okkycopy.domain.member.entity.Member;
-
+import com.innim.okkycopy.global.auth.CustomUserDetails;
+import com.innim.okkycopy.global.common.S3Uploader;
 import java.io.IOException;
 import java.util.Arrays;
-import com.innim.okkycopy.global.auth.CustomUserDetails;
-import com.innim.okkycopy.global.commons.S3Uploader;
+import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -30,6 +30,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 @ExtendWith(MockitoExtension.class)
 class BoardControllerTest {
+
     @Mock
     BoardService boardService;
     @Mock
@@ -40,16 +41,16 @@ class BoardControllerTest {
     @Test
     void serveTopicsTest() throws Exception {
         // given
-        TopicsResponse topicsResponse = topicsResponse();
-        given(boardService.findAllBoardTopics()).willReturn(topicsResponse);
+        TopicListResponse topicListResponse = topicsResponse();
+        given(boardService.findBoardTopics()).willReturn(topicListResponse);
 
         // when
-        ResponseEntity response =  boardController.serveTopics();
+        ResponseEntity response = boardController.boardTopicList();
 
         // then
-        then(boardService).should(times(1)).findAllBoardTopics();
+        then(boardService).should(times(1)).findBoardTopics();
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-        assertThat(response.getBody()).isInstanceOf(TopicsResponse.class);
+        assertThat(response.getBody()).isInstanceOf(TopicListResponse.class);
     }
 
     @Test
@@ -58,10 +59,10 @@ class BoardControllerTest {
         ScrapRequest request = scrapRequest();
 
         // when
-        boardController.doScrap(request, WithMockCustomUserSecurityContextFactory.customUserDetailsMock());
+        boardController.scrapAdd(request, WithMockCustomUserSecurityContextFactory.customUserDetailsMock());
 
         // then
-        then(boardService).should(times(1)).scrapPost(any(Member.class), anyLong());
+        then(boardService).should(times(1)).addScrap(any(Member.class), anyLong());
 
     }
 
@@ -71,10 +72,10 @@ class BoardControllerTest {
         ScrapRequest request = scrapRequest();
 
         // when
-        boardController.cancelScrap(request, WithMockCustomUserSecurityContextFactory.customUserDetailsMock());
+        boardController.scrapRemove(request, WithMockCustomUserSecurityContextFactory.customUserDetailsMock());
 
         // then
-        then(boardService).should(times(1)).cancelScrap(any(Member.class), anyLong());
+        then(boardService).should(times(1)).removeScrap(any(Member.class), anyLong());
     }
 
     @Test
@@ -84,11 +85,11 @@ class BoardControllerTest {
         long id = 1L;
 
         // when
-        ResponseEntity<Object> response = boardController.makeLikeExpression(customUserDetails, id);
+        ResponseEntity<Object> response = boardController.likeExpressionAdd(customUserDetails, id);
 
         // then
         then(boardService).should(times(1))
-                .insertPostExpression(customUserDetails.getMember(), id, ExpressionType.LIKE);
+            .addPostExpression(customUserDetails.getMember(), id, ExpressionType.LIKE);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
     }
 
@@ -99,11 +100,11 @@ class BoardControllerTest {
         long id = 1L;
 
         // when
-        ResponseEntity<Object> response = boardController.makeHateExpression(customUserDetails, id);
+        ResponseEntity<Object> response = boardController.hateExpressionAdd(customUserDetails, id);
 
         // then
         then(boardService).should(times(1))
-                .insertPostExpression(customUserDetails.getMember(), id, ExpressionType.HATE);
+            .addPostExpression(customUserDetails.getMember(), id, ExpressionType.HATE);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
     }
 
@@ -114,11 +115,11 @@ class BoardControllerTest {
         long id = 1L;
 
         // when
-        ResponseEntity<Object> response = boardController.removeLikeExpression(customUserDetails, id);
+        ResponseEntity<Object> response = boardController.likeExpressionRemove(customUserDetails, id);
 
         // then
         then(boardService).should(times(1))
-                .deletePostExpression(customUserDetails.getMember(), id, ExpressionType.LIKE);
+            .removePostExpression(customUserDetails.getMember(), id, ExpressionType.LIKE);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
     }
 
@@ -129,11 +130,11 @@ class BoardControllerTest {
         long id = 1L;
 
         // when
-        ResponseEntity<Object> response = boardController.removeHateExpression(customUserDetails, id);
+        ResponseEntity<Object> response = boardController.hateExpressionRemove(customUserDetails, id);
 
         // then
         then(boardService).should(times(1))
-                .deletePostExpression(customUserDetails.getMember(), id, ExpressionType.HATE);
+            .removePostExpression(customUserDetails.getMember(), id, ExpressionType.HATE);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
     }
 
@@ -143,26 +144,26 @@ class BoardControllerTest {
         MultipartFile file = null;
 
         // when
-        boardController.saveFile(file);
+        boardController.fileAdd(file);
 
         // then
         then(s3Uploader).should(times(1)).uploadFileToS3(file);
     }
 
 
-    private TopicsResponse topicsResponse() {
-        TopicResponse tr1 = new TopicResponse("topic1", 1);
-        TopicResponse tr2 = new TopicResponse("topic2", 2);
-        TopicResponse tr3 = new TopicResponse("topic3", 3);
+    private TopicListResponse topicsResponse() {
+        TopicDetailsResponse tr1 = new TopicDetailsResponse("topic1", 1);
+        TopicDetailsResponse tr2 = new TopicDetailsResponse("topic2", 2);
+        TopicDetailsResponse tr3 = new TopicDetailsResponse("topic3", 3);
 
-        TypeResponse typeResponse1 = new TypeResponse("type1", 1, Arrays.asList(tr1, tr2));
-        TypeResponse typeResponse2 = new TypeResponse("type2", 2, Arrays.asList(tr3));
+        TypeDetailsResponse typeDetailsResponse1 = new TypeDetailsResponse("type1", 1, Arrays.asList(tr1, tr2));
+        TypeDetailsResponse typeDetailsResponse2 = new TypeDetailsResponse("type2", 2, List.of(tr3));
 
-        return new TopicsResponse(Arrays.asList(typeResponse1, typeResponse2));
+        return new TopicListResponse(Arrays.asList(typeDetailsResponse1, typeDetailsResponse2));
     }
 
     private ScrapRequest scrapRequest() {
-        return new ScrapRequest(1l);
+        return new ScrapRequest(1L);
     }
 
 }

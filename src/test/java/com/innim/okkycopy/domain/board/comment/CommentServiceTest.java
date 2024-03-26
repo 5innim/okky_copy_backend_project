@@ -1,29 +1,28 @@
 package com.innim.okkycopy.domain.board.comment;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.catchThrowable;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.then;
+import static org.mockito.Mockito.times;
+
 import com.innim.okkycopy.common.WithMockCustomUserSecurityContextFactory;
-import com.innim.okkycopy.domain.board.comment.dto.response.CommentsResponse;
+import com.innim.okkycopy.domain.board.comment.dto.response.CommentListResponse;
 import com.innim.okkycopy.domain.board.comment.entity.Comment;
 import com.innim.okkycopy.domain.board.comment.repository.CommentRepository;
 import com.innim.okkycopy.domain.board.entity.Post;
 import com.innim.okkycopy.domain.board.repository.PostRepository;
 import com.innim.okkycopy.domain.member.MemberRepository;
-import com.innim.okkycopy.global.error.exception.NoSuchCommentException;
-import com.innim.okkycopy.global.error.exception.NoSuchPostException;
+import com.innim.okkycopy.global.error.exception.StatusCode400Exception;
+import java.time.LocalDateTime;
+import java.util.Arrays;
+import java.util.Optional;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-
-import java.time.LocalDateTime;
-import java.util.Arrays;
-import java.util.Optional;
-
-import static org.mockito.BDDMockito.given;
-import static org.assertj.core.api.Assertions.*;
-import static org.mockito.BDDMockito.then;
-import static org.mockito.Mockito.times;
 
 @ExtendWith(MockitoExtension.class)
 public class CommentServiceTest {
@@ -40,33 +39,34 @@ public class CommentServiceTest {
 
 
     @Nested
-    class selectComments {
+    class SelectComments {
+
         @Test
-        void given_notExistPostId_then_throwNoSuchPostException() {
+        void given_notExistPostId_then_throwStatusCode400Exception() {
             // given
-            long notExistPostId = 1l;
+            long notExistPostId = 1L;
             given(postRepository.findByPostId(notExistPostId)).willReturn(Optional.empty());
 
             // when
             Throwable thrown = catchThrowable(() -> {
-                commentService.selectComments(null, notExistPostId);
+                commentService.findComments(null, notExistPostId);
             });
 
             // then
             then(postRepository).should(times(1)).findByPostId(notExistPostId);
-            assertThat(thrown).isInstanceOf(NoSuchPostException.class);
+            assertThat(thrown).isInstanceOf(StatusCode400Exception.class);
         }
 
         @Test
         void given_correctInfo_then_returnCommentsResponse() {
             // given
-            long existPostId = 1l;
+            long existPostId = 1L;
             Comment existComment = Comment.builder()
                 .likes(0)
                 .content("test content")
                 .member(WithMockCustomUserSecurityContextFactory.customUserDetailsMock()
                     .getMember())
-                .commentId(1l)
+                .commentId(1L)
                 .createdDate(LocalDateTime.now())
                 .lastUpdate(LocalDateTime.now())
                 .build();
@@ -78,7 +78,7 @@ public class CommentServiceTest {
             given(postRepository.findByPostId(existPostId)).willReturn(Optional.of(existPost));
 
             // when
-            CommentsResponse response = commentService.selectComments(null, existPostId);
+            CommentListResponse response = commentService.findComments(null, existPostId);
 
             // then
             then(postRepository).should(times(1)).findByPostId(existPostId);
@@ -88,21 +88,22 @@ public class CommentServiceTest {
     }
 
     @Nested
-    class selectReComments {
+    class SelectReComments {
+
         @Test
-        void given_notExistCommentId_then_throwNoSuchCommentException() {
+        void given_notExistCommentId_then_throwStatusCode400Exception() {
             // given
-            long notExistCommentId = 1l;
+            long notExistCommentId = 1L;
             given(commentRepository.findByCommentId(notExistCommentId)).willReturn(Optional.empty());
 
             // when
             Throwable thrown = catchThrowable(() -> {
-                commentService.selectReComments(null, notExistCommentId);
+                commentService.findReComments(null, notExistCommentId);
             });
 
             // then
             then(commentRepository).should(times(1)).findByCommentId(notExistCommentId);
-            assertThat(thrown).isInstanceOf(NoSuchCommentException.class);
+            assertThat(thrown).isInstanceOf(StatusCode400Exception.class);
         }
 
         @Test
@@ -111,20 +112,20 @@ public class CommentServiceTest {
             long existCommentId = 1L;
 
             Comment existComment = Comment.builder()
-                    .likes(0)
-                    .content("test content")
-                    .member(WithMockCustomUserSecurityContextFactory.customUserDetailsMock()
-                            .getMember())
-                    .commentId(1l)
-                    .createdDate(LocalDateTime.now())
-                    .lastUpdate(LocalDateTime.now())
-                    .build();
+                .likes(0)
+                .content("test content")
+                .member(WithMockCustomUserSecurityContextFactory.customUserDetailsMock()
+                    .getMember())
+                .commentId(1L)
+                .createdDate(LocalDateTime.now())
+                .lastUpdate(LocalDateTime.now())
+                .build();
 
             given(commentRepository.findByCommentId(existCommentId)).willReturn(Optional.of(existComment));
             given(commentRepository.findByParentId(existCommentId)).willReturn(Arrays.asList());
 
             // when
-            CommentsResponse response = commentService.selectReComments(null, existCommentId);
+            commentService.findReComments(null, existCommentId);
 
             // then
             then(commentRepository).should(times(1)).findByCommentId(existCommentId);

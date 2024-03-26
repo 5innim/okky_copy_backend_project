@@ -1,5 +1,9 @@
 package com.innim.okkycopy.integration.board.post;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+
 import com.innim.okkycopy.domain.member.MemberRepository;
 import com.innim.okkycopy.domain.member.entity.Member;
 import com.innim.okkycopy.global.auth.CustomUserDetails;
@@ -21,12 +25,9 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-
 @SpringBootTest
 public class MakeExpressionTest {
+
     @Autowired
     private WebApplicationContext context;
     @Autowired
@@ -37,8 +38,8 @@ public class MakeExpressionTest {
     @BeforeEach
     void init() {
         mockMvc = MockMvcBuilders.webAppContextSetup(context)
-                .apply(springSecurity())
-                .build();
+            .apply(springSecurity())
+            .build();
 
         initSecurityContext();
     }
@@ -49,22 +50,24 @@ public class MakeExpressionTest {
         CustomUserDetails principal = new CustomUserDetails(testMember);
 
         Authentication auth =
-                UsernamePasswordAuthenticationToken.authenticated(principal, principal.getPassword(), principal.getAuthorities());
+            UsernamePasswordAuthenticationToken.authenticated(principal, principal.getPassword(),
+                principal.getAuthorities());
         context.setAuthentication(auth);
         SecurityContextHolder.setContext(context);
     }
 
     @Nested
     @Transactional
-    class makeLikeExpressionTest {
+    class MakeLikeExpressionTest {
+
         @Test
         void given_noExistPost_then_responseErrorCode() throws Exception {
             // given
-            long postId = 1000l;
+            long postId = 1000L;
 
             // when
             ResultActions resultActions = mockMvc.perform(
-                    MockMvcRequestBuilders.post("/board/posts/" + postId + "/like")
+                MockMvcRequestBuilders.post("/board/posts/" + postId + "/like")
             );
 
             // then
@@ -74,14 +77,14 @@ public class MakeExpressionTest {
         @Test
         void given_alreadyExistExpression_then_responseErrorCode() throws Exception {
             // given
-            long postId = 1l;
+            long postId = 1L;
             mockMvc.perform(
-                    MockMvcRequestBuilders.post("/board/posts/" + postId + "/hate")
+                MockMvcRequestBuilders.post("/board/posts/" + postId + "/hate")
             );
 
             // when
             ResultActions resultActions = mockMvc.perform(
-                    MockMvcRequestBuilders.post("/board/posts/" + postId + "/like")
+                MockMvcRequestBuilders.post("/board/posts/" + postId + "/like")
             );
 
             // then
@@ -91,11 +94,11 @@ public class MakeExpressionTest {
         @Test
         void given_correctInfo_then_response201() throws Exception {
             // given
-            long postId = 1l;
+            long postId = 1L;
 
             // when
             MockHttpServletResponse response = mockMvc.perform(
-                    MockMvcRequestBuilders.post("/board/posts/" + postId + "/like")
+                MockMvcRequestBuilders.post("/board/posts/" + postId + "/like")
             ).andReturn().getResponse();
 
             // then
@@ -105,15 +108,16 @@ public class MakeExpressionTest {
 
     @Nested
     @Transactional
-    class makeHateExpressionTest {
+    class MakeHateExpressionTest {
+
         @Test
         void given_noExistPost_then_responseErrorCode() throws Exception {
             // given
-            long postId = 1000l;
+            long postId = 1000L;
 
             // when
             ResultActions resultActions = mockMvc.perform(
-                    MockMvcRequestBuilders.post("/board/posts/" + postId + "/hate")
+                MockMvcRequestBuilders.post("/board/posts/" + postId + "/hate")
             );
 
             // then
@@ -123,14 +127,14 @@ public class MakeExpressionTest {
         @Test
         void given_alreadyExistExpression_then_responseErrorCode() throws Exception {
             // given
-            long postId = 1l;
+            long postId = 1L;
             mockMvc.perform(
-                    MockMvcRequestBuilders.post("/board/posts/" + postId + "/like")
+                MockMvcRequestBuilders.post("/board/posts/" + postId + "/like")
             );
 
             // when
             ResultActions resultActions = mockMvc.perform(
-                    MockMvcRequestBuilders.post("/board/posts/" + postId + "/hate")
+                MockMvcRequestBuilders.post("/board/posts/" + postId + "/hate")
             );
 
             // then
@@ -140,11 +144,11 @@ public class MakeExpressionTest {
         @Test
         void given_correctInfo_then_response201() throws Exception {
             // given
-            long postId = 1l;
+            long postId = 1L;
 
             // when
             MockHttpServletResponse response = mockMvc.perform(
-                    MockMvcRequestBuilders.post("/board/posts/" + postId + "/hate")
+                MockMvcRequestBuilders.post("/board/posts/" + postId + "/hate")
             ).andReturn().getResponse();
 
             // then

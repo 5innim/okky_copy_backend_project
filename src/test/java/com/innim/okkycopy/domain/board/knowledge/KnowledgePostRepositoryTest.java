@@ -1,9 +1,9 @@
 package com.innim.okkycopy.domain.board.knowledge;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.innim.okkycopy.common.WithMockCustomUserSecurityContextFactory;
-import com.innim.okkycopy.domain.board.dto.request.write.WriteRequest;
+import com.innim.okkycopy.domain.board.dto.request.write.PostAddRequest;
 import com.innim.okkycopy.domain.board.entity.BoardTopic;
 import com.innim.okkycopy.domain.board.entity.Post;
 import com.innim.okkycopy.domain.board.knowledge.entity.KnowledgePost;
@@ -24,6 +24,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = Replace.NONE)
 class KnowledgePostRepositoryTest {
+
     @Autowired
     KnowledgePostRepository knowledgePostRepository;
     @Autowired
@@ -36,25 +37,25 @@ class KnowledgePostRepositoryTest {
     void findByPostIdTest() {
         // given
         Member member = WithMockCustomUserSecurityContextFactory.customUserDetailsMock().getMember();
-        WriteRequest writeRequest = writeRequest();
-        BoardTopic boardTopic = boardTopicRepository.findByName(writeRequest.getTopic()).get();
+        PostAddRequest postAddRequest = writeRequest();
+        BoardTopic boardTopic = boardTopicRepository.findByName(postAddRequest.getTopic()).get();
 
         List<Post> posts = new ArrayList<>();
         member.setPosts(posts);
-        KnowledgePost knowledgePost = KnowledgePost.createKnowledgePost(writeRequest, boardTopic, member);
+        KnowledgePost knowledgePost = KnowledgePost.create(postAddRequest, boardTopic, member);
 
         entityManager.merge(member);
         entityManager.persist(knowledgePost);
 
         // when
-        KnowledgePost post = knowledgePostRepository.findByPostId(1l).get();
+        KnowledgePost post = knowledgePostRepository.findByPostId(1L).get();
 
         // then
         assertThat(post.getTitle()).isEqualTo(knowledgePost.getTitle());
     }
 
-    WriteRequest writeRequest() {
-        return WriteRequest.builder()
+    PostAddRequest writeRequest() {
+        return PostAddRequest.builder()
             .title("test_title")
             .content("test_content")
             .topic("컬럼")

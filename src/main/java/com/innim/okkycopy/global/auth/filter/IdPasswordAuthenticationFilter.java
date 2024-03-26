@@ -3,7 +3,7 @@ package com.innim.okkycopy.global.auth.filter;
 import com.innim.okkycopy.global.auth.AuthService;
 import com.innim.okkycopy.global.auth.CustomUserDetails;
 import com.innim.okkycopy.global.auth.dto.request.LoginRequest;
-import com.innim.okkycopy.global.error.ErrorCode;
+import com.innim.okkycopy.global.error.ErrorCase;
 import com.innim.okkycopy.global.error.exception.TokenGenerateException;
 import com.innim.okkycopy.global.error.exception.UserIdNotFoundException;
 import com.innim.okkycopy.global.util.JwtUtil;
@@ -28,6 +28,7 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 @Slf4j
 public class IdPasswordAuthenticationFilter extends AbstractAuthenticationProcessingFilter {
+
     private static final AntPathRequestMatcher DEFAULT_ANT_PATH_REQUEST_MATCHER = new AntPathRequestMatcher("/login",
         "POST");
     private AuthService authService;
@@ -47,8 +48,12 @@ public class IdPasswordAuthenticationFilter extends AbstractAuthenticationProces
             throw new AuthenticationServiceException("Authentication method not supported: " + request.getMethod());
         }
         LoginRequest requestBody = obtainBody(request);
-        if (requestBody.getId() == null) requestBody.setId("");
-        if (requestBody.getPassword() == null) requestBody.setPassword("");
+        if (requestBody.getId() == null) {
+            requestBody.setId("");
+        }
+        if (requestBody.getPassword() == null) {
+            requestBody.setPassword("");
+        }
 
         UsernamePasswordAuthenticationToken authRequest = UsernamePasswordAuthenticationToken.unauthenticated(
             requestBody.getId(),
@@ -78,11 +83,11 @@ public class IdPasswordAuthenticationFilter extends AbstractAuthenticationProces
             refreshToken = JwtUtil.generateRefreshToken(userId, loginDate);
 
             LocalDateTime localDateTime = LocalDateTime.ofInstant(loginDate.toInstant(), ZoneId.systemDefault());
-            authService.updateMemberLoginDate(userId, localDateTime);
+            authService.modifyMemberLoginDate(userId, localDateTime);
 
-        } catch(TokenGenerateException | UserIdNotFoundException ex) {
+        } catch (TokenGenerateException | UserIdNotFoundException ex) {
             RequestResponseUtil.makeExceptionResponseForFilter(response,
-                ErrorCode._500_GENERATE_TOKEN);
+                ErrorCase._500_GENERATE_TOKEN);
             return;
         }
 
@@ -95,11 +100,11 @@ public class IdPasswordAuthenticationFilter extends AbstractAuthenticationProces
         AuthenticationException failed) throws IOException {
 
         if (failed instanceof BadCredentialsException) {
-            RequestResponseUtil.makeExceptionResponseForFilter(response, ErrorCode._400_BAD_CREDENTIALS);
+            RequestResponseUtil.makeExceptionResponseForFilter(response, ErrorCase._400_BAD_CREDENTIALS);
             return;
         }
 
-        RequestResponseUtil.makeExceptionResponseForFilter(response, ErrorCode._400_AUTHENTICATION_FAILED);
+        RequestResponseUtil.makeExceptionResponseForFilter(response, ErrorCase._400_AUTHENTICATION_FAILED);
 
     }
 }

@@ -1,13 +1,13 @@
 package com.innim.okkycopy.domain.board.knowledge;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.times;
 
 import com.innim.okkycopy.common.WithMockCustomUserSecurityContextFactory;
-import com.innim.okkycopy.domain.board.dto.request.write.WriteRequest;
-import com.innim.okkycopy.domain.board.dto.response.post.detail.PostDetailResponse;
+import com.innim.okkycopy.domain.board.dto.request.write.PostAddRequest;
+import com.innim.okkycopy.domain.board.dto.response.post.detail.PostDetailsResponse;
 import com.innim.okkycopy.global.auth.CustomUserDetails;
 import java.time.LocalDateTime;
 import java.util.Arrays;
@@ -31,58 +31,58 @@ class KnowledgeControllerTest {
     @Test
     void writeKnowledgePostTest() {
         // given
-        WriteRequest writeRequest = writeRequest();
+        PostAddRequest postAddRequest = writeRequest();
         CustomUserDetails customUserDetails = WithMockCustomUserSecurityContextFactory.customUserDetailsMock();
 
         // when
-        ResponseEntity response = controller.writeKnowledgePost(writeRequest, customUserDetails);
+        ResponseEntity response = controller.knowledgePostAdd(postAddRequest, customUserDetails);
 
         // then
-        then(service).should(times(1)).saveKnowledgePost(writeRequest, customUserDetails);
+        then(service).should(times(1)).addKnowledgePost(postAddRequest, customUserDetails);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
     }
 
     @Test
     void getKnowledgePostTest() {
         // given
-        long id = 1l;
-        PostDetailResponse postDetailResponse = postDetailRequest();
-        given(service.selectKnowledgePost(null, id)).willReturn(postDetailResponse);
+        long id = 1L;
+        PostDetailsResponse postDetailsResponse = postDetailRequest();
+        given(service.findKnowledgePost(null, id)).willReturn(postDetailsResponse);
 
         // when
-        ResponseEntity response = controller.getKnowledgePost(null, id);
+        ResponseEntity response = controller.knowledgePostDetails(null, id);
 
         // then
-        assertThat(response.getBody()).isEqualTo(postDetailResponse);
+        assertThat(response.getBody()).isEqualTo(postDetailsResponse);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     }
 
     @Test
     void editKnowledgePostTest() {
         // given
-        long id = 1l;
-        WriteRequest writeRequest = writeRequest();
+        long id = 1L;
+        PostAddRequest postAddRequest = writeRequest();
         CustomUserDetails customUserDetails = WithMockCustomUserSecurityContextFactory.customUserDetailsMock();
 
         // when
-        ResponseEntity response = controller.editKnowledgePost(customUserDetails, writeRequest, id);
+        ResponseEntity response = controller.knowledgePostModify(customUserDetails, postAddRequest, id);
 
         // then
-        then(service).should(times(1)).updateKnowledgePost(customUserDetails, writeRequest, id);
+        then(service).should(times(1)).modifyKnowledgePost(customUserDetails, postAddRequest, id);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
     }
 
     @Test
     void deleteKnowledgePostTest() {
         // given
-        long id = 1l;
+        long id = 1L;
         CustomUserDetails customUserDetails = WithMockCustomUserSecurityContextFactory.customUserDetailsMock();
 
         // when
-        ResponseEntity response = controller.deleteKnowledgePost(customUserDetails, id);
+        ResponseEntity response = controller.knowledgePostRemove(customUserDetails, id);
 
         // then
-        then(service).should(times(1)).deleteKnowledgePost(customUserDetails, id);
+        then(service).should(times(1)).removeKnowledgePost(customUserDetails, id);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
     }
 
@@ -92,20 +92,19 @@ class KnowledgeControllerTest {
         long topicId = 1;
         String keyword = "test_keyword";
         Pageable pageable = null;
-        given(service.selectKnowledgePostsByCondition(topicId, keyword, pageable)).willReturn(null);
+        given(service.findKnowledgePostsByKeywordAndPageable(topicId, keyword, pageable)).willReturn(null);
 
         // when
-        ResponseEntity<Object> response = controller.getBriefPosts(topicId, keyword, pageable);
+        ResponseEntity<Object> response = controller.briefPostList(topicId, keyword, pageable);
 
         // then
-        then(service).should(times(1)).selectKnowledgePostsByCondition(topicId, keyword, pageable);
+        then(service).should(times(1)).findKnowledgePostsByKeywordAndPageable(topicId, keyword, pageable);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     }
 
 
-
-    WriteRequest writeRequest() {
-        return WriteRequest.builder()
+    PostAddRequest writeRequest() {
+        return PostAddRequest.builder()
             .title("test_title")
             .topic("test_topic")
             .tags(Arrays.asList())
@@ -113,8 +112,8 @@ class KnowledgeControllerTest {
             .build();
     }
 
-    PostDetailResponse postDetailRequest() {
-        return PostDetailResponse.builder()
+    PostDetailsResponse postDetailRequest() {
+        return PostDetailsResponse.builder()
             .title("test_title")
             .tags(Arrays.asList())
             .content("test_content")

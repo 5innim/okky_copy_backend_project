@@ -18,7 +18,7 @@ public class AuthService {
     private final MemberRepository memberRepository;
 
     @Transactional(readOnly = true)
-    public void updateMemberLoginDate(long memberId, LocalDateTime loginDate)
+    public void modifyMemberLoginDate(long memberId, LocalDateTime loginDate)
         throws UserIdNotFoundException {
         Optional<Member> optionalMember = memberRepository.findByMemberId(memberId);
         Member member = optionalMember.orElseThrow(
@@ -27,7 +27,7 @@ public class AuthService {
     }
 
     @Transactional(readOnly = true)
-    public Date selectMemberLoginDate(long memberId)
+    public Date findMemberLoginDate(long memberId)
         throws UserIdNotFoundException {
         Optional<Member> optionalMember = memberRepository.findByMemberId(memberId);
         Member member = optionalMember.orElseThrow(

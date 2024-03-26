@@ -26,7 +26,8 @@ public class JwtUtil {
         return generateToken(userId, expiredDate, loginDate, "refresh");
     }
 
-    public static String generateToken(Long userId, Date expiredDate, Date loginDate, String tokenSub) throws TokenGenerateException{
+    public static String generateToken(Long userId, Date expiredDate, Date loginDate, String tokenSub)
+        throws TokenGenerateException {
 
         String generatedToken;
         try {
@@ -38,7 +39,7 @@ public class JwtUtil {
                 .addClaims(Map.of("lat", loginDate))
                 .signWith(JwtProperty.secretKey, JwtProperty.signatureAlgorithm)
                 .compact();
-        } catch(Exception ex) {
+        } catch (Exception ex) {
             log.info(ex.getMessage());
             throw new TokenGenerateException("can not generate token with userId: " + "[" + userId + "]");
         }
@@ -51,14 +52,14 @@ public class JwtUtil {
         try {
             JwtParser parser = Jwts.parserBuilder().setSigningKey(JwtProperty.secretKey).build();
             return parser.parseClaimsJws(token).getBody();
-        } catch(ExpiredJwtException ex) {
+        } catch (ExpiredJwtException ex) {
             throw ex;
-        } catch(SignatureException ex) {
+        } catch (SignatureException ex) {
             throw new FailValidationJwtException("signature is not equals");
-        } catch(JwtException ex) {
+        } catch (JwtException ex) {
             throw new FailValidationJwtException("token validation failed");
         }
 
     }
-    
+
 }

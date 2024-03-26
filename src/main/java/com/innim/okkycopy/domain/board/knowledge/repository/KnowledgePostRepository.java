@@ -10,9 +10,12 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 public interface KnowledgePostRepository extends JpaRepository<KnowledgePost, Long> {
+
     Optional<KnowledgePost> findByPostId(long postId);
+
     @Query("SELECT k FROM KnowledgePost k WHERE k.boardTopic = :boardTopic AND k.title LIKE CONCAT('%', :keyword, '%')")
     Page<KnowledgePost> findByTopicId(@Param("boardTopic") BoardTopic boardTopic, String keyword, Pageable pageable);
+
     @Query("SELECT k FROM KnowledgePost k WHERE k.title LIKE CONCAT('%', :keyword, '%')")
-    Page<KnowledgePost> findAll(String keyword, Pageable pageable);
+    Page<KnowledgePost> findAllByKeywordAndPageable(String keyword, Pageable pageable);
 }
