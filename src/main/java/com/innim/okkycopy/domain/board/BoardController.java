@@ -4,7 +4,7 @@ import com.innim.okkycopy.domain.board.dto.request.ScrapRequest;
 import com.innim.okkycopy.domain.board.dto.response.FileResponse;
 import com.innim.okkycopy.domain.board.enums.ExpressionType;
 import com.innim.okkycopy.global.auth.CustomUserDetails;
-import com.innim.okkycopy.global.commons.S3Uploader;
+import com.innim.okkycopy.global.common.S3Uploader;
 import com.innim.okkycopy.global.error.exception.ServiceException;
 import java.io.IOException;
 import lombok.RequiredArgsConstructor;

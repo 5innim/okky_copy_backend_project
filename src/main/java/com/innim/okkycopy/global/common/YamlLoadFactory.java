@@ -1,4 +1,4 @@
-package com.innim.okkycopy.global.commons;
+package com.innim.okkycopy.global.common;
 
 import java.io.IOException;
 import java.util.Properties;

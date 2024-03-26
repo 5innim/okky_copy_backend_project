@@ -1,6 +1,6 @@
-package com.innim.okkycopy.global.commons.validation;
+package com.innim.okkycopy.global.common.validation;
 
-import com.innim.okkycopy.global.commons.validation.annotation.MentionId;
+import com.innim.okkycopy.global.common.validation.annotation.MentionId;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 

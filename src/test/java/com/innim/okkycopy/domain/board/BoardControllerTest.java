@@ -15,7 +15,7 @@ import com.innim.okkycopy.domain.board.dto.response.topics.TypeResponse;
 import com.innim.okkycopy.domain.board.enums.ExpressionType;
 import com.innim.okkycopy.domain.member.entity.Member;
 import com.innim.okkycopy.global.auth.CustomUserDetails;
-import com.innim.okkycopy.global.commons.S3Uploader;
+import com.innim.okkycopy.global.common.S3Uploader;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;

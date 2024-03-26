@@ -1,6 +1,6 @@
 package com.innim.okkycopy.domain.board.dto.request.write;
 
-import com.innim.okkycopy.global.commons.validation.annotation.ListSize;
+import com.innim.okkycopy.global.common.validation.annotation.ListSize;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Size;
 import java.util.List;

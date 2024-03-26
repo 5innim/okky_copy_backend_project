@@ -1,6 +1,6 @@
 package com.innim.okkycopy.domain.board.comment.dto.request;
 
-import com.innim.okkycopy.global.commons.validation.annotation.MentionId;
+import com.innim.okkycopy.global.common.validation.annotation.MentionId;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
