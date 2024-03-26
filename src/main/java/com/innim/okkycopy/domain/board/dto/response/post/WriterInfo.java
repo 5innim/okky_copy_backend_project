@@ -1,4 +1,4 @@
-package com.innim.okkycopy.domain.board.dto.response.post.detail;
+package com.innim.okkycopy.domain.board.dto.response.post;
 
 import com.innim.okkycopy.domain.member.entity.Member;
 import lombok.AllArgsConstructor;
@@ -8,14 +8,14 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 @Builder
-public class WriterInfoResponse {
+public class WriterInfo {
 
     private long memberId;
     private String nickName;
     private String profile;
 
-    public static WriterInfoResponse toWriterInfoRequestDto(Member member) {
-        return WriterInfoResponse.builder()
+    public static WriterInfo toWriterInfoRequestDto(Member member) {
+        return WriterInfo.builder()
             .memberId(member.getMemberId())
             .nickName(member.getNickname())
             .profile(member.getProfile())

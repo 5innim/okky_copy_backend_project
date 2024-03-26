@@ -28,43 +28,44 @@ public class KnowledgeController {
     private final KnowledgeService knowledgeService;
 
     @PostMapping("/write")
-    public ResponseEntity<Object> writeKnowledgePost(@RequestBody @Valid WriteRequest writeRequest,
+    public ResponseEntity<Object> knowledgePostAdd(@RequestBody @Valid WriteRequest writeRequest,
         @AuthenticationPrincipal CustomUserDetails customUserDetails) {
-        knowledgeService.saveKnowledgePost(writeRequest, customUserDetails);
+        knowledgeService.addKnowledgePost(writeRequest, customUserDetails);
 
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @GetMapping("/posts/{id}")
-    public ResponseEntity<Object> getKnowledgePost(
+    public ResponseEntity<Object> knowledgePostDetails(
         @AuthenticationPrincipal CustomUserDetails customUserDetails,
         @PathVariable("id") long id) {
-        return ResponseEntity.ok(knowledgeService.selectKnowledgePost(customUserDetails, id));
+        return ResponseEntity.ok(knowledgeService.findKnowledgePost(customUserDetails, id));
     }
 
     @PutMapping("/posts/{id}")
-    public ResponseEntity<Object> editKnowledgePost(
+    public ResponseEntity<Object> knowledgePostModify(
         @AuthenticationPrincipal CustomUserDetails customUserDetails,
         @RequestBody @Valid WriteRequest updateRequest,
         @PathVariable("id") long id) {
-        knowledgeService.updateKnowledgePost(customUserDetails, updateRequest, id);
+        knowledgeService.modifyKnowledgePost(customUserDetails, updateRequest, id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
     @DeleteMapping("/posts/{id}")
-    public ResponseEntity<Object> deleteKnowledgePost(
+    public ResponseEntity<Object> knowledgePostRemove(
         @AuthenticationPrincipal CustomUserDetails customUserDetails,
         @PathVariable("id") long id) {
-        knowledgeService.deleteKnowledgePost(customUserDetails, id);
+        knowledgeService.removeKnowledgePost(customUserDetails, id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
     @GetMapping("/posts")
-    public ResponseEntity<Object> getBriefPosts(
+    public ResponseEntity<Object> briefPostList(
         @RequestParam(required = false) Long topicId,
         @RequestParam(required = false) String keyword,
         @PageableDefault(size = 20, sort = "createdDate", direction = Sort.Direction.DESC) Pageable pageable) {
-        return ResponseEntity.ok().body(knowledgeService.selectKnowledgePostsByCondition(topicId, keyword, pageable));
+        return ResponseEntity.ok()
+            .body(knowledgeService.findKnowledgePostsByKeywordAndPageable(topicId, keyword, pageable));
     }
 
 }

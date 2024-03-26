@@ -5,7 +5,7 @@ import static org.springframework.security.test.web.servlet.setup.SecurityMockMv
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
 import com.google.gson.Gson;
-import com.innim.okkycopy.domain.board.comment.dto.request.WriteReCommentRequest;
+import com.innim.okkycopy.domain.board.comment.dto.request.ReCommentRequest;
 import com.innim.okkycopy.domain.member.MemberRepository;
 import com.innim.okkycopy.domain.member.entity.Member;
 import com.innim.okkycopy.global.auth.CustomUserDetails;
@@ -63,15 +63,15 @@ public class WriteReCommentTest {
         // given
         long postId = 1L;
         long commentId = 1L;
-        WriteReCommentRequest writeReCommentRequest = writeReCommentRequest();
-        writeReCommentRequest.setContent("");
+        ReCommentRequest reCommentRequest = reCommentRequest();
+        reCommentRequest.setContent("");
 
         // when
         ResultActions resultActions = mockMvc.perform(
             MockMvcRequestBuilders.post("/board/posts/" + postId + "/comments/" + commentId + "/recomment")
                 .contentType(MediaType.APPLICATION_JSON)
                 .characterEncoding("UTF-8")
-                .content(new Gson().toJson(writeReCommentRequest))
+                .content(new Gson().toJson(reCommentRequest))
         );
 
         // then
@@ -84,15 +84,15 @@ public class WriteReCommentTest {
         // given
         long postId = 1L;
         long commentId = 1L;
-        WriteReCommentRequest writeReCommentRequest = writeReCommentRequest();
-        writeReCommentRequest.setMentionId(0L);
+        ReCommentRequest reCommentRequest = reCommentRequest();
+        reCommentRequest.setMentionId(0L);
 
         // when
         ResultActions resultActions = mockMvc.perform(
             MockMvcRequestBuilders.post("/board/posts/" + postId + "/comments/" + commentId + "/recomment")
                 .contentType(MediaType.APPLICATION_JSON)
                 .characterEncoding("UTF-8")
-                .content(new Gson().toJson(writeReCommentRequest))
+                .content(new Gson().toJson(reCommentRequest))
         );
 
         // then
@@ -112,7 +112,7 @@ public class WriteReCommentTest {
             MockMvcRequestBuilders.post("/board/posts/" + postId + "/comments/" + commentId + "/recomment")
                 .contentType(MediaType.APPLICATION_JSON)
                 .characterEncoding("UTF-8")
-                .content(new Gson().toJson(writeReCommentRequest()))
+                .content(new Gson().toJson(reCommentRequest()))
         );
 
         // then
@@ -131,7 +131,7 @@ public class WriteReCommentTest {
             MockMvcRequestBuilders.post("/board/posts/" + postId + "/comments/" + commentId + "/recomment")
                 .contentType(MediaType.APPLICATION_JSON)
                 .characterEncoding("UTF-8")
-                .content(new Gson().toJson(writeReCommentRequest()))
+                .content(new Gson().toJson(reCommentRequest()))
         );
 
         // then
@@ -150,15 +150,15 @@ public class WriteReCommentTest {
             MockMvcRequestBuilders.post("/board/posts/" + postId + "/comments/" + commentId + "/recomment")
                 .contentType(MediaType.APPLICATION_JSON)
                 .characterEncoding("UTF-8")
-                .content(new Gson().toJson(writeReCommentRequest()))
+                .content(new Gson().toJson(reCommentRequest()))
         ).andReturn().getResponse();
 
         // then
         assertThat(response.getStatus()).isEqualTo(HttpStatus.CREATED.value());
     }
 
-    WriteReCommentRequest writeReCommentRequest() {
-        return WriteReCommentRequest.builder()
+    ReCommentRequest reCommentRequest() {
+        return ReCommentRequest.builder()
             .content("test content")
             .mentionId(1L)
             .build();

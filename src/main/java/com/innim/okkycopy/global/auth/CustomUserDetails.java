@@ -4,19 +4,17 @@ import com.innim.okkycopy.domain.member.entity.Member;
 import java.util.Collection;
 import java.util.List;
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+@Getter
 @AllArgsConstructor
 @NoArgsConstructor
 public class CustomUserDetails implements UserDetails {
 
     private Member member;
-
-    public Member getMember() {
-        return member;
-    }
 
     public long getUserId() {
         return member.getMemberId();

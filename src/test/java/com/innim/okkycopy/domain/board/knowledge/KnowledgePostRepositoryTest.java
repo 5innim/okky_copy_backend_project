@@ -42,7 +42,7 @@ class KnowledgePostRepositoryTest {
 
         List<Post> posts = new ArrayList<>();
         member.setPosts(posts);
-        KnowledgePost knowledgePost = KnowledgePost.createKnowledgePost(writeRequest, boardTopic, member);
+        KnowledgePost knowledgePost = KnowledgePost.create(writeRequest, boardTopic, member);
 
         entityManager.merge(member);
         entityManager.persist(knowledgePost);

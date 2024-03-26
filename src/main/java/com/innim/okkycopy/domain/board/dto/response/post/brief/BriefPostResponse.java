@@ -1,6 +1,6 @@
 package com.innim.okkycopy.domain.board.dto.response.post.brief;
 
-import com.innim.okkycopy.domain.board.dto.response.post.detail.WriterInfoResponse;
+import com.innim.okkycopy.domain.board.dto.response.post.WriterInfo;
 import com.innim.okkycopy.domain.board.entity.Post;
 import com.innim.okkycopy.domain.board.entity.Tag;
 import com.innim.okkycopy.domain.board.knowledge.entity.KnowledgePost;
@@ -22,7 +22,7 @@ public class BriefPostResponse {
 
     long postId;
     String title;
-    WriterInfoResponse writerInfo;
+    WriterInfo writerInfo;
     LocalDateTime createdDate;
     List<String> tags;
     int views;
@@ -38,7 +38,7 @@ public class BriefPostResponse {
         BriefPostResponse response = BriefPostResponse.builder()
             .postId(post.getPostId())
             .title(post.getTitle())
-            .writerInfo(WriterInfoResponse.toWriterInfoRequestDto(post.getMember()))
+            .writerInfo(WriterInfo.toWriterInfoRequestDto(post.getMember()))
             .createdDate(post.getCreatedDate())
             .tags(tags)
             .build();

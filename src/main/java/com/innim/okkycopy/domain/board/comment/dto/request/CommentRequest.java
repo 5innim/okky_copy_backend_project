@@ -10,7 +10,8 @@ import lombok.Setter;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public class WriteCommentRequest {
+public class CommentRequest {
+
     @Size(min = 1, max = 20000)
     private String content;
 }

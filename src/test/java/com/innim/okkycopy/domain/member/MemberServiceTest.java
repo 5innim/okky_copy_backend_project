@@ -7,7 +7,7 @@ import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.times;
 
 import com.innim.okkycopy.domain.member.dto.request.SignupRequest;
-import com.innim.okkycopy.domain.member.dto.response.BriefMemberInfo;
+import com.innim.okkycopy.domain.member.dto.response.BriefMemberResponse;
 import com.innim.okkycopy.domain.member.entity.Member;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -34,7 +34,7 @@ class MemberServiceTest {
         given(passwordEncoder.encode(any(String.class))).willReturn("**************");
 
         // when
-        BriefMemberInfo briefMemberInfo = memberService.insertMember(signupRequest);
+        BriefMemberResponse briefMemberInfo = memberService.addMember(signupRequest);
 
         // then
         then(memberRepository).should(times(1)).save(any(Member.class));

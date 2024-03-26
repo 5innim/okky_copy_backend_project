@@ -29,60 +29,60 @@ public class BoardController {
     private final S3Uploader s3Uploader;
 
     @GetMapping("/topics")
-    public ResponseEntity<Object> serveTopics() {
-        return ResponseEntity.ok(boardService.findAllBoardTopics());
+    public ResponseEntity<Object> boardTopicList() {
+        return ResponseEntity.ok(boardService.findBoardTopics());
     }
 
     @PostMapping("/post/scrap")
-    public ResponseEntity<Object> doScrap(
+    public void scrapAdd(
             @RequestBody ScrapRequest scrapRequest,
             @AuthenticationPrincipal CustomUserDetails customUserDetails) {
-        boardService.scrapPost(customUserDetails.getMember(), scrapRequest.getPostId());
-        return ResponseEntity.ok().build();
+        boardService.addScrap(customUserDetails.getMember(), scrapRequest.getPostId());
+        ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/post/scrap")
-    public ResponseEntity<Object> cancelScrap(
+    public void scrapRemove(
             @RequestBody ScrapRequest scrapRequest,
             @AuthenticationPrincipal CustomUserDetails customUserDetails) {
-        boardService.cancelScrap(customUserDetails.getMember(), scrapRequest.getPostId());
-        return ResponseEntity.ok().build();
+        boardService.removeScrap(customUserDetails.getMember(), scrapRequest.getPostId());
+        ResponseEntity.ok().build();
     }
 
     @PostMapping("/posts/{id}/like")
-    public ResponseEntity<Object> makeLikeExpression(
+    public ResponseEntity<Object> likeExpressionAdd(
             @AuthenticationPrincipal CustomUserDetails customUserDetails,
             @PathVariable long id) {
-        boardService.insertPostExpression(customUserDetails.getMember(), id, ExpressionType.LIKE);
+        boardService.addPostExpression(customUserDetails.getMember(), id, ExpressionType.LIKE);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @PostMapping("/posts/{id}/hate")
-    public ResponseEntity<Object> makeHateExpression(
+    public ResponseEntity<Object> hateExpressionAdd(
             @AuthenticationPrincipal CustomUserDetails customUserDetails,
             @PathVariable long id) {
-        boardService.insertPostExpression(customUserDetails.getMember(), id, ExpressionType.HATE);
+        boardService.addPostExpression(customUserDetails.getMember(), id, ExpressionType.HATE);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @DeleteMapping("/posts/{id}/like")
-    public ResponseEntity<Object> removeLikeExpression(
+    public ResponseEntity<Object> likeExpressionRemove(
             @AuthenticationPrincipal CustomUserDetails customUserDetails,
             @PathVariable long id) {
-        boardService.deletePostExpression(customUserDetails.getMember(), id, ExpressionType.LIKE);
+        boardService.removePostExpression(customUserDetails.getMember(), id, ExpressionType.LIKE);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
     @DeleteMapping("/posts/{id}/hate")
-    public ResponseEntity<Object> removeHateExpression(
+    public ResponseEntity<Object> hateExpressionRemove(
             @AuthenticationPrincipal CustomUserDetails customUserDetails,
             @PathVariable long id) {
-        boardService.deletePostExpression(customUserDetails.getMember(), id, ExpressionType.HATE);
+        boardService.removePostExpression(customUserDetails.getMember(), id, ExpressionType.HATE);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
     @PostMapping("/file/upload")
-    public ResponseEntity<Object> saveFile(@RequestParam("file") MultipartFile file)
+    public ResponseEntity<Object> fileAdd(@RequestParam("file") MultipartFile file)
             throws ServiceException, IOException {
         return ResponseEntity.ok(new FileResponse(s3Uploader.uploadFileToS3(file)));
     }

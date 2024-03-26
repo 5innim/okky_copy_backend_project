@@ -6,9 +6,9 @@ import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.times;
 
 import com.innim.okkycopy.common.WithMockCustomUserSecurityContextFactory;
-import com.innim.okkycopy.domain.board.comment.dto.request.WriteCommentRequest;
-import com.innim.okkycopy.domain.board.comment.dto.request.WriteReCommentRequest;
-import com.innim.okkycopy.domain.board.comment.dto.response.CommentsResponse;
+import com.innim.okkycopy.domain.board.comment.dto.request.CommentRequest;
+import com.innim.okkycopy.domain.board.comment.dto.request.ReCommentRequest;
+import com.innim.okkycopy.domain.board.comment.dto.response.CommentListResponse;
 import com.innim.okkycopy.domain.board.enums.ExpressionType;
 import com.innim.okkycopy.global.auth.CustomUserDetails;
 import java.util.Arrays;
@@ -33,14 +33,14 @@ public class CommentControllerTest {
         // given
         long id = 1L;
         CustomUserDetails customUserDetails = WithMockCustomUserSecurityContextFactory.customUserDetailsMock();
-        WriteCommentRequest writeCommentRequest = commentRequest();
+        CommentRequest commentRequest = commentRequest();
 
         // when
-        ResponseEntity response = commentController.writeComment(customUserDetails,
-            writeCommentRequest, id);
+        ResponseEntity response = commentController.commentAdd(customUserDetails,
+            commentRequest, id);
 
         // then
-        then(commentService).should(times(1)).saveComment(customUserDetails, writeCommentRequest, id);
+        then(commentService).should(times(1)).addComment(customUserDetails, commentRequest, id);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
     }
 
@@ -49,15 +49,15 @@ public class CommentControllerTest {
         // given
         long id = 1L;
         CustomUserDetails customUserDetails = WithMockCustomUserSecurityContextFactory.customUserDetailsMock();
-        WriteCommentRequest writeCommentRequest = commentRequest();
+        CommentRequest commentRequest = commentRequest();
 
         // when
-        ResponseEntity response = commentController.editComment(customUserDetails,
-            writeCommentRequest, id);
+        ResponseEntity response = commentController.commentModify(customUserDetails,
+            commentRequest, id);
 
         // then
-        then(commentService).should(times(1)).updateComment(customUserDetails,
-            writeCommentRequest, id);
+        then(commentService).should(times(1)).modifyComment(customUserDetails,
+            commentRequest, id);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
     }
 
@@ -68,10 +68,10 @@ public class CommentControllerTest {
         CustomUserDetails customUserDetails = WithMockCustomUserSecurityContextFactory.customUserDetailsMock();
 
         // when
-        ResponseEntity response = commentController.deleteComment(customUserDetails, id);
+        ResponseEntity response = commentController.commentRemove(customUserDetails, id);
 
         // then
-        then(commentService).should(times(1)).deleteComment(customUserDetails, id);
+        then(commentService).should(times(1)).removeComment(customUserDetails, id);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
     }
 
@@ -79,10 +79,10 @@ public class CommentControllerTest {
     void getComments() {
         // given
         long id = 1L;
-        given(commentService.selectComments(null, id)).willReturn(new CommentsResponse(Arrays.asList()));
+        given(commentService.findComments(null, id)).willReturn(new CommentListResponse(Arrays.asList()));
 
         // when
-        ResponseEntity response = commentController.getComments(null, id);
+        ResponseEntity response = commentController.commentList(null, id);
 
         // then
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
@@ -94,25 +94,25 @@ public class CommentControllerTest {
         long postId = 1L;
         long commentId = 1L;
         CustomUserDetails customUserDetails = WithMockCustomUserSecurityContextFactory.customUserDetailsMock();
-        WriteReCommentRequest writeReCommentRequest = WriteReCommentRequest.builder()
+        ReCommentRequest reCommentRequest = ReCommentRequest.builder()
             .mentionId(1L)
             .content("test")
             .build();
 
         // when
-        ResponseEntity response = commentController.writeReComment(
+        ResponseEntity response = commentController.reCommentAdd(
             customUserDetails,
             postId,
             commentId,
-            writeReCommentRequest
+            reCommentRequest
         );
 
         // then
-        then(commentService).should(times(1)).saveReComment(
+        then(commentService).should(times(1)).addReComment(
             customUserDetails,
             postId,
             commentId,
-            writeReCommentRequest
+            reCommentRequest
         );
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
     }
@@ -121,10 +121,10 @@ public class CommentControllerTest {
     void getReCommentsTest() {
         // given
         long id = 1L;
-        given(commentService.selectReComments(null, id)).willReturn(new CommentsResponse(Arrays.asList()));
+        given(commentService.findReComments(null, id)).willReturn(new CommentListResponse(Arrays.asList()));
 
         // when
-        ResponseEntity response = commentController.getReComments(null, id);
+        ResponseEntity response = commentController.reCommentList(null, id);
 
         // then
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
@@ -137,11 +137,11 @@ public class CommentControllerTest {
         long id = 1L;
 
         // when
-        ResponseEntity<Object> response = commentController.makeLikeExpression(customUserDetails, id);
+        ResponseEntity<Object> response = commentController.likeExpressionAdd(customUserDetails, id);
 
         // then
         then(commentService).should(times(1))
-            .insertCommentExpression(customUserDetails.getMember(), id, ExpressionType.LIKE);
+            .addCommentExpression(customUserDetails.getMember(), id, ExpressionType.LIKE);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
     }
 
@@ -152,11 +152,11 @@ public class CommentControllerTest {
         long id = 1L;
 
         // when
-        ResponseEntity<Object> response = commentController.makeHateExpression(customUserDetails, id);
+        ResponseEntity<Object> response = commentController.hateExpressionAdd(customUserDetails, id);
 
         // then
         then(commentService).should(times(1))
-            .insertCommentExpression(customUserDetails.getMember(), id, ExpressionType.HATE);
+            .addCommentExpression(customUserDetails.getMember(), id, ExpressionType.HATE);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
     }
 
@@ -167,11 +167,11 @@ public class CommentControllerTest {
         long id = 1L;
 
         // when
-        ResponseEntity<Object> response = commentController.removeLikeExpression(customUserDetails, id);
+        ResponseEntity<Object> response = commentController.likeExpressionRemove(customUserDetails, id);
 
         // then
         then(commentService).should(times(1))
-            .deleteCommentExpression(customUserDetails.getMember(), id, ExpressionType.LIKE);
+            .removeCommentExpression(customUserDetails.getMember(), id, ExpressionType.LIKE);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
     }
 
@@ -182,15 +182,15 @@ public class CommentControllerTest {
         long id = 1L;
 
         // when
-        ResponseEntity<Object> response = commentController.removeHateExpression(customUserDetails, id);
+        ResponseEntity<Object> response = commentController.hateExpressionRemove(customUserDetails, id);
 
         // then
         then(commentService).should(times(1))
-            .deleteCommentExpression(customUserDetails.getMember(), id, ExpressionType.HATE);
+            .removeCommentExpression(customUserDetails.getMember(), id, ExpressionType.HATE);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
     }
 
-    WriteCommentRequest commentRequest() {
-        return new WriteCommentRequest("test comment");
+    CommentRequest commentRequest() {
+        return new CommentRequest("test comment");
     }
 }

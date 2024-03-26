@@ -44,7 +44,7 @@ public class Scrap {
     @JoinColumn(name = "member_id")
     private Member member;
 
-    public static Scrap createScrap(Post post, Member member) {
+    public static Scrap create(Post post, Member member) {
         post.increaseScraps();
         return Scrap.builder()
             .member(member)
@@ -52,7 +52,7 @@ public class Scrap {
             .build();
     }
 
-    public static void removeScrap(EntityManager entityManager, Scrap scrap) {
+    public static void remove(EntityManager entityManager, Scrap scrap) {
         scrap.getPost().decreaseScraps();
         entityManager.remove(scrap);
     }

@@ -80,7 +80,7 @@ public class GetCommentsTest {
 
         // then
         assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());
-        resultActions.andExpect(jsonPath("$.comments[0].commentRequesterInfoResponse").isEmpty());
+        resultActions.andExpect(jsonPath("$.comments[0].requesterInfo").isEmpty());
     }
 
     @Test
@@ -97,7 +97,7 @@ public class GetCommentsTest {
 
         // then
         assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());
-        resultActions.andExpect(jsonPath("$.comments[0].commentRequesterInfoResponse").isNotEmpty());
+        resultActions.andExpect(jsonPath("$.comments[0].requesterInfo").isNotEmpty());
 
         clearSecurityContext();
     }

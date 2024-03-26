@@ -52,7 +52,7 @@ public class GetTest {
 
         // then
         assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());
-        resultActions.andExpect(jsonPath("postRequesterInfoResponse").isEmpty());
+        resultActions.andExpect(jsonPath("requesterInfo").isEmpty());
     }
 
     @Test
@@ -67,7 +67,7 @@ public class GetTest {
 
         // then
         assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());
-        resultActions.andExpect(jsonPath("postRequesterInfoResponse").isNotEmpty());
+        resultActions.andExpect(jsonPath("requesterInfo").isNotEmpty());
 
         clearSecurityContext();
     }

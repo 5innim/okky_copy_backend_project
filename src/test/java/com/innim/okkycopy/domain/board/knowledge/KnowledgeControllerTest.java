@@ -35,10 +35,10 @@ class KnowledgeControllerTest {
         CustomUserDetails customUserDetails = WithMockCustomUserSecurityContextFactory.customUserDetailsMock();
 
         // when
-        ResponseEntity response = controller.writeKnowledgePost(writeRequest, customUserDetails);
+        ResponseEntity response = controller.knowledgePostAdd(writeRequest, customUserDetails);
 
         // then
-        then(service).should(times(1)).saveKnowledgePost(writeRequest, customUserDetails);
+        then(service).should(times(1)).addKnowledgePost(writeRequest, customUserDetails);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
     }
 
@@ -47,10 +47,10 @@ class KnowledgeControllerTest {
         // given
         long id = 1L;
         PostDetailResponse postDetailResponse = postDetailRequest();
-        given(service.selectKnowledgePost(null, id)).willReturn(postDetailResponse);
+        given(service.findKnowledgePost(null, id)).willReturn(postDetailResponse);
 
         // when
-        ResponseEntity response = controller.getKnowledgePost(null, id);
+        ResponseEntity response = controller.knowledgePostDetails(null, id);
 
         // then
         assertThat(response.getBody()).isEqualTo(postDetailResponse);
@@ -65,10 +65,10 @@ class KnowledgeControllerTest {
         CustomUserDetails customUserDetails = WithMockCustomUserSecurityContextFactory.customUserDetailsMock();
 
         // when
-        ResponseEntity response = controller.editKnowledgePost(customUserDetails, writeRequest, id);
+        ResponseEntity response = controller.knowledgePostModify(customUserDetails, writeRequest, id);
 
         // then
-        then(service).should(times(1)).updateKnowledgePost(customUserDetails, writeRequest, id);
+        then(service).should(times(1)).modifyKnowledgePost(customUserDetails, writeRequest, id);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
     }
 
@@ -79,10 +79,10 @@ class KnowledgeControllerTest {
         CustomUserDetails customUserDetails = WithMockCustomUserSecurityContextFactory.customUserDetailsMock();
 
         // when
-        ResponseEntity response = controller.deleteKnowledgePost(customUserDetails, id);
+        ResponseEntity response = controller.knowledgePostRemove(customUserDetails, id);
 
         // then
-        then(service).should(times(1)).deleteKnowledgePost(customUserDetails, id);
+        then(service).should(times(1)).removeKnowledgePost(customUserDetails, id);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
     }
 
@@ -92,13 +92,13 @@ class KnowledgeControllerTest {
         long topicId = 1;
         String keyword = "test_keyword";
         Pageable pageable = null;
-        given(service.selectKnowledgePostsByCondition(topicId, keyword, pageable)).willReturn(null);
+        given(service.findKnowledgePostsByKeywordAndPageable(topicId, keyword, pageable)).willReturn(null);
 
         // when
-        ResponseEntity<Object> response = controller.getBriefPosts(topicId, keyword, pageable);
+        ResponseEntity<Object> response = controller.briefPostList(topicId, keyword, pageable);
 
         // then
-        then(service).should(times(1)).selectKnowledgePostsByCondition(topicId, keyword, pageable);
+        then(service).should(times(1)).findKnowledgePostsByKeywordAndPageable(topicId, keyword, pageable);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     }
 

@@ -38,7 +38,7 @@ public class BoardServiceTest {
             given(boardTypeRepository.findAll()).willReturn(boardTypes);
 
             // when
-            TopicsResponse topicsResponse = boardService.findAllBoardTopics();
+            TopicsResponse topicsResponse = boardService.findBoardTopics();
 
             // then
             then(boardTypeRepository).should(times(1)).findAll();
@@ -52,7 +52,7 @@ public class BoardServiceTest {
 
             // when
             Throwable thrown = catchThrowable(() -> {
-                boardService.findAllBoardTopics();
+                boardService.findBoardTopics();
             });
 
             // then

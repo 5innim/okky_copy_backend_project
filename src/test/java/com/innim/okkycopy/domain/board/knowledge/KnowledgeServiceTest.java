@@ -55,7 +55,7 @@ class KnowledgeServiceTest {
 
             // when
             Throwable thrown = catchThrowable(() -> {
-                knowledgeService.selectKnowledgePost(null, notExistPostId);
+                knowledgeService.findKnowledgePost(null, notExistPostId);
             });
 
             // then
@@ -73,7 +73,7 @@ class KnowledgeServiceTest {
                 Optional.empty());
 
             // when
-            PostDetailResponse postDetailResponse = knowledgeService.selectKnowledgePost(null, postId);
+            PostDetailResponse postDetailResponse = knowledgeService.findKnowledgePost(null, postId);
 
             // then
             then(knowledgePostRepository).should(times(1)).findByPostId(postId);
@@ -86,7 +86,7 @@ class KnowledgeServiceTest {
                 .getMember();
             List<Post> posts = new ArrayList<>();
             member.setPosts(posts);
-            return KnowledgePost.createKnowledgePost(writeRequest(), boardTopic(), member);
+            return KnowledgePost.create(writeRequest(), boardTopic(), member);
         }
 
         WriteRequest writeRequest() {
@@ -123,7 +123,7 @@ class KnowledgeServiceTest {
 
             // when
             Throwable thrown = catchThrowable(() -> {
-                knowledgeService.selectKnowledgePostsByCondition(topicId, keyword, pageable);
+                knowledgeService.findKnowledgePostsByKeywordAndPageable(topicId, keyword, pageable);
             });
 
             // then
@@ -146,7 +146,7 @@ class KnowledgeServiceTest {
 
             // when
             Throwable thrown = catchThrowable(() -> {
-                knowledgeService.selectKnowledgePostsByCondition(topicId, keyword, pageable);
+                knowledgeService.findKnowledgePostsByKeywordAndPageable(topicId, keyword, pageable);
             });
 
             // then

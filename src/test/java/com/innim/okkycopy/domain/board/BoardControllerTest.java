@@ -42,13 +42,13 @@ class BoardControllerTest {
     void serveTopicsTest() throws Exception {
         // given
         TopicsResponse topicsResponse = topicsResponse();
-        given(boardService.findAllBoardTopics()).willReturn(topicsResponse);
+        given(boardService.findBoardTopics()).willReturn(topicsResponse);
 
         // when
-        ResponseEntity response = boardController.serveTopics();
+        ResponseEntity response = boardController.boardTopicList();
 
         // then
-        then(boardService).should(times(1)).findAllBoardTopics();
+        then(boardService).should(times(1)).findBoardTopics();
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(response.getBody()).isInstanceOf(TopicsResponse.class);
     }
@@ -59,10 +59,10 @@ class BoardControllerTest {
         ScrapRequest request = scrapRequest();
 
         // when
-        boardController.doScrap(request, WithMockCustomUserSecurityContextFactory.customUserDetailsMock());
+        boardController.scrapAdd(request, WithMockCustomUserSecurityContextFactory.customUserDetailsMock());
 
         // then
-        then(boardService).should(times(1)).scrapPost(any(Member.class), anyLong());
+        then(boardService).should(times(1)).addScrap(any(Member.class), anyLong());
 
     }
 
@@ -72,10 +72,10 @@ class BoardControllerTest {
         ScrapRequest request = scrapRequest();
 
         // when
-        boardController.cancelScrap(request, WithMockCustomUserSecurityContextFactory.customUserDetailsMock());
+        boardController.scrapRemove(request, WithMockCustomUserSecurityContextFactory.customUserDetailsMock());
 
         // then
-        then(boardService).should(times(1)).cancelScrap(any(Member.class), anyLong());
+        then(boardService).should(times(1)).removeScrap(any(Member.class), anyLong());
     }
 
     @Test
@@ -85,11 +85,11 @@ class BoardControllerTest {
         long id = 1L;
 
         // when
-        ResponseEntity<Object> response = boardController.makeLikeExpression(customUserDetails, id);
+        ResponseEntity<Object> response = boardController.likeExpressionAdd(customUserDetails, id);
 
         // then
         then(boardService).should(times(1))
-            .insertPostExpression(customUserDetails.getMember(), id, ExpressionType.LIKE);
+            .addPostExpression(customUserDetails.getMember(), id, ExpressionType.LIKE);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
     }
 
@@ -100,11 +100,11 @@ class BoardControllerTest {
         long id = 1L;
 
         // when
-        ResponseEntity<Object> response = boardController.makeHateExpression(customUserDetails, id);
+        ResponseEntity<Object> response = boardController.hateExpressionAdd(customUserDetails, id);
 
         // then
         then(boardService).should(times(1))
-            .insertPostExpression(customUserDetails.getMember(), id, ExpressionType.HATE);
+            .addPostExpression(customUserDetails.getMember(), id, ExpressionType.HATE);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
     }
 
@@ -115,11 +115,11 @@ class BoardControllerTest {
         long id = 1L;
 
         // when
-        ResponseEntity<Object> response = boardController.removeLikeExpression(customUserDetails, id);
+        ResponseEntity<Object> response = boardController.likeExpressionRemove(customUserDetails, id);
 
         // then
         then(boardService).should(times(1))
-            .deletePostExpression(customUserDetails.getMember(), id, ExpressionType.LIKE);
+            .removePostExpression(customUserDetails.getMember(), id, ExpressionType.LIKE);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
     }
 
@@ -130,11 +130,11 @@ class BoardControllerTest {
         long id = 1L;
 
         // when
-        ResponseEntity<Object> response = boardController.removeHateExpression(customUserDetails, id);
+        ResponseEntity<Object> response = boardController.hateExpressionRemove(customUserDetails, id);
 
         // then
         then(boardService).should(times(1))
-            .deletePostExpression(customUserDetails.getMember(), id, ExpressionType.HATE);
+            .removePostExpression(customUserDetails.getMember(), id, ExpressionType.HATE);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
     }
 
@@ -144,7 +144,7 @@ class BoardControllerTest {
         MultipartFile file = null;
 
         // when
-        boardController.saveFile(file);
+        boardController.fileAdd(file);
 
         // then
         then(s3Uploader).should(times(1)).uploadFileToS3(file);

@@ -1,7 +1,7 @@
 package com.innim.okkycopy.domain.board.comment;
 
-import com.innim.okkycopy.domain.board.comment.dto.request.WriteCommentRequest;
-import com.innim.okkycopy.domain.board.comment.dto.request.WriteReCommentRequest;
+import com.innim.okkycopy.domain.board.comment.dto.request.CommentRequest;
+import com.innim.okkycopy.domain.board.comment.dto.request.ReCommentRequest;
 import com.innim.okkycopy.domain.board.enums.ExpressionType;
 import com.innim.okkycopy.global.auth.CustomUserDetails;
 import jakarta.validation.Valid;
@@ -26,83 +26,83 @@ public class CommentController {
     private final CommentService commentService;
 
     @PostMapping("/posts/{id}/comment")
-    public ResponseEntity<Object> writeComment(
+    public ResponseEntity<Object> commentAdd(
         @AuthenticationPrincipal CustomUserDetails customUserDetails,
-        @RequestBody @Valid WriteCommentRequest writeCommentRequest,
+        @RequestBody @Valid CommentRequest commentRequest,
         @PathVariable("id") long id) {
 
-        commentService.saveComment(customUserDetails, writeCommentRequest, id);
+        commentService.addComment(customUserDetails, commentRequest, id);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @PutMapping("/comments/{id}")
-    public ResponseEntity<Object> editComment(
+    public ResponseEntity<Object> commentModify(
         @AuthenticationPrincipal CustomUserDetails customUserDetails,
-        @RequestBody @Valid WriteCommentRequest writeCommentRequest,
+        @RequestBody @Valid CommentRequest commentRequest,
         @PathVariable("id") long id) {
-        commentService.updateComment(customUserDetails, writeCommentRequest, id);
+        commentService.modifyComment(customUserDetails, commentRequest, id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
     @DeleteMapping("/comments/{id}")
-    public ResponseEntity<Object> deleteComment(
+    public ResponseEntity<Object> commentRemove(
         @AuthenticationPrincipal CustomUserDetails customUserDetails,
         @PathVariable("id") long id) {
-        commentService.deleteComment(customUserDetails, id);
+        commentService.removeComment(customUserDetails, id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
     @GetMapping("/posts/{id}/comments")
-    public ResponseEntity<Object> getComments(
+    public ResponseEntity<Object> commentList(
         @AuthenticationPrincipal CustomUserDetails customUserDetails,
         @PathVariable long id) {
-        return ResponseEntity.ok(commentService.selectComments(customUserDetails, id));
+        return ResponseEntity.ok(commentService.findComments(customUserDetails, id));
     }
 
     @PostMapping("/posts/{postId}/comments/{commentId}/recomment")
-    public ResponseEntity<Object> writeReComment(
+    public ResponseEntity<Object> reCommentAdd(
         @AuthenticationPrincipal CustomUserDetails customUserDetails,
         @PathVariable long postId,
         @PathVariable long commentId,
-        @RequestBody @Valid WriteReCommentRequest writeReCommentRequest) {
-        commentService.saveReComment(customUserDetails, postId, commentId, writeReCommentRequest);
+        @RequestBody @Valid ReCommentRequest reCommentRequest) {
+        commentService.addReComment(customUserDetails, postId, commentId, reCommentRequest);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @GetMapping("/comments/{id}/recomments")
-    public ResponseEntity<Object> getReComments(
+    public ResponseEntity<Object> reCommentList(
         @AuthenticationPrincipal CustomUserDetails customUserDetails,
         @PathVariable long id) {
-        return ResponseEntity.status(HttpStatus.OK).body(commentService.selectReComments(customUserDetails, id));
+        return ResponseEntity.status(HttpStatus.OK).body(commentService.findReComments(customUserDetails, id));
     }
 
     @PostMapping("/comments/{id}/like")
-    public ResponseEntity<Object> makeLikeExpression(
+    public ResponseEntity<Object> likeExpressionAdd(
         @AuthenticationPrincipal CustomUserDetails customUserDetails,
         @PathVariable long id) {
-        commentService.insertCommentExpression(customUserDetails.getMember(), id, ExpressionType.LIKE);
+        commentService.addCommentExpression(customUserDetails.getMember(), id, ExpressionType.LIKE);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @PostMapping("/comments/{id}/hate")
-    public ResponseEntity<Object> makeHateExpression(
+    public ResponseEntity<Object> hateExpressionAdd(
         @AuthenticationPrincipal CustomUserDetails customUserDetails,
         @PathVariable long id) {
-        commentService.insertCommentExpression(customUserDetails.getMember(), id, ExpressionType.HATE);
+        commentService.addCommentExpression(customUserDetails.getMember(), id, ExpressionType.HATE);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @DeleteMapping("/comments/{id}/like")
-    public ResponseEntity<Object> removeLikeExpression(@AuthenticationPrincipal CustomUserDetails customUserDetails,
+    public ResponseEntity<Object> likeExpressionRemove(@AuthenticationPrincipal CustomUserDetails customUserDetails,
         @PathVariable long id) {
-        commentService.deleteCommentExpression(customUserDetails.getMember(), id, ExpressionType.LIKE);
+        commentService.removeCommentExpression(customUserDetails.getMember(), id, ExpressionType.LIKE);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
     @DeleteMapping("/comments/{id}/hate")
-    public ResponseEntity<Object> removeHateExpression(@AuthenticationPrincipal CustomUserDetails customUserDetails,
+    public ResponseEntity<Object> hateExpressionRemove(@AuthenticationPrincipal CustomUserDetails customUserDetails,
         @PathVariable long id) {
-        commentService.deleteCommentExpression(customUserDetails.getMember(), id, ExpressionType.HATE);
+        commentService.removeCommentExpression(customUserDetails.getMember(), id, ExpressionType.HATE);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 }

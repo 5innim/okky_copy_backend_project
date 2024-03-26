@@ -8,7 +8,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @Builder
-public class MemberInfo {
+public class MemberResponse {
 
     private long memberId;
     private String nickname;

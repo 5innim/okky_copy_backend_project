@@ -13,7 +13,8 @@ import lombok.Setter;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class WriteReCommentRequest {
+public class ReCommentRequest {
+
     @Size(min = 1, max = 20000)
     private String content;
     @MentionId

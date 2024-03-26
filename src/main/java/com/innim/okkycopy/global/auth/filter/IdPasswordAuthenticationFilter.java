@@ -83,7 +83,7 @@ public class IdPasswordAuthenticationFilter extends AbstractAuthenticationProces
             refreshToken = JwtUtil.generateRefreshToken(userId, loginDate);
 
             LocalDateTime localDateTime = LocalDateTime.ofInstant(loginDate.toInstant(), ZoneId.systemDefault());
-            authService.updateMemberLoginDate(userId, localDateTime);
+            authService.modifyMemberLoginDate(userId, localDateTime);
 
         } catch (TokenGenerateException | UserIdNotFoundException ex) {
             RequestResponseUtil.makeExceptionResponseForFilter(response,

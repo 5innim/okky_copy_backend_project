@@ -37,7 +37,7 @@ public class BoardService {
     private EntityManager entityManager;
 
     @Transactional(readOnly = true)
-    public TopicsResponse findAllBoardTopics() {
+    public TopicsResponse findBoardTopics() {
         List<BoardType> boardTypes = boardTypeRepository.findAll();
 
         if (boardTypes.isEmpty()) {
@@ -48,37 +48,37 @@ public class BoardService {
     }
 
     @Transactional
-    public void scrapPost(Member member, long postId) {
+    public void addScrap(Member member, long postId) {
         Member mergedMember = entityManager.merge(member);
         Post post = postRepository.findByPostId(postId)
             .orElseThrow(() -> new NoSuchPostException(ErrorCode._400_NO_SUCH_POST));
-        entityManager.persist(Scrap.createScrap(post, mergedMember));
+        entityManager.persist(Scrap.create(post, mergedMember));
     }
 
     @Transactional
-    public void cancelScrap(Member member, long postId) {
+    public void removeScrap(Member member, long postId) {
         Member mergedMember = entityManager.merge(member);
         Post post = postRepository.findByPostId(postId)
             .orElseThrow(() -> new NoSuchPostException(ErrorCode._400_NO_SUCH_POST));
         Scrap scrap = scrapRepository.findByMemberAndPost(post, mergedMember)
             .orElseThrow(() -> new NoSuchScrapException(ErrorCode._400_NO_SUCH_SCRAP));
-        Scrap.removeScrap(entityManager, scrap);
+        Scrap.remove(entityManager, scrap);
     }
 
     @Transactional
-    public void insertPostExpression(Member member, long postId, ExpressionType type) {
+    public void addPostExpression(Member member, long postId, ExpressionType type) {
         Member mergedMember = entityManager.merge(member);
         Post post = postRepository.findByPostId(postId)
             .orElseThrow(() -> new NoSuchPostException(ErrorCode._400_NO_SUCH_POST));
         if (postExpressionRepository.findByMemberAndPost(post, mergedMember).isPresent()) {
             throw new AlreadyExistExpressionException(ErrorCode._400_ALREADY_EXIST_EXPRESSION);
         }
-        PostExpression postExpression = PostExpression.createPostExpression(post, mergedMember, type);
+        PostExpression postExpression = PostExpression.create(post, mergedMember, type);
         entityManager.persist(postExpression);
     }
 
     @Transactional
-    public void deletePostExpression(Member member, long postId, ExpressionType type) {
+    public void removePostExpression(Member member, long postId, ExpressionType type) {
         Member mergedMember = entityManager.merge(member);
         Post post = postRepository.findByPostId(postId)
             .orElseThrow(() -> new NoSuchPostException(ErrorCode._400_NO_SUCH_POST));
@@ -87,7 +87,7 @@ public class BoardService {
         if (postExpression == null || !postExpression.getExpressionType().equals(type)) {
             throw new NotRegisteredBeforeException(ErrorCode._400_NOT_REGISTERED_BEFORE);
         }
-        PostExpression.removePostExpression(entityManager, postExpression, post, type);
+        PostExpression.remove(entityManager, postExpression, post, type);
     }
 
 }

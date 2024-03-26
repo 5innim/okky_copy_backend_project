@@ -1,7 +1,7 @@
 package com.innim.okkycopy.domain.board.comment.entity;
 
-import com.innim.okkycopy.domain.board.comment.dto.request.WriteCommentRequest;
-import com.innim.okkycopy.domain.board.comment.dto.request.WriteReCommentRequest;
+import com.innim.okkycopy.domain.board.comment.dto.request.CommentRequest;
+import com.innim.okkycopy.domain.board.comment.dto.request.ReCommentRequest;
 import com.innim.okkycopy.domain.board.entity.Post;
 import com.innim.okkycopy.domain.board.knowledge.entity.KnowledgePost;
 import com.innim.okkycopy.domain.member.entity.Member;
@@ -68,12 +68,12 @@ public class Comment {
     @OneToMany(mappedBy = "comment", cascade = {CascadeType.REMOVE})
     private List<CommentExpression> commentExpressionList;
 
-    public void updateComment(String content) {
+    public void update(String content) {
         this.content = content;
         this.lastUpdate = LocalDateTime.now();
     }
 
-    public static Comment createComment(Post post, Member member, WriteCommentRequest writeCommentRequest) {
+    public static Comment create(Post post, Member member, CommentRequest writeCommentRequest) {
         Comment comment = Comment.builder()
             .content(writeCommentRequest.getContent())
             .likes(0)
@@ -88,7 +88,7 @@ public class Comment {
         return comment;
     }
 
-    public static void removeComment(Comment comment, EntityManager entityManager) {
+    public static void remove(Comment comment, EntityManager entityManager) {
         Post post = comment.getPost();
         if (post instanceof KnowledgePost) {
             ((KnowledgePost) post).setComments(((KnowledgePost) post).getComments() - 1);
@@ -98,10 +98,10 @@ public class Comment {
     }
 
     public static Comment createReComment(Post post, Member member, long parentId,
-        WriteReCommentRequest writeReCommentRequest) {
+        ReCommentRequest reCommentRequest) {
         return Comment.builder()
-            .content(writeReCommentRequest.getContent())
-            .mentionedMember(writeReCommentRequest.getMentionId())
+            .content(reCommentRequest.getContent())
+            .mentionedMember(reCommentRequest.getMentionId())
             .parentId(parentId)
             .post(post)
             .member(member)

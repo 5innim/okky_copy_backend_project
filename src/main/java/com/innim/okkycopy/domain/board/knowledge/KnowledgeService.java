@@ -3,7 +3,7 @@ package com.innim.okkycopy.domain.board.knowledge;
 import com.innim.okkycopy.domain.board.dto.request.write.WriteRequest;
 import com.innim.okkycopy.domain.board.dto.response.post.brief.PostsResponse;
 import com.innim.okkycopy.domain.board.dto.response.post.detail.PostDetailResponse;
-import com.innim.okkycopy.domain.board.dto.response.post.detail.PostRequesterInfoResponse;
+import com.innim.okkycopy.domain.board.dto.response.post.detail.RequesterInfo;
 import com.innim.okkycopy.domain.board.entity.BoardTopic;
 import com.innim.okkycopy.domain.board.entity.PostExpression;
 import com.innim.okkycopy.domain.board.enums.ExpressionType;
@@ -42,19 +42,19 @@ public class KnowledgeService {
     private EntityManager entityManager;
 
     @Transactional
-    public void saveKnowledgePost(WriteRequest writeRequest, CustomUserDetails customUserDetails) {
+    public void addKnowledgePost(WriteRequest writeRequest, CustomUserDetails customUserDetails) {
         Member member = entityManager.merge(customUserDetails.getMember());
 
         BoardTopic boardTopic = boardTopicRepository.findByName(writeRequest.getTopic())
             .orElseThrow(() -> new NoSuchTopicException(
                 ErrorCode._400_NO_SUCH_TOPIC));
 
-        KnowledgePost knowledgePost = KnowledgePost.createKnowledgePost(writeRequest, boardTopic, member);
+        KnowledgePost knowledgePost = KnowledgePost.create(writeRequest, boardTopic, member);
         entityManager.persist(knowledgePost);
     }
 
     @Transactional
-    public PostDetailResponse selectKnowledgePost(CustomUserDetails customUserDetails, long postId) {
+    public PostDetailResponse findKnowledgePost(CustomUserDetails customUserDetails, long postId) {
         KnowledgePost knowledgePost = knowledgePostRepository.findByPostId(postId)
             .orElseThrow(() -> new NoSuchPostException(ErrorCode._400_NO_SUCH_POST));
         Member member = memberRepository.findByMemberId(knowledgePost.getMember().getMemberId()).orElseGet(() -> null);
@@ -64,8 +64,8 @@ public class KnowledgeService {
             Member requester = customUserDetails.getMember();
             PostExpression postExpression = postExpressionRepository.findByMemberAndPost(knowledgePost, requester)
                 .orElseGet(() -> null);
-            response.setPostRequesterInfoResponse(
-                PostRequesterInfoResponse.builder()
+            response.setRequesterInfo(
+                RequesterInfo.builder()
                     .scrap(scrapRepository.findByMemberAndPost(knowledgePost, requester).isPresent())
                     .like(postExpression != null && postExpression.getExpressionType().equals(ExpressionType.LIKE))
                     .hate(postExpression != null && postExpression.getExpressionType().equals(ExpressionType.HATE))
@@ -78,7 +78,7 @@ public class KnowledgeService {
     }
 
     @Transactional
-    public void updateKnowledgePost(CustomUserDetails customUserDetails, WriteRequest updateRequest, long postId) {
+    public void modifyKnowledgePost(CustomUserDetails customUserDetails, WriteRequest updateRequest, long postId) {
         Member mergedMember = entityManager.merge(customUserDetails.getMember());
         KnowledgePost knowledgePost = knowledgePostRepository.findByPostId(postId)
             .orElseThrow(() -> new NoSuchPostException(ErrorCode._400_NO_SUCH_POST));
@@ -89,11 +89,11 @@ public class KnowledgeService {
         if (knowledgePost.getMember().getMemberId() != mergedMember.getMemberId()) {
             throw new NoAuthorityException(ErrorCode._403_NO_AUTHORITY);
         }
-        knowledgePost.updateKnowledgePost(updateRequest, boardTopic);
+        knowledgePost.update(updateRequest, boardTopic);
     }
 
     @Transactional
-    public void deleteKnowledgePost(CustomUserDetails customUserDetails, long postId) {
+    public void removeKnowledgePost(CustomUserDetails customUserDetails, long postId) {
         Member mergedMember = entityManager.merge(customUserDetails.getMember());
         KnowledgePost knowledgePost = knowledgePostRepository.findByPostId(postId)
             .orElseThrow(() -> new NoSuchPostException(ErrorCode._400_NO_SUCH_POST));
@@ -105,10 +105,11 @@ public class KnowledgeService {
     }
 
     @Transactional(readOnly = true)
-    public PostsResponse selectKnowledgePostsByCondition(Long topicId, String keyword, Pageable pageable) {
+    public PostsResponse findKnowledgePostsByKeywordAndPageable(Long topicId, String keyword, Pageable pageable) {
         Page<KnowledgePost> knowledgePostPage;
         if (topicId == null) {
-            knowledgePostPage = knowledgePostRepository.findAll((keyword == null) ? "" : keyword, pageable);
+            knowledgePostPage = knowledgePostRepository.findAllByKeywordAndPageable((keyword == null) ? "" : keyword,
+                pageable);
         } else {
             BoardTopic boardTopic = boardTopicRepository
                 .findByTopicId(topicId)

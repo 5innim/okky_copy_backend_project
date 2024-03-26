@@ -8,14 +8,14 @@ import lombok.Setter;
 @Getter
 @Setter
 @Builder
-public class BriefMemberInfo {
+public class BriefMemberResponse {
 
     private String nickname;
     private String name;
     private String email;
 
-    public static BriefMemberInfo toDto(Member member) {
-        return BriefMemberInfo.builder()
+    public static BriefMemberResponse toDto(Member member) {
+        return BriefMemberResponse.builder()
             .nickname(member.getNickname())
             .name(member.getName())
             .email(member.getEmail())

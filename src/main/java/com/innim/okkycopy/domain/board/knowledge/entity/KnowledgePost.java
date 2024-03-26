@@ -48,7 +48,7 @@ public class KnowledgePost extends Post {
     @Column(nullable = false)
     private Integer comments;
 
-    public static KnowledgePost createKnowledgePost(WriteRequest writeRequest, BoardTopic boardTopic, Member member) {
+    public static KnowledgePost create(WriteRequest writeRequest, BoardTopic boardTopic, Member member) {
         KnowledgePost knowledgePost = KnowledgePost.builder()
             .member(member)
             .content(writeRequest.getContent())
@@ -64,7 +64,7 @@ public class KnowledgePost extends Post {
 
         List<Tag> tags = new ArrayList<>();
         for (TagRequest tag : writeRequest.getTags()) {
-            tags.add(KnowledgeTag.createKnowledgeTag(knowledgePost, boardTopic, tag.getName()));
+            tags.add(KnowledgeTag.create(knowledgePost, boardTopic, tag.getName()));
         }
         member.getPosts().add((Post) knowledgePost);
         knowledgePost.setTags(tags);
@@ -72,7 +72,7 @@ public class KnowledgePost extends Post {
         return knowledgePost;
     }
 
-    public void updateKnowledgePost(WriteRequest updateRequest, BoardTopic boardTopic) {
+    public void update(WriteRequest updateRequest, BoardTopic boardTopic) {
         this.setTitle(updateRequest.getTitle());
         this.setContent(updateRequest.getContent());
         this.setBoardTopic(boardTopic);
@@ -82,7 +82,7 @@ public class KnowledgePost extends Post {
         tags.clear();
 
         for (TagRequest tag : updateRequest.getTags()) {
-            tags.add(KnowledgeTag.createKnowledgeTag(this, boardTopic, tag.getName()));
+            tags.add(KnowledgeTag.create(this, boardTopic, tag.getName()));
         }
     }
 

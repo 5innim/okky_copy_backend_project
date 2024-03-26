@@ -1,10 +1,10 @@
 package com.innim.okkycopy.domain.board.comment;
 
-import com.innim.okkycopy.domain.board.comment.dto.request.WriteCommentRequest;
-import com.innim.okkycopy.domain.board.comment.dto.request.WriteReCommentRequest;
-import com.innim.okkycopy.domain.board.comment.dto.response.CommentRequesterInfoResponse;
-import com.innim.okkycopy.domain.board.comment.dto.response.CommentResponse;
-import com.innim.okkycopy.domain.board.comment.dto.response.CommentsResponse;
+import com.innim.okkycopy.domain.board.comment.dto.request.CommentRequest;
+import com.innim.okkycopy.domain.board.comment.dto.request.ReCommentRequest;
+import com.innim.okkycopy.domain.board.comment.dto.response.CommentDetailsResponse;
+import com.innim.okkycopy.domain.board.comment.dto.response.CommentListResponse;
+import com.innim.okkycopy.domain.board.comment.dto.response.RequesterInfo;
 import com.innim.okkycopy.domain.board.comment.entity.Comment;
 import com.innim.okkycopy.domain.board.comment.entity.CommentExpression;
 import com.innim.okkycopy.domain.board.comment.repository.CommentExpressionRepository;
@@ -44,21 +44,21 @@ public class CommentService {
     private final EntityManager entityManager;
 
     @Transactional
-    public void saveComment(CustomUserDetails customUserDetails,
-        WriteCommentRequest writeCommentRequest,
+    public void addComment(CustomUserDetails customUserDetails,
+        CommentRequest commentRequest,
         long postId) {
         Member mergedMember = entityManager.merge(customUserDetails.getMember());
         Post post = postRepository.findByPostId(postId)
             .orElseThrow(() -> new NoSuchPostException(ErrorCode._400_NO_SUCH_POST));
 
-        Comment comment = Comment.createComment(post, mergedMember,
-            writeCommentRequest);
+        Comment comment = Comment.create(post, mergedMember,
+            commentRequest);
         entityManager.persist(comment);
     }
 
     @Transactional
-    public void updateComment(CustomUserDetails customUserDetails,
-        WriteCommentRequest writeCommentRequest,
+    public void modifyComment(CustomUserDetails customUserDetails,
+        CommentRequest commentRequest,
         long commentId) {
         Member mergedMember = entityManager.merge(customUserDetails.getMember());
         Comment comment = commentRepository.findByCommentId(commentId)
@@ -67,11 +67,11 @@ public class CommentService {
         if (comment.getMember().getMemberId() != mergedMember.getMemberId()) {
             throw new NoAuthorityException(ErrorCode._403_NO_AUTHORITY);
         }
-        comment.updateComment(writeCommentRequest.getContent());
+        comment.update(commentRequest.getContent());
     }
 
     @Transactional
-    public void deleteComment(CustomUserDetails customUserDetails, long commentId) {
+    public void removeComment(CustomUserDetails customUserDetails, long commentId) {
         Member mergedMember = entityManager.merge(customUserDetails.getMember());
         Comment comment = commentRepository.findByCommentId(commentId)
             .orElseThrow(() -> new NoSuchCommentException(ErrorCode._400_NO_SUCH_COMMENT));
@@ -81,28 +81,28 @@ public class CommentService {
         }
         List<Comment> commentList = commentRepository.findByParentId(comment.getCommentId());
         for (Comment c : commentList) {
-            Comment.removeComment(c, entityManager);
+            Comment.remove(c, entityManager);
         }
-        Comment.removeComment(comment, entityManager);
+        Comment.remove(comment, entityManager);
 
     }
 
     @Transactional(readOnly = true)
-    public CommentsResponse selectComments(CustomUserDetails customUserDetails, long postId) {
+    public CommentListResponse findComments(CustomUserDetails customUserDetails, long postId) {
         Post post = postRepository.findByPostId(postId)
             .orElseThrow(() -> new NoSuchPostException(ErrorCode._400_NO_SUCH_POST));
         List<Comment> parentComments = post.getCommentList().stream()
             .filter(comment -> (comment.getParentId() == null))
             .toList();
 
-        List<CommentResponse> commentResponses = new ArrayList<>();
+        List<CommentDetailsResponse> commentResponses = new ArrayList<>();
         Member requester = (customUserDetails == null) ? null : customUserDetails.getMember();
         for (Comment comment : parentComments) {
             CommentExpression commentExpression = (requester == null) ? null : commentExpressionRepository
                 .findByMemberAndComment(comment, requester)
                 .orElseGet(() -> null);
-            CommentRequesterInfoResponse commentRequesterInfoResponse =
-                (requester == null) ? null : CommentRequesterInfoResponse.builder()
+            RequesterInfo requesterInfo =
+                (requester == null) ? null : RequesterInfo.builder()
                     .like(
                         commentExpression != null && commentExpression.getExpressionType().equals(ExpressionType.LIKE))
                     .hate(
@@ -110,24 +110,24 @@ public class CommentService {
                     .build();
 
             commentResponses.add(
-                CommentResponse.toCommentResponseDto(
+                CommentDetailsResponse.toCommentResponseDto(
                     comment,
                     null,
-                    commentRequesterInfoResponse
+                    requesterInfo
                 )
             );
         }
         Collections.sort(commentResponses);
 
-        return new CommentsResponse(commentResponses);
+        return new CommentListResponse(commentResponses);
     }
 
     @Transactional
-    public void saveReComment(
+    public void addReComment(
         CustomUserDetails customUserDetails,
         long postId,
         long commentId,
-        WriteReCommentRequest writeReCommentRequest) {
+        ReCommentRequest reCommentRequest) {
         Member mergedMember = entityManager.merge(customUserDetails.getMember());
         Post post = postRepository.findByPostId(postId)
             .orElseThrow(() -> new NoSuchPostException(ErrorCode._400_NO_SUCH_POST));
@@ -135,18 +135,18 @@ public class CommentService {
             .orElseThrow(() -> new NoSuchCommentException(ErrorCode._400_NO_SUCH_COMMENT));
 
         Comment reComment = Comment.createReComment(post, mergedMember,
-            commentId, writeReCommentRequest);
+            commentId, reCommentRequest);
 
         entityManager.persist(reComment);
     }
 
     @Transactional(readOnly = true)
-    public CommentsResponse selectReComments(CustomUserDetails customUserDetails, long commentId) {
+    public CommentListResponse findReComments(CustomUserDetails customUserDetails, long commentId) {
         commentRepository.findByCommentId(commentId)
             .orElseThrow(() -> new NoSuchCommentException(ErrorCode._400_NO_SUCH_COMMENT));
 
         List<Comment> comments = commentRepository.findByParentId(commentId);
-        List<CommentResponse> commentResponses = new ArrayList<>();
+        List<CommentDetailsResponse> commentResponses = new ArrayList<>();
 
         Member requester = (customUserDetails == null) ? null : customUserDetails.getMember();
         for (Comment comment : comments) {
@@ -159,8 +159,8 @@ public class CommentService {
                 .findByMemberAndComment(comment, requester)
                 .orElseGet(() -> null);
 
-            CommentRequesterInfoResponse commentRequesterInfoResponse =
-                (requester == null) ? null : CommentRequesterInfoResponse.builder()
+            RequesterInfo requesterInfo =
+                (requester == null) ? null : RequesterInfo.builder()
                     .like(
                         commentExpression != null && commentExpression.getExpressionType().equals(ExpressionType.LIKE))
                     .hate(
@@ -168,16 +168,16 @@ public class CommentService {
                     .build();
 
             commentResponses.add(
-                CommentResponse.toCommentResponseDto(comment, mentionedNickname, commentRequesterInfoResponse)
+                CommentDetailsResponse.toCommentResponseDto(comment, mentionedNickname, requesterInfo)
             );
         }
         Collections.sort(commentResponses);
 
-        return new CommentsResponse(commentResponses);
+        return new CommentListResponse(commentResponses);
     }
 
     @Transactional
-    public void insertCommentExpression(Member member, long commentId, ExpressionType type) {
+    public void addCommentExpression(Member member, long commentId, ExpressionType type) {
         Member mergedMember = entityManager.merge(member);
         Comment comment = commentRepository
             .findByCommentId(commentId)
@@ -188,11 +188,11 @@ public class CommentService {
         if (CommentExpression.isNotSupportedCase(comment)) {
             throw new NotSupportedCaseException(ErrorCode._400_NOT_SUPPORTED_CASE);
         }
-        entityManager.persist(CommentExpression.createCommentExpression(comment, mergedMember, type));
+        entityManager.persist(CommentExpression.create(comment, mergedMember, type));
     }
 
     @Transactional
-    public void deleteCommentExpression(Member member, long commentId, ExpressionType type) {
+    public void removeCommentExpression(Member member, long commentId, ExpressionType type) {
         Member mergedMember = entityManager.merge(member);
         Comment comment = commentRepository.findByCommentId(commentId)
             .orElseThrow(() -> new NoSuchCommentException(ErrorCode._400_NO_SUCH_COMMENT));

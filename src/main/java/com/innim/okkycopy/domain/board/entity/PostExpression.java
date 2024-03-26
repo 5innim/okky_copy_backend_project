@@ -48,7 +48,7 @@ public class PostExpression {
     @JoinColumn(name = "member_id")
     private Member member;
 
-    public static PostExpression createPostExpression(Post post, Member member, ExpressionType type) {
+    public static PostExpression create(Post post, Member member, ExpressionType type) {
         if (type.equals(ExpressionType.LIKE)) {
             post.increaseLikes();
         } else if (type.equals(ExpressionType.HATE)) {
@@ -61,7 +61,7 @@ public class PostExpression {
             .build();
     }
 
-    public static void removePostExpression(
+    public static void remove(
         EntityManager entityManager,
         PostExpression postExpression,
         Post post,

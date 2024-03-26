@@ -1,4 +1,4 @@
-package com.innim.okkycopy.domain.board.comment.dto.response;
+package com.innim.okkycopy.domain.board.dto.response.post.detail;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,7 +9,9 @@ import lombok.Setter;
 @Setter
 @Builder
 @AllArgsConstructor
-public class CommentRequesterInfoResponse {
+public class RequesterInfo {
+
+    private boolean scrap;
     private boolean like;
     private boolean hate;
 }

@@ -49,7 +49,7 @@ public class CommentExpression {
     private Member member;
 
 
-    public static CommentExpression createCommentExpression(Comment comment, Member member, ExpressionType type) {
+    public static CommentExpression create(Comment comment, Member member, ExpressionType type) {
         if (type.equals(ExpressionType.LIKE)) {
             comment.increaseLikes();
         } else if (type.equals(ExpressionType.HATE)) {

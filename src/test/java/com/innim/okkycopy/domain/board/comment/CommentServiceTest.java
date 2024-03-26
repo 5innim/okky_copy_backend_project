@@ -7,7 +7,7 @@ import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.times;
 
 import com.innim.okkycopy.common.WithMockCustomUserSecurityContextFactory;
-import com.innim.okkycopy.domain.board.comment.dto.response.CommentsResponse;
+import com.innim.okkycopy.domain.board.comment.dto.response.CommentListResponse;
 import com.innim.okkycopy.domain.board.comment.entity.Comment;
 import com.innim.okkycopy.domain.board.comment.repository.CommentRepository;
 import com.innim.okkycopy.domain.board.entity.Post;
@@ -50,7 +50,7 @@ public class CommentServiceTest {
 
             // when
             Throwable thrown = catchThrowable(() -> {
-                commentService.selectComments(null, notExistPostId);
+                commentService.findComments(null, notExistPostId);
             });
 
             // then
@@ -79,7 +79,7 @@ public class CommentServiceTest {
             given(postRepository.findByPostId(existPostId)).willReturn(Optional.of(existPost));
 
             // when
-            CommentsResponse response = commentService.selectComments(null, existPostId);
+            CommentListResponse response = commentService.findComments(null, existPostId);
 
             // then
             then(postRepository).should(times(1)).findByPostId(existPostId);
@@ -99,7 +99,7 @@ public class CommentServiceTest {
 
             // when
             Throwable thrown = catchThrowable(() -> {
-                commentService.selectReComments(null, notExistCommentId);
+                commentService.findReComments(null, notExistCommentId);
             });
 
             // then
@@ -126,7 +126,7 @@ public class CommentServiceTest {
             given(commentRepository.findByParentId(existCommentId)).willReturn(Arrays.asList());
 
             // when
-            CommentsResponse response = commentService.selectReComments(null, existCommentId);
+            commentService.findReComments(null, existCommentId);
 
             // then
             then(commentRepository).should(times(1)).findByCommentId(existCommentId);

@@ -108,7 +108,7 @@ public class JwtRefreshFilter extends OncePerRequestFilter {
             claims = JwtUtil.validateToken(token);
             if (claims.getSubject().equals("refresh")) {
                 Long userId = Long.valueOf((Integer) claims.get("uid"));
-                Date loginDate = authService.selectMemberLoginDate(userId);
+                Date loginDate = authService.findMemberLoginDate(userId);
                 Date lat = new Date((Long) claims.get("lat"));
                 if (lat.equals(loginDate)) {
                     return userId;

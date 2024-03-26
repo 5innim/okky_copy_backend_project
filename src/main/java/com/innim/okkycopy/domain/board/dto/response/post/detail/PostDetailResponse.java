@@ -1,5 +1,6 @@
 package com.innim.okkycopy.domain.board.dto.response.post.detail;
 
+import com.innim.okkycopy.domain.board.dto.response.post.WriterInfo;
 import com.innim.okkycopy.domain.board.entity.Tag;
 import com.innim.okkycopy.domain.board.knowledge.entity.KnowledgePost;
 import com.innim.okkycopy.domain.member.entity.Member;
@@ -17,7 +18,7 @@ import lombok.Setter;
 @Builder
 public class PostDetailResponse {
 
-    private WriterInfoResponse writerInfo;
+    private WriterInfo writerInfo;
     private String title;
     private String content;
     private List<String> tags;
@@ -25,7 +26,7 @@ public class PostDetailResponse {
     private Integer likes;
     private Integer hates;
     private LocalDateTime createdDate;
-    private PostRequesterInfoResponse postRequesterInfoResponse;
+    private RequesterInfo requesterInfo;
 
 
     public static PostDetailResponse toPostDetailResponseDto(KnowledgePost knowledgePost, Member member) {
@@ -35,7 +36,7 @@ public class PostDetailResponse {
         }
 
         return PostDetailResponse.builder()
-            .writerInfo((member == null) ? null : WriterInfoResponse.builder()
+            .writerInfo((member == null) ? null : WriterInfo.builder()
                 .memberId(member.getMemberId())
                 .nickName(member.getNickname())
                 .profile(member.getProfile()).build())

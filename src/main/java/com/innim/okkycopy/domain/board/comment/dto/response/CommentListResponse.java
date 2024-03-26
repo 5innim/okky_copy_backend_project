@@ -6,7 +6,8 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public class CommentsResponse {
-    private List<CommentResponse> comments;
+public class CommentListResponse {
+
+    private List<CommentDetailsResponse> comments;
 
 }
