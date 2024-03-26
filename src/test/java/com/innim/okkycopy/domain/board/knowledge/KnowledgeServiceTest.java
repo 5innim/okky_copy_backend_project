@@ -7,7 +7,7 @@ import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.times;
 
 import com.innim.okkycopy.common.WithMockCustomUserSecurityContextFactory;
-import com.innim.okkycopy.domain.board.dto.request.write.PostAddRequest;
+import com.innim.okkycopy.domain.board.dto.request.write.PostRequest;
 import com.innim.okkycopy.domain.board.dto.response.post.detail.PostDetailsResponse;
 import com.innim.okkycopy.domain.board.entity.BoardTopic;
 import com.innim.okkycopy.domain.board.entity.BoardType;
@@ -84,11 +84,11 @@ class KnowledgeServiceTest {
                 .getMember();
             List<Post> posts = new ArrayList<>();
             member.setPosts(posts);
-            return KnowledgePost.create(writeRequest(), boardTopic(), member);
+            return KnowledgePost.of(writeRequest(), boardTopic(), member);
         }
 
-        PostAddRequest writeRequest() {
-            return PostAddRequest.builder()
+        PostRequest writeRequest() {
+            return PostRequest.builder()
                 .topic("test_topic")
                 .tags(Arrays.asList())
                 .title("test_title")

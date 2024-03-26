@@ -1,6 +1,6 @@
 package com.innim.okkycopy.domain.member;
 
-import com.innim.okkycopy.domain.member.dto.request.MemberAddRequest;
+import com.innim.okkycopy.domain.member.dto.request.MemberRequest;
 import com.innim.okkycopy.domain.member.dto.response.MemberBriefResponse;
 import com.innim.okkycopy.domain.member.dto.response.MemberDetailsResponse;
 import com.innim.okkycopy.global.auth.CustomUserDetails;
@@ -25,10 +25,10 @@ public class MemberController {
     private final MemberService memberService;
 
     @PostMapping("/signup")
-    public ResponseEntity<MemberBriefResponse> memberAdd(@Valid @RequestBody MemberAddRequest memberAddRequest) {
+    public ResponseEntity<MemberBriefResponse> memberAdd(@Valid @RequestBody MemberRequest memberRequest) {
         return ResponseEntity
             .status(HttpStatus.CREATED)
-            .body(memberService.addMember(memberAddRequest));
+            .body(memberService.addMember(memberRequest));
     }
 
     @GetMapping("/info")

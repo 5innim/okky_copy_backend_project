@@ -6,7 +6,7 @@ import static org.springframework.security.test.web.servlet.setup.SecurityMockMv
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
 import com.google.gson.Gson;
-import com.innim.okkycopy.domain.board.dto.request.write.PostAddRequest;
+import com.innim.okkycopy.domain.board.dto.request.write.PostRequest;
 import com.innim.okkycopy.domain.board.dto.request.write.TagInfo;
 import com.innim.okkycopy.domain.member.MemberRepository;
 import com.innim.okkycopy.domain.member.entity.Member;
@@ -84,8 +84,8 @@ public class GetPostsTest {
         resultActions.andExpect(jsonPath("$.posts[0].title").value("test_title"));
     }
 
-    PostAddRequest writeRequest() {
-        return PostAddRequest.builder()
+    PostRequest writeRequest() {
+        return PostRequest.builder()
             .title("test_title")
             .topic("팁")
             .tags(Arrays.asList(new TagInfo("tag1"), new TagInfo("tag2")))

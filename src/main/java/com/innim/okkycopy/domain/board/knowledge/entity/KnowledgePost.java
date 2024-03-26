@@ -1,6 +1,6 @@
 package com.innim.okkycopy.domain.board.knowledge.entity;
 
-import com.innim.okkycopy.domain.board.dto.request.write.PostAddRequest;
+import com.innim.okkycopy.domain.board.dto.request.write.PostRequest;
 import com.innim.okkycopy.domain.board.dto.request.write.TagInfo;
 import com.innim.okkycopy.domain.board.entity.BoardTopic;
 import com.innim.okkycopy.domain.board.entity.Post;
@@ -48,11 +48,11 @@ public class KnowledgePost extends Post {
     @Column(nullable = false)
     private Integer comments;
 
-    public static KnowledgePost create(PostAddRequest postAddRequest, BoardTopic boardTopic, Member member) {
+    public static KnowledgePost of(PostRequest postRequest, BoardTopic boardTopic, Member member) {
         KnowledgePost knowledgePost = KnowledgePost.builder()
             .member(member)
-            .content(postAddRequest.getContent())
-            .title(postAddRequest.getTitle())
+            .content(postRequest.getContent())
+            .title(postRequest.getTitle())
             .lastUpdate(null)
             .boardTopic(boardTopic)
             .likes(0)
@@ -63,8 +63,8 @@ public class KnowledgePost extends Post {
             .build();
 
         List<Tag> tags = new ArrayList<>();
-        for (TagInfo tag : postAddRequest.getTags()) {
-            tags.add(KnowledgeTag.create(knowledgePost, boardTopic, tag.getName()));
+        for (TagInfo tag : postRequest.getTags()) {
+            tags.add(KnowledgeTag.of(knowledgePost, boardTopic, tag.getName()));
         }
         member.getPosts().add((Post) knowledgePost);
         knowledgePost.setTags(tags);
@@ -72,7 +72,7 @@ public class KnowledgePost extends Post {
         return knowledgePost;
     }
 
-    public void update(PostAddRequest updateRequest, BoardTopic boardTopic) {
+    public void update(PostRequest updateRequest, BoardTopic boardTopic) {
         this.setTitle(updateRequest.getTitle());
         this.setContent(updateRequest.getContent());
         this.setBoardTopic(boardTopic);
@@ -82,7 +82,7 @@ public class KnowledgePost extends Post {
         tags.clear();
 
         for (TagInfo tag : updateRequest.getTags()) {
-            tags.add(KnowledgeTag.create(this, boardTopic, tag.getName()));
+            tags.add(KnowledgeTag.of(this, boardTopic, tag.getName()));
         }
     }
 

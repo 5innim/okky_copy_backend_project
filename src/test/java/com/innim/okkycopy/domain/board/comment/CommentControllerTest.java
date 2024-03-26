@@ -6,8 +6,8 @@ import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.times;
 
 import com.innim.okkycopy.common.WithMockCustomUserSecurityContextFactory;
-import com.innim.okkycopy.domain.board.comment.dto.request.CommentAddRequest;
-import com.innim.okkycopy.domain.board.comment.dto.request.ReCommentAddRequest;
+import com.innim.okkycopy.domain.board.comment.dto.request.CommentRequest;
+import com.innim.okkycopy.domain.board.comment.dto.request.ReCommentRequest;
 import com.innim.okkycopy.domain.board.comment.dto.response.CommentListResponse;
 import com.innim.okkycopy.domain.board.enums.ExpressionType;
 import com.innim.okkycopy.global.auth.CustomUserDetails;
@@ -33,14 +33,14 @@ public class CommentControllerTest {
         // given
         long id = 1L;
         CustomUserDetails customUserDetails = WithMockCustomUserSecurityContextFactory.customUserDetailsMock();
-        CommentAddRequest commentAddRequest = commentRequest();
+        CommentRequest commentRequest = commentRequest();
 
         // when
         ResponseEntity response = commentController.commentAdd(customUserDetails,
-            commentAddRequest, id);
+            commentRequest, id);
 
         // then
-        then(commentService).should(times(1)).addComment(customUserDetails, commentAddRequest, id);
+        then(commentService).should(times(1)).addComment(customUserDetails, commentRequest, id);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
     }
 
@@ -49,15 +49,15 @@ public class CommentControllerTest {
         // given
         long id = 1L;
         CustomUserDetails customUserDetails = WithMockCustomUserSecurityContextFactory.customUserDetailsMock();
-        CommentAddRequest commentAddRequest = commentRequest();
+        CommentRequest commentRequest = commentRequest();
 
         // when
         ResponseEntity response = commentController.commentModify(customUserDetails,
-            commentAddRequest, id);
+            commentRequest, id);
 
         // then
         then(commentService).should(times(1)).modifyComment(customUserDetails,
-            commentAddRequest, id);
+            commentRequest, id);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
     }
 
@@ -94,7 +94,7 @@ public class CommentControllerTest {
         long postId = 1L;
         long commentId = 1L;
         CustomUserDetails customUserDetails = WithMockCustomUserSecurityContextFactory.customUserDetailsMock();
-        ReCommentAddRequest reCommentAddRequest = ReCommentAddRequest.builder()
+        ReCommentRequest reCommentRequest = ReCommentRequest.builder()
             .mentionId(1L)
             .content("test")
             .build();
@@ -104,7 +104,7 @@ public class CommentControllerTest {
             customUserDetails,
             postId,
             commentId,
-            reCommentAddRequest
+            reCommentRequest
         );
 
         // then
@@ -112,7 +112,7 @@ public class CommentControllerTest {
             customUserDetails,
             postId,
             commentId,
-            reCommentAddRequest
+            reCommentRequest
         );
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
     }
@@ -190,7 +190,7 @@ public class CommentControllerTest {
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
     }
 
-    CommentAddRequest commentRequest() {
-        return new CommentAddRequest("test comment");
+    CommentRequest commentRequest() {
+        return new CommentRequest("test comment");
     }
 }

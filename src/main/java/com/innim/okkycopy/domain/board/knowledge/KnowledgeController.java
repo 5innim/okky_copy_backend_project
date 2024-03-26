@@ -1,6 +1,6 @@
 package com.innim.okkycopy.domain.board.knowledge;
 
-import com.innim.okkycopy.domain.board.dto.request.write.PostAddRequest;
+import com.innim.okkycopy.domain.board.dto.request.write.PostRequest;
 import com.innim.okkycopy.global.auth.CustomUserDetails;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -28,9 +28,9 @@ public class KnowledgeController {
     private final KnowledgeService knowledgeService;
 
     @PostMapping("/write")
-    public ResponseEntity<Object> knowledgePostAdd(@RequestBody @Valid PostAddRequest postAddRequest,
+    public ResponseEntity<Object> knowledgePostAdd(@RequestBody @Valid PostRequest postRequest,
         @AuthenticationPrincipal CustomUserDetails customUserDetails) {
-        knowledgeService.addKnowledgePost(postAddRequest, customUserDetails);
+        knowledgeService.addKnowledgePost(postRequest, customUserDetails);
 
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
@@ -45,7 +45,7 @@ public class KnowledgeController {
     @PutMapping("/posts/{id}")
     public ResponseEntity<Object> knowledgePostModify(
         @AuthenticationPrincipal CustomUserDetails customUserDetails,
-        @RequestBody @Valid PostAddRequest updateRequest,
+        @RequestBody @Valid PostRequest updateRequest,
         @PathVariable("id") long id) {
         knowledgeService.modifyKnowledgePost(customUserDetails, updateRequest, id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();

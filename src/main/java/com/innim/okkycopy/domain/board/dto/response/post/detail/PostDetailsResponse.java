@@ -29,7 +29,7 @@ public class PostDetailsResponse {
     private RequesterInfo requesterInfo;
 
 
-    public static PostDetailsResponse create(KnowledgePost knowledgePost, Member member) {
+    public static PostDetailsResponse of(KnowledgePost knowledgePost, Member member) {
         List<String> tags = new ArrayList<>();
         for (Tag tag : knowledgePost.getTags()) {
             tags.add(tag.getName());

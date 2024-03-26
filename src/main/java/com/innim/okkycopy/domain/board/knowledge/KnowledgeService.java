@@ -1,6 +1,6 @@
 package com.innim.okkycopy.domain.board.knowledge;
 
-import com.innim.okkycopy.domain.board.dto.request.write.PostAddRequest;
+import com.innim.okkycopy.domain.board.dto.request.write.PostRequest;
 import com.innim.okkycopy.domain.board.dto.response.post.brief.PostListResponse;
 import com.innim.okkycopy.domain.board.dto.response.post.detail.PostDetailsResponse;
 import com.innim.okkycopy.domain.board.dto.response.post.detail.RequesterInfo;
@@ -40,14 +40,14 @@ public class KnowledgeService {
     private EntityManager entityManager;
 
     @Transactional
-    public void addKnowledgePost(PostAddRequest postAddRequest, CustomUserDetails customUserDetails) {
+    public void addKnowledgePost(PostRequest postRequest, CustomUserDetails customUserDetails) {
         Member member = entityManager.merge(customUserDetails.getMember());
 
-        BoardTopic boardTopic = boardTopicRepository.findByName(postAddRequest.getTopic())
+        BoardTopic boardTopic = boardTopicRepository.findByName(postRequest.getTopic())
             .orElseThrow(() -> new StatusCode400Exception(
                 ErrorCase._400_NO_SUCH_TOPIC));
 
-        KnowledgePost knowledgePost = KnowledgePost.create(postAddRequest, boardTopic, member);
+        KnowledgePost knowledgePost = KnowledgePost.of(postRequest, boardTopic, member);
         entityManager.persist(knowledgePost);
     }
 
@@ -57,7 +57,7 @@ public class KnowledgeService {
             .orElseThrow(() -> new StatusCode400Exception(ErrorCase._400_NO_SUCH_POST));
         Member member = memberRepository.findByMemberId(knowledgePost.getMember().getMemberId()).orElseGet(() -> null);
 
-        PostDetailsResponse response = PostDetailsResponse.create(knowledgePost, member);
+        PostDetailsResponse response = PostDetailsResponse.of(knowledgePost, member);
         if (customUserDetails != null) {
             Member requester = customUserDetails.getMember();
             PostExpression postExpression = postExpressionRepository.findByMemberAndPost(knowledgePost, requester)
@@ -76,7 +76,7 @@ public class KnowledgeService {
     }
 
     @Transactional
-    public void modifyKnowledgePost(CustomUserDetails customUserDetails, PostAddRequest updateRequest, long postId) {
+    public void modifyKnowledgePost(CustomUserDetails customUserDetails, PostRequest updateRequest, long postId) {
         Member mergedMember = entityManager.merge(customUserDetails.getMember());
         KnowledgePost knowledgePost = knowledgePostRepository.findByPostId(postId)
             .orElseThrow(() -> new StatusCode400Exception(ErrorCase._400_NO_SUCH_POST));

@@ -7,7 +7,7 @@ import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.times;
 
 import com.innim.okkycopy.common.WithMockCustomUserSecurityContextFactory;
-import com.innim.okkycopy.domain.member.dto.request.MemberAddRequest;
+import com.innim.okkycopy.domain.member.dto.request.MemberRequest;
 import com.innim.okkycopy.domain.member.dto.response.MemberBriefResponse;
 import com.innim.okkycopy.domain.member.dto.response.MemberDetailsResponse;
 import com.innim.okkycopy.domain.member.entity.Member;
@@ -31,16 +31,16 @@ class MemberControllerTest {
     @Test
     void signupTest() {
         // given
-        MemberAddRequest request = signupRequest();
+        MemberRequest request = signupRequest();
         MemberBriefResponse briefMemberInfo = briefMemberInfo();
 
-        given(memberService.addMember(any(MemberAddRequest.class))).willReturn(briefMemberInfo);
+        given(memberService.addMember(any(MemberRequest.class))).willReturn(briefMemberInfo);
 
         // when
         ResponseEntity response = memberController.memberAdd(request);
 
         // then
-        then(memberService).should(times(1)).addMember(any(MemberAddRequest.class));
+        then(memberService).should(times(1)).addMember(any(MemberRequest.class));
         then(memberService).shouldHaveNoMoreInteractions();
         assertThat(response.getBody()).isInstanceOf(MemberBriefResponse.class).isEqualTo(briefMemberInfo);
     }
@@ -62,8 +62,8 @@ class MemberControllerTest {
         assertThat(response.getBody()).isInstanceOf(MemberDetailsResponse.class).isEqualTo(memberInfo);
     }
 
-    private MemberAddRequest signupRequest() {
-        return MemberAddRequest.builder()
+    private MemberRequest signupRequest() {
+        return MemberRequest.builder()
             .id("test1234")
             .password("test1234**")
             .email("test@test.com")

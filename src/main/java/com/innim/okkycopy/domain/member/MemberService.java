@@ -1,7 +1,7 @@
 package com.innim.okkycopy.domain.member;
 
 import com.innim.okkycopy.domain.board.entity.Scrap;
-import com.innim.okkycopy.domain.member.dto.request.MemberAddRequest;
+import com.innim.okkycopy.domain.member.dto.request.MemberRequest;
 import com.innim.okkycopy.domain.member.dto.response.MemberBriefResponse;
 import com.innim.okkycopy.domain.member.dto.response.MemberDetailsResponse;
 import com.innim.okkycopy.domain.member.entity.Member;
@@ -31,19 +31,19 @@ public class MemberService {
     private EntityManager entityManager;
 
     @Transactional(propagation = Propagation.REQUIRES_NEW, isolation = Isolation.SERIALIZABLE)
-    public MemberBriefResponse addMember(MemberAddRequest memberAddRequest) {
+    public MemberBriefResponse addMember(MemberRequest memberRequest) {
 
-        if (memberRepository.existsById(memberAddRequest.getId())) {
+        if (memberRepository.existsById(memberRequest.getId())) {
             throw new StatusCode409Exception(ErrorCase._409_DUPLICATE_ID);
         }
 
-        if (memberRepository.existsByEmail(memberAddRequest.getEmail())) {
+        if (memberRepository.existsByEmail(memberRequest.getEmail())) {
             throw new StatusCode409Exception(ErrorCase._409_DUPLICATE_EMAIL);
         }
 
-        memberAddRequest.encodePassword(passwordEncoder);
+        memberRequest.encodePassword(passwordEncoder);
 
-        Member member = Member.from(memberAddRequest);
+        Member member = Member.from(memberRequest);
         memberRepository.save(member);
 
         return MemberBriefResponse.from(member);

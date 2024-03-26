@@ -15,7 +15,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class PostAddRequest {
+public class PostRequest {
 
     @Size(min = 1)
     private String topic;

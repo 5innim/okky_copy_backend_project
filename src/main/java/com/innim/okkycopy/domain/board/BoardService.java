@@ -49,7 +49,7 @@ public class BoardService {
         Member mergedMember = entityManager.merge(member);
         Post post = postRepository.findByPostId(postId)
             .orElseThrow(() -> new StatusCode400Exception(ErrorCase._400_NO_SUCH_POST));
-        entityManager.persist(Scrap.create(post, mergedMember));
+        entityManager.persist(Scrap.of(post, mergedMember));
     }
 
     @Transactional
@@ -70,7 +70,7 @@ public class BoardService {
         if (postExpressionRepository.findByMemberAndPost(post, mergedMember).isPresent()) {
             throw new StatusCode400Exception(ErrorCase._400_ALREADY_EXIST_EXPRESSION);
         }
-        PostExpression postExpression = PostExpression.create(post, mergedMember, type);
+        PostExpression postExpression = PostExpression.of(post, mergedMember, type);
         entityManager.persist(postExpression);
     }
 

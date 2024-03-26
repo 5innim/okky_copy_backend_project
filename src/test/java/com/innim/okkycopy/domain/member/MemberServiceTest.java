@@ -6,7 +6,7 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.times;
 
-import com.innim.okkycopy.domain.member.dto.request.MemberAddRequest;
+import com.innim.okkycopy.domain.member.dto.request.MemberRequest;
 import com.innim.okkycopy.domain.member.dto.response.MemberBriefResponse;
 import com.innim.okkycopy.domain.member.entity.Member;
 import org.junit.jupiter.api.Test;
@@ -29,12 +29,12 @@ class MemberServiceTest {
     @Test
     void insertMemberTest() {
         // given
-        MemberAddRequest memberAddRequest = signupRequest();
+        MemberRequest memberRequest = signupRequest();
         given(memberRepository.save(any(Member.class))).willReturn(null);
         given(passwordEncoder.encode(any(String.class))).willReturn("**************");
 
         // when
-        MemberBriefResponse briefMemberInfo = memberService.addMember(memberAddRequest);
+        MemberBriefResponse briefMemberInfo = memberService.addMember(memberRequest);
 
         // then
         then(memberRepository).should(times(1)).save(any(Member.class));
@@ -42,14 +42,14 @@ class MemberServiceTest {
         then(memberRepository).should(times(1)).existsByEmail(any(String.class));
         then(memberRepository).shouldHaveNoMoreInteractions();
 
-        assertThat(briefMemberInfo.getEmail()).isEqualTo(memberAddRequest.getEmail());
-        assertThat(briefMemberInfo.getName()).isEqualTo(memberAddRequest.getName());
-        assertThat(briefMemberInfo.getNickname()).isEqualTo(memberAddRequest.getNickname());
+        assertThat(briefMemberInfo.getEmail()).isEqualTo(memberRequest.getEmail());
+        assertThat(briefMemberInfo.getName()).isEqualTo(memberRequest.getName());
+        assertThat(briefMemberInfo.getNickname()).isEqualTo(memberRequest.getNickname());
 
     }
 
-    private MemberAddRequest signupRequest() {
-        return MemberAddRequest.builder()
+    private MemberRequest signupRequest() {
+        return MemberRequest.builder()
             .id("test1")
             .password("test1234**")
             .email("test1@test.com")

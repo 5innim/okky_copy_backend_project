@@ -1,7 +1,7 @@
 package com.innim.okkycopy.domain.board.comment.entity;
 
-import com.innim.okkycopy.domain.board.comment.dto.request.CommentAddRequest;
-import com.innim.okkycopy.domain.board.comment.dto.request.ReCommentAddRequest;
+import com.innim.okkycopy.domain.board.comment.dto.request.CommentRequest;
+import com.innim.okkycopy.domain.board.comment.dto.request.ReCommentRequest;
 import com.innim.okkycopy.domain.board.entity.Post;
 import com.innim.okkycopy.domain.board.knowledge.entity.KnowledgePost;
 import com.innim.okkycopy.domain.member.entity.Member;
@@ -73,9 +73,9 @@ public class Comment {
         this.lastUpdate = LocalDateTime.now();
     }
 
-    public static Comment create(Post post, Member member, CommentAddRequest commentAddRequest) {
+    public static Comment of(Post post, Member member, CommentRequest commentRequest) {
         Comment comment = Comment.builder()
-            .content(commentAddRequest.getContent())
+            .content(commentRequest.getContent())
             .likes(0)
             .hates(0)
             .post(post)
@@ -97,11 +97,11 @@ public class Comment {
         entityManager.remove(comment);
     }
 
-    public static Comment createReComment(Post post, Member member, long parentId,
-        ReCommentAddRequest reCommentAddRequest) {
+    public static Comment reCommentOf(Post post, Member member, long parentId,
+        ReCommentRequest reCommentRequest) {
         return Comment.builder()
-            .content(reCommentAddRequest.getContent())
-            .mentionedMember(reCommentAddRequest.getMentionId())
+            .content(reCommentRequest.getContent())
+            .mentionedMember(reCommentRequest.getMentionId())
             .parentId(parentId)
             .post(post)
             .member(member)

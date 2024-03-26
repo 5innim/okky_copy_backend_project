@@ -1,7 +1,7 @@
 package com.innim.okkycopy.domain.board.comment;
 
-import com.innim.okkycopy.domain.board.comment.dto.request.CommentAddRequest;
-import com.innim.okkycopy.domain.board.comment.dto.request.ReCommentAddRequest;
+import com.innim.okkycopy.domain.board.comment.dto.request.CommentRequest;
+import com.innim.okkycopy.domain.board.comment.dto.request.ReCommentRequest;
 import com.innim.okkycopy.domain.board.enums.ExpressionType;
 import com.innim.okkycopy.global.auth.CustomUserDetails;
 import jakarta.validation.Valid;
@@ -28,19 +28,19 @@ public class CommentController {
     @PostMapping("/posts/{id}/comment")
     public ResponseEntity<Object> commentAdd(
         @AuthenticationPrincipal CustomUserDetails customUserDetails,
-        @RequestBody @Valid CommentAddRequest commentAddRequest,
+        @RequestBody @Valid CommentRequest commentRequest,
         @PathVariable("id") long id) {
 
-        commentService.addComment(customUserDetails, commentAddRequest, id);
+        commentService.addComment(customUserDetails, commentRequest, id);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @PutMapping("/comments/{id}")
     public ResponseEntity<Object> commentModify(
         @AuthenticationPrincipal CustomUserDetails customUserDetails,
-        @RequestBody @Valid CommentAddRequest commentAddRequest,
+        @RequestBody @Valid CommentRequest commentRequest,
         @PathVariable("id") long id) {
-        commentService.modifyComment(customUserDetails, commentAddRequest, id);
+        commentService.modifyComment(customUserDetails, commentRequest, id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
@@ -64,8 +64,8 @@ public class CommentController {
         @AuthenticationPrincipal CustomUserDetails customUserDetails,
         @PathVariable long postId,
         @PathVariable long commentId,
-        @RequestBody @Valid ReCommentAddRequest reCommentAddRequest) {
-        commentService.addReComment(customUserDetails, postId, commentId, reCommentAddRequest);
+        @RequestBody @Valid ReCommentRequest reCommentRequest) {
+        commentService.addReComment(customUserDetails, postId, commentId, reCommentRequest);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 

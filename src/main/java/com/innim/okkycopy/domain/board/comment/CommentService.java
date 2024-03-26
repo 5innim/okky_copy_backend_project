@@ -1,7 +1,7 @@
 package com.innim.okkycopy.domain.board.comment;
 
-import com.innim.okkycopy.domain.board.comment.dto.request.CommentAddRequest;
-import com.innim.okkycopy.domain.board.comment.dto.request.ReCommentAddRequest;
+import com.innim.okkycopy.domain.board.comment.dto.request.CommentRequest;
+import com.innim.okkycopy.domain.board.comment.dto.request.ReCommentRequest;
 import com.innim.okkycopy.domain.board.comment.dto.response.CommentDetailsResponse;
 import com.innim.okkycopy.domain.board.comment.dto.response.CommentListResponse;
 import com.innim.okkycopy.domain.board.comment.dto.response.RequesterInfo;
@@ -41,20 +41,20 @@ public class CommentService {
 
     @Transactional
     public void addComment(CustomUserDetails customUserDetails,
-        CommentAddRequest commentAddRequest,
+        CommentRequest commentRequest,
         long postId) {
         Member mergedMember = entityManager.merge(customUserDetails.getMember());
         Post post = postRepository.findByPostId(postId)
             .orElseThrow(() -> new StatusCode400Exception(ErrorCase._400_NO_SUCH_POST));
 
-        Comment comment = Comment.create(post, mergedMember,
-            commentAddRequest);
+        Comment comment = Comment.of(post, mergedMember,
+            commentRequest);
         entityManager.persist(comment);
     }
 
     @Transactional
     public void modifyComment(CustomUserDetails customUserDetails,
-        CommentAddRequest commentAddRequest,
+        CommentRequest commentRequest,
         long commentId) {
         Member mergedMember = entityManager.merge(customUserDetails.getMember());
         Comment comment = commentRepository.findByCommentId(commentId)
@@ -63,7 +63,7 @@ public class CommentService {
         if (comment.getMember().getMemberId() != mergedMember.getMemberId()) {
             throw new StatusCode403Exception(ErrorCase._403_NO_AUTHORITY);
         }
-        comment.update(commentAddRequest.getContent());
+        comment.update(commentRequest.getContent());
     }
 
     @Transactional
@@ -123,15 +123,15 @@ public class CommentService {
         CustomUserDetails customUserDetails,
         long postId,
         long commentId,
-        ReCommentAddRequest reCommentAddRequest) {
+        ReCommentRequest reCommentRequest) {
         Member mergedMember = entityManager.merge(customUserDetails.getMember());
         Post post = postRepository.findByPostId(postId)
             .orElseThrow(() -> new StatusCode400Exception(ErrorCase._400_NO_SUCH_POST));
         commentRepository.findByCommentId(commentId)
             .orElseThrow(() -> new StatusCode400Exception(ErrorCase._400_NO_SUCH_COMMENT));
 
-        Comment reComment = Comment.createReComment(post, mergedMember,
-            commentId, reCommentAddRequest);
+        Comment reComment = Comment.reCommentOf(post, mergedMember,
+            commentId, reCommentRequest);
 
         entityManager.persist(reComment);
     }
@@ -184,7 +184,7 @@ public class CommentService {
         if (CommentExpression.isNotSupportedCase(comment)) {
             throw new StatusCode400Exception(ErrorCase._400_NOT_SUPPORTED_CASE);
         }
-        entityManager.persist(CommentExpression.create(comment, mergedMember, type));
+        entityManager.persist(CommentExpression.of(comment, mergedMember, type));
     }
 
     @Transactional

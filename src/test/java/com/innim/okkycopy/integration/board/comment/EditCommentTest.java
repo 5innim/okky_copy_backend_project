@@ -5,7 +5,7 @@ import static org.springframework.security.test.web.servlet.setup.SecurityMockMv
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
 import com.google.gson.Gson;
-import com.innim.okkycopy.domain.board.comment.dto.request.CommentAddRequest;
+import com.innim.okkycopy.domain.board.comment.dto.request.CommentRequest;
 import com.innim.okkycopy.domain.member.MemberRepository;
 import com.innim.okkycopy.domain.member.entity.Member;
 import com.innim.okkycopy.global.auth.CustomUserDetails;
@@ -63,14 +63,14 @@ public class EditCommentTest {
     void given_noExistComment_then_responseErrorCode() throws Exception {
         // given
         long commentId = 1000L;
-        CommentAddRequest commentAddRequest = commentRequest();
+        CommentRequest commentRequest = commentRequest();
 
         // when
         ResultActions resultActions = mockMvc.perform(
             MockMvcRequestBuilders.put("/board/comments/" + commentId)
                 .contentType(MediaType.APPLICATION_JSON)
                 .characterEncoding("UTF-8")
-                .content(new Gson().toJson(commentAddRequest))
+                .content(new Gson().toJson(commentRequest))
         );
 
         // then
@@ -81,7 +81,7 @@ public class EditCommentTest {
     @Transactional
     void given_noEqualCommentWriterWithAuthenticationPrincipal_then_responseErrorCode() throws Exception {
         // given
-        CommentAddRequest commentAddRequest = commentRequest();
+        CommentRequest commentRequest = commentRequest();
         long commentId = 2L;
 
         // when
@@ -89,7 +89,7 @@ public class EditCommentTest {
             MockMvcRequestBuilders.put("/board/comments/" + commentId)
                 .contentType(MediaType.APPLICATION_JSON)
                 .characterEncoding("UTF-8")
-                .content(new Gson().toJson(commentAddRequest))
+                .content(new Gson().toJson(commentRequest))
         );
 
         // then
@@ -100,7 +100,7 @@ public class EditCommentTest {
     @Transactional
     void given_correctUpdateInfo_then_response204() throws Exception {
         // given
-        CommentAddRequest commentAddRequest = commentRequest();
+        CommentRequest commentRequest = commentRequest();
         long commentId = 1L;
 
         // when
@@ -108,14 +108,14 @@ public class EditCommentTest {
             MockMvcRequestBuilders.put("/board/comments/" + commentId)
                 .contentType(MediaType.APPLICATION_JSON)
                 .characterEncoding("UTF-8")
-                .content(new Gson().toJson(commentAddRequest))
+                .content(new Gson().toJson(commentRequest))
         ).andReturn().getResponse();
 
         // then
         assertThat(response.getStatus()).isEqualTo(HttpStatus.NO_CONTENT.value());
     }
 
-    CommentAddRequest commentRequest() {
-        return new CommentAddRequest("test comment");
+    CommentRequest commentRequest() {
+        return new CommentRequest("test comment");
     }
 }

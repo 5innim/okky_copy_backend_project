@@ -6,7 +6,7 @@ import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.times;
 
 import com.innim.okkycopy.common.WithMockCustomUserSecurityContextFactory;
-import com.innim.okkycopy.domain.board.dto.request.write.PostAddRequest;
+import com.innim.okkycopy.domain.board.dto.request.write.PostRequest;
 import com.innim.okkycopy.domain.board.dto.response.post.detail.PostDetailsResponse;
 import com.innim.okkycopy.global.auth.CustomUserDetails;
 import java.time.LocalDateTime;
@@ -31,14 +31,14 @@ class KnowledgeControllerTest {
     @Test
     void writeKnowledgePostTest() {
         // given
-        PostAddRequest postAddRequest = writeRequest();
+        PostRequest postRequest = writeRequest();
         CustomUserDetails customUserDetails = WithMockCustomUserSecurityContextFactory.customUserDetailsMock();
 
         // when
-        ResponseEntity response = controller.knowledgePostAdd(postAddRequest, customUserDetails);
+        ResponseEntity response = controller.knowledgePostAdd(postRequest, customUserDetails);
 
         // then
-        then(service).should(times(1)).addKnowledgePost(postAddRequest, customUserDetails);
+        then(service).should(times(1)).addKnowledgePost(postRequest, customUserDetails);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
     }
 
@@ -61,14 +61,14 @@ class KnowledgeControllerTest {
     void editKnowledgePostTest() {
         // given
         long id = 1L;
-        PostAddRequest postAddRequest = writeRequest();
+        PostRequest postRequest = writeRequest();
         CustomUserDetails customUserDetails = WithMockCustomUserSecurityContextFactory.customUserDetailsMock();
 
         // when
-        ResponseEntity response = controller.knowledgePostModify(customUserDetails, postAddRequest, id);
+        ResponseEntity response = controller.knowledgePostModify(customUserDetails, postRequest, id);
 
         // then
-        then(service).should(times(1)).modifyKnowledgePost(customUserDetails, postAddRequest, id);
+        then(service).should(times(1)).modifyKnowledgePost(customUserDetails, postRequest, id);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
     }
 
@@ -103,8 +103,8 @@ class KnowledgeControllerTest {
     }
 
 
-    PostAddRequest writeRequest() {
-        return PostAddRequest.builder()
+    PostRequest writeRequest() {
+        return PostRequest.builder()
             .title("test_title")
             .topic("test_topic")
             .tags(Arrays.asList())

@@ -44,7 +44,7 @@ public class Scrap {
     @JoinColumn(name = "member_id")
     private Member member;
 
-    public static Scrap create(Post post, Member member) {
+    public static Scrap of(Post post, Member member) {
         post.increaseScraps();
         return Scrap.builder()
             .member(member)

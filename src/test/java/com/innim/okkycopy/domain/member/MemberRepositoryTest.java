@@ -2,7 +2,7 @@ package com.innim.okkycopy.domain.member;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.innim.okkycopy.domain.member.dto.request.MemberAddRequest;
+import com.innim.okkycopy.domain.member.dto.request.MemberRequest;
 import com.innim.okkycopy.domain.member.entity.Member;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,10 +23,10 @@ class MemberRepositoryTest {
     void saveAndExistsByTest() {
 
         // given
-        MemberAddRequest memberAddRequest = signupRequest();
+        MemberRequest memberRequest = signupRequest();
 
         // when
-        memberRepository.save(Member.from(memberAddRequest));
+        memberRepository.save(Member.from(memberRequest));
 
         // then
         assertThat(memberRepository.existsById("test1")).isTrue();
@@ -37,17 +37,17 @@ class MemberRepositoryTest {
     @Transactional
     void when_saveEntity_then_autoGenerateTimestamp() {
         // given
-        MemberAddRequest memberAddRequest = signupRequest();
+        MemberRequest memberRequest = signupRequest();
 
         // when
-        Member member = memberRepository.save(Member.from(memberAddRequest));
+        Member member = memberRepository.save(Member.from(memberRequest));
 
         // then
         assertThat(member.getCreatedDate()).isNotNull();
     }
 
-    private MemberAddRequest signupRequest() {
-        return MemberAddRequest.builder()
+    private MemberRequest signupRequest() {
+        return MemberRequest.builder()
             .id("test1")
             .password("test1234**")
             .email("test1@test.com")

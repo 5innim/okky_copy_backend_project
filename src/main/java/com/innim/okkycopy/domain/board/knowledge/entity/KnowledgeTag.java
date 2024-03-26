@@ -23,7 +23,7 @@ public class KnowledgeTag extends Tag {
     @JoinColumn(name = "topic_id")
     private BoardTopic boardTopic;
 
-    public static KnowledgeTag create(KnowledgePost knowledgePost, BoardTopic boardTopic, String name) {
+    public static KnowledgeTag of(KnowledgePost knowledgePost, BoardTopic boardTopic, String name) {
         KnowledgeTag knowledgeTag = new KnowledgeTag();
         knowledgeTag.setPost((Post) knowledgePost);
         knowledgeTag.setName(name);

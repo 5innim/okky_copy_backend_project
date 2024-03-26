@@ -4,7 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 
 import com.google.gson.Gson;
-import com.innim.okkycopy.domain.board.dto.request.write.PostAddRequest;
+import com.innim.okkycopy.domain.board.dto.request.write.PostRequest;
 import com.innim.okkycopy.domain.member.MemberRepository;
 import com.innim.okkycopy.domain.member.entity.Member;
 import com.innim.okkycopy.global.auth.CustomUserDetails;
@@ -60,14 +60,14 @@ public class WritePostTest {
     @Transactional
     void writeKnowledgePost() throws Exception {
         // given
-        PostAddRequest postAddRequest = writeRequest();
+        PostRequest postRequest = writeRequest();
 
         // when
         MockHttpServletResponse response = mockMvc.perform(
             MockMvcRequestBuilders.post("/board/knowledge/write")
                 .contentType(MediaType.APPLICATION_JSON)
                 .characterEncoding("UTF-8")
-                .content(new Gson().toJson(postAddRequest))
+                .content(new Gson().toJson(postRequest))
         ).andReturn().getResponse();
 
         // then
@@ -88,8 +88,8 @@ public class WritePostTest {
         assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());
     }
 
-    PostAddRequest writeRequest() {
-        return PostAddRequest.builder()
+    PostRequest writeRequest() {
+        return PostRequest.builder()
             .title("test_title")
             .topic("Tech 뉴스")
             .tags(Arrays.asList())
