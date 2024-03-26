@@ -41,7 +41,7 @@ public class BoardService {
             throw new StatusCode500Exception(ErrorCase._500_FAIL_INITIALIZATION);
         }
 
-        return TopicListResponse.of(boardTypes);
+        return TopicListResponse.from(boardTypes);
     }
 
     @Transactional

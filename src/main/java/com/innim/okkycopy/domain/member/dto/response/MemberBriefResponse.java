@@ -14,7 +14,7 @@ public class MemberBriefResponse {
     private String name;
     private String email;
 
-    public static MemberBriefResponse of(Member member) {
+    public static MemberBriefResponse from(Member member) {
         return MemberBriefResponse.builder()
             .nickname(member.getNickname())
             .name(member.getName())

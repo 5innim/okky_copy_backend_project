@@ -26,7 +26,7 @@ class MemberRepositoryTest {
         MemberAddRequest memberAddRequest = signupRequest();
 
         // when
-        memberRepository.save(Member.of(memberAddRequest));
+        memberRepository.save(Member.from(memberAddRequest));
 
         // then
         assertThat(memberRepository.existsById("test1")).isTrue();
@@ -40,7 +40,7 @@ class MemberRepositoryTest {
         MemberAddRequest memberAddRequest = signupRequest();
 
         // when
-        Member member = memberRepository.save(Member.of(memberAddRequest));
+        Member member = memberRepository.save(Member.from(memberAddRequest));
 
         // then
         assertThat(member.getCreatedDate()).isNotNull();

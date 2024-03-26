@@ -14,10 +14,10 @@ public class TopicListResponse {
 
     List<TypeDetailsResponse> types;
 
-    public static TopicListResponse of(List<BoardType> boardTypes) {
+    public static TopicListResponse from(List<BoardType> boardTypes) {
         List<TypeDetailsResponse> typeList = new ArrayList<>();
         for (BoardType boardType : boardTypes) {
-            typeList.add(TypeDetailsResponse.of(boardType));
+            typeList.add(TypeDetailsResponse.from(boardType));
         }
 
         return new TopicListResponse(typeList);

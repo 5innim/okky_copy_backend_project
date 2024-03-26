@@ -75,7 +75,7 @@ public class Member {
     @OneToMany(mappedBy = "member")
     private List<Comment> comments;
 
-    public static Member of(MemberAddRequest request) {
+    public static Member from(MemberAddRequest request) {
         return Member.builder()
             .id(request.getId())
             .password(request.getPassword())

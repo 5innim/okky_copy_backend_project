@@ -29,7 +29,7 @@ public class PostBriefResponse {
     int comments;
     int likes;
 
-    public static <T extends Post> PostBriefResponse create(T post) {
+    public static <T extends Post> PostBriefResponse from(T post) {
         List<String> tags = new ArrayList<>();
         for (Tag tag : post.getTags()) {
             tags.add(tag.getName());
@@ -38,7 +38,7 @@ public class PostBriefResponse {
         PostBriefResponse response = PostBriefResponse.builder()
             .postId(post.getPostId())
             .title(post.getTitle())
-            .writerInfo(WriterInfo.of(post.getMember()))
+            .writerInfo(WriterInfo.from(post.getMember()))
             .createdDate(post.getCreatedDate())
             .tags(tags)
             .build();

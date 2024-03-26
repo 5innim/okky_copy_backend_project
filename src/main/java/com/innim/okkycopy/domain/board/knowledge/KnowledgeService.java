@@ -57,7 +57,7 @@ public class KnowledgeService {
             .orElseThrow(() -> new StatusCode400Exception(ErrorCase._400_NO_SUCH_POST));
         Member member = memberRepository.findByMemberId(knowledgePost.getMember().getMemberId()).orElseGet(() -> null);
 
-        PostDetailsResponse response = PostDetailsResponse.of(knowledgePost, member);
+        PostDetailsResponse response = PostDetailsResponse.create(knowledgePost, member);
         if (customUserDetails != null) {
             Member requester = customUserDetails.getMember();
             PostExpression postExpression = postExpressionRepository.findByMemberAndPost(knowledgePost, requester)
@@ -119,6 +119,6 @@ public class KnowledgeService {
                 pageable);
         }
 
-        return PostListResponse.create(knowledgePostPage);
+        return PostListResponse.from(knowledgePostPage);
     }
 }

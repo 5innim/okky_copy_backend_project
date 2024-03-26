@@ -43,10 +43,10 @@ public class MemberService {
 
         memberAddRequest.encodePassword(passwordEncoder);
 
-        Member member = Member.of(memberAddRequest);
+        Member member = Member.from(memberAddRequest);
         memberRepository.save(member);
 
-        return MemberBriefResponse.of(member);
+        return MemberBriefResponse.from(member);
     }
 
     @Transactional(readOnly = true)

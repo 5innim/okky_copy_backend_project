@@ -30,7 +30,7 @@ public class CommentDetailsResponse implements Comparable<CommentDetailsResponse
         RequesterInfo requesterInfo) {
         return CommentDetailsResponse.builder()
             .writerInfo((comment.getMember() == null)
-                ? null : WriterInfo.of(comment.getMember()))
+                ? null : WriterInfo.from(comment.getMember()))
             .mentionedNickname(mentionedNickname)
             .content(comment.getContent())
             .createdDate(comment.getCreatedDate())

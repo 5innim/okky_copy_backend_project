@@ -17,7 +17,7 @@ public class TypeDetailsResponse {
     long typeId;
     List<TopicDetailsResponse> topics;
 
-    public static TypeDetailsResponse of(BoardType boardType) {
+    public static TypeDetailsResponse from(BoardType boardType) {
         List<TopicDetailsResponse> topicList = new ArrayList<>();
 
         for (BoardTopic boardTopic : boardType.getBoardTopics()) {

@@ -20,10 +20,10 @@ public class PostListResponse {
     List<PostBriefResponse> posts;
     int totalPages;
 
-    public static <T extends Post> PostListResponse create(Page<T> postsPage) {
+    public static <T extends Post> PostListResponse from(Page<T> postsPage) {
         ArrayList<PostBriefResponse> briefPosts = new ArrayList<>();
         for (T post : postsPage.getContent()) {
-            briefPosts.add(PostBriefResponse.create(post));
+            briefPosts.add(PostBriefResponse.from(post));
         }
 
         return PostListResponse.builder()

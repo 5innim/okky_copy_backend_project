@@ -14,7 +14,7 @@ public class WriterInfo {
     private String nickName;
     private String profile;
 
-    public static WriterInfo of(Member member) {
+    public static WriterInfo from(Member member) {
         return WriterInfo.builder()
             .memberId(member.getMemberId())
             .nickName(member.getNickname())
