@@ -2,7 +2,9 @@ package com.innim.okkycopy.global.auth;
 
 import com.innim.okkycopy.domain.member.MemberRepository;
 import com.innim.okkycopy.domain.member.entity.Member;
-import com.innim.okkycopy.global.error.exception.UserIdNotFoundException;
+import com.innim.okkycopy.global.error.ErrorCase;
+import com.innim.okkycopy.global.error.exception.StatusCode401Exception;
+import com.innim.okkycopy.global.error.exception.StatusCodeException;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -30,10 +32,10 @@ public class CustomUserDetailsService implements UserDetailsService {
     }
 
     @Transactional(readOnly = true)
-    public UserDetails loadUserByUserId(Long userId) throws UserIdNotFoundException {
+    public UserDetails loadUserByUserId(Long userId) throws StatusCodeException {
         Optional<Member> member = memberRepository.findByMemberId(userId);
         if (member.isEmpty()) {
-            throw new UserIdNotFoundException("can not find user with " + "[" + userId + "]");
+            throw new StatusCode401Exception(ErrorCase._401_NO_SUCH_MEMBER);
         }
 
         return new CustomUserDetails(member.get());

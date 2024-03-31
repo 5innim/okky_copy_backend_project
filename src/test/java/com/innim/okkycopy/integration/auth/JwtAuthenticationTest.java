@@ -6,7 +6,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.google.gson.Gson;
 import com.innim.okkycopy.domain.member.dto.request.MemberRequest;
-import com.innim.okkycopy.global.error.exception.TokenGenerateException;
 import com.innim.okkycopy.global.util.JwtUtil;
 import com.innim.okkycopy.global.util.property.JwtProperty;
 import io.jsonwebtoken.Jwts;

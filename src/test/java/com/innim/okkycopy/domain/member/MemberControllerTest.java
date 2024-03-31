@@ -11,6 +11,7 @@ import com.innim.okkycopy.domain.member.dto.request.MemberRequest;
 import com.innim.okkycopy.domain.member.dto.response.MemberBriefResponse;
 import com.innim.okkycopy.domain.member.dto.response.MemberDetailsResponse;
 import com.innim.okkycopy.domain.member.entity.Member;
+import com.innim.okkycopy.domain.member.service.MemberService;
 import com.innim.okkycopy.global.auth.CustomUserDetails;
 import java.util.ArrayList;
 import org.junit.jupiter.api.Test;
