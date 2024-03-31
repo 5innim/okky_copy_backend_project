@@ -4,8 +4,8 @@ import com.innim.okkycopy.global.auth.enums.Algorithm;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.PostConstruct;
+import java.nio.charset.StandardCharsets;
 import java.security.Key;
-import java.util.Base64;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -48,7 +48,7 @@ public class JwtProperty {
 
     @PostConstruct
     private void init() {
-        secretKey = Keys.hmacShaKeyFor(Base64.getEncoder().encode(secret.getBytes()));
+        secretKey = Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
         signatureAlgorithm = Algorithm.valueOf(algorithm)
             .getSignatureAlgorithm();
     }

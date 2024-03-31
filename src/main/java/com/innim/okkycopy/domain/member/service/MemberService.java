@@ -1,6 +1,7 @@
-package com.innim.okkycopy.domain.member;
+package com.innim.okkycopy.domain.member.service;
 
 import com.innim.okkycopy.domain.board.entity.Scrap;
+import com.innim.okkycopy.domain.member.MemberRepository;
 import com.innim.okkycopy.domain.member.dto.request.MemberRequest;
 import com.innim.okkycopy.domain.member.dto.response.MemberBriefResponse;
 import com.innim.okkycopy.domain.member.dto.response.MemberDetailsResponse;

@@ -1,33 +1,32 @@
 package com.innim.okkycopy.global.util;
 
-import com.innim.okkycopy.global.error.exception.FailValidationJwtException;
-import com.innim.okkycopy.global.error.exception.TokenGenerateException;
+import com.innim.okkycopy.global.error.ErrorCase;
+import com.innim.okkycopy.global.error.exception.StatusCode401Exception;
+import com.innim.okkycopy.global.error.exception.StatusCode500Exception;
+import com.innim.okkycopy.global.error.exception.StatusCodeException;
 import com.innim.okkycopy.global.util.property.JwtProperty;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
-import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.JwtParser;
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.security.SignatureException;
 import java.util.Date;
 import java.util.Map;
-import lombok.extern.slf4j.Slf4j;
 
-@Slf4j
+
 public class JwtUtil {
 
-    public static String generateAccessToken(Long userId, Date loginDate) throws TokenGenerateException {
+    public static String generateAccessToken(Long userId, Date loginDate) throws StatusCodeException {
         Date expiredDate = new Date(loginDate.getTime() + JwtProperty.accessValidTime);
         return generateToken(userId, expiredDate, loginDate, "access");
     }
 
-    public static String generateRefreshToken(Long userId, Date loginDate) throws TokenGenerateException {
+    public static String generateRefreshToken(Long userId, Date loginDate) throws StatusCodeException {
         Date expiredDate = new Date(loginDate.getTime() + JwtProperty.refreshValidTime);
         return generateToken(userId, expiredDate, loginDate, "refresh");
     }
 
     public static String generateToken(Long userId, Date expiredDate, Date loginDate, String tokenSub)
-        throws TokenGenerateException {
+        throws StatusCodeException {
 
         String generatedToken;
         try {
@@ -40,26 +39,32 @@ public class JwtUtil {
                 .signWith(JwtProperty.secretKey, JwtProperty.signatureAlgorithm)
                 .compact();
         } catch (Exception ex) {
-            log.info(ex.getMessage());
-            throw new TokenGenerateException("can not generate token with userId: " + "[" + userId + "]");
+            throw new StatusCode500Exception(ErrorCase._500_JWT_GENERATE_FAIL);
         }
 
         return generatedToken;
     }
 
-    public static Claims validateToken(String token) throws ExpiredJwtException, FailValidationJwtException {
+
+    public static Claims validateToken(String token) throws StatusCodeException {
 
         try {
             JwtParser parser = Jwts.parserBuilder().setSigningKey(JwtProperty.secretKey).build();
             return parser.parseClaimsJws(token).getBody();
         } catch (ExpiredJwtException ex) {
-            throw ex;
-        } catch (SignatureException ex) {
-            throw new FailValidationJwtException("signature is not equals");
-        } catch (JwtException ex) {
-            throw new FailValidationJwtException("token validation failed");
+            throw new StatusCode401Exception(ErrorCase._401_TOKEN_EXPIRED);
+        } catch (Exception ex) {
+            throw new StatusCode401Exception(ErrorCase._401_TOKEN_VALIDATE_FAIL);
         }
 
+    }
+
+    public static boolean prefixNotMatched(String value) {
+        return !value.startsWith(JwtProperty.prefix);
+    }
+
+    public static String extractTokenWithoutPrefix(String value) {
+        return value.substring(JwtProperty.prefix.length());
     }
 
 }
