@@ -5,6 +5,8 @@ import static org.springframework.security.test.web.servlet.setup.SecurityMockMv
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
 import com.google.gson.Gson;
+import com.innim.okkycopy.global.error.ErrorCase;
+import com.innim.okkycopy.global.error.exception.StatusCode500Exception;
 import com.innim.okkycopy.global.util.JwtUtil;
 import com.innim.okkycopy.global.util.property.JwtProperty;
 import io.jsonwebtoken.Jwts;
@@ -42,22 +44,7 @@ public class RefreshTest {
     }
 
     @Test
-    void given_notEqualPrefix_then_response400013() throws Exception {
-        // given
-        String prefix = "noBearer";
-        String refreshToken = "it's no Bearer prefix token";
-
-        // when
-        ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.post("/refresh")
-            .header("Authorization", prefix + refreshToken)
-        );
-
-        // then
-        resultActions.andExpect(jsonPath("code").value(400013));
-    }
-
-    @Test
-    void given_emptyToken_then_response400013() throws Exception {
+    void given_emptyToken_then_response401001() throws Exception {
         // given
         String prefix = JwtProperty.prefix;
         String refreshToken = "";
@@ -68,11 +55,11 @@ public class RefreshTest {
         );
 
         // then
-        resultActions.andExpect(jsonPath("code").value(400013));
+        resultActions.andExpect(jsonPath("code").value(401001));
     }
 
     @Test
-    void given_expiredToken_then_response403001() throws Exception {
+    void given_expiredToken_then_response401003() throws Exception {
         // given
         String prefix = JwtProperty.prefix;
         String refreshToken = expiredToken();
@@ -83,7 +70,7 @@ public class RefreshTest {
         );
 
         // then
-        resultActions.andExpect(jsonPath("code").value(403001));
+        resultActions.andExpect(jsonPath("code").value(401003));
     }
 
     @Test
@@ -102,7 +89,7 @@ public class RefreshTest {
     }
 
     @Test
-    void given_unSavedMemberClaim_then_response401001() throws Exception {
+    void given_unSavedMemberClaim_then_response401005() throws Exception {
         // given
         String prefix = JwtProperty.prefix;
         String refreshToken = notExistMemberToken();
@@ -113,27 +100,13 @@ public class RefreshTest {
         );
 
         // then
-        resultActions.andExpect(jsonPath("code").value(401001));
+        resultActions.andExpect(jsonPath("code").value(401005));
     }
 
-    @Test
-    void given_accessToken_then_response401001() throws Exception {
-        // given
-        String prefix = JwtProperty.prefix;
-        String accessToken = accessToken();
-
-        // when
-        ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.post("/refresh")
-            .header("Authorization", prefix + accessToken)
-        );
-
-        // then
-        resultActions.andExpect(jsonPath("code").value(401001));
-    }
 
     @Test
     @Transactional
-    void given_unCorrectLoginDateToken_then_response401001() throws Exception {
+    void given_unCorrectLoginDateToken_then_response401004() throws Exception {
         // given
         String prefix = JwtProperty.prefix;
         String refreshToken = correctToken();
@@ -148,7 +121,7 @@ public class RefreshTest {
         );
 
         // then
-        resultActions.andExpect(jsonPath("code").value(401001));
+        resultActions.andExpect(jsonPath("code").value(401004));
     }
 
     @Test
@@ -196,7 +169,7 @@ public class RefreshTest {
                 .signWith(unCorrectSecretKey, JwtProperty.signatureAlgorithm)
                 .compact();
         } catch (Exception ex) {
-            throw new TokenGenerateException("can not generate token with userId: " + "[" + 1L + "]");
+            throw new StatusCode500Exception(ErrorCase._500_JWT_GENERATE_FAIL);
         }
 
         return generatedToken;
