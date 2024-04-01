@@ -6,6 +6,9 @@ import com.innim.okkycopy.domain.board.entity.BoardTopic;
 import com.innim.okkycopy.domain.board.entity.Post;
 import com.innim.okkycopy.domain.board.entity.Tag;
 import com.innim.okkycopy.domain.member.entity.Member;
+import com.innim.okkycopy.global.error.ErrorCase;
+import com.innim.okkycopy.global.error.exception.StatusCode400Exception;
+import com.innim.okkycopy.global.error.exception.StatusCodeException;
 import jakarta.persistence.Column;
 import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
@@ -48,7 +51,11 @@ public class KnowledgePost extends Post {
     @Column(nullable = false)
     private Integer comments;
 
-    public static KnowledgePost of(PostRequest postRequest, BoardTopic boardTopic, Member member) {
+    public static KnowledgePost of(PostRequest postRequest, BoardTopic boardTopic, Member member)
+        throws StatusCodeException {
+        if (!boardTopic.getBoardType().getName().equals("지식")) {
+            throw new StatusCode400Exception(ErrorCase._400_BAD_FORM_DATA);
+        }
         KnowledgePost knowledgePost = KnowledgePost.builder()
             .member(member)
             .content(postRequest.getContent())
