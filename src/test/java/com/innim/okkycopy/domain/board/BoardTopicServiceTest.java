@@ -21,12 +21,13 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
-public class BoardServiceTest {
+public class BoardTopicServiceTest {
 
     @Mock
     BoardTypeRepository boardTypeRepository;
+
     @InjectMocks
-    BoardService boardService;
+    BoardTopicService boardTopicService;
 
     @Nested
     class FindAllBoardTopicsTest {
@@ -38,7 +39,7 @@ public class BoardServiceTest {
             given(boardTypeRepository.findAll()).willReturn(boardTypes);
 
             // when
-            TopicListResponse topicListResponse = boardService.findBoardTopics();
+            TopicListResponse topicListResponse = boardTopicService.findBoardTopics();
 
             // then
             then(boardTypeRepository).should(times(1)).findAll();
@@ -52,7 +53,7 @@ public class BoardServiceTest {
 
             // when
             Throwable thrown = catchThrowable(() -> {
-                boardService.findBoardTopics();
+                boardTopicService.findBoardTopics();
             });
 
             // then

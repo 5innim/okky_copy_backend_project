@@ -25,12 +25,12 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class KnowledgeController {
 
-    private final KnowledgeService knowledgeService;
+    private final KnowledgePostService knowledgePostService;
 
     @PostMapping("/write")
     public ResponseEntity<Object> knowledgePostAdd(@RequestBody @Valid PostRequest postRequest,
         @AuthenticationPrincipal CustomUserDetails customUserDetails) {
-        knowledgeService.addKnowledgePost(postRequest, customUserDetails);
+        knowledgePostService.addKnowledgePost(postRequest, customUserDetails);
 
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
@@ -39,7 +39,7 @@ public class KnowledgeController {
     public ResponseEntity<Object> knowledgePostDetails(
         @AuthenticationPrincipal CustomUserDetails customUserDetails,
         @PathVariable("id") long id) {
-        return ResponseEntity.ok(knowledgeService.findKnowledgePost(customUserDetails, id));
+        return ResponseEntity.ok(knowledgePostService.findKnowledgePost(customUserDetails, id));
     }
 
     @PutMapping("/posts/{id}")
@@ -47,7 +47,7 @@ public class KnowledgeController {
         @AuthenticationPrincipal CustomUserDetails customUserDetails,
         @RequestBody @Valid PostRequest updateRequest,
         @PathVariable("id") long id) {
-        knowledgeService.modifyKnowledgePost(customUserDetails, updateRequest, id);
+        knowledgePostService.modifyKnowledgePost(customUserDetails, updateRequest, id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
@@ -55,7 +55,7 @@ public class KnowledgeController {
     public ResponseEntity<Object> knowledgePostRemove(
         @AuthenticationPrincipal CustomUserDetails customUserDetails,
         @PathVariable("id") long id) {
-        knowledgeService.removeKnowledgePost(customUserDetails, id);
+        knowledgePostService.removeKnowledgePost(customUserDetails, id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
@@ -65,7 +65,7 @@ public class KnowledgeController {
         @RequestParam(required = false) String keyword,
         @PageableDefault(size = 20, sort = "createdDate", direction = Sort.Direction.DESC) Pageable pageable) {
         return ResponseEntity.ok()
-            .body(knowledgeService.findKnowledgePostsByKeywordAndPageable(topicId, keyword, pageable));
+            .body(knowledgePostService.findKnowledgePostsByKeywordAndPageable(topicId, keyword, pageable));
     }
 
 }

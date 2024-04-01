@@ -24,7 +24,7 @@ import org.springframework.http.ResponseEntity;
 class KnowledgeControllerTest {
 
     @Mock
-    KnowledgeService service;
+    KnowledgePostService service;
     @InjectMocks
     KnowledgeController controller;
 

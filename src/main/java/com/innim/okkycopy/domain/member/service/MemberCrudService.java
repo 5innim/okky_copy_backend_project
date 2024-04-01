@@ -23,7 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class MemberService {
+public class MemberCrudService {
 
     private final PasswordEncoder passwordEncoder;
     private final MemberRepository memberRepository;

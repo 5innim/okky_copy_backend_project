@@ -31,7 +31,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.Pageable;
 
 @ExtendWith(MockitoExtension.class)
-class KnowledgeServiceTest {
+class KnowledgePostServiceTest {
 
     @Mock
     KnowledgePostRepository knowledgePostRepository;
@@ -40,7 +40,7 @@ class KnowledgeServiceTest {
     @Mock
     MemberRepository memberRepository;
     @InjectMocks
-    KnowledgeService knowledgeService;
+    KnowledgePostService knowledgePostService;
 
     @Nested
     class SelectKnowledgePostTest {
@@ -53,7 +53,7 @@ class KnowledgeServiceTest {
 
             // when
             Throwable thrown = catchThrowable(() -> {
-                knowledgeService.findKnowledgePost(null, notExistPostId);
+                knowledgePostService.findKnowledgePost(null, notExistPostId);
             });
 
             // then
@@ -71,7 +71,7 @@ class KnowledgeServiceTest {
                 Optional.empty());
 
             // when
-            PostDetailsResponse postDetailsResponse = knowledgeService.findKnowledgePost(null, postId);
+            PostDetailsResponse postDetailsResponse = knowledgePostService.findKnowledgePost(null, postId);
 
             // then
             then(knowledgePostRepository).should(times(1)).findByPostId(postId);
@@ -121,7 +121,7 @@ class KnowledgeServiceTest {
 
             // when
             Throwable thrown = catchThrowable(() -> {
-                knowledgeService.findKnowledgePostsByKeywordAndPageable(topicId, keyword, pageable);
+                knowledgePostService.findKnowledgePostsByKeywordAndPageable(topicId, keyword, pageable);
             });
 
             // then
@@ -144,7 +144,7 @@ class KnowledgeServiceTest {
 
             // when
             Throwable thrown = catchThrowable(() -> {
-                knowledgeService.findKnowledgePostsByKeywordAndPageable(topicId, keyword, pageable);
+                knowledgePostService.findKnowledgePostsByKeywordAndPageable(topicId, keyword, pageable);
             });
 
             // then

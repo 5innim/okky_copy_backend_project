@@ -28,7 +28,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
-public class KnowledgeService {
+public class KnowledgePostService {
 
     private final BoardTopicRepository boardTopicRepository;
     private final KnowledgePostRepository knowledgePostRepository;
