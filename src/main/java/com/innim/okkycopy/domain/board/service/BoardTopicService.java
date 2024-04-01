@@ -1,4 +1,4 @@
-package com.innim.okkycopy.domain.board;
+package com.innim.okkycopy.domain.board.service;
 
 import com.innim.okkycopy.domain.board.dto.response.topics.TopicListResponse;
 import com.innim.okkycopy.domain.board.entity.BoardType;

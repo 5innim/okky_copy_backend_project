@@ -1,4 +1,4 @@
-package com.innim.okkycopy.domain.board;
+package com.innim.okkycopy.domain.board.service;
 
 import com.innim.okkycopy.domain.board.entity.Post;
 import com.innim.okkycopy.domain.board.entity.Scrap;

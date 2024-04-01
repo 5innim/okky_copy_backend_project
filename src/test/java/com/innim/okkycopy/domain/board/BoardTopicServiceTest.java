@@ -10,6 +10,7 @@ import com.innim.okkycopy.domain.board.dto.response.topics.TopicListResponse;
 import com.innim.okkycopy.domain.board.entity.BoardTopic;
 import com.innim.okkycopy.domain.board.entity.BoardType;
 import com.innim.okkycopy.domain.board.repository.BoardTypeRepository;
+import com.innim.okkycopy.domain.board.service.BoardTopicService;
 import com.innim.okkycopy.global.error.exception.StatusCode500Exception;
 import java.util.Arrays;
 import java.util.List;
