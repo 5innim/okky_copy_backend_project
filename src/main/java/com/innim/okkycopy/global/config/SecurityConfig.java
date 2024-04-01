@@ -46,6 +46,7 @@ public class SecurityConfig {
             .authorizeHttpRequests(request -> {
                 request.requestMatchers(HttpMethod.POST,
                         "/board/knowledge/write",
+                        "/board/community/write",
                         "/board/post/scrap",
                         "/board/posts/{id}/comment",
                         "/board/posts/{postId}/comments/{commentId}/recomment",
