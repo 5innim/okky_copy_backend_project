@@ -69,6 +69,7 @@ public class SecurityConfig {
                     .requestMatchers(HttpMethod.GET,
                         "/board/topics",
                         "/board/knowledge/posts/{id}",
+                        "/board/community/posts/{id}",
                         "/member/info",
                         "/board/posts/{id}/comments",
                         "/board/comments/{id}/recomments",
