@@ -24,7 +24,9 @@ import org.springframework.http.ResponseEntity;
 public class CommentControllerTest {
 
     @Mock
-    CommentService commentService;
+    CommentCrudService commentCrudService;
+    @Mock
+    CommentExpressionService commentExpressionService;
     @InjectMocks
     CommentController commentController;
 
@@ -40,7 +42,7 @@ public class CommentControllerTest {
             commentRequest, id);
 
         // then
-        then(commentService).should(times(1)).addComment(customUserDetails, commentRequest, id);
+        then(commentCrudService).should(times(1)).addComment(customUserDetails, commentRequest, id);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
     }
 
@@ -56,7 +58,7 @@ public class CommentControllerTest {
             commentRequest, id);
 
         // then
-        then(commentService).should(times(1)).modifyComment(customUserDetails,
+        then(commentCrudService).should(times(1)).modifyComment(customUserDetails,
             commentRequest, id);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
     }
@@ -71,7 +73,7 @@ public class CommentControllerTest {
         ResponseEntity response = commentController.commentRemove(customUserDetails, id);
 
         // then
-        then(commentService).should(times(1)).removeComment(customUserDetails, id);
+        then(commentCrudService).should(times(1)).removeComment(customUserDetails, id);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
     }
 
@@ -79,7 +81,7 @@ public class CommentControllerTest {
     void getComments() {
         // given
         long id = 1L;
-        given(commentService.findComments(null, id)).willReturn(new CommentListResponse(Arrays.asList()));
+        given(commentCrudService.findComments(null, id)).willReturn(new CommentListResponse(Arrays.asList()));
 
         // when
         ResponseEntity response = commentController.commentList(null, id);
@@ -108,7 +110,7 @@ public class CommentControllerTest {
         );
 
         // then
-        then(commentService).should(times(1)).addReComment(
+        then(commentCrudService).should(times(1)).addReComment(
             customUserDetails,
             postId,
             commentId,
@@ -121,7 +123,7 @@ public class CommentControllerTest {
     void getReCommentsTest() {
         // given
         long id = 1L;
-        given(commentService.findReComments(null, id)).willReturn(new CommentListResponse(Arrays.asList()));
+        given(commentCrudService.findReComments(null, id)).willReturn(new CommentListResponse(Arrays.asList()));
 
         // when
         ResponseEntity response = commentController.reCommentList(null, id);
@@ -140,7 +142,7 @@ public class CommentControllerTest {
         ResponseEntity<Object> response = commentController.likeExpressionAdd(customUserDetails, id);
 
         // then
-        then(commentService).should(times(1))
+        then(commentExpressionService).should(times(1))
             .addCommentExpression(customUserDetails.getMember(), id, ExpressionType.LIKE);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
     }
@@ -155,7 +157,7 @@ public class CommentControllerTest {
         ResponseEntity<Object> response = commentController.hateExpressionAdd(customUserDetails, id);
 
         // then
-        then(commentService).should(times(1))
+        then(commentExpressionService).should(times(1))
             .addCommentExpression(customUserDetails.getMember(), id, ExpressionType.HATE);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
     }
@@ -170,7 +172,7 @@ public class CommentControllerTest {
         ResponseEntity<Object> response = commentController.likeExpressionRemove(customUserDetails, id);
 
         // then
-        then(commentService).should(times(1))
+        then(commentExpressionService).should(times(1))
             .removeCommentExpression(customUserDetails.getMember(), id, ExpressionType.LIKE);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
     }
@@ -185,7 +187,7 @@ public class CommentControllerTest {
         ResponseEntity<Object> response = commentController.hateExpressionRemove(customUserDetails, id);
 
         // then
-        then(commentService).should(times(1))
+        then(commentExpressionService).should(times(1))
             .removeCommentExpression(customUserDetails.getMember(), id, ExpressionType.HATE);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
     }

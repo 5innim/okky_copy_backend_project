@@ -23,7 +23,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/board")
 public class CommentController {
 
-    private final CommentService commentService;
+    private final CommentCrudService commentCrudService;
+    private final CommentExpressionService commentExpressionService;
 
     @PostMapping("/posts/{id}/comment")
     public ResponseEntity<Object> commentAdd(
@@ -31,7 +32,7 @@ public class CommentController {
         @RequestBody @Valid CommentRequest commentRequest,
         @PathVariable("id") long id) {
 
-        commentService.addComment(customUserDetails, commentRequest, id);
+        commentCrudService.addComment(customUserDetails, commentRequest, id);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
@@ -40,7 +41,7 @@ public class CommentController {
         @AuthenticationPrincipal CustomUserDetails customUserDetails,
         @RequestBody @Valid CommentRequest commentRequest,
         @PathVariable("id") long id) {
-        commentService.modifyComment(customUserDetails, commentRequest, id);
+        commentCrudService.modifyComment(customUserDetails, commentRequest, id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
@@ -48,7 +49,7 @@ public class CommentController {
     public ResponseEntity<Object> commentRemove(
         @AuthenticationPrincipal CustomUserDetails customUserDetails,
         @PathVariable("id") long id) {
-        commentService.removeComment(customUserDetails, id);
+        commentCrudService.removeComment(customUserDetails, id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
@@ -56,7 +57,7 @@ public class CommentController {
     public ResponseEntity<Object> commentList(
         @AuthenticationPrincipal CustomUserDetails customUserDetails,
         @PathVariable long id) {
-        return ResponseEntity.ok(commentService.findComments(customUserDetails, id));
+        return ResponseEntity.ok(commentCrudService.findComments(customUserDetails, id));
     }
 
     @PostMapping("/posts/{postId}/comments/{commentId}/recomment")
@@ -65,7 +66,7 @@ public class CommentController {
         @PathVariable long postId,
         @PathVariable long commentId,
         @RequestBody @Valid ReCommentRequest reCommentRequest) {
-        commentService.addReComment(customUserDetails, postId, commentId, reCommentRequest);
+        commentCrudService.addReComment(customUserDetails, postId, commentId, reCommentRequest);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
@@ -73,14 +74,14 @@ public class CommentController {
     public ResponseEntity<Object> reCommentList(
         @AuthenticationPrincipal CustomUserDetails customUserDetails,
         @PathVariable long id) {
-        return ResponseEntity.status(HttpStatus.OK).body(commentService.findReComments(customUserDetails, id));
+        return ResponseEntity.status(HttpStatus.OK).body(commentCrudService.findReComments(customUserDetails, id));
     }
 
     @PostMapping("/comments/{id}/like")
     public ResponseEntity<Object> likeExpressionAdd(
         @AuthenticationPrincipal CustomUserDetails customUserDetails,
         @PathVariable long id) {
-        commentService.addCommentExpression(customUserDetails.getMember(), id, ExpressionType.LIKE);
+        commentExpressionService.addCommentExpression(customUserDetails.getMember(), id, ExpressionType.LIKE);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
@@ -88,21 +89,21 @@ public class CommentController {
     public ResponseEntity<Object> hateExpressionAdd(
         @AuthenticationPrincipal CustomUserDetails customUserDetails,
         @PathVariable long id) {
-        commentService.addCommentExpression(customUserDetails.getMember(), id, ExpressionType.HATE);
+        commentExpressionService.addCommentExpression(customUserDetails.getMember(), id, ExpressionType.HATE);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @DeleteMapping("/comments/{id}/like")
     public ResponseEntity<Object> likeExpressionRemove(@AuthenticationPrincipal CustomUserDetails customUserDetails,
         @PathVariable long id) {
-        commentService.removeCommentExpression(customUserDetails.getMember(), id, ExpressionType.LIKE);
+        commentExpressionService.removeCommentExpression(customUserDetails.getMember(), id, ExpressionType.LIKE);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
     @DeleteMapping("/comments/{id}/hate")
     public ResponseEntity<Object> hateExpressionRemove(@AuthenticationPrincipal CustomUserDetails customUserDetails,
         @PathVariable long id) {
-        commentService.removeCommentExpression(customUserDetails.getMember(), id, ExpressionType.HATE);
+        commentExpressionService.removeCommentExpression(customUserDetails.getMember(), id, ExpressionType.HATE);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 }
