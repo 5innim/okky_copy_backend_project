@@ -70,7 +70,7 @@ public class KnowledgePostService {
                     .build()
             );
         }
-        knowledgePost.setViews(knowledgePost.getViews() + 1);
+        knowledgePost.increaseViews();
 
         return response;
     }

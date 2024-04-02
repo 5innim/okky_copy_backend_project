@@ -113,4 +113,12 @@ public class Post {
             ((CommunityPost) this).setScraps(((CommunityPost) this).getScraps() - 1);
         }
     }
+
+    public void increaseViews() {
+        if (this instanceof KnowledgePost) {
+            ((KnowledgePost) this).setViews(((KnowledgePost) this).getViews() + 1);
+        } else if (this instanceof CommunityPost) {
+            ((CommunityPost) this).setViews(((CommunityPost) this).getViews() + 1);
+        }
+    }
 }
