@@ -58,6 +58,7 @@ public class SecurityConfig {
                     .requestMatchers(HttpMethod.DELETE,
                         "/board/post/scrap",
                         "/board/knowledge/posts/{id}",
+                        "/board/community/posts/{id}",
                         "/board/comments/{id}",
                         "/board/posts/{id}/like",
                         "/board/posts/{id}/hate",
