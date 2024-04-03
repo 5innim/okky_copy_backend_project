@@ -65,6 +65,7 @@ public class SecurityConfig {
                         "/board/comments/{id}/hate").hasAnyAuthority(Role.USER.getValue(), Role.ADMIN.getValue())
                     .requestMatchers(HttpMethod.PUT,
                         "/board/knowledge/posts/{id}",
+                        "/board/community/posts/{id}",
                         "/board/comments/{id}").hasAnyAuthority(Role.USER.getValue(), Role.ADMIN.getValue())
                     .requestMatchers(HttpMethod.GET,
                         "/board/topics",
