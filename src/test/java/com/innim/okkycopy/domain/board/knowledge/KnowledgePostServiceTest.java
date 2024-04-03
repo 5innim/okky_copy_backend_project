@@ -160,6 +160,7 @@ class KnowledgePostServiceTest {
                 .topicId(topicId)
                 .boardType(BoardType.builder()
                     .typeId(1L)
+                    .name("Q&A")
                     .build())
                 .build()));
 
