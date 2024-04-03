@@ -16,6 +16,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
@@ -83,6 +84,22 @@ public class CommunityControllerTest {
         // then
         then(communityPostService).should(times(1)).removeCommunityPost(customUserDetails, id);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
+    }
+
+    @Test
+    void getBriefPostsTest() {
+        // given
+        long topicId = 1;
+        String keyword = "test_keyword";
+        Pageable pageable = null;
+        given(communityPostService.findCommunityPostsByKeywordAndPageable(topicId, keyword, pageable)).willReturn(null);
+
+        // when
+        ResponseEntity<Object> response = communityController.briefPostList(topicId, keyword, pageable);
+
+        // then
+        then(communityPostService).should(times(1)).findCommunityPostsByKeywordAndPageable(topicId, keyword, pageable);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     }
 
     PostRequest postRequest() {

@@ -30,6 +30,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Pageable;
 
 @ExtendWith(MockitoExtension.class)
 public class CommunityPostServiceTest {
@@ -117,6 +118,8 @@ public class CommunityPostServiceTest {
             return communityPost;
         }
 
+
+
         PostRequest postRequest() {
             return PostRequest.builder()
                 .topic("test_topic")
@@ -124,6 +127,52 @@ public class CommunityPostServiceTest {
                 .title("test_title")
                 .content("test_content")
                 .build();
+        }
+    }
+
+    @Nested
+    class SelectCommunityPostsByCondition {
+
+        @Test
+        void given_topicIdAndNotExistTopic_then_throwNoSuchTopicException() {
+            // given
+            long topicId = 1;
+            String keyword = "test_keyword";
+            Pageable pageable = null;
+            given(boardTopicRepository.findByTopicId(topicId)).willReturn(Optional.empty());
+
+            // when
+            Throwable thrown = catchThrowable(() -> {
+                communityPostService.findCommunityPostsByKeywordAndPageable(topicId, keyword, pageable);
+            });
+
+            // then
+            then(boardTopicRepository).should(times(1)).findByTopicId(topicId);
+            assertThat(thrown).isInstanceOf(StatusCode400Exception.class);
+        }
+
+        @Test
+        void given_topicIdOfExistTopicButNotInCommunityType_then_throwStatusCode400Exception() {
+            // given
+            long topicId = 1L;
+            String keyword = "test_keyword";
+            Pageable pageable = null;
+            given(boardTopicRepository.findByTopicId(topicId)).willReturn(Optional.ofNullable(BoardTopic.builder()
+                .topicId(topicId)
+                .boardType(BoardType.builder()
+                    .typeId(1L)
+                    .name("Q&A")
+                    .build())
+                .build()));
+
+            // when
+            Throwable thrown = catchThrowable(() -> {
+                communityPostService.findCommunityPostsByKeywordAndPageable(topicId, keyword, pageable);
+            });
+
+            // then
+            then(boardTopicRepository).should(times(1)).findByTopicId(topicId);
+            assertThat(thrown).isInstanceOf(StatusCode400Exception.class);
         }
     }
 }
