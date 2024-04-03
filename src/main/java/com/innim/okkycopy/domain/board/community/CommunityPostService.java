@@ -2,6 +2,7 @@ package com.innim.okkycopy.domain.board.community;
 
 import com.innim.okkycopy.domain.board.community.entity.CommunityPost;
 import com.innim.okkycopy.domain.board.dto.request.write.PostRequest;
+import com.innim.okkycopy.domain.board.dto.response.post.brief.PostListResponse;
 import com.innim.okkycopy.domain.board.dto.response.post.detail.PostDetailsResponse;
 import com.innim.okkycopy.domain.board.dto.response.post.detail.RequesterInfo;
 import com.innim.okkycopy.domain.board.entity.BoardTopic;
@@ -19,6 +20,8 @@ import com.innim.okkycopy.global.error.exception.StatusCode403Exception;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -95,5 +98,25 @@ public class CommunityPostService {
             throw new StatusCode403Exception(ErrorCase._403_NO_AUTHORITY);
         }
         entityManager.remove(communityPost);
+    }
+
+    @Transactional(readOnly = true)
+    public PostListResponse findCommunityPostsByKeywordAndPageable(Long topicId, String keyword, Pageable pageable) {
+        Page<CommunityPost> communityPostPage;
+        if (topicId == null) {
+            communityPostPage = communityPostRepository.findAllByKeywordAndPageable((keyword == null) ? "" : keyword,
+                pageable);
+        } else {
+            BoardTopic boardTopic = boardTopicRepository
+                .findByTopicId(topicId)
+                .orElseThrow(() -> new StatusCode400Exception(ErrorCase._400_NO_SUCH_TOPIC));
+            if (CommunityPost.isNotSupportedTopic(boardTopic)) {
+                throw new StatusCode400Exception(ErrorCase._400_NOT_SUPPORTED_CASE);
+            }
+            communityPostPage = communityPostRepository.findByTopicId(boardTopic, (keyword == null) ? "" : keyword,
+                pageable);
+        }
+
+        return PostListResponse.from(communityPostPage);
     }
 }
