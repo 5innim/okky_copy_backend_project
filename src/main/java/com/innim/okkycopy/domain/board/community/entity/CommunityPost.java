@@ -15,6 +15,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.AccessLevel;
@@ -52,7 +53,7 @@ public class CommunityPost extends Post {
 
     public static CommunityPost of(PostRequest postRequest, BoardTopic boardTopic, Member member)
         throws StatusCodeException {
-        if (!boardTopic.getBoardType().getName().equals("커뮤니티")) {
+        if (isNotSupportedTopic(boardTopic)) {
             throw new StatusCode400Exception(ErrorCase._400_BAD_FORM_DATA);
         }
         CommunityPost communityPost = CommunityPost.builder()

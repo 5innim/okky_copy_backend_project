@@ -53,7 +53,7 @@ public class KnowledgePost extends Post {
 
     public static KnowledgePost of(PostRequest postRequest, BoardTopic boardTopic, Member member)
         throws StatusCodeException {
-        if (!boardTopic.getBoardType().getName().equals("지식")) {
+        if (isNotSupportedTopic(boardTopic)) {
             throw new StatusCode400Exception(ErrorCase._400_BAD_FORM_DATA);
         }
         KnowledgePost knowledgePost = KnowledgePost.builder()
@@ -80,6 +80,9 @@ public class KnowledgePost extends Post {
     }
 
     public void update(PostRequest updateRequest, BoardTopic boardTopic) {
+        if (isNotSupportedTopic(boardTopic)) {
+            throw new StatusCode400Exception(ErrorCase._400_BAD_FORM_DATA);
+        }
         this.setTitle(updateRequest.getTitle());
         this.setContent(updateRequest.getContent());
         this.setBoardTopic(boardTopic);
@@ -91,6 +94,10 @@ public class KnowledgePost extends Post {
         for (TagInfo tag : updateRequest.getTags()) {
             tags.add(KnowledgeTag.of(this, boardTopic, tag.getName()));
         }
+    }
+
+    public static boolean isNotSupportedTopic(BoardTopic boardTopic) {
+        return !boardTopic.getBoardType().getName().equals("지식");
     }
 
 }
