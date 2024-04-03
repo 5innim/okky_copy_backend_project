@@ -4,6 +4,9 @@ import com.innim.okkycopy.domain.board.dto.request.write.PostRequest;
 import com.innim.okkycopy.global.auth.CustomUserDetails;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -14,6 +17,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -53,5 +57,14 @@ public class CommunityController {
         @PathVariable("id") long id) {
         communityPostService.removeCommunityPost(customUserDetails, id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
+
+    @GetMapping("/posts")
+    public ResponseEntity<Object> briefPostList(
+        @RequestParam(required = false) Long topicId,
+        @RequestParam(required = false) String keyword,
+        @PageableDefault(size = 20, sort = "createdDate", direction = Sort.Direction.DESC) Pageable pageable) {
+        return ResponseEntity.ok()
+            .body(communityPostService.findCommunityPostsByKeywordAndPageable(topicId, keyword, pageable));
     }
 }
