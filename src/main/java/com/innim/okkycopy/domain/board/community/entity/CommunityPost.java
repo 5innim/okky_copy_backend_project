@@ -79,4 +79,25 @@ public class CommunityPost extends Post {
         return communityPost;
     }
 
+    public void update(PostRequest updateRequest, BoardTopic boardTopic) {
+        if (isNotSupportedTopic(boardTopic)) {
+            throw new StatusCode400Exception(ErrorCase._400_BAD_FORM_DATA);
+        }
+        this.setTitle(updateRequest.getTitle());
+        this.setContent(updateRequest.getContent());
+        this.setBoardTopic(boardTopic);
+        this.setLastUpdate(LocalDateTime.now());
+
+        List<Tag> tags = this.getTags();
+        tags.clear();
+
+        for (TagInfo tag : updateRequest.getTags()) {
+            tags.add(CommunityTag.of(this, boardTopic, tag.getName()));
+        }
+    }
+
+    public static boolean isNotSupportedTopic(BoardTopic boardTopic) {
+        return !boardTopic.getBoardType().getName().equals("커뮤니티");
+    }
+
 }
