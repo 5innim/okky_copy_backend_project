@@ -71,6 +71,20 @@ public class CommunityControllerTest {
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
     }
 
+    @Test
+    void deleteCommunityPostTest() {
+        // given
+        long id = 1L;
+        CustomUserDetails customUserDetails = WithMockCustomUserSecurityContextFactory.customUserDetailsMock();
+
+        // when
+        ResponseEntity response = communityController.communityPostRemove(customUserDetails, id);
+
+        // then
+        then(communityPostService).should(times(1)).removeCommunityPost(customUserDetails, id);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
+    }
+
     PostRequest postRequest() {
         return PostRequest.builder()
             .title("test_title")
