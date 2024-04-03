@@ -15,6 +15,7 @@ import com.innim.okkycopy.domain.member.entity.Member;
 import com.innim.okkycopy.global.auth.CustomUserDetails;
 import com.innim.okkycopy.global.error.ErrorCase;
 import com.innim.okkycopy.global.error.exception.StatusCode400Exception;
+import com.innim.okkycopy.global.error.exception.StatusCode403Exception;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import lombok.RequiredArgsConstructor;
@@ -67,5 +68,20 @@ public class CommunityPostService {
         communityPost.increaseViews();
 
         return response;
+    }
+
+    @Transactional
+    public void modifyCommunityPost(CustomUserDetails customUserDetails, PostRequest updateRequest, long postId) {
+        Member mergedMember = entityManager.merge(customUserDetails.getMember());
+        CommunityPost communityPost = communityPostRepository.findByPostId(postId)
+            .orElseThrow(() -> new StatusCode400Exception(ErrorCase._400_NO_SUCH_POST));
+        BoardTopic boardTopic = boardTopicRepository.findByName(updateRequest.getTopic())
+            .orElseThrow(() -> new StatusCode400Exception(
+                ErrorCase._400_NO_SUCH_TOPIC));
+
+        if (communityPost.getMember().getMemberId() != mergedMember.getMemberId()) {
+            throw new StatusCode403Exception(ErrorCase._403_NO_AUTHORITY);
+        }
+        communityPost.update(updateRequest, boardTopic);
     }
 }
