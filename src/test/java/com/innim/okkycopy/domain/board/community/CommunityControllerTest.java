@@ -56,6 +56,21 @@ public class CommunityControllerTest {
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     }
 
+    @Test
+    void editCommunityPostTest() {
+        // given
+        long id = 1L;
+        PostRequest postRequest = postRequest();
+        CustomUserDetails customUserDetails = WithMockCustomUserSecurityContextFactory.customUserDetailsMock();
+
+        // when
+        ResponseEntity response = communityController.communityPostModify(customUserDetails, postRequest, id);
+
+        // then
+        then(communityPostService).should(times(1)).modifyCommunityPost(customUserDetails, postRequest, id);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
+    }
+
     PostRequest postRequest() {
         return PostRequest.builder()
             .title("test_title")

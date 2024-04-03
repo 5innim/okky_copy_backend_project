@@ -1,4 +1,4 @@
-package com.innim.okkycopy.integration.board.knowledge;
+package com.innim.okkycopy.integration.board.community;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
@@ -68,7 +68,7 @@ public class EditTest {
 
         // when
         ResultActions resultActions = mockMvc.perform(
-            MockMvcRequestBuilders.put("/board/knowledge/posts/" + postId)
+            MockMvcRequestBuilders.put("/board/community/posts/" + postId)
                 .contentType(MediaType.APPLICATION_JSON)
                 .characterEncoding("UTF-8")
                 .content(new Gson().toJson(updateRequest))
@@ -83,12 +83,12 @@ public class EditTest {
     void given_noEqualPostWriterWithAuthenticationPrincipal_then_responseErrorCode() throws Exception {
         // given
         PostRequest updateRequest = postRequest();
-        updateRequest.setTopic("기술");
-        long postId = 2L;
+        updateRequest.setTopic("사는얘기");
+        long postId = 4L;
 
         // when
         ResultActions resultActions = mockMvc.perform(
-            MockMvcRequestBuilders.put("/board/knowledge/posts/" + postId)
+            MockMvcRequestBuilders.put("/board/community/posts/" + postId)
                 .contentType(MediaType.APPLICATION_JSON)
                 .characterEncoding("UTF-8")
                 .content(new Gson().toJson(updateRequest))
@@ -103,11 +103,11 @@ public class EditTest {
     void given_noExistTopic_then_responseErrorCode() throws Exception {
         // given
         PostRequest updateRequest = postRequest();
-        long postId = 1L;
+        long postId = 3L;
 
         // when
         ResultActions resultActions = mockMvc.perform(
-            MockMvcRequestBuilders.put("/board/knowledge/posts/" + postId)
+            MockMvcRequestBuilders.put("/board/community/posts/" + postId)
                 .contentType(MediaType.APPLICATION_JSON)
                 .characterEncoding("UTF-8")
                 .content(new Gson().toJson(updateRequest))
@@ -123,12 +123,12 @@ public class EditTest {
     void given_correctUpdateInfo_then_response204() throws Exception {
         // given
         PostRequest updateRequest = postRequest();
-        updateRequest.setTopic("Tech 뉴스");
-        long postId = 1L;
+        updateRequest.setTopic("사는얘기");
+        long postId = 3L;
 
         // when
         MockHttpServletResponse response = mockMvc.perform(
-            MockMvcRequestBuilders.put("/board/knowledge/posts/" + postId)
+            MockMvcRequestBuilders.put("/board/community/posts/" + postId)
                 .contentType(MediaType.APPLICATION_JSON)
                 .characterEncoding("UTF-8")
                 .content(new Gson().toJson(updateRequest))
@@ -143,10 +143,10 @@ public class EditTest {
     void given_notMatchedTopic_then_response400031() throws Exception {
         // given
         PostRequest notMatchedPostRequest = notMatchedPostRequest();
-        long postId = 1L;
+        long postId = 3L;
         // when
         ResultActions resultActions = mockMvc.perform(
-            MockMvcRequestBuilders.put("/board/knowledge/posts/" + postId)
+            MockMvcRequestBuilders.put("/board/community/posts/" + postId)
                 .contentType(MediaType.APPLICATION_JSON)
                 .characterEncoding("UTF-8")
                 .content(new Gson().toJson(notMatchedPostRequest))
@@ -168,7 +168,7 @@ public class EditTest {
     PostRequest notMatchedPostRequest() {
         return PostRequest.builder()
             .title("test_title")
-            .topic("사는얘기")
+            .topic("기술")
             .tags(Arrays.asList())
             .content("test_content")
             .build();
