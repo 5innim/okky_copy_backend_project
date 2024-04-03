@@ -84,4 +84,16 @@ public class CommunityPostService {
         }
         communityPost.update(updateRequest, boardTopic);
     }
+
+    @Transactional
+    public void removeCommunityPost(CustomUserDetails customUserDetails, long postId) {
+        Member mergedMember = entityManager.merge(customUserDetails.getMember());
+        CommunityPost communityPost = communityPostRepository.findByPostId(postId)
+            .orElseThrow(() -> new StatusCode400Exception(ErrorCase._400_NO_SUCH_POST));
+
+        if (communityPost.getMember().getMemberId() != mergedMember.getMemberId()) {
+            throw new StatusCode403Exception(ErrorCase._403_NO_AUTHORITY);
+        }
+        entityManager.remove(communityPost);
+    }
 }
