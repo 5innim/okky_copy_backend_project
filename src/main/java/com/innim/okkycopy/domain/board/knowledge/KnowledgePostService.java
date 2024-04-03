@@ -112,7 +112,7 @@ public class KnowledgePostService {
             BoardTopic boardTopic = boardTopicRepository
                 .findByTopicId(topicId)
                 .orElseThrow(() -> new StatusCode400Exception(ErrorCase._400_NO_SUCH_TOPIC));
-            if (boardTopic.getBoardType().getTypeId() != 2) {
+            if (KnowledgePost.isNotSupportedTopic(boardTopic)) {
                 throw new StatusCode400Exception(ErrorCase._400_NOT_SUPPORTED_CASE);
             }
             knowledgePostPage = knowledgePostRepository.findByTopicId(boardTopic, (keyword == null) ? "" : keyword,
