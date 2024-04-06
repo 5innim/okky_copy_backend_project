@@ -11,7 +11,7 @@ import com.innim.okkycopy.domain.member.dto.request.MemberRequest;
 import com.innim.okkycopy.domain.member.dto.response.MemberBriefResponse;
 import com.innim.okkycopy.domain.member.dto.response.MemberDetailsResponse;
 import com.innim.okkycopy.domain.member.entity.Member;
-import com.innim.okkycopy.domain.member.service.MemberService;
+import com.innim.okkycopy.domain.member.service.MemberCrudService;
 import com.innim.okkycopy.global.auth.CustomUserDetails;
 import java.util.ArrayList;
 import org.junit.jupiter.api.Test;
@@ -25,7 +25,7 @@ import org.springframework.http.ResponseEntity;
 class MemberControllerTest {
 
     @Mock
-    private MemberService memberService;
+    private MemberCrudService memberCrudService;
     @InjectMocks
     private MemberController memberController;
 
@@ -35,14 +35,14 @@ class MemberControllerTest {
         MemberRequest request = signupRequest();
         MemberBriefResponse briefMemberInfo = briefMemberInfo();
 
-        given(memberService.addMember(any(MemberRequest.class))).willReturn(briefMemberInfo);
+        given(memberCrudService.addMember(any(MemberRequest.class))).willReturn(briefMemberInfo);
 
         // when
         ResponseEntity response = memberController.memberAdd(request);
 
         // then
-        then(memberService).should(times(1)).addMember(any(MemberRequest.class));
-        then(memberService).shouldHaveNoMoreInteractions();
+        then(memberCrudService).should(times(1)).addMember(any(MemberRequest.class));
+        then(memberCrudService).shouldHaveNoMoreInteractions();
         assertThat(response.getBody()).isInstanceOf(MemberBriefResponse.class).isEqualTo(briefMemberInfo);
     }
 
@@ -52,14 +52,14 @@ class MemberControllerTest {
         CustomUserDetails request = WithMockCustomUserSecurityContextFactory.customUserDetailsMock();
         MemberDetailsResponse memberInfo = memberInfo();
 
-        given(memberService.findMember(any(Member.class))).willReturn(memberInfo);
+        given(memberCrudService.findMember(any(Member.class))).willReturn(memberInfo);
 
         // when
         ResponseEntity response = memberController.memberDetails(request);
 
         // then
-        then(memberService).should(times(1)).findMember(any(Member.class));
-        then(memberService).shouldHaveNoMoreInteractions();
+        then(memberCrudService).should(times(1)).findMember(any(Member.class));
+        then(memberCrudService).shouldHaveNoMoreInteractions();
         assertThat(response.getBody()).isInstanceOf(MemberDetailsResponse.class).isEqualTo(memberInfo);
     }
 

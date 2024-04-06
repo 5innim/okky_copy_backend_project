@@ -1,5 +1,6 @@
 package com.innim.okkycopy.domain.board.comment.entity;
 
+import com.innim.okkycopy.domain.board.community.entity.CommunityPost;
 import com.innim.okkycopy.domain.board.entity.Post;
 import com.innim.okkycopy.domain.board.enums.ExpressionType;
 import com.innim.okkycopy.domain.board.knowledge.entity.KnowledgePost;
@@ -62,9 +63,10 @@ public class CommentExpression {
             .build();
     }
 
+    // TODO: this method should be expended when new domain post is added
     public static boolean isNotSupportedCase(Comment comment) {
         Post post = comment.getPost();
-        if (post instanceof KnowledgePost) {
+        if (post instanceof KnowledgePost || post instanceof CommunityPost) {
             return false;
         }
         // else if (post instance of QnAPost && comment.getParentId() != null)

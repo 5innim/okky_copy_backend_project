@@ -29,7 +29,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
-public class CommentService {
+public class CommentCrudService {
 
     private final PostRepository postRepository;
     private final CommentRepository commentRepository;
@@ -172,31 +172,5 @@ public class CommentService {
         return new CommentListResponse(commentResponses);
     }
 
-    @Transactional
-    public void addCommentExpression(Member member, long commentId, ExpressionType type) {
-        Member mergedMember = entityManager.merge(member);
-        Comment comment = commentRepository
-            .findByCommentId(commentId)
-            .orElseThrow(() -> new StatusCode400Exception(ErrorCase._400_NO_SUCH_COMMENT));
-        if (commentExpressionRepository.findByMemberAndComment(comment, mergedMember).isPresent()) {
-            throw new StatusCode400Exception(ErrorCase._400_ALREADY_EXIST_EXPRESSION);
-        }
-        if (CommentExpression.isNotSupportedCase(comment)) {
-            throw new StatusCode400Exception(ErrorCase._400_NOT_SUPPORTED_CASE);
-        }
-        entityManager.persist(CommentExpression.of(comment, mergedMember, type));
-    }
 
-    @Transactional
-    public void removeCommentExpression(Member member, long commentId, ExpressionType type) {
-        Member mergedMember = entityManager.merge(member);
-        Comment comment = commentRepository.findByCommentId(commentId)
-            .orElseThrow(() -> new StatusCode400Exception(ErrorCase._400_NO_SUCH_COMMENT));
-        CommentExpression commentExpression = commentExpressionRepository.findByMemberAndComment(comment, mergedMember)
-            .orElseGet(() -> null);
-        if (commentExpression == null || !commentExpression.getExpressionType().equals(type)) {
-            throw new StatusCode400Exception(ErrorCase._400_NOT_REGISTERED_BEFORE);
-        }
-        CommentExpression.remove(entityManager, commentExpression, comment, type);
-    }
 }

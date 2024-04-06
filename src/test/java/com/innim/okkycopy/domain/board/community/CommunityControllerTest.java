@@ -1,4 +1,4 @@
-package com.innim.okkycopy.domain.board.knowledge;
+package com.innim.okkycopy.domain.board.community;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.given;
@@ -21,24 +21,24 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 @ExtendWith(MockitoExtension.class)
-class KnowledgeControllerTest {
+public class CommunityControllerTest {
 
     @Mock
-    KnowledgePostService service;
+    CommunityPostService communityPostService;
     @InjectMocks
-    KnowledgeController controller;
+    CommunityController communityController;
 
     @Test
     void writeKnowledgePostTest() {
         // given
-        PostRequest postRequest = writeRequest();
+        PostRequest postRequest = postRequest();
         CustomUserDetails customUserDetails = WithMockCustomUserSecurityContextFactory.customUserDetailsMock();
 
         // when
-        ResponseEntity response = controller.knowledgePostAdd(postRequest, customUserDetails);
+        ResponseEntity response = communityController.communityPostAdd(postRequest, customUserDetails);
 
         // then
-        then(service).should(times(1)).addKnowledgePost(postRequest, customUserDetails);
+        then(communityPostService).should(times(1)).addCommunityPost(postRequest, customUserDetails);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
     }
 
@@ -47,10 +47,10 @@ class KnowledgeControllerTest {
         // given
         long id = 1L;
         PostDetailsResponse postDetailsResponse = postDetailRequest();
-        given(service.findKnowledgePost(null, id)).willReturn(postDetailsResponse);
+        given(communityPostService.findCommunityPost(null, id)).willReturn(postDetailsResponse);
 
         // when
-        ResponseEntity response = controller.knowledgePostDetails(null, id);
+        ResponseEntity response = communityController.communityPostDetails(null, id);
 
         // then
         assertThat(response.getBody()).isEqualTo(postDetailsResponse);
@@ -58,31 +58,31 @@ class KnowledgeControllerTest {
     }
 
     @Test
-    void editKnowledgePostTest() {
+    void editCommunityPostTest() {
         // given
         long id = 1L;
-        PostRequest postRequest = writeRequest();
+        PostRequest postRequest = postRequest();
         CustomUserDetails customUserDetails = WithMockCustomUserSecurityContextFactory.customUserDetailsMock();
 
         // when
-        ResponseEntity response = controller.knowledgePostModify(customUserDetails, postRequest, id);
+        ResponseEntity response = communityController.communityPostModify(customUserDetails, postRequest, id);
 
         // then
-        then(service).should(times(1)).modifyKnowledgePost(customUserDetails, postRequest, id);
+        then(communityPostService).should(times(1)).modifyCommunityPost(customUserDetails, postRequest, id);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
     }
 
     @Test
-    void deleteKnowledgePostTest() {
+    void deleteCommunityPostTest() {
         // given
         long id = 1L;
         CustomUserDetails customUserDetails = WithMockCustomUserSecurityContextFactory.customUserDetailsMock();
 
         // when
-        ResponseEntity response = controller.knowledgePostRemove(customUserDetails, id);
+        ResponseEntity response = communityController.communityPostRemove(customUserDetails, id);
 
         // then
-        then(service).should(times(1)).removeKnowledgePost(customUserDetails, id);
+        then(communityPostService).should(times(1)).removeCommunityPost(customUserDetails, id);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
     }
 
@@ -92,18 +92,17 @@ class KnowledgeControllerTest {
         long topicId = 1;
         String keyword = "test_keyword";
         Pageable pageable = null;
-        given(service.findKnowledgePostsByKeywordAndPageable(topicId, keyword, pageable)).willReturn(null);
+        given(communityPostService.findCommunityPostsByKeywordAndPageable(topicId, keyword, pageable)).willReturn(null);
 
         // when
-        ResponseEntity<Object> response = controller.briefPostList(topicId, keyword, pageable);
+        ResponseEntity<Object> response = communityController.briefPostList(topicId, keyword, pageable);
 
         // then
-        then(service).should(times(1)).findKnowledgePostsByKeywordAndPageable(topicId, keyword, pageable);
+        then(communityPostService).should(times(1)).findCommunityPostsByKeywordAndPageable(topicId, keyword, pageable);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     }
 
-
-    PostRequest writeRequest() {
+    PostRequest postRequest() {
         return PostRequest.builder()
             .title("test_title")
             .topic("test_topic")

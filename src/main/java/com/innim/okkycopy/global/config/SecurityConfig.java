@@ -46,6 +46,7 @@ public class SecurityConfig {
             .authorizeHttpRequests(request -> {
                 request.requestMatchers(HttpMethod.POST,
                         "/board/knowledge/write",
+                        "/board/community/write",
                         "/board/post/scrap",
                         "/board/posts/{id}/comment",
                         "/board/posts/{postId}/comments/{commentId}/recomment",
@@ -57,6 +58,7 @@ public class SecurityConfig {
                     .requestMatchers(HttpMethod.DELETE,
                         "/board/post/scrap",
                         "/board/knowledge/posts/{id}",
+                        "/board/community/posts/{id}",
                         "/board/comments/{id}",
                         "/board/posts/{id}/like",
                         "/board/posts/{id}/hate",
@@ -64,14 +66,17 @@ public class SecurityConfig {
                         "/board/comments/{id}/hate").hasAnyAuthority(Role.USER.getValue(), Role.ADMIN.getValue())
                     .requestMatchers(HttpMethod.PUT,
                         "/board/knowledge/posts/{id}",
+                        "/board/community/posts/{id}",
                         "/board/comments/{id}").hasAnyAuthority(Role.USER.getValue(), Role.ADMIN.getValue())
                     .requestMatchers(HttpMethod.GET,
                         "/board/topics",
                         "/board/knowledge/posts/{id}",
+                        "/board/community/posts/{id}",
                         "/member/info",
                         "/board/posts/{id}/comments",
                         "/board/comments/{id}/recomments",
-                        "/board/knowledge/posts").permitAll()
+                        "/board/knowledge/posts",
+                        "/board/community/posts").permitAll()
                     .requestMatchers(HttpMethod.POST, "/member/signup").permitAll();
             }).apply(new CustomDsl());
 

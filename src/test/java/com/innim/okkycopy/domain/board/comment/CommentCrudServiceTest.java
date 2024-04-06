@@ -25,7 +25,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
-public class CommentServiceTest {
+public class CommentCrudServiceTest {
 
     @Mock
     PostRepository postRepository;
@@ -35,7 +35,7 @@ public class CommentServiceTest {
     MemberRepository memberRepository;
 
     @InjectMocks
-    CommentService commentService;
+    CommentCrudService commentCrudService;
 
 
     @Nested
@@ -49,7 +49,7 @@ public class CommentServiceTest {
 
             // when
             Throwable thrown = catchThrowable(() -> {
-                commentService.findComments(null, notExistPostId);
+                commentCrudService.findComments(null, notExistPostId);
             });
 
             // then
@@ -78,7 +78,7 @@ public class CommentServiceTest {
             given(postRepository.findByPostId(existPostId)).willReturn(Optional.of(existPost));
 
             // when
-            CommentListResponse response = commentService.findComments(null, existPostId);
+            CommentListResponse response = commentCrudService.findComments(null, existPostId);
 
             // then
             then(postRepository).should(times(1)).findByPostId(existPostId);
@@ -98,7 +98,7 @@ public class CommentServiceTest {
 
             // when
             Throwable thrown = catchThrowable(() -> {
-                commentService.findReComments(null, notExistCommentId);
+                commentCrudService.findReComments(null, notExistCommentId);
             });
 
             // then
@@ -125,7 +125,7 @@ public class CommentServiceTest {
             given(commentRepository.findByParentId(existCommentId)).willReturn(Arrays.asList());
 
             // when
-            commentService.findReComments(null, existCommentId);
+            commentCrudService.findReComments(null, existCommentId);
 
             // then
             then(commentRepository).should(times(1)).findByCommentId(existCommentId);

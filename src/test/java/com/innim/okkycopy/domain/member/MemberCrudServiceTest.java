@@ -9,7 +9,7 @@ import static org.mockito.Mockito.times;
 import com.innim.okkycopy.domain.member.dto.request.MemberRequest;
 import com.innim.okkycopy.domain.member.dto.response.MemberBriefResponse;
 import com.innim.okkycopy.domain.member.entity.Member;
-import com.innim.okkycopy.domain.member.service.MemberService;
+import com.innim.okkycopy.domain.member.service.MemberCrudService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -18,14 +18,14 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 @ExtendWith(MockitoExtension.class)
-class MemberServiceTest {
+class MemberCrudServiceTest {
 
     @Mock
     MemberRepository memberRepository;
     @Mock
     PasswordEncoder passwordEncoder;
     @InjectMocks
-    MemberService memberService;
+    MemberCrudService memberCrudService;
 
     @Test
     void insertMemberTest() {
@@ -35,7 +35,7 @@ class MemberServiceTest {
         given(passwordEncoder.encode(any(String.class))).willReturn("**************");
 
         // when
-        MemberBriefResponse briefMemberInfo = memberService.addMember(memberRequest);
+        MemberBriefResponse briefMemberInfo = memberCrudService.addMember(memberRequest);
 
         // then
         then(memberRepository).should(times(1)).save(any(Member.class));

@@ -13,6 +13,9 @@ import com.innim.okkycopy.domain.board.dto.response.topics.TopicDetailsResponse;
 import com.innim.okkycopy.domain.board.dto.response.topics.TopicListResponse;
 import com.innim.okkycopy.domain.board.dto.response.topics.TypeDetailsResponse;
 import com.innim.okkycopy.domain.board.enums.ExpressionType;
+import com.innim.okkycopy.domain.board.service.BoardExpressionService;
+import com.innim.okkycopy.domain.board.service.BoardScrapService;
+import com.innim.okkycopy.domain.board.service.BoardTopicService;
 import com.innim.okkycopy.domain.member.entity.Member;
 import com.innim.okkycopy.global.auth.CustomUserDetails;
 import com.innim.okkycopy.global.common.S3Uploader;
@@ -32,7 +35,11 @@ import org.springframework.web.multipart.MultipartFile;
 class BoardControllerTest {
 
     @Mock
-    BoardService boardService;
+    BoardExpressionService boardExpressionService;
+    @Mock
+    BoardScrapService boardScrapService;
+    @Mock
+    BoardTopicService boardTopicService;
     @Mock
     S3Uploader s3Uploader;
     @InjectMocks
@@ -42,13 +49,13 @@ class BoardControllerTest {
     void serveTopicsTest() throws Exception {
         // given
         TopicListResponse topicListResponse = topicsResponse();
-        given(boardService.findBoardTopics()).willReturn(topicListResponse);
+        given(boardTopicService.findBoardTopics()).willReturn(topicListResponse);
 
         // when
         ResponseEntity response = boardController.boardTopicList();
 
         // then
-        then(boardService).should(times(1)).findBoardTopics();
+        then(boardTopicService).should(times(1)).findBoardTopics();
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(response.getBody()).isInstanceOf(TopicListResponse.class);
     }
@@ -62,7 +69,7 @@ class BoardControllerTest {
         boardController.scrapAdd(request, WithMockCustomUserSecurityContextFactory.customUserDetailsMock());
 
         // then
-        then(boardService).should(times(1)).addScrap(any(Member.class), anyLong());
+        then(boardScrapService).should(times(1)).addScrap(any(Member.class), anyLong());
 
     }
 
@@ -75,7 +82,7 @@ class BoardControllerTest {
         boardController.scrapRemove(request, WithMockCustomUserSecurityContextFactory.customUserDetailsMock());
 
         // then
-        then(boardService).should(times(1)).removeScrap(any(Member.class), anyLong());
+        then(boardScrapService).should(times(1)).removeScrap(any(Member.class), anyLong());
     }
 
     @Test
@@ -88,7 +95,7 @@ class BoardControllerTest {
         ResponseEntity<Object> response = boardController.likeExpressionAdd(customUserDetails, id);
 
         // then
-        then(boardService).should(times(1))
+        then(boardExpressionService).should(times(1))
             .addPostExpression(customUserDetails.getMember(), id, ExpressionType.LIKE);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
     }
@@ -103,7 +110,7 @@ class BoardControllerTest {
         ResponseEntity<Object> response = boardController.hateExpressionAdd(customUserDetails, id);
 
         // then
-        then(boardService).should(times(1))
+        then(boardExpressionService).should(times(1))
             .addPostExpression(customUserDetails.getMember(), id, ExpressionType.HATE);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
     }
@@ -118,7 +125,7 @@ class BoardControllerTest {
         ResponseEntity<Object> response = boardController.likeExpressionRemove(customUserDetails, id);
 
         // then
-        then(boardService).should(times(1))
+        then(boardExpressionService).should(times(1))
             .removePostExpression(customUserDetails.getMember(), id, ExpressionType.LIKE);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
     }
@@ -133,7 +140,7 @@ class BoardControllerTest {
         ResponseEntity<Object> response = boardController.hateExpressionRemove(customUserDetails, id);
 
         // then
-        then(boardService).should(times(1))
+        then(boardExpressionService).should(times(1))
             .removePostExpression(customUserDetails.getMember(), id, ExpressionType.HATE);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
     }

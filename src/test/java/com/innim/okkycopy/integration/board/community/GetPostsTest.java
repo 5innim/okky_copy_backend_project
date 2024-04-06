@@ -1,4 +1,4 @@
-package com.innim.okkycopy.integration.board.knowledge;
+package com.innim.okkycopy.integration.board.community;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
@@ -6,6 +6,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.google.gson.Gson;
 import com.innim.okkycopy.domain.board.dto.request.write.PostRequest;
+import com.innim.okkycopy.domain.board.dto.request.write.TagInfo;
 import com.innim.okkycopy.domain.member.MemberRepository;
 import com.innim.okkycopy.domain.member.entity.Member;
 import com.innim.okkycopy.global.auth.CustomUserDetails;
@@ -29,12 +30,13 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
 
 @SpringBootTest
-public class WritePostTest {
+public class GetPostsTest {
 
     @Autowired
     WebApplicationContext context;
     @Autowired
     MemberRepository memberRepository;
+
     MockMvc mockMvc;
 
     @BeforeEach
@@ -60,54 +62,32 @@ public class WritePostTest {
 
     @Test
     @Transactional
-    void given_correctRequest_then_response201StatusCode() throws Exception {
+    void given_correctQueryStrings_then_returnPostsResponse() throws Exception {
         // given
-        PostRequest postRequest = postRequest();
-
-        // when
-        MockHttpServletResponse response = mockMvc.perform(
-            MockMvcRequestBuilders.post("/board/knowledge/write")
-                .contentType(MediaType.APPLICATION_JSON)
+        mockMvc.perform(
+            MockMvcRequestBuilders.post("/board/community/write")
                 .characterEncoding("UTF-8")
-                .content(new Gson().toJson(postRequest))
-        ).andReturn().getResponse();
-
-        // then
-        assertThat(response.getStatus()).isEqualTo(HttpStatus.CREATED.value());
-    }
-
-    @Test
-    @Transactional
-    void given_notMatchedTopic_then_response400031() throws Exception {
-        // given
-        PostRequest notMatchedPostRequest = notMatchedPostRequest();
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(new Gson().toJson(writeRequest()))
+        );
 
         // when
         ResultActions resultActions = mockMvc.perform(
-            MockMvcRequestBuilders.post("/board/knowledge/write")
-                .contentType(MediaType.APPLICATION_JSON)
-                .characterEncoding("UTF-8")
-                .content(new Gson().toJson(notMatchedPostRequest))
+            MockMvcRequestBuilders
+                .get("/board/community/posts?topicId=8&page=0&size=20&sort=likes,desc&sort=createdDate,desc")
         );
 
         // then
-        resultActions.andExpect(jsonPath("code").value("400031"));
+        MockHttpServletResponse response = resultActions.andReturn().getResponse();
+        assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());
+        resultActions.andExpect(jsonPath("$.posts[0].title").value("test_title"));
     }
 
-    PostRequest postRequest() {
+    PostRequest writeRequest() {
         return PostRequest.builder()
             .title("test_title")
-            .topic("Tech 뉴스")
-            .tags(Arrays.asList())
-            .content("test_content")
-            .build();
-    }
-
-    PostRequest notMatchedPostRequest() {
-        return PostRequest.builder()
-            .title("test_title")
-            .topic("기타")
-            .tags(Arrays.asList())
+            .topic("사는얘기")
+            .tags(Arrays.asList(new TagInfo("tag1"), new TagInfo("tag2")))
             .content("test_content")
             .build();
     }

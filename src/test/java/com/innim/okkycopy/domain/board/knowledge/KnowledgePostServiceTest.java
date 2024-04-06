@@ -8,11 +8,14 @@ import static org.mockito.Mockito.times;
 
 import com.innim.okkycopy.common.WithMockCustomUserSecurityContextFactory;
 import com.innim.okkycopy.domain.board.dto.request.write.PostRequest;
+import com.innim.okkycopy.domain.board.dto.request.write.TagInfo;
 import com.innim.okkycopy.domain.board.dto.response.post.detail.PostDetailsResponse;
 import com.innim.okkycopy.domain.board.entity.BoardTopic;
 import com.innim.okkycopy.domain.board.entity.BoardType;
 import com.innim.okkycopy.domain.board.entity.Post;
+import com.innim.okkycopy.domain.board.entity.Tag;
 import com.innim.okkycopy.domain.board.knowledge.entity.KnowledgePost;
+import com.innim.okkycopy.domain.board.knowledge.entity.KnowledgeTag;
 import com.innim.okkycopy.domain.board.knowledge.repository.KnowledgePostRepository;
 import com.innim.okkycopy.domain.board.repository.BoardTopicRepository;
 import com.innim.okkycopy.domain.member.MemberRepository;
@@ -31,7 +34,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.Pageable;
 
 @ExtendWith(MockitoExtension.class)
-class KnowledgeServiceTest {
+class KnowledgePostServiceTest {
 
     @Mock
     KnowledgePostRepository knowledgePostRepository;
@@ -40,7 +43,7 @@ class KnowledgeServiceTest {
     @Mock
     MemberRepository memberRepository;
     @InjectMocks
-    KnowledgeService knowledgeService;
+    KnowledgePostService knowledgePostService;
 
     @Nested
     class SelectKnowledgePostTest {
@@ -53,7 +56,7 @@ class KnowledgeServiceTest {
 
             // when
             Throwable thrown = catchThrowable(() -> {
-                knowledgeService.findKnowledgePost(null, notExistPostId);
+                knowledgePostService.findKnowledgePost(null, notExistPostId);
             });
 
             // then
@@ -71,7 +74,7 @@ class KnowledgeServiceTest {
                 Optional.empty());
 
             // when
-            PostDetailsResponse postDetailsResponse = knowledgeService.findKnowledgePost(null, postId);
+            PostDetailsResponse postDetailsResponse = knowledgePostService.findKnowledgePost(null, postId);
 
             // then
             then(knowledgePostRepository).should(times(1)).findByPostId(postId);
@@ -84,26 +87,44 @@ class KnowledgeServiceTest {
                 .getMember();
             List<Post> posts = new ArrayList<>();
             member.setPosts(posts);
-            return KnowledgePost.of(writeRequest(), boardTopic(), member);
-        }
-
-        PostRequest writeRequest() {
-            return PostRequest.builder()
-                .topic("test_topic")
-                .tags(Arrays.asList())
-                .title("test_title")
-                .content("test_content")
-                .build();
-        }
-
-        BoardTopic boardTopic() {
-            return BoardTopic.builder()
+            BoardTopic boardTopic = BoardTopic.builder()
                 .knowledgePosts(Arrays.asList())
                 .knowledgeTags(Arrays.asList())
                 .topicId(1L)
                 .name("test_topic")
                 .boardType(BoardType.builder()
                     .build())
+                .build();
+            KnowledgePost knowledgePost = KnowledgePost.builder()
+                .member(member)
+                .content("test_content")
+                .title("test_title")
+                .lastUpdate(null)
+                .boardTopic(boardTopic)
+                .likes(0)
+                .hates(0)
+                .scraps(0)
+                .views(0)
+                .comments(0)
+                .build();
+
+            PostRequest postRequest = postRequest();
+            List<Tag> tags = new ArrayList<>();
+            for (TagInfo tag : postRequest.getTags()) {
+                tags.add(KnowledgeTag.of(knowledgePost, boardTopic, tag.getName()));
+            }
+            member.getPosts().add((Post) knowledgePost);
+            knowledgePost.setTags(tags);
+
+            return knowledgePost;
+        }
+
+        PostRequest postRequest() {
+            return PostRequest.builder()
+                .topic("test_topic")
+                .tags(Arrays.asList())
+                .title("test_title")
+                .content("test_content")
                 .build();
         }
     }
@@ -121,7 +142,7 @@ class KnowledgeServiceTest {
 
             // when
             Throwable thrown = catchThrowable(() -> {
-                knowledgeService.findKnowledgePostsByKeywordAndPageable(topicId, keyword, pageable);
+                knowledgePostService.findKnowledgePostsByKeywordAndPageable(topicId, keyword, pageable);
             });
 
             // then
@@ -139,12 +160,13 @@ class KnowledgeServiceTest {
                 .topicId(topicId)
                 .boardType(BoardType.builder()
                     .typeId(1L)
+                    .name("Q&A")
                     .build())
                 .build()));
 
             // when
             Throwable thrown = catchThrowable(() -> {
-                knowledgeService.findKnowledgePostsByKeywordAndPageable(topicId, keyword, pageable);
+                knowledgePostService.findKnowledgePostsByKeywordAndPageable(topicId, keyword, pageable);
             });
 
             // then

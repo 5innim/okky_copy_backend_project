@@ -1,4 +1,4 @@
-package com.innim.okkycopy.domain.board.knowledge;
+package com.innim.okkycopy.domain.board.community;
 
 import com.innim.okkycopy.domain.board.dto.request.write.PostRequest;
 import com.innim.okkycopy.global.auth.CustomUserDetails;
@@ -21,41 +21,41 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/board/knowledge")
+@RequestMapping("/board/community")
 @RequiredArgsConstructor
-public class KnowledgeController {
+public class CommunityController {
 
-    private final KnowledgePostService knowledgePostService;
+    private final CommunityPostService communityPostService;
 
     @PostMapping("/write")
-    public ResponseEntity<Object> knowledgePostAdd(@RequestBody @Valid PostRequest postRequest,
+    public ResponseEntity<Object> communityPostAdd(@RequestBody @Valid PostRequest postRequest,
         @AuthenticationPrincipal CustomUserDetails customUserDetails) {
-        knowledgePostService.addKnowledgePost(postRequest, customUserDetails);
+        communityPostService.addCommunityPost(postRequest, customUserDetails);
 
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @GetMapping("/posts/{id}")
-    public ResponseEntity<Object> knowledgePostDetails(
+    public ResponseEntity<Object> communityPostDetails(
         @AuthenticationPrincipal CustomUserDetails customUserDetails,
         @PathVariable("id") long id) {
-        return ResponseEntity.ok(knowledgePostService.findKnowledgePost(customUserDetails, id));
+        return ResponseEntity.ok(communityPostService.findCommunityPost(customUserDetails, id));
     }
 
     @PutMapping("/posts/{id}")
-    public ResponseEntity<Object> knowledgePostModify(
+    public ResponseEntity<Object> communityPostModify(
         @AuthenticationPrincipal CustomUserDetails customUserDetails,
         @RequestBody @Valid PostRequest updateRequest,
         @PathVariable("id") long id) {
-        knowledgePostService.modifyKnowledgePost(customUserDetails, updateRequest, id);
+        communityPostService.modifyCommunityPost(customUserDetails, updateRequest, id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
     @DeleteMapping("/posts/{id}")
-    public ResponseEntity<Object> knowledgePostRemove(
+    public ResponseEntity<Object> communityPostRemove(
         @AuthenticationPrincipal CustomUserDetails customUserDetails,
         @PathVariable("id") long id) {
-        knowledgePostService.removeKnowledgePost(customUserDetails, id);
+        communityPostService.removeCommunityPost(customUserDetails, id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
@@ -65,7 +65,6 @@ public class KnowledgeController {
         @RequestParam(required = false) String keyword,
         @PageableDefault(size = 20, sort = "createdDate", direction = Sort.Direction.DESC) Pageable pageable) {
         return ResponseEntity.ok()
-            .body(knowledgePostService.findKnowledgePostsByKeywordAndPageable(topicId, keyword, pageable));
+            .body(communityPostService.findCommunityPostsByKeywordAndPageable(topicId, keyword, pageable));
     }
-
 }

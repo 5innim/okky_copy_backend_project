@@ -1,4 +1,4 @@
-package com.innim.okkycopy.domain.board.knowledge.entity;
+package com.innim.okkycopy.domain.board.community.entity;
 
 import com.innim.okkycopy.domain.board.dto.request.write.PostRequest;
 import com.innim.okkycopy.domain.board.dto.request.write.TagInfo;
@@ -26,16 +26,16 @@ import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.DynamicUpdate;
 
-@DynamicUpdate
 @Entity
+@DynamicUpdate
+@DiscriminatorValue(value = "community")
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Table(name = "community_post")
+@AllArgsConstructor
 @Setter
 @Getter
 @SuperBuilder
-@Table(name = "knowledge_post")
-@DiscriminatorValue(value = "knowledge")
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
-@AllArgsConstructor
-public class KnowledgePost extends Post {
+public class CommunityPost extends Post {
 
     @ManyToOne(optional = false)
     @JoinColumn(name = "topic_id")
@@ -51,12 +51,12 @@ public class KnowledgePost extends Post {
     @Column(nullable = false)
     private Integer comments;
 
-    public static KnowledgePost of(PostRequest postRequest, BoardTopic boardTopic, Member member)
+    public static CommunityPost of(PostRequest postRequest, BoardTopic boardTopic, Member member)
         throws StatusCodeException {
         if (isNotSupportedTopic(boardTopic)) {
             throw new StatusCode400Exception(ErrorCase._400_BAD_FORM_DATA);
         }
-        KnowledgePost knowledgePost = KnowledgePost.builder()
+        CommunityPost communityPost = CommunityPost.builder()
             .member(member)
             .content(postRequest.getContent())
             .title(postRequest.getTitle())
@@ -71,12 +71,12 @@ public class KnowledgePost extends Post {
 
         List<Tag> tags = new ArrayList<>();
         for (TagInfo tag : postRequest.getTags()) {
-            tags.add(KnowledgeTag.of(knowledgePost, boardTopic, tag.getName()));
+            tags.add(CommunityTag.of(communityPost, boardTopic, tag.getName()));
         }
-        member.getPosts().add((Post) knowledgePost);
-        knowledgePost.setTags(tags);
+        member.getPosts().add((Post) communityPost);
+        communityPost.setTags(tags);
 
-        return knowledgePost;
+        return communityPost;
     }
 
     public void update(PostRequest updateRequest, BoardTopic boardTopic) {
@@ -92,12 +92,12 @@ public class KnowledgePost extends Post {
         tags.clear();
 
         for (TagInfo tag : updateRequest.getTags()) {
-            tags.add(KnowledgeTag.of(this, boardTopic, tag.getName()));
+            tags.add(CommunityTag.of(this, boardTopic, tag.getName()));
         }
     }
 
     public static boolean isNotSupportedTopic(BoardTopic boardTopic) {
-        return !boardTopic.getBoardType().getName().equals("지식");
+        return !boardTopic.getBoardType().getName().equals("커뮤니티");
     }
 
 }

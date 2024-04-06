@@ -1,5 +1,7 @@
 package com.innim.okkycopy.domain.board.entity;
 
+import com.innim.okkycopy.domain.board.community.entity.CommunityPost;
+import com.innim.okkycopy.domain.board.community.entity.CommunityTag;
 import com.innim.okkycopy.domain.board.knowledge.entity.KnowledgePost;
 import com.innim.okkycopy.domain.board.knowledge.entity.KnowledgeTag;
 import jakarta.persistence.Column;
@@ -45,6 +47,11 @@ public class BoardTopic {
     List<KnowledgePost> knowledgePosts;
 
     @OneToMany(mappedBy = "boardTopic", fetch = FetchType.LAZY)
+    List<CommunityPost> communityPosts;
+
+    @OneToMany(mappedBy = "boardTopic", fetch = FetchType.LAZY)
     List<KnowledgeTag> knowledgeTags;
 
+    @OneToMany(mappedBy = "boardTopic", fetch = FetchType.LAZY)
+    List<CommunityTag> communityTags;
 }

@@ -3,6 +3,9 @@ package com.innim.okkycopy.domain.board;
 import com.innim.okkycopy.domain.board.dto.request.ScrapRequest;
 import com.innim.okkycopy.domain.board.dto.response.FileResponse;
 import com.innim.okkycopy.domain.board.enums.ExpressionType;
+import com.innim.okkycopy.domain.board.service.BoardExpressionService;
+import com.innim.okkycopy.domain.board.service.BoardScrapService;
+import com.innim.okkycopy.domain.board.service.BoardTopicService;
 import com.innim.okkycopy.global.auth.CustomUserDetails;
 import com.innim.okkycopy.global.common.S3Uploader;
 import com.innim.okkycopy.global.error.exception.StatusCodeException;
@@ -25,65 +28,68 @@ import org.springframework.web.multipart.MultipartFile;
 @RequestMapping("/board")
 @RequiredArgsConstructor
 public class BoardController {
-    private final BoardService boardService;
+
+    private final BoardExpressionService boardExpressionService;
+    private final BoardScrapService boardScrapService;
+    private final BoardTopicService boardTopicService;
     private final S3Uploader s3Uploader;
 
     @GetMapping("/topics")
     public ResponseEntity<Object> boardTopicList() {
-        return ResponseEntity.ok(boardService.findBoardTopics());
+        return ResponseEntity.ok(boardTopicService.findBoardTopics());
     }
 
     @PostMapping("/post/scrap")
     public void scrapAdd(
-            @RequestBody ScrapRequest scrapRequest,
-            @AuthenticationPrincipal CustomUserDetails customUserDetails) {
-        boardService.addScrap(customUserDetails.getMember(), scrapRequest.getPostId());
+        @RequestBody ScrapRequest scrapRequest,
+        @AuthenticationPrincipal CustomUserDetails customUserDetails) {
+        boardScrapService.addScrap(customUserDetails.getMember(), scrapRequest.getPostId());
         ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/post/scrap")
     public void scrapRemove(
-            @RequestBody ScrapRequest scrapRequest,
-            @AuthenticationPrincipal CustomUserDetails customUserDetails) {
-        boardService.removeScrap(customUserDetails.getMember(), scrapRequest.getPostId());
+        @RequestBody ScrapRequest scrapRequest,
+        @AuthenticationPrincipal CustomUserDetails customUserDetails) {
+        boardScrapService.removeScrap(customUserDetails.getMember(), scrapRequest.getPostId());
         ResponseEntity.ok().build();
     }
 
     @PostMapping("/posts/{id}/like")
     public ResponseEntity<Object> likeExpressionAdd(
-            @AuthenticationPrincipal CustomUserDetails customUserDetails,
-            @PathVariable long id) {
-        boardService.addPostExpression(customUserDetails.getMember(), id, ExpressionType.LIKE);
+        @AuthenticationPrincipal CustomUserDetails customUserDetails,
+        @PathVariable long id) {
+        boardExpressionService.addPostExpression(customUserDetails.getMember(), id, ExpressionType.LIKE);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @PostMapping("/posts/{id}/hate")
     public ResponseEntity<Object> hateExpressionAdd(
-            @AuthenticationPrincipal CustomUserDetails customUserDetails,
-            @PathVariable long id) {
-        boardService.addPostExpression(customUserDetails.getMember(), id, ExpressionType.HATE);
+        @AuthenticationPrincipal CustomUserDetails customUserDetails,
+        @PathVariable long id) {
+        boardExpressionService.addPostExpression(customUserDetails.getMember(), id, ExpressionType.HATE);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @DeleteMapping("/posts/{id}/like")
     public ResponseEntity<Object> likeExpressionRemove(
-            @AuthenticationPrincipal CustomUserDetails customUserDetails,
-            @PathVariable long id) {
-        boardService.removePostExpression(customUserDetails.getMember(), id, ExpressionType.LIKE);
+        @AuthenticationPrincipal CustomUserDetails customUserDetails,
+        @PathVariable long id) {
+        boardExpressionService.removePostExpression(customUserDetails.getMember(), id, ExpressionType.LIKE);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
     @DeleteMapping("/posts/{id}/hate")
     public ResponseEntity<Object> hateExpressionRemove(
-            @AuthenticationPrincipal CustomUserDetails customUserDetails,
-            @PathVariable long id) {
-        boardService.removePostExpression(customUserDetails.getMember(), id, ExpressionType.HATE);
+        @AuthenticationPrincipal CustomUserDetails customUserDetails,
+        @PathVariable long id) {
+        boardExpressionService.removePostExpression(customUserDetails.getMember(), id, ExpressionType.HATE);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
     @PostMapping("/file/upload")
     public ResponseEntity<Object> fileAdd(@RequestParam("file") MultipartFile file)
-            throws StatusCodeException, IOException {
+        throws StatusCodeException, IOException {
         return ResponseEntity.ok(new FileResponse(s3Uploader.uploadFileToS3(file)));
     }
 
