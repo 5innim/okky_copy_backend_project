@@ -3,6 +3,7 @@ package com.innim.okkycopy.global.config;
 import com.innim.okkycopy.domain.member.service.MemberLoginService;
 import com.innim.okkycopy.global.auth.CustomUserDetailsService;
 import com.innim.okkycopy.global.auth.enums.Role;
+import com.innim.okkycopy.global.auth.filter.CorsFilter;
 import com.innim.okkycopy.global.auth.filter.FormDataLoginAuthenticationFilter;
 import com.innim.okkycopy.global.auth.filter.HandleStatusCodeExceptionFilter;
 import com.innim.okkycopy.global.auth.filter.JwtAuthenticationFilter;
@@ -19,6 +20,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.context.SecurityContextHolderFilter;
 
 @Configuration
 @EnableWebSecurity
@@ -95,7 +97,8 @@ public class SecurityConfig {
                 .addFilterAfter(new JwtAuthenticationFilter(customUserDetailsService),
                     FormDataLoginAuthenticationFilter.class)
                 .addFilterAfter(new RefreshJwtFilter(memberLoginService),
-                    JwtAuthenticationFilter.class);
+                    JwtAuthenticationFilter.class)
+                .addFilterBefore(new CorsFilter(), SecurityContextHolderFilter.class);
         }
     }
 }
