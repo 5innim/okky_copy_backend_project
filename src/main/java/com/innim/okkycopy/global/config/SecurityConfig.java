@@ -71,10 +71,11 @@ public class SecurityConfig {
                         "/board/community/posts/{id}",
                         "/board/comments/{id}").hasAnyAuthority(Role.USER.getValue(), Role.ADMIN.getValue())
                     .requestMatchers(HttpMethod.GET,
+                        "/member/info").hasAnyAuthority(Role.USER.getValue(), Role.ADMIN.getValue())
+                    .requestMatchers(HttpMethod.GET,
                         "/board/topics",
                         "/board/knowledge/posts/{id}",
                         "/board/community/posts/{id}",
-                        "/member/info",
                         "/board/posts/{id}/comments",
                         "/board/comments/{id}/recomments",
                         "/board/knowledge/posts",
