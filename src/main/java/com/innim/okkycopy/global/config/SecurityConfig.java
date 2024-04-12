@@ -91,15 +91,15 @@ public class SecurityConfig {
 
         @Override
         public void configure(HttpSecurity http) {
-            http.addFilterAt(new HandleStatusCodeExceptionFilter(), UsernamePasswordAuthenticationFilter.class)
+            http.addFilterBefore(new CorsFilter(), SecurityContextHolderFilter.class)
+                .addFilterAt(new HandleStatusCodeExceptionFilter(), UsernamePasswordAuthenticationFilter.class)
                 .addFilterAfter(new FormDataLoginAuthenticationFilter(http.getSharedObject(
                         AuthenticationManager.class), memberLoginService),
                     HandleStatusCodeExceptionFilter.class)
-                .addFilterAfter(new JwtAuthenticationFilter(customUserDetailsService),
-                    FormDataLoginAuthenticationFilter.class)
                 .addFilterAfter(new RefreshJwtFilter(memberLoginService),
-                    JwtAuthenticationFilter.class)
-                .addFilterBefore(new CorsFilter(), SecurityContextHolderFilter.class);
+                    FormDataLoginAuthenticationFilter.class)
+                .addFilterAfter(new JwtAuthenticationFilter(customUserDetailsService),
+                    RefreshJwtFilter.class);
         }
     }
 }
