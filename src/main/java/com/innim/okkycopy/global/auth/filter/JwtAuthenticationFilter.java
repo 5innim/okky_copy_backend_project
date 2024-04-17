@@ -6,6 +6,7 @@ import com.innim.okkycopy.global.util.JwtUtil;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -27,12 +28,18 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
         throws ServletException, IOException {
-        String authorization = request.getHeader("Authorization");
-        if (authorization == null || JwtUtil.prefixNotMatched(authorization)) {
+        String token = null;
+        if (request.getCookies() != null) {
+            for (Cookie c : request.getCookies()) {
+                if (c.getName().equals("accessToken")) {
+                    token = c.getValue();
+                }
+            }
+        }
+
+        if (token == null) {
             filterChain.doFilter(request, response);
         } else {
-            String token = JwtUtil.extractTokenWithoutPrefix(authorization);
-
             Claims claims = JwtUtil.validateToken(token);
             if (claims.getSubject().equals("access")) {
                 Long userId = Long.valueOf((Integer) claims.get("uid"));

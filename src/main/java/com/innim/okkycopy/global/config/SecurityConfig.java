@@ -3,6 +3,7 @@ package com.innim.okkycopy.global.config;
 import com.innim.okkycopy.domain.member.service.MemberLoginService;
 import com.innim.okkycopy.global.auth.CustomUserDetailsService;
 import com.innim.okkycopy.global.auth.enums.Role;
+import com.innim.okkycopy.global.auth.filter.CorsFilter;
 import com.innim.okkycopy.global.auth.filter.FormDataLoginAuthenticationFilter;
 import com.innim.okkycopy.global.auth.filter.HandleStatusCodeExceptionFilter;
 import com.innim.okkycopy.global.auth.filter.JwtAuthenticationFilter;
@@ -19,6 +20,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.context.SecurityContextHolderFilter;
 
 @Configuration
 @EnableWebSecurity
@@ -69,10 +71,11 @@ public class SecurityConfig {
                         "/board/community/posts/{id}",
                         "/board/comments/{id}").hasAnyAuthority(Role.USER.getValue(), Role.ADMIN.getValue())
                     .requestMatchers(HttpMethod.GET,
+                        "/member/info").hasAnyAuthority(Role.USER.getValue(), Role.ADMIN.getValue())
+                    .requestMatchers(HttpMethod.GET,
                         "/board/topics",
                         "/board/knowledge/posts/{id}",
                         "/board/community/posts/{id}",
-                        "/member/info",
                         "/board/posts/{id}/comments",
                         "/board/comments/{id}/recomments",
                         "/board/knowledge/posts",
@@ -88,14 +91,15 @@ public class SecurityConfig {
 
         @Override
         public void configure(HttpSecurity http) {
-            http.addFilterAt(new HandleStatusCodeExceptionFilter(), UsernamePasswordAuthenticationFilter.class)
+            http.addFilterBefore(new CorsFilter(), SecurityContextHolderFilter.class)
+                .addFilterAt(new HandleStatusCodeExceptionFilter(), UsernamePasswordAuthenticationFilter.class)
                 .addFilterAfter(new FormDataLoginAuthenticationFilter(http.getSharedObject(
                         AuthenticationManager.class), memberLoginService),
                     HandleStatusCodeExceptionFilter.class)
-                .addFilterAfter(new JwtAuthenticationFilter(customUserDetailsService),
-                    FormDataLoginAuthenticationFilter.class)
                 .addFilterAfter(new RefreshJwtFilter(memberLoginService),
-                    JwtAuthenticationFilter.class);
+                    FormDataLoginAuthenticationFilter.class)
+                .addFilterAfter(new JwtAuthenticationFilter(customUserDetailsService),
+                    RefreshJwtFilter.class);
         }
     }
 }

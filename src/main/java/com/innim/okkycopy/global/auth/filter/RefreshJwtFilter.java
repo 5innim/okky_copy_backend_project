@@ -9,6 +9,7 @@ import com.innim.okkycopy.global.util.ResponseUtil;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -32,11 +33,18 @@ public class RefreshJwtFilter extends OncePerRequestFilter {
         throws ServletException, IOException {
 
         if (requestMatcher.matches(request)) {
-            String authorization = request.getHeader("Authorization");
-            if (authorization == null || JwtUtil.prefixNotMatched(authorization)) {
+            String token = null;
+            if (request.getCookies() != null) {
+                for (Cookie c : request.getCookies()) {
+                    if (c.getName().equals("refreshToken")) {
+                        token = c.getValue();
+                    }
+                }
+            }
+
+            if (token == null) {
                 filterChain.doFilter(request, response);
             } else {
-                String token = JwtUtil.extractTokenWithoutPrefix(authorization);
                 Claims claims = JwtUtil.validateToken(token);
                 if (claims.getSubject().equals("refresh")) {
                     Long userId = Long.valueOf((Integer) claims.get("uid"));
@@ -45,7 +53,7 @@ public class RefreshJwtFilter extends OncePerRequestFilter {
                     checkMostRecentGeneratedToken(userId, lat);
 
                     ResponseUtil.addCookieWithHttpOnly(response, "accessToken",
-                        JwtUtil.generateAccessToken(userId, lat));
+                        JwtUtil.generateAccessToken(userId, new Date()));
                 } else {
                     filterChain.doFilter(request, response);
                 }
