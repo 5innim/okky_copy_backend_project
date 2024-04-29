@@ -4,6 +4,7 @@ import com.innim.okkycopy.domain.board.comment.dto.request.CommentRequest;
 import com.innim.okkycopy.domain.board.comment.dto.request.ReCommentRequest;
 import com.innim.okkycopy.domain.board.community.entity.CommunityPost;
 import com.innim.okkycopy.domain.board.entity.Post;
+import com.innim.okkycopy.domain.board.event.entity.EventPost;
 import com.innim.okkycopy.domain.board.knowledge.entity.KnowledgePost;
 import com.innim.okkycopy.domain.member.entity.Member;
 import jakarta.persistence.CascadeType;
@@ -87,6 +88,8 @@ public class Comment {
             ((KnowledgePost) post).setComments(((KnowledgePost) post).getComments() + 1);
         } else if (post instanceof CommunityPost) {
             ((CommunityPost) post).setComments(((CommunityPost) post).getComments() + 1);
+        } else if (post instanceof EventPost) {
+            ((EventPost) post).setComments(((EventPost) post).getComments() + 1);
         }
 
         return comment;
@@ -95,8 +98,12 @@ public class Comment {
     // TODO: this method should be expended when new domain post is added
     public static void remove(Comment comment, EntityManager entityManager) {
         Post post = comment.getPost();
-        if (post instanceof CommunityPost) {
+        if (post instanceof KnowledgePost) {
+            ((KnowledgePost) post).setComments(((KnowledgePost) post).getComments() - 1);
+        } else if (post instanceof CommunityPost) {
             ((CommunityPost) post).setComments(((CommunityPost) post).getComments() - 1);
+        } else if (post instanceof EventPost) {
+            ((EventPost) post).setComments(((EventPost) post).getComments() - 1);
         }
 
         entityManager.remove(comment);

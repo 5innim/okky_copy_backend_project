@@ -2,6 +2,7 @@ package com.innim.okkycopy.domain.board.entity;
 
 import com.innim.okkycopy.domain.board.comment.entity.Comment;
 import com.innim.okkycopy.domain.board.community.entity.CommunityPost;
+import com.innim.okkycopy.domain.board.event.entity.EventPost;
 import com.innim.okkycopy.domain.board.knowledge.entity.KnowledgePost;
 import com.innim.okkycopy.domain.member.entity.Member;
 import jakarta.persistence.CascadeType;
@@ -71,6 +72,8 @@ public class Post {
             ((KnowledgePost) this).setLikes(((KnowledgePost) this).getLikes() + 1);
         } else if (this instanceof CommunityPost) {
             ((CommunityPost) this).setLikes(((CommunityPost) this).getLikes() + 1);
+        } else if (this instanceof EventPost) {
+            ((EventPost) this).setLikes(((EventPost) this).getLikes() + 1);
         }
     }
 
@@ -79,6 +82,8 @@ public class Post {
             ((KnowledgePost) this).setLikes(((KnowledgePost) this).getLikes() - 1);
         } else if (this instanceof CommunityPost) {
             ((CommunityPost) this).setLikes(((CommunityPost) this).getLikes() - 1);
+        } else if (this instanceof EventPost) {
+            ((EventPost) this).setLikes(((EventPost) this).getLikes() - 1);
         }
     }
 
@@ -87,6 +92,8 @@ public class Post {
             ((KnowledgePost) this).setHates(((KnowledgePost) this).getHates() + 1);
         } else if (this instanceof CommunityPost) {
             ((CommunityPost) this).setHates(((CommunityPost) this).getHates() + 1);
+        } else if (this instanceof EventPost) {
+            ((EventPost) this).setHates(((EventPost) this).getHates() + 1);
         }
     }
 
@@ -95,6 +102,8 @@ public class Post {
             ((KnowledgePost) this).setHates(((KnowledgePost) this).getHates() - 1);
         } else if (this instanceof CommunityPost) {
             ((CommunityPost) this).setHates(((CommunityPost) this).getHates() - 1);
+        } else if (this instanceof EventPost) {
+            ((EventPost) this).setHates(((EventPost) this).getHates() - 1);
         }
     }
 
@@ -103,6 +112,8 @@ public class Post {
             ((KnowledgePost) this).setScraps(((KnowledgePost) this).getScraps() + 1);
         } else if (this instanceof CommunityPost) {
             ((CommunityPost) this).setScraps(((CommunityPost) this).getScraps() + 1);
+        } else if (this instanceof EventPost) {
+            ((EventPost) this).setScraps(((EventPost) this).getScraps() + 1);
         }
     }
 
@@ -111,6 +122,8 @@ public class Post {
             ((KnowledgePost) this).setScraps(((KnowledgePost) this).getScraps() - 1);
         } else if (this instanceof CommunityPost) {
             ((CommunityPost) this).setScraps(((CommunityPost) this).getScraps() - 1);
+        } else if (this instanceof EventPost) {
+            ((EventPost) this).setScraps(((EventPost) this).getScraps() - 1);
         }
     }
 
@@ -119,6 +132,8 @@ public class Post {
             ((KnowledgePost) this).setViews(((KnowledgePost) this).getViews() + 1);
         } else if (this instanceof CommunityPost) {
             ((CommunityPost) this).setViews(((CommunityPost) this).getViews() + 1);
+        } else if (this instanceof EventPost) {
+            ((EventPost) this).setViews(((EventPost) this).getViews() + 1);
         }
     }
 }
