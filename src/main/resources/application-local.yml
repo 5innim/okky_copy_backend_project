@@ -18,6 +18,17 @@ spring:
     username: for_local
     password: okky1234
 
+  # security
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: 673990742828-f60dbpkqo1jlo185ifqf1r511hv91a5p.apps.googleusercontent.com
+            client-secret: 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
+            scope: profile, email
+
+
   # jpa
   jpa:
     hibernate:
