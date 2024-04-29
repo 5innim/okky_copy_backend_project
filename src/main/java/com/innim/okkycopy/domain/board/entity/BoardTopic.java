@@ -2,6 +2,8 @@ package com.innim.okkycopy.domain.board.entity;
 
 import com.innim.okkycopy.domain.board.community.entity.CommunityPost;
 import com.innim.okkycopy.domain.board.community.entity.CommunityTag;
+import com.innim.okkycopy.domain.board.event.entity.EventPost;
+import com.innim.okkycopy.domain.board.event.entity.EventTag;
 import com.innim.okkycopy.domain.board.knowledge.entity.KnowledgePost;
 import com.innim.okkycopy.domain.board.knowledge.entity.KnowledgeTag;
 import jakarta.persistence.Column;
@@ -50,8 +52,14 @@ public class BoardTopic {
     List<CommunityPost> communityPosts;
 
     @OneToMany(mappedBy = "boardTopic", fetch = FetchType.LAZY)
+    List<EventPost> eventPosts;
+
+    @OneToMany(mappedBy = "boardTopic", fetch = FetchType.LAZY)
     List<KnowledgeTag> knowledgeTags;
 
     @OneToMany(mappedBy = "boardTopic", fetch = FetchType.LAZY)
     List<CommunityTag> communityTags;
+
+    @OneToMany(mappedBy = "boardTopic", fetch = FetchType.LAZY)
+    List<EventTag> eventTags;
 }
