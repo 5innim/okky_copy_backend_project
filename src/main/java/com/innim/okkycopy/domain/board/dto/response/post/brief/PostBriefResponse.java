@@ -4,6 +4,7 @@ import com.innim.okkycopy.domain.board.community.entity.CommunityPost;
 import com.innim.okkycopy.domain.board.dto.response.post.WriterInfo;
 import com.innim.okkycopy.domain.board.entity.Post;
 import com.innim.okkycopy.domain.board.entity.Tag;
+import com.innim.okkycopy.domain.board.event.entity.EventPost;
 import com.innim.okkycopy.domain.board.knowledge.entity.KnowledgePost;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -49,10 +50,14 @@ public class PostBriefResponse {
             response.setViews(((KnowledgePost) post).getViews());
             response.setComments(((KnowledgePost) post).getComments());
             response.setLikes(((KnowledgePost) post).getLikes());
-        } else if(post instanceof CommunityPost) {
+        } else if (post instanceof CommunityPost) {
             response.setViews(((CommunityPost) post).getViews());
             response.setComments(((CommunityPost) post).getComments());
             response.setLikes(((CommunityPost) post).getLikes());
+        } else if (post instanceof EventPost) {
+            response.setViews(((EventPost) post).getViews());
+            response.setComments(((EventPost) post).getComments());
+            response.setLikes(((EventPost) post).getLikes());
         }
 
         return response;
