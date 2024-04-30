@@ -27,7 +27,7 @@ import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
 @Entity
-@Table(name = "event_board")
+@Table(name = "event_post")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @DiscriminatorValue(value = "event")
 @Setter
