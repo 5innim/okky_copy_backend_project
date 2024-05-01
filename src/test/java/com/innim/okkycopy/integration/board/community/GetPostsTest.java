@@ -7,8 +7,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.google.gson.Gson;
 import com.innim.okkycopy.domain.board.dto.request.write.PostRequest;
 import com.innim.okkycopy.domain.board.dto.request.write.TagInfo;
-import com.innim.okkycopy.domain.member.MemberRepository;
+import com.innim.okkycopy.domain.member.repository.MemberRepository;
 import com.innim.okkycopy.domain.member.entity.Member;
+import com.innim.okkycopy.domain.member.repository.OkkyMemberRepository;
 import com.innim.okkycopy.global.auth.CustomUserDetails;
 import java.util.Arrays;
 import org.junit.jupiter.api.BeforeEach;
@@ -35,7 +36,7 @@ public class GetPostsTest {
     @Autowired
     WebApplicationContext context;
     @Autowired
-    MemberRepository memberRepository;
+    OkkyMemberRepository memberRepository;
 
     MockMvc mockMvc;
 

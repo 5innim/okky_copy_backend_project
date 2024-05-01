@@ -4,8 +4,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
-import com.innim.okkycopy.domain.member.MemberRepository;
+import com.innim.okkycopy.domain.member.repository.MemberRepository;
 import com.innim.okkycopy.domain.member.entity.Member;
+import com.innim.okkycopy.domain.member.repository.OkkyMemberRepository;
 import com.innim.okkycopy.global.auth.CustomUserDetails;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
@@ -31,7 +32,7 @@ public class RemoveExpressionTest {
     @Autowired
     private WebApplicationContext context;
     @Autowired
-    private MemberRepository memberRepository;
+    private OkkyMemberRepository memberRepository;
 
     private MockMvc mockMvc;
 

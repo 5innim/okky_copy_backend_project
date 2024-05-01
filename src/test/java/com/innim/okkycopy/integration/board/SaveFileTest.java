@@ -3,8 +3,8 @@ package com.innim.okkycopy.integration.board;
 
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 
-import com.innim.okkycopy.domain.member.MemberRepository;
 import com.innim.okkycopy.domain.member.entity.Member;
+import com.innim.okkycopy.domain.member.repository.OkkyMemberRepository;
 import com.innim.okkycopy.global.auth.CustomUserDetails;
 import org.junit.jupiter.api.BeforeEach;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +24,7 @@ public class SaveFileTest {
     @Autowired
     WebApplicationContext context;
     @Autowired
-    MemberRepository memberRepository;
+    OkkyMemberRepository memberRepository;
     MockMvc mockMvc;
 
     @BeforeEach

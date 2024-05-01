@@ -17,7 +17,7 @@ import com.innim.okkycopy.domain.board.entity.BoardType;
 import com.innim.okkycopy.domain.board.entity.Post;
 import com.innim.okkycopy.domain.board.entity.Tag;
 import com.innim.okkycopy.domain.board.repository.BoardTopicRepository;
-import com.innim.okkycopy.domain.member.MemberRepository;
+import com.innim.okkycopy.domain.member.repository.MemberRepository;
 import com.innim.okkycopy.domain.member.entity.Member;
 import com.innim.okkycopy.global.error.exception.StatusCode400Exception;
 import java.util.ArrayList;
