@@ -1,6 +1,7 @@
 package com.innim.okkycopy.global.auth;
 
 import com.innim.okkycopy.domain.member.entity.Member;
+import com.innim.okkycopy.domain.member.entity.OkkyMember;
 import java.util.Collection;
 import java.util.List;
 import lombok.AllArgsConstructor;
@@ -27,12 +28,20 @@ public class CustomUserDetails implements UserDetails {
 
     @Override
     public String getPassword() {
-        return member.getPassword();
+        if (member instanceof OkkyMember) {
+            return ((OkkyMember) member).getPassword();
+        }
+
+        return "";
     }
 
     @Override
     public String getUsername() {
-        return member.getId();
+        if (member instanceof OkkyMember) {
+            return ((OkkyMember) member).getId();
+        }
+
+        return "";
     }
 
     @Override
