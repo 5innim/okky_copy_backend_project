@@ -4,6 +4,7 @@ import com.innim.okkycopy.domain.member.dto.request.MemberRequest;
 import com.innim.okkycopy.domain.member.dto.response.MemberBriefResponse;
 import com.innim.okkycopy.domain.member.dto.response.MemberDetailsResponse;
 import com.innim.okkycopy.domain.member.service.MemberCrudService;
+import com.innim.okkycopy.domain.member.service.OkkyMemberService;
 import com.innim.okkycopy.global.auth.CustomUserDetails;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -23,13 +24,14 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/member")
 public class MemberController {
 
+    private final OkkyMemberService okkyMemberService;
     private final MemberCrudService memberCrudService;
 
     @PostMapping("/signup")
     public ResponseEntity<MemberBriefResponse> memberAdd(@Valid @RequestBody MemberRequest memberRequest) {
         return ResponseEntity
             .status(HttpStatus.CREATED)
-            .body(memberCrudService.addMember(memberRequest));
+            .body(okkyMemberService.addMember(memberRequest));
     }
 
     @GetMapping("/info")
