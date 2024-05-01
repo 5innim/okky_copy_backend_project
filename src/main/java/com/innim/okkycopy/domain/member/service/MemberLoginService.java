@@ -1,6 +1,6 @@
 package com.innim.okkycopy.domain.member.service;
 
-import com.innim.okkycopy.domain.member.MemberRepository;
+import com.innim.okkycopy.domain.member.repository.MemberRepository;
 import com.innim.okkycopy.domain.member.entity.Member;
 import com.innim.okkycopy.global.error.ErrorCase;
 import com.innim.okkycopy.global.error.exception.StatusCode401Exception;

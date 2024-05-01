@@ -12,7 +12,7 @@ import com.innim.okkycopy.domain.board.knowledge.repository.KnowledgePostReposit
 import com.innim.okkycopy.domain.board.repository.BoardTopicRepository;
 import com.innim.okkycopy.domain.board.repository.PostExpressionRepository;
 import com.innim.okkycopy.domain.board.repository.ScrapRepository;
-import com.innim.okkycopy.domain.member.MemberRepository;
+import com.innim.okkycopy.domain.member.repository.MemberRepository;
 import com.innim.okkycopy.domain.member.entity.Member;
 import com.innim.okkycopy.global.auth.CustomUserDetails;
 import com.innim.okkycopy.global.error.ErrorCase;

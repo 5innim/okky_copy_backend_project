@@ -1,4 +1,4 @@
-package com.innim.okkycopy.domain.member;
+package com.innim.okkycopy.domain.member.repository;
 
 import com.innim.okkycopy.domain.member.entity.Member;
 import java.util.Optional;

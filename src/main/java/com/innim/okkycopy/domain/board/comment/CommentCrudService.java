@@ -12,7 +12,7 @@ import com.innim.okkycopy.domain.board.comment.repository.CommentRepository;
 import com.innim.okkycopy.domain.board.entity.Post;
 import com.innim.okkycopy.domain.board.enums.ExpressionType;
 import com.innim.okkycopy.domain.board.repository.PostRepository;
-import com.innim.okkycopy.domain.member.MemberRepository;
+import com.innim.okkycopy.domain.member.repository.MemberRepository;
 import com.innim.okkycopy.domain.member.entity.Member;
 import com.innim.okkycopy.global.auth.CustomUserDetails;
 import com.innim.okkycopy.global.error.ErrorCase;
