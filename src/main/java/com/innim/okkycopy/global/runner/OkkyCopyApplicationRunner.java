@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 @Slf4j
 public class OkkyCopyApplicationRunner implements ApplicationRunner {
 
-    @Value("${spring.profiles.active}")
+    @Value("#{environment['spring.profiles.active']}")
     private String activeProfile;
 
     @Override
