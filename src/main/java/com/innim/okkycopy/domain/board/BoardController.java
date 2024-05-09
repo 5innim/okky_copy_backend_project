@@ -52,7 +52,6 @@ public class BoardController {
         @RequestBody ScrapRequest scrapRequest,
         @AuthenticationPrincipal CustomUserDetails customUserDetails) {
         boardScrapService.removeScrap(customUserDetails.getMember(), scrapRequest.getPostId());
-        ResponseEntity.ok().build();
     }
 
     @PostMapping("/posts/{id}/like")
