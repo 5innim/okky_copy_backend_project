@@ -1,6 +1,5 @@
 package com.innim.okkycopy.global.auth;
 
-import com.innim.okkycopy.domain.member.entity.Member;
 import com.innim.okkycopy.domain.member.service.GoogleMemberService;
 import com.innim.okkycopy.domain.member.service.KakaoMemberService;
 import com.innim.okkycopy.domain.member.service.NaverMemberService;
@@ -22,28 +21,25 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
         OAuth2User oAuth2User = super.loadUser(userRequest);
-        Member member = null;
         String registrationId = userRequest.getClientRegistration().getRegistrationId();
-        String nameAttributeKey = userRequest.getClientRegistration().getProviderDetails().getUserInfoEndpoint().getUserNameAttributeName();
-        String email = oAuth2User.getAttribute("email");
-        switch(registrationId) {
+        String nameAttributeKey = userRequest.getClientRegistration().getProviderDetails().getUserInfoEndpoint()
+            .getUserNameAttributeName();
+
+        String providerId = oAuth2User.getName();
+        switch (registrationId) {
             case "google":
-                member = googleMemberService.findGoogleMember(email);
-                break;
+                return CustomOAuth2User.of(oAuth2User, nameAttributeKey, googleMemberService.findGoogleMember(providerId),
+                    registrationId);
             case "kakao":
-                member = kakaoMemberService.findKakaoMember(email);
-                break;
+                return CustomOAuth2User.of(oAuth2User, nameAttributeKey, kakaoMemberService.findKakaoMember(providerId),
+                    registrationId);
             case "naver":
-                member = naverMemberService.findNaverMember(email);
-                break;
-            default :
-                break;
+                return CustomOAuth2User.of(oAuth2User, nameAttributeKey, naverMemberService.findNaverMember(providerId),
+                    registrationId);
+            default:
+                return null;
         }
-
-        return CustomOAuth2User.of(oAuth2User, nameAttributeKey, member);
     }
-
-
 
 
 }
