@@ -29,8 +29,5 @@ public class MemberRequest {
     private String nickname;
     private boolean emailCheck;
 
-    public void encodePassword(PasswordEncoder passwordEncoder) {
-        password = passwordEncoder.encode(password);
-    }
 
 }

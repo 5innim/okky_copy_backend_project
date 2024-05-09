@@ -33,9 +33,7 @@ public class OkkyMemberService {
             throw new StatusCode409Exception(ErrorCase._409_DUPLICATE_EMAIL);
         }
 
-        memberRequest.encodePassword(passwordEncoder);
-
-        OkkyMember member = OkkyMember.from(memberRequest);
+        OkkyMember member = OkkyMember.of(memberRequest, passwordEncoder);
         okkyMemberRepository.save(member);
 
         return MemberBriefResponse.from(member);

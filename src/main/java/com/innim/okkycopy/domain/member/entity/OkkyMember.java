@@ -12,6 +12,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.DynamicUpdate;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -29,10 +30,10 @@ public class OkkyMember extends Member {
     @Column(nullable = false, unique = true)
     private String email;
 
-    public static OkkyMember from(MemberRequest request) {
+    public static OkkyMember of(MemberRequest request, PasswordEncoder passwordEncoder) {
         return OkkyMember.builder()
             .id(request.getId())
-            .password(request.getPassword())
+            .password(passwordEncoder.encode(request.getPassword()))
             .email(request.getEmail())
             .name(request.getName())
             .nickname(request.getNickname())
