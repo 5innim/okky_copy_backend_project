@@ -56,3 +56,10 @@ cloud:
     credentials:
       access-key: AKIA43MJDZISSDPJ2I4Y
       secret-key: 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
+
+# frontend
+frontend:
+  origin: http://localhost:8081
+  path:
+    base: /
+    signup: /oauth/signup
