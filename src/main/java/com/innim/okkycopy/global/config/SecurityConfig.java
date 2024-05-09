@@ -8,21 +8,24 @@ import com.innim.okkycopy.global.auth.filter.CorsFilter;
 import com.innim.okkycopy.global.auth.filter.FormDataLoginAuthenticationFilter;
 import com.innim.okkycopy.global.auth.filter.HandleStatusCodeExceptionFilter;
 import com.innim.okkycopy.global.auth.filter.JwtAuthenticationFilter;
+import com.innim.okkycopy.global.auth.filter.OAuth2SessionInfoProcessingFilter;
 import com.innim.okkycopy.global.auth.filter.RefreshJwtFilter;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.authentication.ui.DefaultLoginPageGeneratingFilter;
 import org.springframework.security.web.context.SecurityContextHolderFilter;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.security.web.util.matcher.RequestMatcher;
 
 @Configuration
 @EnableWebSecurity
@@ -100,16 +103,20 @@ public class SecurityConfig {
 
     public class CustomDsl extends AbstractHttpConfigurer<CustomDsl, HttpSecurity> {
 
+
         @Override
         public void configure(HttpSecurity http) {
-            http.addFilterBefore(new CorsFilter(), SecurityContextHolderFilter.class)
-                .addFilterAt(new HandleStatusCodeExceptionFilter(), UsernamePasswordAuthenticationFilter.class)
+            http.addFilterBefore(new CorsFilter(frontendOrigin), SecurityContextHolderFilter.class)
+                .addFilterAfter(new HandleStatusCodeExceptionFilter(), DefaultLoginPageGeneratingFilter.class)
+                .addFilterAfter(new OAuth2SessionInfoProcessingFilter(), HandleStatusCodeExceptionFilter.class)
                 .addFilterAfter(new FormDataLoginAuthenticationFilter(http.getSharedObject(
                         AuthenticationManager.class), memberLoginService),
-                    HandleStatusCodeExceptionFilter.class)
+                    OAuth2SessionInfoProcessingFilter.class)
                 .addFilterAfter(new RefreshJwtFilter(memberLoginService),
                     FormDataLoginAuthenticationFilter.class)
-                .addFilterAfter(new JwtAuthenticationFilter(customUserDetailsService),
+                .addFilterAfter(new JwtAuthenticationFilter(customUserDetailsService, new RequestMatcher[]{
+                        new AntPathRequestMatcher("/member/{provider}/signup", "POST")
+                    }),
                     RefreshJwtFilter.class);
         }
     }
