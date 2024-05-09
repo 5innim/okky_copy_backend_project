@@ -5,5 +5,5 @@ import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface KakaoMemberRepository extends JpaRepository<KakaoMember, Long> {
-    Optional<KakaoMember> findByEmail(String email);
+    Optional<KakaoMember> findByProviderId(String providerId);
 }

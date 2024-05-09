@@ -6,5 +6,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 
 public interface GoogleMemberRepository extends JpaRepository<GoogleMember, Long> {
-    Optional<GoogleMember> findByEmail(String email);
+    Optional<GoogleMember> findByProviderId(String providerId);
 }
