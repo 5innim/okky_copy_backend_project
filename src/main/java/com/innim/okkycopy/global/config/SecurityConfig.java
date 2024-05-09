@@ -1,6 +1,7 @@
 package com.innim.okkycopy.global.config;
 
 import com.innim.okkycopy.domain.member.service.MemberLoginService;
+import com.innim.okkycopy.global.auth.CustomOAuth2AuthenticationSuccessHandler;
 import com.innim.okkycopy.global.auth.CustomUserDetailsService;
 import com.innim.okkycopy.global.auth.enums.Role;
 import com.innim.okkycopy.global.auth.filter.CorsFilter;
@@ -30,6 +31,9 @@ public class SecurityConfig {
 
     private final CustomUserDetailsService customUserDetailsService;
     private final MemberLoginService memberLoginService;
+    private final CustomOAuth2AuthenticationSuccessHandler oAuth2AuthenticationSuccessHandler;
+    @Value("#{environment['frontend.origin']}")
+    private String frontendOrigin;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
