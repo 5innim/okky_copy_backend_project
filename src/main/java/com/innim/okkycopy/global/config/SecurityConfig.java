@@ -89,7 +89,9 @@ public class SecurityConfig {
                         "/board/comments/{id}/recomments",
                         "/board/knowledge/posts",
                         "/board/community/posts").permitAll()
-                    .requestMatchers(HttpMethod.POST, "/member/signup").permitAll();
+                    .requestMatchers(HttpMethod.POST,
+                        "/member/signup",
+                        "/member/{provider}/signup").permitAll();
             }).apply(new CustomDsl());
 
         return http.build();
