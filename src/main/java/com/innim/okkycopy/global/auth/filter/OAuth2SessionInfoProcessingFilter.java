@@ -1,0 +1,46 @@
+package com.innim.okkycopy.global.auth.filter;
+
+import com.innim.okkycopy.global.auth.CustomOAuth2User;
+import com.innim.okkycopy.global.auth.dto.response.OAuthInfoResponse;
+import com.innim.okkycopy.global.error.ErrorCase;
+import com.innim.okkycopy.global.error.exception.StatusCode400Exception;
+import com.innim.okkycopy.global.util.ResponseUtil;
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.security.web.util.matcher.RequestMatcher;
+import org.springframework.web.filter.OncePerRequestFilter;
+
+public class OAuth2SessionInfoProcessingFilter extends OncePerRequestFilter {
+    private final RequestMatcher requestMatcher = new AntPathRequestMatcher("/oauth/info",
+        "GET");
+    @Override
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+        throws ServletException, IOException {
+        if (requestMatcher.matches(request)) {
+            try {
+                String principalName = request.getParameter("id");
+                CustomOAuth2User oAuth2User = (CustomOAuth2User) request.getSession().getAttribute(principalName);
+                OAuthInfoResponse oAuthInfo = OAuthInfoResponse.builder()
+                    .name(oAuth2User.getAttribute("name"))
+                    .email(oAuth2User.getAttribute("email"))
+                    .profile(oAuth2User.getAttribute("picture"))
+                    .nickname(oAuth2User.getAttribute("nickname"))
+                    .provider(oAuth2User.getRegistrationId())
+                    .build();
+
+                ResponseUtil.setResponseToObject(response, oAuthInfo);
+
+            } catch(Exception ex) {
+                throw new StatusCode400Exception(ErrorCase._400_NO_ACCEPTABLE_PARAMETER);
+            }
+
+
+        } else {
+            filterChain.doFilter(request, response);
+        }
+    }
+}
