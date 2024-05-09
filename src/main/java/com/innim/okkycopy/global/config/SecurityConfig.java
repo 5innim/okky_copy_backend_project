@@ -50,7 +50,10 @@ public class SecurityConfig {
             .servletApi(AbstractHttpConfigurer::disable)
             .anonymous(AbstractHttpConfigurer::disable)
             .exceptionHandling(AbstractHttpConfigurer::disable)
-            .oauth2Login(Customizer.withDefaults())
+            .oauth2Login(oauth2 -> {
+                oauth2
+                    .successHandler(oAuth2AuthenticationSuccessHandler);
+            })
             .authorizeHttpRequests(request -> {
                 request.requestMatchers(HttpMethod.POST,
                         "/board/knowledge/write",
