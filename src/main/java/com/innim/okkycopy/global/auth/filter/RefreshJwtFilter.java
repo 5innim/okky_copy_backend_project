@@ -1,6 +1,6 @@
 package com.innim.okkycopy.global.auth.filter;
 
-import com.innim.okkycopy.domain.member.service.MemberLoginService;
+import com.innim.okkycopy.domain.member.service.MemberCrudService;
 import com.innim.okkycopy.global.error.ErrorCase;
 import com.innim.okkycopy.global.error.exception.StatusCode401Exception;
 import com.innim.okkycopy.global.error.exception.StatusCodeException;
@@ -19,13 +19,13 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 public class RefreshJwtFilter extends OncePerRequestFilter {
 
-    private MemberLoginService memberLoginService;
+    private MemberCrudService memberCrudService;
 
     private final AntPathRequestMatcher requestMatcher = new AntPathRequestMatcher("/refresh",
         "POST");
 
-    public RefreshJwtFilter(MemberLoginService memberLoginService) {
-        this.memberLoginService = memberLoginService;
+    public RefreshJwtFilter(MemberCrudService memberCrudService) {
+        this.memberCrudService = memberCrudService;
     }
 
     @Override
@@ -65,7 +65,7 @@ public class RefreshJwtFilter extends OncePerRequestFilter {
 
 
     private void checkMostRecentGeneratedToken(Long userId, Date date) throws StatusCodeException {
-        Date lastLoginDate = memberLoginService.findMemberLoginDate(userId);
+        Date lastLoginDate = memberCrudService.findMemberLoginDate(userId);
         if (!date.equals(lastLoginDate)) {
             throw new StatusCode401Exception(ErrorCase._401_NOT_MOST_RECENT_GENERATED_TOKEN);
         }

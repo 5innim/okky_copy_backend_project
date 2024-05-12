@@ -7,7 +7,6 @@ import com.innim.okkycopy.domain.member.dto.response.MemberDetailsResponse;
 import com.innim.okkycopy.domain.member.service.GoogleMemberService;
 import com.innim.okkycopy.domain.member.service.KakaoMemberService;
 import com.innim.okkycopy.domain.member.service.MemberCrudService;
-import com.innim.okkycopy.domain.member.service.MemberLoginService;
 import com.innim.okkycopy.domain.member.service.NaverMemberService;
 import com.innim.okkycopy.domain.member.service.OkkyMemberService;
 import com.innim.okkycopy.global.auth.CustomUserDetails;
@@ -40,7 +39,6 @@ public class MemberController {
 
     private final OkkyMemberService okkyMemberService;
     private final MemberCrudService memberCrudService;
-    private final MemberLoginService memberLoginService;
     private final GoogleMemberService googleMemberService;
     private final KakaoMemberService kakaoMemberService;
     private final NaverMemberService naverMemberService;
@@ -80,7 +78,7 @@ public class MemberController {
 
         Date loginDate = new Date();
         LocalDateTime localDateTime = LocalDateTime.ofInstant(loginDate.toInstant(), ZoneId.systemDefault());
-        memberLoginService.modifyMemberLoginDate(memberId, localDateTime);
+        memberCrudService.modifyMemberLoginDate(memberId, localDateTime);
 
         ResponseUtil.addCookieWithHttpOnly(response, "accessToken", JwtUtil.generateAccessToken(memberId, loginDate));
         ResponseUtil.addCookieWithHttpOnly(response, "refreshToken", JwtUtil.generateRefreshToken(memberId, loginDate));
