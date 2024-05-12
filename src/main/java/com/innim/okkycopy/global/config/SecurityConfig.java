@@ -61,6 +61,7 @@ public class SecurityConfig {
                 request.requestMatchers(HttpMethod.POST,
                         "/board/knowledge/write",
                         "/board/community/write",
+                        "/board/event/write",
                         "/board/post/scrap",
                         "/board/posts/{id}/comment",
                         "/board/posts/{postId}/comments/{commentId}/recomment",
@@ -73,6 +74,7 @@ public class SecurityConfig {
                         "/board/post/scrap",
                         "/board/knowledge/posts/{id}",
                         "/board/community/posts/{id}",
+                        "/board/event/posts/{id}",
                         "/board/comments/{id}",
                         "/board/posts/{id}/like",
                         "/board/posts/{id}/hate",
@@ -81,6 +83,7 @@ public class SecurityConfig {
                     .requestMatchers(HttpMethod.PUT,
                         "/board/knowledge/posts/{id}",
                         "/board/community/posts/{id}",
+                        "/board/event/posts/{id}",
                         "/board/comments/{id}").hasAnyAuthority(Role.USER.getValue(), Role.ADMIN.getValue())
                     .requestMatchers(HttpMethod.GET,
                         "/member/info").hasAnyAuthority(Role.USER.getValue(), Role.ADMIN.getValue())
@@ -88,12 +91,14 @@ public class SecurityConfig {
                         "/board/topics",
                         "/board/knowledge/posts/{id}",
                         "/board/community/posts/{id}",
+                        "/board/event/posts/{id}",
                         "/board/posts/{id}/comments",
                         "/board/comments/{id}/recomments",
                         "/board/knowledge/posts",
-                        "/board/community/posts").permitAll()
+                        "/board/community/posts",
+                        "/board/event/posts").permitAll()
                     .requestMatchers(HttpMethod.POST,
-                        "/member/signup",
+                        "/member/signup", 
                         "/member/{provider}/signup").permitAll();
             }).apply(new CustomDsl());
 
