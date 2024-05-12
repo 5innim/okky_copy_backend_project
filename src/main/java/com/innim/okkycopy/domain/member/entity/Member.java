@@ -62,6 +62,8 @@ public class Member {
     private String profile;
     @Column(name = "login_date")
     private LocalDateTime loginDate;
+    @Column(name = "logout_date")
+    private LocalDateTime logoutDate;
     @OneToMany(mappedBy = "member")
     private List<Post> posts;
     @OneToMany(mappedBy = "member", cascade = {CascadeType.REMOVE})
