@@ -1,7 +1,7 @@
 package com.innim.okkycopy.common;
 
 import com.innim.okkycopy.common.annotation.WithMockCustomUser;
-import com.innim.okkycopy.domain.member.entity.Member;
+import com.innim.okkycopy.domain.member.entity.OkkyMember;
 import com.innim.okkycopy.global.auth.CustomUserDetails;
 import com.innim.okkycopy.global.auth.enums.Role;
 import java.time.LocalDateTime;
@@ -30,7 +30,7 @@ public class WithMockCustomUserSecurityContextFactory implements
     }
 
     public static CustomUserDetails customUserDetailsMock() {
-        Member testMember = Member.builder()
+        OkkyMember testMember = OkkyMember.builder()
             .memberId(1L)
             .id("test_id")
             .email("test@test.com")

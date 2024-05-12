@@ -3,8 +3,9 @@ package com.innim.okkycopy.integration.member;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
-import com.innim.okkycopy.domain.member.MemberRepository;
+import com.innim.okkycopy.domain.member.repository.MemberRepository;
 import com.innim.okkycopy.domain.member.entity.Member;
+import com.innim.okkycopy.domain.member.repository.OkkyMemberRepository;
 import com.innim.okkycopy.global.auth.CustomUserDetails;
 import java.util.ArrayList;
 import org.junit.jupiter.api.BeforeEach;
@@ -27,7 +28,7 @@ public class InfoTest {
     @Autowired
     WebApplicationContext context;
     @Autowired
-    MemberRepository memberRepository;
+    OkkyMemberRepository memberRepository;
     MockMvc mockMvc;
 
     @BeforeEach

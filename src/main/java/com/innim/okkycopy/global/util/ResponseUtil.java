@@ -23,7 +23,14 @@ public class ResponseUtil {
     }
 
     public static void setContentTypeToJson(HttpServletResponse response) {
-        response.setContentType("application/json");
+        response.setContentType("application/json;charset=UTF-8");
+    }
+
+    public static <T> void setResponseToObject(HttpServletResponse response, T obj)
+        throws IOException {
+        setContentTypeToJson(response);
+        String body = jsonFrom(obj);
+        response.getWriter().write(body);
     }
 
     public static void setResponseToErrorResponse(HttpServletResponse response, ErrorCase errorCase)
@@ -38,6 +45,7 @@ public class ResponseUtil {
     public static void addCookieWithHttpOnly(HttpServletResponse response, String name, String value) {
         Cookie cookie = new Cookie(name, value);
         cookie.setHttpOnly(true);
+        cookie.setPath("/");
         response.addCookie(cookie);
     }
 }

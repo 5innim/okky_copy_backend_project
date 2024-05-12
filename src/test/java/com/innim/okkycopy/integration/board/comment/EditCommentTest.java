@@ -6,8 +6,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.google.gson.Gson;
 import com.innim.okkycopy.domain.board.comment.dto.request.CommentRequest;
-import com.innim.okkycopy.domain.member.MemberRepository;
+import com.innim.okkycopy.domain.member.repository.MemberRepository;
 import com.innim.okkycopy.domain.member.entity.Member;
+import com.innim.okkycopy.domain.member.repository.OkkyMemberRepository;
 import com.innim.okkycopy.global.auth.CustomUserDetails;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -33,7 +34,7 @@ public class EditCommentTest {
     @Autowired
     WebApplicationContext context;
     @Autowired
-    MemberRepository memberRepository;
+    OkkyMemberRepository memberRepository;
 
     MockMvc mockMvc;
 

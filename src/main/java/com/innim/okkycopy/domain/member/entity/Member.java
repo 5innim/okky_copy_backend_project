@@ -5,26 +5,28 @@ import com.innim.okkycopy.domain.board.comment.entity.CommentExpression;
 import com.innim.okkycopy.domain.board.entity.Post;
 import com.innim.okkycopy.domain.board.entity.PostExpression;
 import com.innim.okkycopy.domain.board.entity.Scrap;
-import com.innim.okkycopy.domain.member.dto.request.MemberRequest;
 import com.innim.okkycopy.global.auth.enums.Role;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
+import jakarta.persistence.DiscriminatorColumn;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Inheritance;
+import jakarta.persistence.InheritanceType;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import java.time.LocalDateTime;
 import java.util.List;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.DynamicUpdate;
 
@@ -33,7 +35,9 @@ import org.hibernate.annotations.DynamicUpdate;
 @DynamicUpdate
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
-@Builder
+@Inheritance(strategy = InheritanceType.JOINED)
+@DiscriminatorColumn(name = "dtype")
+@SuperBuilder
 @Getter
 @Setter
 public class Member {
@@ -42,12 +46,6 @@ public class Member {
     @Column(name = "member_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long memberId;
-    @Column(nullable = false, unique = true)
-    private String id;
-    @Column(nullable = false)
-    private String password;
-    @Column(nullable = false, unique = true)
-    private String email;
     @Column(nullable = false)
     private String name;
     @Column(nullable = false, unique = true)
@@ -75,17 +73,15 @@ public class Member {
     @OneToMany(mappedBy = "member")
     private List<Comment> comments;
 
-    public static Member from(MemberRequest request) {
-        return Member.builder()
-            .id(request.getId())
-            .password(request.getPassword())
-            .email(request.getEmail())
-            .name(request.getName())
-            .nickname(request.getNickname())
-            .emailCheck(request.isEmailCheck())
-            .role(Role.USER)
-            .profile(null)
-            .build();
+
+    //TODO "if new SNS type is added, then should expand logic
+    public String getEmail() {
+        if (this instanceof OkkyMember) {
+            return ((OkkyMember) this).getEmail();
+        }
+
+        return "";
     }
+
 
 }

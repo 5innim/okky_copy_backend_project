@@ -16,6 +16,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.web.util.matcher.RequestMatcher;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 
@@ -23,11 +24,20 @@ import org.springframework.web.filter.OncePerRequestFilter;
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private CustomUserDetailsService customUserDetailsService;
+    private RequestMatcher[] useSessionRequests;
 
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
         throws ServletException, IOException {
+
+        for (RequestMatcher matcher : useSessionRequests) {
+            if (matcher.matches(request)) {
+                filterChain.doFilter(request, response);
+                return;
+            }
+        }
+
         String token = null;
         if (request.getCookies() != null) {
             for (Cookie c : request.getCookies()) {
