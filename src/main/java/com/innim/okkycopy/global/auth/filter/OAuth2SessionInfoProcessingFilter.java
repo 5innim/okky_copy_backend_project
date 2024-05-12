@@ -10,13 +10,16 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.LinkedHashMap;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.security.web.util.matcher.RequestMatcher;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 public class OAuth2SessionInfoProcessingFilter extends OncePerRequestFilter {
+
     private final RequestMatcher requestMatcher = new AntPathRequestMatcher("/oauth/info",
         "GET");
+
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
         throws ServletException, IOException {
@@ -24,17 +27,54 @@ public class OAuth2SessionInfoProcessingFilter extends OncePerRequestFilter {
             try {
                 String principalName = request.getParameter("id");
                 CustomOAuth2User oAuth2User = (CustomOAuth2User) request.getSession().getAttribute(principalName);
-                OAuthInfoResponse oAuthInfo = OAuthInfoResponse.builder()
-                    .name(oAuth2User.getAttribute("name"))
-                    .email(oAuth2User.getAttribute("email"))
-                    .profile(oAuth2User.getAttribute("picture"))
-                    .nickname(oAuth2User.getAttribute("nickname"))
-                    .provider(oAuth2User.getRegistrationId())
-                    .build();
+                OAuthInfoResponse oAuthInfo = null;
+                switch (oAuth2User.getRegistrationId()) {
+                    case "google":
+                        oAuthInfo = OAuthInfoResponse.builder()
+                            .name(oAuth2User.getAttribute("name"))
+                            .email(oAuth2User.getAttribute("email"))
+                            .profile(oAuth2User.getAttribute("picture"))
+                            .nickname(null)
+                            .provider(oAuth2User.getRegistrationId())
+                            .build();
+                        break;
+                    case "kakao":
+                        LinkedHashMap<String, String> properties = oAuth2User.getAttribute("properties");
+                        LinkedHashMap<String, Object> kakaoAccount = oAuth2User.getAttribute("kakao_account");
+                        assert properties != null;
+                        assert kakaoAccount != null;
+
+                        LinkedHashMap<String, Boolean> kakaoAccountProfile = (LinkedHashMap<String, Boolean>) kakaoAccount.get(
+                            "profile");
+
+
+                        oAuthInfo = OAuthInfoResponse.builder()
+//                            .name(properties.get("name")) TODO "After authenticate business app at kakao, can use name property"
+                            .email((String) kakaoAccount.get("email"))
+                            .profile(kakaoAccountProfile.get("is_default_image") ? null : properties.get("profile_image"))
+                            .nickname(properties.get("nickname"))
+                            .provider(oAuth2User.getRegistrationId())
+                            .build();
+                        break;
+                    case "naver":
+                        LinkedHashMap<String, String> map = oAuth2User.getAttribute("response");
+
+                        assert map != null;
+                        oAuthInfo = OAuthInfoResponse.builder()
+                            .name(map.get("name"))
+                            .email(map.get("email"))
+                            .profile(map.get("profile_image"))
+                            .nickname(map.get("nickname"))
+                            .provider(oAuth2User.getRegistrationId())
+                            .build();
+                        break;
+                }
+
+                assert oAuthInfo != null;
 
                 ResponseUtil.setResponseToObject(response, oAuthInfo);
 
-            } catch(Exception ex) {
+            } catch (Exception ex) {
                 throw new StatusCode400Exception(ErrorCase._400_NO_ACCEPTABLE_PARAMETER);
             }
 

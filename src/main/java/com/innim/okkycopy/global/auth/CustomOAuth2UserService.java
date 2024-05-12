@@ -3,10 +3,12 @@ package com.innim.okkycopy.global.auth;
 import com.innim.okkycopy.domain.member.service.GoogleMemberService;
 import com.innim.okkycopy.domain.member.service.KakaoMemberService;
 import com.innim.okkycopy.domain.member.service.NaverMemberService;
+import java.util.LinkedHashMap;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
+import org.springframework.security.oauth2.core.OAuth2Error;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 
@@ -25,17 +27,27 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         String nameAttributeKey = userRequest.getClientRegistration().getProviderDetails().getUserInfoEndpoint()
             .getUserNameAttributeName();
 
-        String providerId = oAuth2User.getName();
         switch (registrationId) {
             case "google":
-                return CustomOAuth2User.of(oAuth2User, nameAttributeKey, googleMemberService.findGoogleMember(providerId),
+                return CustomOAuth2User.of(oAuth2User, nameAttributeKey,
+                    googleMemberService.findGoogleMember(oAuth2User.getName()),
                     registrationId);
             case "kakao":
-                return CustomOAuth2User.of(oAuth2User, nameAttributeKey, kakaoMemberService.findKakaoMember(providerId),
+                return CustomOAuth2User.of(oAuth2User, nameAttributeKey,
+                    kakaoMemberService.findKakaoMember(oAuth2User.getName()),
                     registrationId);
             case "naver":
-                return CustomOAuth2User.of(oAuth2User, nameAttributeKey, naverMemberService.findNaverMember(providerId),
-                    registrationId);
+                try {
+                    LinkedHashMap<String, String> map = oAuth2User.getAttribute("response");
+                    assert map != null;
+                    return CustomOAuth2User.of(oAuth2User, nameAttributeKey,
+                        naverMemberService.findNaverMember(map.get("id")),
+                        registrationId);
+                } catch (Exception ex) {
+                    OAuth2Error oauth2Error = new OAuth2Error("provider_id_not_found");
+                    throw new OAuth2AuthenticationException(oauth2Error, oauth2Error.toString());
+                }
+
             default:
                 return null;
         }
