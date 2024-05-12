@@ -33,7 +33,8 @@ public enum ErrorCase {
     _500_JWT_GENERATE_FAIL(HttpStatus.INTERNAL_SERVER_ERROR, "500001", "can not generate token"),
     _500_FAIL_INITIALIZATION(HttpStatus.INTERNAL_SERVER_ERROR, "500002", "database was not initialized"),
     _500_FILE_NOT_CREATED(HttpStatus.INTERNAL_SERVER_ERROR, "500003", "temporal file is can not created"),
-    _500_FAIL_PUT_S3(HttpStatus.INTERNAL_SERVER_ERROR, "500004", "fail file put to S3");
+    _500_FAIL_PUT_S3(HttpStatus.INTERNAL_SERVER_ERROR, "500004", "fail file put to S3"),
+    _500_NULL_PROPERTY(HttpStatus.INTERNAL_SERVER_ERROR, "500005", "data(never be null) is null");
     private final HttpStatus status;
     private final String code;
     private final String message;
