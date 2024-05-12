@@ -23,21 +23,17 @@ import org.hibernate.annotations.DynamicUpdate;
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @DynamicUpdate
-public class NaverMember extends Member{
+public class NaverMember extends Member {
+
     @Column(name = "provider_id", nullable = false, unique = true)
     private String providerId;
-    @Column( nullable = false, unique = true)
+    @Column(nullable = false, unique = true)
     private String email;
 
     public static NaverMember of(OAuthMemberRequest request, CustomOAuth2User oAuth2User) {
-        LinkedHashMap<String, String> map = null;
-        try {
-            map = oAuth2User.getAttribute("response");
-            if (map == null) {
-                throw new StatusCode500Exception(ErrorCase._500_NULL_PROPERTY);
-            }
-        } catch (StatusCode500Exception e) {
-            throw new RuntimeException(e);
+        LinkedHashMap<String, String> map = oAuth2User.getAttribute("response");
+        if (map == null) {
+            throw new StatusCode500Exception(ErrorCase._500_NULL_PROPERTY);
         }
 
         return NaverMember.builder()
