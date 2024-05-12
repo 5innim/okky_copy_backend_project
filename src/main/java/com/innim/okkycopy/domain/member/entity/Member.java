@@ -80,6 +80,12 @@ public class Member {
     public String getEmail() {
         if (this instanceof OkkyMember) {
             return ((OkkyMember) this).getEmail();
+        } else if (this instanceof GoogleMember) {
+            return ((GoogleMember) this).getEmail();
+        } else if (this instanceof NaverMember) {
+            return ((NaverMember) this).getEmail();
+        } else if (this instanceof KakaoMember) {
+            return ((KakaoMember) this).getEmail();
         }
 
         return "";
