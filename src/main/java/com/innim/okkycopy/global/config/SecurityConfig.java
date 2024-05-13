@@ -62,6 +62,7 @@ public class SecurityConfig {
                         "/board/knowledge/write",
                         "/board/community/write",
                         "/board/event/write",
+                        "/board/qna/write",
                         "/board/post/scrap",
                         "/board/posts/{id}/comment",
                         "/board/posts/{postId}/comments/{commentId}/recomment",
@@ -75,6 +76,7 @@ public class SecurityConfig {
                         "/board/knowledge/posts/{id}",
                         "/board/community/posts/{id}",
                         "/board/event/posts/{id}",
+                        "/board/qna/posts/{id}",
                         "/board/comments/{id}",
                         "/board/posts/{id}/like",
                         "/board/posts/{id}/hate",
@@ -84,6 +86,7 @@ public class SecurityConfig {
                         "/board/knowledge/posts/{id}",
                         "/board/community/posts/{id}",
                         "/board/event/posts/{id}",
+                        "/board/qna/posts/{id}",
                         "/board/comments/{id}",
                         "/member/logout").hasAnyAuthority(Role.USER.getValue(), Role.ADMIN.getValue())
                     .requestMatchers(HttpMethod.GET,
@@ -93,11 +96,13 @@ public class SecurityConfig {
                         "/board/knowledge/posts/{id}",
                         "/board/community/posts/{id}",
                         "/board/event/posts/{id}",
+                        "/board/qna/posts/{id}",
                         "/board/posts/{id}/comments",
                         "/board/comments/{id}/recomments",
                         "/board/knowledge/posts",
                         "/board/community/posts",
-                        "/board/event/posts").permitAll()
+                        "/board/event/posts",
+                        "/board/qna/posts").permitAll()
                     .requestMatchers(HttpMethod.POST,
                         "/member/signup",
                         "/member/{provider}/signup").permitAll();
