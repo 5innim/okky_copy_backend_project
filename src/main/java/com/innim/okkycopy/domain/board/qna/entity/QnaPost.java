@@ -1,4 +1,4 @@
-package com.innim.okkycopy.domain.board.event.entity;
+package com.innim.okkycopy.domain.board.qna.entity;
 
 import com.innim.okkycopy.domain.board.dto.request.write.PostRequest;
 import com.innim.okkycopy.domain.board.dto.request.write.TagInfo;
@@ -26,14 +26,14 @@ import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
 @Entity
-@Table(name = "event_post")
+@Table(name = "qna_post")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@DiscriminatorValue(value = "event")
+@DiscriminatorValue(value = "qna")
 @Setter
 @Getter
 @SuperBuilder
 @AllArgsConstructor
-public class EventPost extends Post {
+public class QnaPost extends Post {
 
     @ManyToOne(optional = false)
     @JoinColumn(name = "topic_id")
@@ -49,12 +49,12 @@ public class EventPost extends Post {
     @Column(nullable = false)
     private Integer comments;
 
-    public static EventPost of(PostRequest postRequest, BoardTopic boardTopic, Member member)
+    public static QnaPost of(PostRequest postRequest, BoardTopic boardTopic, Member member)
         throws StatusCodeException {
         if (isNotSupportedTopic(boardTopic)) {
             throw new StatusCode400Exception(ErrorCase._400_BAD_FORM_DATA);
         }
-        EventPost eventPost = EventPost.builder()
+        QnaPost qnaPost = QnaPost.builder()
             .member(member)
             .content(postRequest.getContent())
             .title(postRequest.getTitle())
@@ -69,12 +69,12 @@ public class EventPost extends Post {
 
         List<Tag> tags = new ArrayList<>();
         for (TagInfo tag : postRequest.getTags()) {
-            tags.add(EventTag.of(eventPost, boardTopic, tag.getName()));
+            tags.add(QnaTag.of(qnaPost, boardTopic, tag.getName()));
         }
-        member.getPosts().add((Post) eventPost);
-        eventPost.setTags(tags);
+        member.getPosts().add((Post) qnaPost);
+        qnaPost.setTags(tags);
 
-        return eventPost;
+        return qnaPost;
     }
 
     public void update(PostRequest updateRequest, BoardTopic boardTopic) {
@@ -90,12 +90,12 @@ public class EventPost extends Post {
         tags.clear();
 
         for (TagInfo tag : updateRequest.getTags()) {
-            tags.add(EventTag.of(this, boardTopic, tag.getName()));
+            tags.add(QnaTag.of(this, boardTopic, tag.getName()));
         }
     }
 
     public static boolean isNotSupportedTopic(BoardTopic boardTopic) {
-        return !boardTopic.getBoardType().getName().equals("이벤트");
+        return !boardTopic.getBoardType().getName().equals("Q&A");
     }
 
 }

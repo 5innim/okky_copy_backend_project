@@ -5,6 +5,7 @@ import com.innim.okkycopy.domain.board.entity.Post;
 import com.innim.okkycopy.domain.board.enums.ExpressionType;
 import com.innim.okkycopy.domain.board.event.entity.EventPost;
 import com.innim.okkycopy.domain.board.knowledge.entity.KnowledgePost;
+import com.innim.okkycopy.domain.board.qna.entity.QnaPost;
 import com.innim.okkycopy.domain.member.entity.Member;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -69,8 +70,9 @@ public class CommentExpression {
         Post post = comment.getPost();
         if (post instanceof KnowledgePost || post instanceof CommunityPost || post instanceof EventPost) {
             return false;
+        } else if (post instanceof QnaPost && comment.getDepth() > 1) {
+            return true;
         }
-        // else if (post instance of QnAPost && comment.getParentId() != null)
 
         return true;
     }

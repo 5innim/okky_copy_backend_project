@@ -5,6 +5,7 @@ import com.innim.okkycopy.domain.board.dto.response.post.WriterInfo;
 import com.innim.okkycopy.domain.board.entity.Tag;
 import com.innim.okkycopy.domain.board.event.entity.EventPost;
 import com.innim.okkycopy.domain.board.knowledge.entity.KnowledgePost;
+import com.innim.okkycopy.domain.board.qna.entity.QnaPost;
 import com.innim.okkycopy.domain.member.entity.Member;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -89,6 +90,26 @@ public class PostDetailsResponse {
             .likes(eventPost.getLikes())
             .hates(eventPost.getHates())
             .createdDate(eventPost.getCreatedDate())
+            .build();
+    }
+
+    public static PostDetailsResponse of(QnaPost qnaPost, Member member) {
+        List<String> tags = new ArrayList<>();
+        for (Tag tag : qnaPost.getTags()) {
+            tags.add(tag.getName());
+        }
+
+        return PostDetailsResponse.builder()
+            .writerInfo((member == null) ? null : WriterInfo.builder()
+                .memberId(member.getMemberId())
+                .nickName(member.getNickname())
+                .profile(member.getProfile()).build())
+            .title(qnaPost.getTitle())
+            .content(qnaPost.getContent())
+            .tags(tags).views(qnaPost.getViews())
+            .likes(qnaPost.getLikes())
+            .hates(qnaPost.getHates())
+            .createdDate(qnaPost.getCreatedDate())
             .build();
     }
 
