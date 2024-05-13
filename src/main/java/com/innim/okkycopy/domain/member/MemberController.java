@@ -28,6 +28,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -84,6 +85,15 @@ public class MemberController {
         ResponseUtil.addCookieWithHttpOnly(response, "refreshToken", JwtUtil.generateRefreshToken(memberId, loginDate));
 
         return ResponseEntity.status(HttpStatus.CREATED).build();
+    }
+
+    @PutMapping("/logout")
+    public ResponseEntity<Object> memberModify(@AuthenticationPrincipal CustomUserDetails customUserDetails) {
+        Date loginDate = new Date();
+        LocalDateTime localDateTime = LocalDateTime.ofInstant(loginDate.toInstant(), ZoneId.systemDefault());
+        memberCrudService.modifyMemberLogoutDate(customUserDetails.getMember(), localDateTime);
+
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
 
