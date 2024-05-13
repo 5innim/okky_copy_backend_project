@@ -59,6 +59,8 @@ public class Comment {
     private String content;
     @Column(name = "parent_id")
     private Long parentId;
+    @Column(name = "depth", nullable = false)
+    private Integer depth;
     @Column(name = "mentioned_member")
     private Long mentionedMember;
     @ManyToOne
@@ -81,6 +83,7 @@ public class Comment {
             .content(commentRequest.getContent())
             .likes(0)
             .hates(0)
+            .depth(1)
             .post(post)
             .member(member).build();
 
@@ -119,6 +122,7 @@ public class Comment {
             .member(member)
             .likes(0)
             .hates(0)
+            .depth(2)
             .build();
     }
 
