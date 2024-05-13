@@ -62,6 +62,8 @@ public class Member {
     private String profile;
     @Column(name = "login_date")
     private LocalDateTime loginDate;
+    @Column(name = "logout_date")
+    private LocalDateTime logoutDate;
     @OneToMany(mappedBy = "member")
     private List<Post> posts;
     @OneToMany(mappedBy = "member", cascade = {CascadeType.REMOVE})
@@ -78,6 +80,12 @@ public class Member {
     public String getEmail() {
         if (this instanceof OkkyMember) {
             return ((OkkyMember) this).getEmail();
+        } else if (this instanceof GoogleMember) {
+            return ((GoogleMember) this).getEmail();
+        } else if (this instanceof NaverMember) {
+            return ((NaverMember) this).getEmail();
+        } else if (this instanceof KakaoMember) {
+            return ((KakaoMember) this).getEmail();
         }
 
         return "";

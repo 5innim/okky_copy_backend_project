@@ -1,6 +1,6 @@
 package com.innim.okkycopy.global.config;
 
-import com.innim.okkycopy.domain.member.service.MemberLoginService;
+import com.innim.okkycopy.domain.member.service.MemberCrudService;
 import com.innim.okkycopy.global.auth.CustomOAuth2AuthenticationSuccessHandler;
 import com.innim.okkycopy.global.auth.CustomUserDetailsService;
 import com.innim.okkycopy.global.auth.enums.Role;
@@ -33,7 +33,7 @@ import org.springframework.security.web.util.matcher.RequestMatcher;
 public class SecurityConfig {
 
     private final CustomUserDetailsService customUserDetailsService;
-    private final MemberLoginService memberLoginService;
+    private final MemberCrudService memberCrudService;
     private final CustomOAuth2AuthenticationSuccessHandler oAuth2AuthenticationSuccessHandler;
     @Value("#{environment['frontend.origin']}")
     private String frontendOrigin;
@@ -84,7 +84,8 @@ public class SecurityConfig {
                         "/board/knowledge/posts/{id}",
                         "/board/community/posts/{id}",
                         "/board/event/posts/{id}",
-                        "/board/comments/{id}").hasAnyAuthority(Role.USER.getValue(), Role.ADMIN.getValue())
+                        "/board/comments/{id}",
+                        "/member/logout").hasAnyAuthority(Role.USER.getValue(), Role.ADMIN.getValue())
                     .requestMatchers(HttpMethod.GET,
                         "/member/info").hasAnyAuthority(Role.USER.getValue(), Role.ADMIN.getValue())
                     .requestMatchers(HttpMethod.GET,
@@ -98,7 +99,7 @@ public class SecurityConfig {
                         "/board/community/posts",
                         "/board/event/posts").permitAll()
                     .requestMatchers(HttpMethod.POST,
-                        "/member/signup", 
+                        "/member/signup",
                         "/member/{provider}/signup").permitAll();
             }).apply(new CustomDsl());
 
@@ -115,13 +116,13 @@ public class SecurityConfig {
                 .addFilterAfter(new HandleStatusCodeExceptionFilter(), DefaultLoginPageGeneratingFilter.class)
                 .addFilterAfter(new OAuth2SessionInfoProcessingFilter(), HandleStatusCodeExceptionFilter.class)
                 .addFilterAfter(new FormDataLoginAuthenticationFilter(http.getSharedObject(
-                        AuthenticationManager.class), memberLoginService),
+                        AuthenticationManager.class), memberCrudService),
                     OAuth2SessionInfoProcessingFilter.class)
-                .addFilterAfter(new RefreshJwtFilter(memberLoginService),
+                .addFilterAfter(new RefreshJwtFilter(memberCrudService),
                     FormDataLoginAuthenticationFilter.class)
                 .addFilterAfter(new JwtAuthenticationFilter(customUserDetailsService, new RequestMatcher[]{
                         new AntPathRequestMatcher("/member/{provider}/signup", "POST")
-                    }),
+                    }, memberCrudService),
                     RefreshJwtFilter.class);
         }
     }

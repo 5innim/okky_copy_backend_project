@@ -1,6 +1,6 @@
 package com.innim.okkycopy.global.auth.filter;
 
-import com.innim.okkycopy.domain.member.service.MemberLoginService;
+import com.innim.okkycopy.domain.member.service.MemberCrudService;
 import com.innim.okkycopy.global.auth.CustomUserDetails;
 import com.innim.okkycopy.global.auth.dto.request.LoginRequest;
 import com.innim.okkycopy.global.error.ErrorCase;
@@ -32,7 +32,7 @@ public class FormDataLoginAuthenticationFilter extends OncePerRequestFilter {
     private final RequestMatcher requestMatcher = new AntPathRequestMatcher("/login",
         "POST");
     private AuthenticationManager authenticationManager;
-    private MemberLoginService memberLoginService;
+    private MemberCrudService memberCrudService;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
@@ -79,7 +79,7 @@ public class FormDataLoginAuthenticationFilter extends OncePerRequestFilter {
         refreshToken = JwtUtil.generateRefreshToken(userId, loginDate);
 
         LocalDateTime localDateTime = LocalDateTime.ofInstant(loginDate.toInstant(), ZoneId.systemDefault());
-        memberLoginService.modifyMemberLoginDate(userId, localDateTime);
+        memberCrudService.modifyMemberLoginDate(userId, localDateTime);
 
         ResponseUtil.addCookieWithHttpOnly(response, "accessToken", accessToken);
         ResponseUtil.addCookieWithHttpOnly(response, "refreshToken", refreshToken);

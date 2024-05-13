@@ -1,6 +1,6 @@
 package com.innim.okkycopy.global.auth;
 
-import com.innim.okkycopy.domain.member.service.MemberLoginService;
+import com.innim.okkycopy.domain.member.service.MemberCrudService;
 import com.innim.okkycopy.global.util.JwtUtil;
 import com.innim.okkycopy.global.util.ResponseUtil;
 import jakarta.servlet.ServletException;
@@ -24,7 +24,7 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class CustomOAuth2AuthenticationSuccessHandler implements AuthenticationSuccessHandler {
 
-    private final MemberLoginService memberLoginService;
+    private final MemberCrudService memberCrudService;
     @Value("#{environment['frontend.origin']}")
     private String frontendOrigin;
     @Value("#{environment['frontend.path.signup']}")
@@ -42,7 +42,7 @@ public class CustomOAuth2AuthenticationSuccessHandler implements AuthenticationS
 
             Date loginDate = new Date();
             LocalDateTime localDateTime = LocalDateTime.ofInstant(loginDate.toInstant(), ZoneId.systemDefault());
-            memberLoginService.modifyMemberLoginDate(userId, localDateTime);
+            memberCrudService.modifyMemberLoginDate(userId, localDateTime);
 
             ResponseUtil.addCookieWithHttpOnly(response, "accessToken", JwtUtil.generateAccessToken(userId, loginDate));
             ResponseUtil.addCookieWithHttpOnly(response, "refreshToken",
