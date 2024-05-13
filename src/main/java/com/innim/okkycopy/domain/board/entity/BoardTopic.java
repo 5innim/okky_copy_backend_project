@@ -6,6 +6,8 @@ import com.innim.okkycopy.domain.board.event.entity.EventPost;
 import com.innim.okkycopy.domain.board.event.entity.EventTag;
 import com.innim.okkycopy.domain.board.knowledge.entity.KnowledgePost;
 import com.innim.okkycopy.domain.board.knowledge.entity.KnowledgeTag;
+import com.innim.okkycopy.domain.board.qna.entity.QnaPost;
+import com.innim.okkycopy.domain.board.qna.entity.QnaTag;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -55,6 +57,9 @@ public class BoardTopic {
     List<EventPost> eventPosts;
 
     @OneToMany(mappedBy = "boardTopic", fetch = FetchType.LAZY)
+    List<QnaPost> qnaPosts;
+
+    @OneToMany(mappedBy = "boardTopic", fetch = FetchType.LAZY)
     List<KnowledgeTag> knowledgeTags;
 
     @OneToMany(mappedBy = "boardTopic", fetch = FetchType.LAZY)
@@ -62,4 +67,7 @@ public class BoardTopic {
 
     @OneToMany(mappedBy = "boardTopic", fetch = FetchType.LAZY)
     List<EventTag> eventTags;
+
+    @OneToMany(mappedBy = "boardTopic", fetch = FetchType.LAZY)
+    List<QnaTag> qnaTags;
 }

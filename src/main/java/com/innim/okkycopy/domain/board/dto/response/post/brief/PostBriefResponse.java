@@ -6,6 +6,7 @@ import com.innim.okkycopy.domain.board.entity.Post;
 import com.innim.okkycopy.domain.board.entity.Tag;
 import com.innim.okkycopy.domain.board.event.entity.EventPost;
 import com.innim.okkycopy.domain.board.knowledge.entity.KnowledgePost;
+import com.innim.okkycopy.domain.board.qna.entity.QnaPost;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -58,6 +59,10 @@ public class PostBriefResponse {
             response.setViews(((EventPost) post).getViews());
             response.setComments(((EventPost) post).getComments());
             response.setLikes(((EventPost) post).getLikes());
+        } else if (post instanceof QnaPost) {
+            response.setViews(((QnaPost) post).getViews());
+            response.setComments(((QnaPost) post).getComments());
+            response.setLikes(((QnaPost) post).getLikes());
         }
 
         return response;

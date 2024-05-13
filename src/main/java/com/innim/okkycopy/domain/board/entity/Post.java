@@ -4,6 +4,7 @@ import com.innim.okkycopy.domain.board.comment.entity.Comment;
 import com.innim.okkycopy.domain.board.community.entity.CommunityPost;
 import com.innim.okkycopy.domain.board.event.entity.EventPost;
 import com.innim.okkycopy.domain.board.knowledge.entity.KnowledgePost;
+import com.innim.okkycopy.domain.board.qna.entity.QnaPost;
 import com.innim.okkycopy.domain.member.entity.Member;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -74,6 +75,8 @@ public class Post {
             ((CommunityPost) this).setLikes(((CommunityPost) this).getLikes() + 1);
         } else if (this instanceof EventPost) {
             ((EventPost) this).setLikes(((EventPost) this).getLikes() + 1);
+        } else if (this instanceof QnaPost) {
+            ((QnaPost) this).setLikes(((QnaPost) this).getLikes() + 1);
         }
     }
 
@@ -84,6 +87,8 @@ public class Post {
             ((CommunityPost) this).setLikes(((CommunityPost) this).getLikes() - 1);
         } else if (this instanceof EventPost) {
             ((EventPost) this).setLikes(((EventPost) this).getLikes() - 1);
+        } else if (this instanceof QnaPost) {
+            ((QnaPost) this).setLikes(((QnaPost) this).getLikes() - 1);
         }
     }
 
@@ -94,6 +99,8 @@ public class Post {
             ((CommunityPost) this).setHates(((CommunityPost) this).getHates() + 1);
         } else if (this instanceof EventPost) {
             ((EventPost) this).setHates(((EventPost) this).getHates() + 1);
+        } else if (this instanceof QnaPost) {
+            ((QnaPost) this).setHates(((QnaPost) this).getHates() + 1);
         }
     }
 
@@ -104,6 +111,8 @@ public class Post {
             ((CommunityPost) this).setHates(((CommunityPost) this).getHates() - 1);
         } else if (this instanceof EventPost) {
             ((EventPost) this).setHates(((EventPost) this).getHates() - 1);
+        } else if (this instanceof QnaPost) {
+            ((QnaPost) this).setHates(((QnaPost) this).getHates() - 1);
         }
     }
 
@@ -114,6 +123,8 @@ public class Post {
             ((CommunityPost) this).setScraps(((CommunityPost) this).getScraps() + 1);
         } else if (this instanceof EventPost) {
             ((EventPost) this).setScraps(((EventPost) this).getScraps() + 1);
+        } else if (this instanceof QnaPost) {
+            ((QnaPost) this).setScraps(((QnaPost) this).getScraps() + 1);
         }
     }
 
@@ -124,6 +135,8 @@ public class Post {
             ((CommunityPost) this).setScraps(((CommunityPost) this).getScraps() - 1);
         } else if (this instanceof EventPost) {
             ((EventPost) this).setScraps(((EventPost) this).getScraps() - 1);
+        } else if (this instanceof QnaPost) {
+            ((QnaPost) this).setScraps(((QnaPost) this).getScraps() - 1);
         }
     }
 
@@ -134,6 +147,8 @@ public class Post {
             ((CommunityPost) this).setViews(((CommunityPost) this).getViews() + 1);
         } else if (this instanceof EventPost) {
             ((EventPost) this).setViews(((EventPost) this).getViews() + 1);
+        } else if (this instanceof QnaPost) {
+            ((QnaPost) this).setViews(((QnaPost) this).getViews() + 1);
         }
     }
 }
