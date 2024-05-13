@@ -40,13 +40,19 @@ public class MemberCrudService {
         member.setLoginDate(loginDate);
     }
 
+    @Transactional
+    public void modifyMemberLogoutDate(Member member, LocalDateTime loginDate)
+        throws StatusCodeException {
+        Member mergedMember = entityManager.merge(member);
+        mergedMember.setLogoutDate(loginDate);
+    }
+
     @Transactional(readOnly = true)
-    public Date findMemberLoginDate(long memberId)
+    public Member findMember(long memberId)
         throws StatusCodeException {
         Optional<Member> optionalMember = memberRepository.findByMemberId(memberId);
-        Member member = optionalMember.orElseThrow(
+        return optionalMember.orElseThrow(
             () -> new StatusCode401Exception(ErrorCase._401_NO_SUCH_MEMBER));
-        return (Date) Timestamp.valueOf(member.getLoginDate());
     }
 
 }
