@@ -1,9 +1,6 @@
 package com.innim.okkycopy.global.auth.filter;
 
 import com.innim.okkycopy.domain.member.service.MemberCrudService;
-import com.innim.okkycopy.global.error.ErrorCase;
-import com.innim.okkycopy.global.error.exception.StatusCode401Exception;
-import com.innim.okkycopy.global.error.exception.StatusCodeException;
 import com.innim.okkycopy.global.util.JwtUtil;
 import com.innim.okkycopy.global.util.ResponseUtil;
 import io.jsonwebtoken.Claims;
@@ -50,7 +47,7 @@ public class RefreshJwtFilter extends OncePerRequestFilter {
                     Long userId = Long.valueOf((Integer) claims.get("uid"));
                     Date lat = new Date((Long) claims.get("lat"));
 
-                    checkMostRecentGeneratedToken(userId, lat);
+                    JwtUtil.checkTokenIsLogoutOrIsGeneratedBeforeLogin(memberCrudService.findMember(userId), lat);
 
                     ResponseUtil.addCookieWithHttpOnly(response, "accessToken",
                         JwtUtil.generateAccessToken(userId, new Date()));
@@ -60,14 +57,6 @@ public class RefreshJwtFilter extends OncePerRequestFilter {
             }
         } else {
             filterChain.doFilter(request, response);
-        }
-    }
-
-
-    private void checkMostRecentGeneratedToken(Long userId, Date date) throws StatusCodeException {
-        Date lastLoginDate = memberCrudService.findMemberLoginDate(userId);
-        if (!date.equals(lastLoginDate)) {
-            throw new StatusCode401Exception(ErrorCase._401_NOT_MOST_RECENT_GENERATED_TOKEN);
         }
     }
 }

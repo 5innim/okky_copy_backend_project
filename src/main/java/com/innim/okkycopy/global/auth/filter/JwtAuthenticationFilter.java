@@ -1,5 +1,6 @@
 package com.innim.okkycopy.global.auth.filter;
 
+import com.innim.okkycopy.domain.member.service.MemberCrudService;
 import com.innim.okkycopy.global.auth.CustomUserDetailsService;
 import com.innim.okkycopy.global.error.exception.StatusCodeException;
 import com.innim.okkycopy.global.util.JwtUtil;
@@ -10,6 +11,7 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Date;
 import lombok.AllArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -25,6 +27,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private CustomUserDetailsService customUserDetailsService;
     private RequestMatcher[] useSessionRequests;
+    private MemberCrudService memberCrudService;
 
 
     @Override
@@ -53,6 +56,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             Claims claims = JwtUtil.validateToken(token);
             if (claims.getSubject().equals("access")) {
                 Long userId = Long.valueOf((Integer) claims.get("uid"));
+                Date lat = new Date((Long) claims.get("lat"));
+
+                JwtUtil.checkTokenIsLogoutOrIsGeneratedBeforeLogin(memberCrudService.findMember(userId), lat);
+
                 Authentication authResult = authenticate(userId);
                 onSuccessfulAuthentication(authResult, request, response, filterChain);
             } else {
