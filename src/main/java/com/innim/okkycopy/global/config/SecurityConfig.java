@@ -84,7 +84,8 @@ public class SecurityConfig {
                         "/board/knowledge/posts/{id}",
                         "/board/community/posts/{id}",
                         "/board/event/posts/{id}",
-                        "/board/comments/{id}").hasAnyAuthority(Role.USER.getValue(), Role.ADMIN.getValue())
+                        "/board/comments/{id}",
+                        "/member/logout").hasAnyAuthority(Role.USER.getValue(), Role.ADMIN.getValue())
                     .requestMatchers(HttpMethod.GET,
                         "/member/info").hasAnyAuthority(Role.USER.getValue(), Role.ADMIN.getValue())
                     .requestMatchers(HttpMethod.GET,
@@ -98,7 +99,7 @@ public class SecurityConfig {
                         "/board/community/posts",
                         "/board/event/posts").permitAll()
                     .requestMatchers(HttpMethod.POST,
-                        "/member/signup", 
+                        "/member/signup",
                         "/member/{provider}/signup").permitAll();
             }).apply(new CustomDsl());
 
@@ -121,7 +122,7 @@ public class SecurityConfig {
                     FormDataLoginAuthenticationFilter.class)
                 .addFilterAfter(new JwtAuthenticationFilter(customUserDetailsService, new RequestMatcher[]{
                         new AntPathRequestMatcher("/member/{provider}/signup", "POST")
-                    }),
+                    }, memberCrudService),
                     RefreshJwtFilter.class);
         }
     }
