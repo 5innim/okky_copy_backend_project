@@ -1,5 +1,6 @@
 package com.innim.okkycopy.global.util;
 
+import com.innim.okkycopy.domain.member.entity.Member;
 import com.innim.okkycopy.global.error.ErrorCase;
 import com.innim.okkycopy.global.error.exception.StatusCode401Exception;
 import com.innim.okkycopy.global.error.exception.StatusCode500Exception;
@@ -9,6 +10,7 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtParser;
 import io.jsonwebtoken.Jwts;
+import java.sql.Timestamp;
 import java.util.Date;
 import java.util.Map;
 
@@ -57,6 +59,16 @@ public class JwtUtil {
             throw new StatusCode401Exception(ErrorCase._401_TOKEN_VALIDATE_FAIL);
         }
 
+    }
+
+    public static void checkTokenIsLogoutOrIsGeneratedBeforeLogin(Member member, Date date) {
+        Date lastLoginDate = (Date) Timestamp.valueOf(member.getLoginDate());
+        Date lastLogoutDate = (member.getLogoutDate() == null) ? null : (Date) Timestamp.valueOf(member.getLogoutDate());
+        if (date.compareTo(lastLoginDate) < 0) {
+            throw new StatusCode401Exception(ErrorCase._401_BEFORE_THEN_LAST_LOGIN_DATE);
+        } else if (lastLogoutDate != null && lastLoginDate.compareTo(lastLogoutDate) < 0) {
+            throw new StatusCode401Exception(ErrorCase._401_IS_LOGOUT_MEMBER);
+        }
     }
 
     public static boolean prefixNotMatched(String value) {
