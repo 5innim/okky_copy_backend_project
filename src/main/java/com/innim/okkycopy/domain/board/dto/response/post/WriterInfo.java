@@ -11,13 +11,13 @@ import lombok.Getter;
 public class WriterInfo {
 
     private long memberId;
-    private String nickName;
+    private String nickname;
     private String profile;
 
     public static WriterInfo from(Member member) {
         return WriterInfo.builder()
             .memberId(member.getMemberId())
-            .nickName(member.getNickname())
+            .nickname(member.getNickname())
             .profile(member.getProfile())
             .build();
     }
