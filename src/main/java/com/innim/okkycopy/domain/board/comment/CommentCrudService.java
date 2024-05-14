@@ -85,7 +85,11 @@ public class CommentCrudService {
 
     @Transactional(readOnly = true)
     public CommentListResponse findComments(CustomUserDetails customUserDetails, long postId) {
-        List<Comment> parentComments = commentRepository.findByPostIdAndDepth(postId, 1);
+        Post post = postRepository.findByPostId(postId)
+            .orElseThrow(() -> new StatusCode400Exception(ErrorCase._400_NO_SUCH_POST));
+
+        List<Comment> parentComments = post.getCommentList().stream().filter(comment -> comment.getDepth() == 1)
+            .toList();
 
         List<CommentDetailsResponse> commentResponses = new ArrayList<>();
         Member requester = (customUserDetails == null) ? null : customUserDetails.getMember();
