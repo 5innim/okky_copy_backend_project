@@ -23,6 +23,7 @@ public class PostDetailsResponse {
 
     private WriterInfo writerInfo;
     private String title;
+    private String topicName;
     private String content;
     private List<String> tags;
     private Integer views;
@@ -45,6 +46,7 @@ public class PostDetailsResponse {
                 .nickname(member.getNickname())
                 .profile(member.getProfile()).build())
             .title(knowledgePost.getTitle())
+            .topicName(knowledgePost.getBoardTopic().getName())
             .content(knowledgePost.getContent())
             .tags(tags).views(knowledgePost.getViews())
             .likes(knowledgePost.getLikes())
@@ -65,6 +67,7 @@ public class PostDetailsResponse {
                 .nickname(member.getNickname())
                 .profile(member.getProfile()).build())
             .title(communityPost.getTitle())
+            .topicName(communityPost.getBoardTopic().getName())
             .content(communityPost.getContent())
             .tags(tags).views(communityPost.getViews())
             .likes(communityPost.getLikes())
@@ -85,6 +88,7 @@ public class PostDetailsResponse {
                 .nickname(member.getNickname())
                 .profile(member.getProfile()).build())
             .title(eventPost.getTitle())
+            .topicName(eventPost.getBoardTopic().getName())
             .content(eventPost.getContent())
             .tags(tags).views(eventPost.getViews())
             .likes(eventPost.getLikes())
@@ -105,6 +109,7 @@ public class PostDetailsResponse {
                 .nickname(member.getNickname())
                 .profile(member.getProfile()).build())
             .title(qnaPost.getTitle())
+            .topicName(qnaPost.getBoardTopic().getName())
             .content(qnaPost.getContent())
             .tags(tags).views(qnaPost.getViews())
             .likes(qnaPost.getLikes())
