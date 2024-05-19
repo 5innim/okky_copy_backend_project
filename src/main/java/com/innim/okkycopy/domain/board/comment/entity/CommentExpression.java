@@ -70,11 +70,9 @@ public class CommentExpression {
         Post post = comment.getPost();
         if (post instanceof KnowledgePost || post instanceof CommunityPost || post instanceof EventPost) {
             return false;
-        } else if (post instanceof QnaPost && comment.getDepth() > 1) {
-            return true;
+        } else {
+            return post instanceof QnaPost && comment.getDepth() > 1;
         }
-
-        return true;
     }
 
     public static void remove(
