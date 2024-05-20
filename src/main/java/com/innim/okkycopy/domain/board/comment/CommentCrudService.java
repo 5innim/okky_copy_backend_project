@@ -4,6 +4,8 @@ import com.innim.okkycopy.domain.board.comment.dto.request.CommentRequest;
 import com.innim.okkycopy.domain.board.comment.dto.request.ReCommentRequest;
 import com.innim.okkycopy.domain.board.comment.dto.response.CommentDetailsResponse;
 import com.innim.okkycopy.domain.board.comment.dto.response.CommentListResponse;
+import com.innim.okkycopy.domain.board.comment.dto.response.ReCommentDetailsResponse;
+import com.innim.okkycopy.domain.board.comment.dto.response.ReCommentListResponse;
 import com.innim.okkycopy.domain.board.comment.dto.response.RequesterInfo;
 import com.innim.okkycopy.domain.board.comment.entity.Comment;
 import com.innim.okkycopy.domain.board.comment.entity.CommentExpression;
@@ -108,7 +110,7 @@ public class CommentCrudService {
             commentResponses.add(
                 CommentDetailsResponse.of(
                     comment,
-                    null,
+                    findReComments(customUserDetails, comment.getCommentId()),
                     requesterInfo
                 )
             );
@@ -137,12 +139,12 @@ public class CommentCrudService {
     }
 
     @Transactional(readOnly = true)
-    public CommentListResponse findReComments(CustomUserDetails customUserDetails, long commentId) {
+    public ReCommentListResponse findReComments(CustomUserDetails customUserDetails, long commentId) {
         commentRepository.findByCommentId(commentId)
             .orElseThrow(() -> new StatusCode400Exception(ErrorCase._400_NO_SUCH_COMMENT));
 
         List<Comment> comments = commentRepository.findByParentId(commentId);
-        List<CommentDetailsResponse> commentResponses = new ArrayList<>();
+        List<ReCommentDetailsResponse> commentResponses = new ArrayList<>();
 
         Member requester = (customUserDetails == null) ? null : customUserDetails.getMember();
         for (Comment comment : comments) {
@@ -164,12 +166,12 @@ public class CommentCrudService {
                     .build();
 
             commentResponses.add(
-                CommentDetailsResponse.of(comment, mentionedNickname, requesterInfo)
+                ReCommentDetailsResponse.of(comment, mentionedNickname, requesterInfo)
             );
         }
         Collections.sort(commentResponses);
 
-        return new CommentListResponse(commentResponses);
+        return new ReCommentListResponse(commentResponses);
     }
 
 
