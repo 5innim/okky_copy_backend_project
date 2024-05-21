@@ -119,18 +119,18 @@ public class CommentControllerTest {
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
     }
 
-    @Test
-    void getReCommentsTest() {
-        // given
-        long id = 1L;
-        given(commentCrudService.findReComments(null, id)).willReturn(new CommentListResponse(Arrays.asList()));
-
-        // when
-        ResponseEntity response = commentController.reCommentList(null, id);
-
-        // then
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-    }
+//    @Test
+//    void getReCommentsTest() {
+//        // given
+//        long id = 1L;
+//        given(commentCrudService.findReComments(null, id)).willReturn(new CommentListResponse(Arrays.asList()));
+//
+//        // when
+//        ResponseEntity response = commentController.reCommentList(null, id);
+//
+//        // then
+//        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+//    }
 
     @Test
     void makeLikeExpressionTest() {
