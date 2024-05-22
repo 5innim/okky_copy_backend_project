@@ -17,6 +17,7 @@ public class MemberDetailsResponse {
     private String nickname;
     private List<Long> scrappedPost;
     private String profile;
+    private String name;
 
     public static MemberDetailsResponse from(Member member) {
         List<Long> scrappedPostIdList = new ArrayList<>();
@@ -30,6 +31,7 @@ public class MemberDetailsResponse {
         return MemberDetailsResponse.builder()
             .memberId(member.getMemberId())
             .nickname(member.getNickname())
+            .name(member.getName())
             .profile(member.getProfile())
             .scrappedPost(scrappedPostIdList)
             .build();
