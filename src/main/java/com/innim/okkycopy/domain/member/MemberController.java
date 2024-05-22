@@ -1,5 +1,6 @@
 package com.innim.okkycopy.domain.member;
 
+import com.innim.okkycopy.domain.member.dto.request.MemberModifyRequest;
 import com.innim.okkycopy.domain.member.dto.request.MemberRequest;
 import com.innim.okkycopy.domain.member.dto.request.OAuthMemberRequest;
 import com.innim.okkycopy.domain.member.dto.response.MemberBriefResponse;
@@ -55,6 +56,13 @@ public class MemberController {
     public ResponseEntity<MemberDetailsResponse> memberDetails(
         @AuthenticationPrincipal CustomUserDetails customUserDetails) {
         return ResponseEntity.ok(memberCrudService.findMember(customUserDetails.getMember()));
+    }
+
+    @PutMapping("/profile-update")
+    public ResponseEntity<Object> memberModify(@Valid @RequestBody MemberModifyRequest memberModifyRequest,
+        @AuthenticationPrincipal CustomUserDetails customUserDetails) {
+        memberCrudService.modifyMember(customUserDetails.getMember(), memberModifyRequest);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
     //TODO "Adjust interceptor later"
