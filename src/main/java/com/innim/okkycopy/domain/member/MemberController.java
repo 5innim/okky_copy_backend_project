@@ -1,6 +1,7 @@
 package com.innim.okkycopy.domain.member;
 
-import com.innim.okkycopy.domain.member.dto.request.MemberModifyRequest;
+import com.innim.okkycopy.domain.member.dto.request.ChangePasswordRequest;
+import com.innim.okkycopy.domain.member.dto.request.ProfileUpdateRequest;
 import com.innim.okkycopy.domain.member.dto.request.MemberRequest;
 import com.innim.okkycopy.domain.member.dto.request.OAuthMemberRequest;
 import com.innim.okkycopy.domain.member.dto.response.MemberBriefResponse;
@@ -59,9 +60,16 @@ public class MemberController {
     }
 
     @PutMapping("/profile-update")
-    public ResponseEntity<Object> memberModify(@Valid @RequestBody MemberModifyRequest memberModifyRequest,
+    public ResponseEntity<Object> memberModify(@Valid @RequestBody ProfileUpdateRequest profileUpdateRequest,
         @AuthenticationPrincipal CustomUserDetails customUserDetails) {
-        memberCrudService.modifyMember(customUserDetails.getMember(), memberModifyRequest);
+        memberCrudService.modifyMember(customUserDetails.getMember(), profileUpdateRequest);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
+
+    @PutMapping("/change-password")
+    public ResponseEntity<Object> memberModify(@Valid @RequestBody ChangePasswordRequest changePasswordRequest,
+        @AuthenticationPrincipal CustomUserDetails customUserDetails) {
+        okkyMemberService.modifyMember(customUserDetails.getMember(), changePasswordRequest);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
