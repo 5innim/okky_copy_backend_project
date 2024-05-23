@@ -1,5 +1,6 @@
 package com.innim.okkycopy.domain.member.service;
 
+import com.innim.okkycopy.domain.member.dto.request.ProfileUpdateRequest;
 import com.innim.okkycopy.domain.member.dto.response.MemberDetailsResponse;
 import com.innim.okkycopy.domain.member.entity.Member;
 import com.innim.okkycopy.domain.member.repository.MemberRepository;
@@ -8,9 +9,7 @@ import com.innim.okkycopy.global.error.exception.StatusCode401Exception;
 import com.innim.okkycopy.global.error.exception.StatusCodeException;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
-import java.sql.Timestamp;
 import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -41,10 +40,19 @@ public class MemberCrudService {
     }
 
     @Transactional
-    public void modifyMemberLogoutDate(Member member, LocalDateTime loginDate)
+    public void modifyMember(Member member, ProfileUpdateRequest profileUpdateRequest) {
+        Member mergedMember = entityManager.merge(member);
+        mergedMember.setName(profileUpdateRequest.getName());
+        mergedMember.setNickname(profileUpdateRequest.getNickname());
+        mergedMember.setProfile(profileUpdateRequest.getProfile());
+
+    }
+
+    @Transactional
+    public void modifyMemberLogoutDate(Member member, LocalDateTime logoutDate)
         throws StatusCodeException {
         Member mergedMember = entityManager.merge(member);
-        mergedMember.setLogoutDate(loginDate);
+        mergedMember.setLogoutDate(logoutDate);
     }
 
     @Transactional(readOnly = true)

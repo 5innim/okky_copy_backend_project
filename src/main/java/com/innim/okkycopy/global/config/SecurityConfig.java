@@ -88,7 +88,9 @@ public class SecurityConfig {
                         "/board/event/posts/{id}",
                         "/board/qna/posts/{id}",
                         "/board/comments/{id}",
-                        "/member/logout").hasAnyAuthority(Role.USER.getValue(), Role.ADMIN.getValue())
+                        "/member/logout",
+                        "/member/profile-update",
+                        "/member/change-password").hasAnyAuthority(Role.USER.getValue(), Role.ADMIN.getValue())
                     .requestMatchers(HttpMethod.GET,
                         "/member/info").hasAnyAuthority(Role.USER.getValue(), Role.ADMIN.getValue())
                     .requestMatchers(HttpMethod.GET,
