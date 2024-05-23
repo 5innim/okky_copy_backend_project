@@ -97,8 +97,8 @@ public class MemberController {
 
     @PutMapping("/logout")
     public ResponseEntity<Object> memberModify(@AuthenticationPrincipal CustomUserDetails customUserDetails) {
-        Date loginDate = new Date();
-        LocalDateTime localDateTime = LocalDateTime.ofInstant(loginDate.toInstant(), ZoneId.systemDefault());
+        Date logoutDate = new Date();
+        LocalDateTime localDateTime = LocalDateTime.ofInstant(logoutDate.toInstant(), ZoneId.systemDefault());
         memberCrudService.modifyMemberLogoutDate(customUserDetails.getMember(), localDateTime);
 
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
