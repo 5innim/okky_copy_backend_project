@@ -49,10 +49,10 @@ public class MemberCrudService {
     }
 
     @Transactional
-    public void modifyMemberLogoutDate(Member member, LocalDateTime loginDate)
+    public void modifyMemberLogoutDate(Member member, LocalDateTime logoutDate)
         throws StatusCodeException {
         Member mergedMember = entityManager.merge(member);
-        mergedMember.setLogoutDate(loginDate);
+        mergedMember.setLogoutDate(logoutDate);
     }
 
     @Transactional(readOnly = true)
