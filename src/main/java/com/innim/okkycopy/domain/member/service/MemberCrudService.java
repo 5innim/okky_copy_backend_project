@@ -1,6 +1,6 @@
 package com.innim.okkycopy.domain.member.service;
 
-import com.innim.okkycopy.domain.member.dto.request.MemberModifyRequest;
+import com.innim.okkycopy.domain.member.dto.request.ProfileUpdateRequest;
 import com.innim.okkycopy.domain.member.dto.response.MemberDetailsResponse;
 import com.innim.okkycopy.domain.member.entity.Member;
 import com.innim.okkycopy.domain.member.repository.MemberRepository;
@@ -40,11 +40,11 @@ public class MemberCrudService {
     }
 
     @Transactional
-    public void modifyMember(Member member, MemberModifyRequest memberModifyRequest) {
+    public void modifyMember(Member member, ProfileUpdateRequest profileUpdateRequest) {
         Member mergedMember = entityManager.merge(member);
-        mergedMember.setName(memberModifyRequest.getName());
-        mergedMember.setNickname(memberModifyRequest.getNickname());
-        mergedMember.setProfile(memberModifyRequest.getProfile());
+        mergedMember.setName(profileUpdateRequest.getName());
+        mergedMember.setNickname(profileUpdateRequest.getNickname());
+        mergedMember.setProfile(profileUpdateRequest.getProfile());
 
     }
 
