@@ -7,6 +7,7 @@ import com.innim.okkycopy.global.auth.CustomOAuth2User;
 import com.innim.okkycopy.global.error.ErrorCase;
 import com.innim.okkycopy.global.error.exception.StatusCode400Exception;
 import com.innim.okkycopy.global.error.exception.StatusCode401Exception;
+import com.innim.okkycopy.global.util.email.MailUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import java.util.Optional;
@@ -19,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class NaverMemberService {
 
     private final NaverMemberRepository naverMemberRepository;
+    private final MailUtil mailUtil;
 
     @Transactional(readOnly = true)
     public NaverMember findNaverMember(String providerId) {
@@ -44,6 +46,8 @@ public class NaverMemberService {
         }
 
         NaverMember member = naverMemberRepository.save(NaverMember.of(oAuthMemberRequest, oAuth2User));
+        mailUtil.sendAuthenticateEmailAndPutCache(member.findEmail(), member.getMemberId(), member.getName());
+
         return member.getMemberId();
     }
 
