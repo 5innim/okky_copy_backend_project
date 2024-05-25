@@ -18,7 +18,7 @@ public class MemberBriefResponse {
         return MemberBriefResponse.builder()
             .nickname(member.getNickname())
             .name(member.getName())
-            .email(member.getEmail())
+            .email(member.findEmail())
             .build();
     }
 }
