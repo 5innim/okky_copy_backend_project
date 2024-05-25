@@ -60,6 +60,8 @@ public class Member {
     private Role role;
     @Column
     private String profile;
+    @Column(nullable = false, name = "is_email_valid")
+    private Boolean isEmailValid;
     @Column(name = "login_date")
     private LocalDateTime loginDate;
     @Column(name = "logout_date")

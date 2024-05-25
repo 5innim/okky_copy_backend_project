@@ -38,6 +38,7 @@ public class OkkyMember extends Member {
             .name(request.getName())
             .nickname(request.getNickname())
             .emailCheck(request.isEmailCheck())
+            .isEmailValid(false)
             .role(Role.USER)
             .profile(null)
             .build();

@@ -46,6 +46,7 @@ public class NaverMember extends Member {
             .name(map.get("name"))
             .nickname(request.getNickname())
             .emailCheck(request.isEmailCheck())
+            .isEmailValid(false)
             .role(Role.USER)
             .profile(request.getProfile())
             .build();
