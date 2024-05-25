@@ -1,5 +1,7 @@
 package com.innim.okkycopy.global.config;
 
+import com.google.common.cache.Cache;
+import com.google.common.cache.CacheBuilder;
 import com.innim.okkycopy.domain.member.service.MemberCrudService;
 import com.innim.okkycopy.global.auth.CustomOAuth2AuthenticationSuccessHandler;
 import com.innim.okkycopy.global.auth.CustomUserDetailsService;
@@ -10,6 +12,8 @@ import com.innim.okkycopy.global.auth.filter.HandleStatusCodeExceptionFilter;
 import com.innim.okkycopy.global.auth.filter.JwtAuthenticationFilter;
 import com.innim.okkycopy.global.auth.filter.OAuth2SessionInfoProcessingFilter;
 import com.innim.okkycopy.global.auth.filter.RefreshJwtFilter;
+import com.innim.okkycopy.global.util.email.EmailAuthenticateValue;
+import java.util.concurrent.TimeUnit;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -41,6 +45,13 @@ public class SecurityConfig {
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
+    }
+
+    @Bean
+    public Cache<String, EmailAuthenticateValue> emailAuthenticateCache() {
+        return CacheBuilder.newBuilder()
+            .expireAfterWrite(30, TimeUnit.MINUTES)
+            .build();
     }
 
     @Bean
