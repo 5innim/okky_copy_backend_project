@@ -55,6 +55,32 @@ spring:
             user-info-uri: https://kapi.kakao.com/v2/user/me
             user-name-attribute: id
 
+  # mail
+  mail:
+    default-encoding: UTF-8
+    host: smtp.gmail.com
+    port: 587
+    username: bjm22247@gmail.com
+    password: imzi mmoo qmuc xjuz
+    properties.mail:
+      smtp:
+        auth: true
+        starttls:
+          enable: true
+      debug: true
+      mime:
+        charset: UTF-8
+      transport:
+        protocol: smtp
+
+  # thymeleaf
+  thymeleaf:
+    check-template-location: true
+    prefix: classpath:/templates/
+    suffix: .html
+    mode: HTML5
+    cache: true
+    order: 0
 
   # jpa
   jpa:
@@ -90,3 +116,4 @@ frontend:
   path:
     base: /
     signup: /oauth/signup
+    mail-authenticate: /mail-authenticate
