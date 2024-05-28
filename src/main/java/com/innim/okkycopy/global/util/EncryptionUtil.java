@@ -25,9 +25,8 @@ public class EncryptionUtil {
         return sb.toString();
     }
 
-    public static String getEmailEncryptionKeyEncodedWithBase64(String... str) throws NoSuchAlgorithmException {
-        String encryptedKey = encryptWithSHA256(connectStrings(str));
-        return new String(Base64.getEncoder().encode(encryptedKey.getBytes(StandardCharsets.UTF_8)));
+    public static String base64Encode(String key) throws NoSuchAlgorithmException {
+        return new String(Base64.getEncoder().encode(key.getBytes(StandardCharsets.UTF_8)));
     }
 
     public static String byteToHexString(byte[] data) {
