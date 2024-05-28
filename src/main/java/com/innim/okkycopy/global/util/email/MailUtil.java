@@ -34,14 +34,18 @@ public class MailUtil {
 
     public void sendAuthenticateEmailAndPutCache(String email, Long memberId, String name) {
         try {
-            sendAuthenticateEmail(
-                EncryptionUtil.getEmailEncryptionKeyEncodedWithBase64(email,
-                    memberId.toString()),
-                name,
-                email);
-            emailAuthenticateCache.put(EncryptionUtil.encryptWithSHA256(
-                    EncryptionUtil.connectStrings(email, memberId.toString())),
-                new EmailAuthenticateValue(memberId, email));
+            String key = EncryptionUtil.encryptWithSHA256(
+                EncryptionUtil.connectStrings(email, memberId.toString()));
+            emailAuthenticateCache.put(key, new EmailAuthenticateValue(memberId, email));
+            try {
+                sendAuthenticateEmail(
+                    EncryptionUtil.base64Encode(key),
+                    name,
+                    email);
+            } catch (Exception ex) {
+                emailAuthenticateCache.invalidate(key);
+                throw ex;
+            }
         } catch (Exception ex) {
             throw new StatusCode500Exception(ErrorCase._500_SEND_MAIL_FAIL);
         }
