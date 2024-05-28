@@ -14,6 +14,7 @@ import com.innim.okkycopy.domain.member.service.OkkyMemberService;
 import com.innim.okkycopy.global.auth.CustomUserDetails;
 import com.innim.okkycopy.global.error.ErrorCase;
 import com.innim.okkycopy.global.error.exception.StatusCode400Exception;
+import com.innim.okkycopy.global.util.EncryptionUtil;
 import com.innim.okkycopy.global.util.JwtUtil;
 import com.innim.okkycopy.global.util.ResponseUtil;
 import jakarta.servlet.http.HttpServletRequest;
@@ -70,6 +71,12 @@ public class MemberController {
     public ResponseEntity<Object> memberModify(@Valid @RequestBody ChangePasswordRequest changePasswordRequest,
         @AuthenticationPrincipal CustomUserDetails customUserDetails) {
         okkyMemberService.modifyMember(customUserDetails.getMember(), changePasswordRequest);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
+
+    @PutMapping("/email-authenticate")
+    public ResponseEntity<Object> memberModify(String key) {
+        memberCrudService.modifyMemberIsEmailValid(EncryptionUtil.base64Decode(key));
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
