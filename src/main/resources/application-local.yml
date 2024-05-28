@@ -116,4 +116,4 @@ frontend:
   path:
     base: /
     signup: /oauth/signup
-    mail-authenticate: /mail-authenticate
+    mail-authenticate: /email-authenticate
