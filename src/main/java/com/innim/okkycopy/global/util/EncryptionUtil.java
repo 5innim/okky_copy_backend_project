@@ -37,4 +37,8 @@ public class EncryptionUtil {
         return sb.toString();
     }
 
+    public static String base64Decode(String encoded) {
+        return new String(Base64.getDecoder().decode(encoded));
+    }
+
 }
