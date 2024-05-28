@@ -1,11 +1,14 @@
 package com.innim.okkycopy.global.util.email;
 
 import com.google.common.cache.Cache;
+import com.google.common.cache.CacheBuilder;
 import com.innim.okkycopy.global.error.ErrorCase;
 import com.innim.okkycopy.global.error.exception.StatusCode500Exception;
 import com.innim.okkycopy.global.util.EncryptionUtil;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
+import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -19,8 +22,7 @@ import org.thymeleaf.spring6.SpringTemplateEngine;
 public class MailUtil {
     private final JavaMailSender mailSender;
     private final SpringTemplateEngine templateEngine;
-    private final Cache<String, EmailAuthenticateValue> emailAuthenticateCache;
-
+    private static final Cache<String, EmailAuthenticateValue> emailAuthenticateCache;
     @Value("#{environment['frontend.origin']}")
     private String frontendOrigin;
     @Value("#{environment['frontend.path.mail-authenticate']}")
