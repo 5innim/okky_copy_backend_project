@@ -48,13 +48,6 @@ public class SecurityConfig {
     }
 
     @Bean
-    public Cache<String, EmailAuthenticateValue> emailAuthenticateCache() {
-        return CacheBuilder.newBuilder()
-            .expireAfterWrite(30, TimeUnit.MINUTES)
-            .build();
-    }
-
-    @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
             .sessionManagement(AbstractHttpConfigurer::disable)

@@ -26,6 +26,12 @@ public class MailUtil {
     @Value("#{environment['frontend.path.mail-authenticate']}")
     private String mailAuthenticatePath;
 
+    static {
+        emailAuthenticateCache = CacheBuilder.newBuilder()
+            .expireAfterWrite(30, TimeUnit.MINUTES)
+            .build();
+    }
+
     public void sendAuthenticateEmailAndPutCache(String email, Long memberId, String name) {
         try {
             sendAuthenticateEmail(
