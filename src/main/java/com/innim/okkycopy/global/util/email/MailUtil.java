@@ -85,4 +85,12 @@ public class MailUtil {
         mailSender.send(mimeMessage);
     }
 
+    public Optional<EmailAuthenticateValue> findValue(String key) {
+        return Optional.ofNullable(emailAuthenticateCache.getIfPresent(key));
+    }
+
+    public void removeKey(String key) {
+        emailAuthenticateCache.invalidate(key);
+    }
+
 }
