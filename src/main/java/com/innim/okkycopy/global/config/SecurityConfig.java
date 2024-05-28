@@ -73,8 +73,9 @@ public class SecurityConfig {
                         "/board/posts/{id}/like",
                         "/board/posts/{id}/hate",
                         "/board/comments/{id}/like",
-                        "/board/comments/{id}/hate",
-                        "/board/file/upload").hasAnyAuthority(Role.USER.getValue(), Role.ADMIN.getValue())
+                        "/board/comments/{id}/hate").hasAnyAuthority(Role.USER.getValue(), Role.ADMIN.getValue())
+                    .requestMatchers(HttpMethod.POST,
+                        "/board/file/upload").hasAnyAuthority(Role.MAIL_INVALID_USER.getValue(), Role.USER.getValue(), Role.ADMIN.getValue())
                     .requestMatchers(HttpMethod.DELETE,
                         "/board/post/scrap",
                         "/board/knowledge/posts/{id}",
@@ -91,12 +92,15 @@ public class SecurityConfig {
                         "/board/community/posts/{id}",
                         "/board/event/posts/{id}",
                         "/board/qna/posts/{id}",
-                        "/board/comments/{id}",
+                        "/board/comments/{id}").hasAnyAuthority(Role.USER.getValue(), Role.ADMIN.getValue())
+                    .requestMatchers(HttpMethod.PUT,
                         "/member/logout",
                         "/member/profile-update",
-                        "/member/change-password").hasAnyAuthority(Role.USER.getValue(), Role.ADMIN.getValue())
+                        "/member/change-password")
+                    .hasAnyAuthority(Role.MAIL_INVALID_USER.getValue(), Role.USER.getValue(), Role.ADMIN.getValue())
                     .requestMatchers(HttpMethod.GET,
-                        "/member/info").hasAnyAuthority(Role.USER.getValue(), Role.ADMIN.getValue())
+                        "/member/info")
+                    .hasAnyAuthority(Role.MAIL_INVALID_USER.getValue(), Role.USER.getValue(), Role.ADMIN.getValue())
                     .requestMatchers(HttpMethod.GET,
                         "/board/topics",
                         "/board/knowledge/posts/{id}",
@@ -111,7 +115,9 @@ public class SecurityConfig {
                         "/board/qna/posts").permitAll()
                     .requestMatchers(HttpMethod.POST,
                         "/member/signup",
-                        "/member/{provider}/signup").permitAll();
+                        "/member/{provider}/signup").permitAll()
+                    .requestMatchers(HttpMethod.PUT,
+                        "/member/email-authenticate").permitAll();
             }).apply(new CustomDsl());
 
         return http.build();

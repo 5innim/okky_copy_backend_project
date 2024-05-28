@@ -38,8 +38,7 @@ public class GoogleMember extends Member {
             .name(oAuth2User.getAttribute("name"))
             .nickname(request.getNickname())
             .emailCheck(request.isEmailCheck())
-            .isEmailValid(false)
-            .role(Role.USER)
+            .role(Role.MAIL_INVALID_USER)
             .profile(request.getProfile())
             .build();
     }

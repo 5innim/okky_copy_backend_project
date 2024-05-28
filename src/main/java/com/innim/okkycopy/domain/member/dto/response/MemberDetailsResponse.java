@@ -24,6 +24,7 @@ public class MemberDetailsResponse {
     private String profile;
     private String name;
     private String accountFrom;
+    private String role;
 
     public static MemberDetailsResponse from(Member member) {
         List<Long> scrappedPostIdList = new ArrayList<>();
@@ -52,6 +53,7 @@ public class MemberDetailsResponse {
             .nickname(member.getNickname())
             .name(member.getName())
             .accountFrom(accountFrom)
+            .role(member.getRole().getValue())
             .profile(member.getProfile())
             .scrappedPost(scrappedPostIdList)
             .build();

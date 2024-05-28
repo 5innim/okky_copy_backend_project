@@ -47,7 +47,7 @@ public class KakaoMember extends Member {
             .name(request.getNickname())
             .nickname(request.getNickname())
             .emailCheck(request.isEmailCheck())
-            .isEmailValid(false)
+            .role(Role.MAIL_INVALID_USER)
             .role(Role.USER)
             .profile(request.getProfile())
             .build();
