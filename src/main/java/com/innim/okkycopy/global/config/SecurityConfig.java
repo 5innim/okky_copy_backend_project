@@ -1,7 +1,5 @@
 package com.innim.okkycopy.global.config;
 
-import com.google.common.cache.Cache;
-import com.google.common.cache.CacheBuilder;
 import com.innim.okkycopy.domain.member.service.MemberCrudService;
 import com.innim.okkycopy.global.auth.CustomOAuth2AuthenticationSuccessHandler;
 import com.innim.okkycopy.global.auth.CustomUserDetailsService;
@@ -12,8 +10,6 @@ import com.innim.okkycopy.global.auth.filter.HandleStatusCodeExceptionFilter;
 import com.innim.okkycopy.global.auth.filter.JwtAuthenticationFilter;
 import com.innim.okkycopy.global.auth.filter.OAuth2SessionInfoProcessingFilter;
 import com.innim.okkycopy.global.auth.filter.RefreshJwtFilter;
-import com.innim.okkycopy.global.util.email.EmailAuthenticateValue;
-import java.util.concurrent.TimeUnit;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -75,7 +71,8 @@ public class SecurityConfig {
                         "/board/comments/{id}/like",
                         "/board/comments/{id}/hate").hasAnyAuthority(Role.USER.getValue(), Role.ADMIN.getValue())
                     .requestMatchers(HttpMethod.POST,
-                        "/board/file/upload").hasAnyAuthority(Role.MAIL_INVALID_USER.getValue(), Role.USER.getValue(), Role.ADMIN.getValue())
+                        "/board/file/upload",
+                        "/member/update-email").hasAnyAuthority(Role.MAIL_INVALID_USER.getValue(), Role.USER.getValue(), Role.ADMIN.getValue())
                     .requestMatchers(HttpMethod.DELETE,
                         "/board/post/scrap",
                         "/board/knowledge/posts/{id}",
@@ -117,7 +114,8 @@ public class SecurityConfig {
                         "/member/signup",
                         "/member/{provider}/signup").permitAll()
                     .requestMatchers(HttpMethod.PUT,
-                        "/member/email-authenticate").permitAll();
+                        "/member/email-authenticate",
+                        "/member/email-change-authenticate").permitAll();
             }).apply(new CustomDsl());
 
         return http.build();
