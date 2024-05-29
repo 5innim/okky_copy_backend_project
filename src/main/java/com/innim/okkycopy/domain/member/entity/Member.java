@@ -91,5 +91,17 @@ public class Member {
         return "";
     }
 
+    public void changeEmail(String email) {
+        if (this instanceof OkkyMember) {
+            ((OkkyMember) this).setEmail(email);
+        } else if (this instanceof GoogleMember) {
+            ((GoogleMember) this).setEmail(email);
+        } else if (this instanceof NaverMember) {
+            ((NaverMember) this).setEmail(email);
+        } else if (this instanceof KakaoMember) {
+            ((KakaoMember) this).setEmail(email);
+        }
+    }
+
 
 }
