@@ -20,6 +20,7 @@ public enum ErrorCase {
     _400_DATA_INTEGRITY_VIOLATION(HttpStatus.BAD_REQUEST, "400030", "data integrity violation"),
     _400_BAD_FORM_DATA(HttpStatus.BAD_REQUEST, "400031", "input form data is wrong"),
     _400_NO_CHANGE_PASSWORD(HttpStatus.BAD_REQUEST, "400032", "is not changed when compare with old password"),
+    _400_IN_USAGE_EMAIL(HttpStatus.BAD_REQUEST, "400033", "is already used by another member"),
     _400_INVALID_UNEXPECTED(HttpStatus.BAD_REQUEST, "400100", "unexpected input is invalid"),
     _401_TOKEN_VALIDATE_FAIL(HttpStatus.UNAUTHORIZED, "401001", "this token is not valid"),
     _401_LOGIN_FAIL(HttpStatus.UNAUTHORIZED, "401002", "login fail"),
