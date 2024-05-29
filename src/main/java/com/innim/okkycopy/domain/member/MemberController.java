@@ -9,6 +9,7 @@ import com.innim.okkycopy.domain.member.dto.response.MemberDetailsResponse;
 import com.innim.okkycopy.domain.member.service.GoogleMemberService;
 import com.innim.okkycopy.domain.member.service.KakaoMemberService;
 import com.innim.okkycopy.domain.member.service.MemberCrudService;
+import com.innim.okkycopy.domain.member.service.MemberEmailService;
 import com.innim.okkycopy.domain.member.service.NaverMemberService;
 import com.innim.okkycopy.domain.member.service.OkkyMemberService;
 import com.innim.okkycopy.global.auth.CustomUserDetails;
@@ -46,6 +47,7 @@ public class MemberController {
     private final GoogleMemberService googleMemberService;
     private final KakaoMemberService kakaoMemberService;
     private final NaverMemberService naverMemberService;
+    private final MemberEmailService memberEmailService;
 
     @PostMapping("/signup")
     public ResponseEntity<MemberBriefResponse> memberAdd(@Valid @RequestBody MemberRequest memberRequest) {
@@ -72,6 +74,12 @@ public class MemberController {
         @AuthenticationPrincipal CustomUserDetails customUserDetails) {
         okkyMemberService.modifyMember(customUserDetails.getMember(), changePasswordRequest);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
+
+    @PostMapping("/update-email")
+    public void authenticationMailSend(@Valid @RequestBody UpdateEmailRequest updateEmailRequest,
+        @AuthenticationPrincipal CustomUserDetails customUserDetails) {
+        memberEmailService.sendAuthenticationMail(updateEmailRequest, customUserDetails.getMember());
     }
 
     @PutMapping("/email-authenticate")
