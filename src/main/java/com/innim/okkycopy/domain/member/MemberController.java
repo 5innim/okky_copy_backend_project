@@ -4,6 +4,7 @@ import com.innim.okkycopy.domain.member.dto.request.ChangePasswordRequest;
 import com.innim.okkycopy.domain.member.dto.request.ProfileUpdateRequest;
 import com.innim.okkycopy.domain.member.dto.request.MemberRequest;
 import com.innim.okkycopy.domain.member.dto.request.OAuthMemberRequest;
+import com.innim.okkycopy.domain.member.dto.request.UpdateEmailRequest;
 import com.innim.okkycopy.domain.member.dto.response.MemberBriefResponse;
 import com.innim.okkycopy.domain.member.dto.response.MemberDetailsResponse;
 import com.innim.okkycopy.domain.member.service.GoogleMemberService;
@@ -83,8 +84,14 @@ public class MemberController {
     }
 
     @PutMapping("/email-authenticate")
-    public ResponseEntity<Object> memberModify(String key) {
-        memberCrudService.modifyMemberIsEmailValid(EncryptionUtil.base64Decode(key));
+    public ResponseEntity<Object> emailAuthenticate(String key) {
+        memberCrudService.modifyMemberRole(EncryptionUtil.base64Decode(key));
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
+
+    @PutMapping("/email-change-authenticate")
+    public ResponseEntity<Object> emailChangeAuthenticate(String key) {
+        memberCrudService.modifyMemberRoleAndEmail(EncryptionUtil.base64Decode(key));
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
