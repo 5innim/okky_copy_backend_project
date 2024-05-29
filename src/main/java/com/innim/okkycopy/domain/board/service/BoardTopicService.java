@@ -21,7 +21,7 @@ public class BoardTopicService {
         List<BoardType> boardTypes = boardTypeRepository.findAll();
 
         if (boardTypes.isEmpty()) {
-            throw new StatusCode500Exception(ErrorCase._500_FAIL_INITIALIZATION);
+            throw new StatusCode500Exception(ErrorCase._500_INITIALIZATION_FAIL);
         }
 
         return TopicListResponse.from(boardTypes);

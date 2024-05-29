@@ -4,9 +4,14 @@ import com.innim.okkycopy.domain.member.dto.request.ProfileUpdateRequest;
 import com.innim.okkycopy.domain.member.dto.response.MemberDetailsResponse;
 import com.innim.okkycopy.domain.member.entity.Member;
 import com.innim.okkycopy.domain.member.repository.MemberRepository;
+import com.innim.okkycopy.global.auth.enums.Role;
 import com.innim.okkycopy.global.error.ErrorCase;
 import com.innim.okkycopy.global.error.exception.StatusCode401Exception;
+import com.innim.okkycopy.global.error.exception.StatusCode500Exception;
 import com.innim.okkycopy.global.error.exception.StatusCodeException;
+import com.innim.okkycopy.global.util.EncryptionUtil;
+import com.innim.okkycopy.global.util.email.EmailAuthenticateValue;
+import com.innim.okkycopy.global.util.email.MailUtil;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import java.time.LocalDateTime;
@@ -14,12 +19,14 @@ import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.client.HttpStatusCodeException;
 
 @Service
 @RequiredArgsConstructor
 public class MemberCrudService {
 
     private final MemberRepository memberRepository;
+    private final MailUtil mailUtil;
     @PersistenceContext
     EntityManager entityManager;
 
@@ -37,6 +44,49 @@ public class MemberCrudService {
         Member member = optionalMember.orElseThrow(
             () -> new StatusCode401Exception(ErrorCase._401_NO_SUCH_MEMBER));
         member.setLoginDate(loginDate);
+    }
+
+    @Transactional
+    public void modifyMemberRole(String key) {
+        EmailAuthenticateValue value = mailUtil.findValueByEmailAuthenticate(key).orElseThrow(
+            () -> new StatusCode401Exception(ErrorCase._401_NO_SUCH_KEY));
+
+        Member member = memberRepository.findByMemberId(value.getMemberId()).orElseThrow(
+            () -> new StatusCode401Exception(ErrorCase._401_NO_SUCH_MEMBER));
+
+        if (member.getRole() != Role.MAIL_INVALID_USER) {
+            throw new StatusCode401Exception(ErrorCase._401_MAIL_ALREADY_AUTHENTICATED);
+        };
+
+        try {
+            String generatedKey = EncryptionUtil.encryptWithSHA256(
+                EncryptionUtil.connectStrings(member.findEmail(), member.getMemberId().toString()));
+            if (!key.equals(generatedKey)) {
+                throw new StatusCode401Exception(ErrorCase._401_KEY_VALIDATION_FAIL);
+            }
+        } catch(HttpStatusCodeException ex) {
+            throw ex;
+        } catch(Exception ex) {
+            throw new StatusCode500Exception(ErrorCase._500_KEY_GENERATE_FAIL);
+        }
+
+        member.setRole(Role.USER);
+        mailUtil.removeKey(key);
+    }
+
+    @Transactional
+    public void modifyMemberRoleAndEmail(String key) {
+        EmailAuthenticateValue value = mailUtil.findValueByEmailChangeAuthenticate(key).orElseThrow(
+            () -> new StatusCode401Exception(ErrorCase._401_NO_SUCH_KEY));
+
+        Member member = memberRepository.findByMemberId(value.getMemberId()).orElseThrow(
+            () -> new StatusCode401Exception(ErrorCase._401_NO_SUCH_MEMBER));
+
+        if (member.getRole() == Role.MAIL_INVALID_USER) {
+            member.setRole(Role.USER);
+        }
+        member.changeEmail(value.getEmail());
+        mailUtil.removeKey(key);
     }
 
     @Transactional

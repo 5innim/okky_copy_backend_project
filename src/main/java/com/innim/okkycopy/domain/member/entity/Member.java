@@ -77,7 +77,7 @@ public class Member {
 
 
     //TODO "if new SNS type is added, then should expand logic
-    public String getEmail() {
+    public String findEmail() {
         if (this instanceof OkkyMember) {
             return ((OkkyMember) this).getEmail();
         } else if (this instanceof GoogleMember) {
@@ -89,6 +89,18 @@ public class Member {
         }
 
         return "";
+    }
+
+    public void changeEmail(String email) {
+        if (this instanceof OkkyMember) {
+            ((OkkyMember) this).setEmail(email);
+        } else if (this instanceof GoogleMember) {
+            ((GoogleMember) this).setEmail(email);
+        } else if (this instanceof NaverMember) {
+            ((NaverMember) this).setEmail(email);
+        } else if (this instanceof KakaoMember) {
+            ((KakaoMember) this).setEmail(email);
+        }
     }
 
 

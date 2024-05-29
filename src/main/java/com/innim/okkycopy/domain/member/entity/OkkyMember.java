@@ -38,7 +38,7 @@ public class OkkyMember extends Member {
             .name(request.getName())
             .nickname(request.getNickname())
             .emailCheck(request.isEmailCheck())
-            .role(Role.USER)
+            .role(Role.MAIL_INVALID_USER)
             .profile(null)
             .build();
     }

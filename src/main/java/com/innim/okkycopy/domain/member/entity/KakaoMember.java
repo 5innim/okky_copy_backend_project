@@ -12,7 +12,9 @@ import jakarta.persistence.Table;
 import java.util.LinkedHashMap;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.DynamicUpdate;
 
@@ -20,6 +22,8 @@ import org.hibernate.annotations.DynamicUpdate;
 @DiscriminatorValue(value = "kakao")
 @Table(name = "kakao_member")
 @SuperBuilder
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @DynamicUpdate
@@ -43,6 +47,7 @@ public class KakaoMember extends Member {
             .name(request.getNickname())
             .nickname(request.getNickname())
             .emailCheck(request.isEmailCheck())
+            .role(Role.MAIL_INVALID_USER)
             .role(Role.USER)
             .profile(request.getProfile())
             .build();

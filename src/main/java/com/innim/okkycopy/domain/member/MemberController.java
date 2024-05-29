@@ -4,16 +4,19 @@ import com.innim.okkycopy.domain.member.dto.request.ChangePasswordRequest;
 import com.innim.okkycopy.domain.member.dto.request.ProfileUpdateRequest;
 import com.innim.okkycopy.domain.member.dto.request.MemberRequest;
 import com.innim.okkycopy.domain.member.dto.request.OAuthMemberRequest;
+import com.innim.okkycopy.domain.member.dto.request.UpdateEmailRequest;
 import com.innim.okkycopy.domain.member.dto.response.MemberBriefResponse;
 import com.innim.okkycopy.domain.member.dto.response.MemberDetailsResponse;
 import com.innim.okkycopy.domain.member.service.GoogleMemberService;
 import com.innim.okkycopy.domain.member.service.KakaoMemberService;
 import com.innim.okkycopy.domain.member.service.MemberCrudService;
+import com.innim.okkycopy.domain.member.service.MemberEmailService;
 import com.innim.okkycopy.domain.member.service.NaverMemberService;
 import com.innim.okkycopy.domain.member.service.OkkyMemberService;
 import com.innim.okkycopy.global.auth.CustomUserDetails;
 import com.innim.okkycopy.global.error.ErrorCase;
 import com.innim.okkycopy.global.error.exception.StatusCode400Exception;
+import com.innim.okkycopy.global.util.EncryptionUtil;
 import com.innim.okkycopy.global.util.JwtUtil;
 import com.innim.okkycopy.global.util.ResponseUtil;
 import jakarta.servlet.http.HttpServletRequest;
@@ -45,6 +48,7 @@ public class MemberController {
     private final GoogleMemberService googleMemberService;
     private final KakaoMemberService kakaoMemberService;
     private final NaverMemberService naverMemberService;
+    private final MemberEmailService memberEmailService;
 
     @PostMapping("/signup")
     public ResponseEntity<MemberBriefResponse> memberAdd(@Valid @RequestBody MemberRequest memberRequest) {
@@ -70,6 +74,24 @@ public class MemberController {
     public ResponseEntity<Object> memberModify(@Valid @RequestBody ChangePasswordRequest changePasswordRequest,
         @AuthenticationPrincipal CustomUserDetails customUserDetails) {
         okkyMemberService.modifyMember(customUserDetails.getMember(), changePasswordRequest);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
+
+    @PostMapping("/update-email")
+    public void authenticationMailSend(@Valid @RequestBody UpdateEmailRequest updateEmailRequest,
+        @AuthenticationPrincipal CustomUserDetails customUserDetails) {
+        memberEmailService.sendAuthenticationMail(updateEmailRequest, customUserDetails.getMember());
+    }
+
+    @PutMapping("/email-authenticate")
+    public ResponseEntity<Object> emailAuthenticate(String key) {
+        memberCrudService.modifyMemberRole(EncryptionUtil.base64Decode(key));
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
+
+    @PutMapping("/email-change-authenticate")
+    public ResponseEntity<Object> emailChangeAuthenticate(String key) {
+        memberCrudService.modifyMemberRoleAndEmail(EncryptionUtil.base64Decode(key));
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 

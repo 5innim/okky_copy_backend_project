@@ -10,6 +10,7 @@ import com.innim.okkycopy.global.error.ErrorCase;
 import com.innim.okkycopy.global.error.exception.StatusCode400Exception;
 import com.innim.okkycopy.global.error.exception.StatusCode401Exception;
 import com.innim.okkycopy.global.error.exception.StatusCode409Exception;
+import com.innim.okkycopy.global.util.email.MailUtil;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import java.time.LocalDateTime;
@@ -30,6 +31,8 @@ public class OkkyMemberService {
 
     private final PasswordEncoder passwordEncoder;
     private final OkkyMemberRepository okkyMemberRepository;
+    private final MailUtil mailUtil;
+
     @PersistenceContext
     private EntityManager entityManager;
 
@@ -46,6 +49,8 @@ public class OkkyMemberService {
 
         OkkyMember member = OkkyMember.of(memberRequest, passwordEncoder);
         okkyMemberRepository.save(member);
+
+        mailUtil.sendAuthenticateEmailAndPutCache(member.findEmail(), member.getMemberId(), member.getName());
 
         return MemberBriefResponse.from(member);
     }

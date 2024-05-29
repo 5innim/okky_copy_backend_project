@@ -10,7 +10,9 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.DynamicUpdate;
 
@@ -18,6 +20,8 @@ import org.hibernate.annotations.DynamicUpdate;
 @DiscriminatorValue(value = "google")
 @Table(name = "google_member")
 @SuperBuilder
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @DynamicUpdate
@@ -34,7 +38,7 @@ public class GoogleMember extends Member {
             .name(oAuth2User.getAttribute("name"))
             .nickname(request.getNickname())
             .emailCheck(request.isEmailCheck())
-            .role(Role.USER)
+            .role(Role.MAIL_INVALID_USER)
             .profile(request.getProfile())
             .build();
     }

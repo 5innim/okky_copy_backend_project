@@ -35,7 +35,7 @@ public class S3Uploader {
             String filePath = folderPath + "/" + UUID.randomUUID();
             return putFileToS3(uploadFile, filePath);
         } catch (Exception ex) {
-            throw new StatusCodeException(ErrorCase._500_FAIL_PUT_S3);
+            throw new StatusCodeException(ErrorCase._500_PUT_S3_FAIL);
         } finally {
             removeNewFile(uploadFile);
         }
