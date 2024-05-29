@@ -47,8 +47,8 @@ public class MemberCrudService {
     }
 
     @Transactional
-    public void modifyMemberIsEmailValid(String key) {
-        EmailAuthenticateValue value = mailUtil.findValue(key).orElseThrow(
+    public void modifyMemberRole(String key) {
+        EmailAuthenticateValue value = mailUtil.findValueByEmailAuthenticate(key).orElseThrow(
             () -> new StatusCode401Exception(ErrorCase._401_NO_SUCH_KEY));
 
         Member member = memberRepository.findByMemberId(value.getMemberId()).orElseThrow(
