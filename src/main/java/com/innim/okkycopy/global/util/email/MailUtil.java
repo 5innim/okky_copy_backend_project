@@ -20,9 +20,11 @@ import org.thymeleaf.spring6.SpringTemplateEngine;
 @Component
 @RequiredArgsConstructor
 public class MailUtil {
+
     private final JavaMailSender mailSender;
     private final SpringTemplateEngine templateEngine;
     private static final Cache<String, EmailAuthenticateValue> emailAuthenticateCache;
+    private static final Cache<String, EmailAuthenticateValue> emailChangeAuthenticateCache;
     @Value("#{environment['frontend.origin']}")
     private String frontendOrigin;
     @Value("#{environment['frontend.path.mail-authenticate']}")
