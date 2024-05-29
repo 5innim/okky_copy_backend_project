@@ -7,6 +7,7 @@ import com.innim.okkycopy.global.error.exception.StatusCode500Exception;
 import com.innim.okkycopy.global.util.EncryptionUtil;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import lombok.RequiredArgsConstructor;
@@ -36,6 +37,33 @@ public class MailUtil {
         emailAuthenticateCache = CacheBuilder.newBuilder()
             .expireAfterWrite(30, TimeUnit.MINUTES)
             .build();
+        emailChangeAuthenticateCache = CacheBuilder.newBuilder()
+            .expireAfterWrite(30, TimeUnit.MINUTES)
+            .build();
+    }
+
+    public void sendAuthenticateChangedEmailAndPutCache(String email, Long memberId, boolean isChanged) {
+        try {
+            String key = EncryptionUtil.encryptWithSHA256(
+                EncryptionUtil.connectStrings(email, memberId.toString()));
+            if (isChanged) {
+                emailChangeAuthenticateCache.asMap().entrySet().removeIf(entry -> {
+                        return Objects.equals(entry.getValue().getMemberId(), memberId);
+                    }
+                );
+                emailChangeAuthenticateCache.put(key, new EmailAuthenticateValue(memberId, email));
+            } else {
+                emailAuthenticateCache.put(key, new EmailAuthenticateValue(memberId, email));
+            }
+            try {
+                sendAuthenticateChangedEmail(EncryptionUtil.base64Encode(key), isChanged, email);
+            } catch (Exception ex) {
+                emailAuthenticateCache.invalidate(key);
+                throw ex;
+            }
+        } catch (Exception ex) {
+            throw new StatusCode500Exception(ErrorCase._500_SEND_MAIL_FAIL);
+        }
     }
 
     public void sendAuthenticateEmailAndPutCache(String email, Long memberId, String name) {
@@ -90,12 +118,17 @@ public class MailUtil {
         mailSender.send(mimeMessage);
     }
 
-    public Optional<EmailAuthenticateValue> findValue(String key) {
+    public Optional<EmailAuthenticateValue> findValueByEmailAuthenticate(String key) {
         return Optional.ofNullable(emailAuthenticateCache.getIfPresent(key));
+    }
+
+    public Optional<EmailAuthenticateValue> findValueByEmailChangeAuthenticate(String key) {
+        return Optional.ofNullable(emailChangeAuthenticateCache.getIfPresent(key));
     }
 
     public void removeKey(String key) {
         emailAuthenticateCache.invalidate(key);
+        emailChangeAuthenticateCache.invalidate(key);
     }
 
 }
