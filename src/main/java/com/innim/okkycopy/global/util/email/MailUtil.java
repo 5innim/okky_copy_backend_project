@@ -29,6 +29,8 @@ public class MailUtil {
     private String frontendOrigin;
     @Value("#{environment['frontend.path.mail-authenticate']}")
     private String mailAuthenticatePath;
+    @Value("#{environment['frontend.path.mail-change-authenticate']}")
+    private String mailChangeAuthenticatePath;
 
     static {
         emailAuthenticateCache = CacheBuilder.newBuilder()
@@ -71,12 +73,13 @@ public class MailUtil {
         mailSender.send(mimeMessage);
     }
 
-    public void sendAuthenticateChangedEmail(String key, boolean isChanged, String receiverEmail) throws MessagingException {
+    public void sendAuthenticateChangedEmail(String key, boolean isChanged, String receiverEmail)
+        throws MessagingException {
         MimeMessage mimeMessage = mailSender.createMimeMessage();
         MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, true, "UTF-8");
 
         Context context = new Context();
-        context.setVariable("url", frontendOrigin + mailAuthenticatePath);
+        context.setVariable("url", frontendOrigin + ((isChanged) ? mailChangeAuthenticatePath : mailAuthenticatePath));
         context.setVariable("key", key);
         context.setVariable("prefix", (isChanged) ? "변경 " : "");
         String html = templateEngine.process("email_change_authenticate", context);
