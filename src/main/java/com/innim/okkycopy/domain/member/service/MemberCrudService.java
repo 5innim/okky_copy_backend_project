@@ -72,7 +72,21 @@ public class MemberCrudService {
 
         member.setRole(Role.USER);
         mailUtil.removeKey(key);
+    }
 
+    @Transactional
+    public void modifyMemberRoleAndEmail(String key) {
+        EmailAuthenticateValue value = mailUtil.findValueByEmailChangeAuthenticate(key).orElseThrow(
+            () -> new StatusCode401Exception(ErrorCase._401_NO_SUCH_KEY));
+
+        Member member = memberRepository.findByMemberId(value.getMemberId()).orElseThrow(
+            () -> new StatusCode401Exception(ErrorCase._401_NO_SUCH_MEMBER));
+
+        if (member.getRole() == Role.MAIL_INVALID_USER) {
+            member.setRole(Role.USER);
+        }
+        member.changeEmail(value.getEmail());
+        mailUtil.removeKey(key);
     }
 
     @Transactional
