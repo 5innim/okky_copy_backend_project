@@ -117,3 +117,4 @@ frontend:
     base: /
     signup: /oauth/signup
     mail-authenticate: /email-authenticate
+    mail-change-authenticate: /email-change-authenticate
