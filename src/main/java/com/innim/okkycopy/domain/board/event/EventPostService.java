@@ -53,7 +53,7 @@ public class EventPostService {
     public PostDetailsResponse findEventPost(CustomUserDetails customUserDetails, long postId) {
         EventPost eventPost = eventPostRepository.findByPostId(postId)
             .orElseThrow(() -> new StatusCode400Exception(ErrorCase._400_NO_SUCH_POST));
-        Member member = memberRepository.findByMemberId(eventPost.getMember().getMemberId()).orElseGet(() -> null);
+        Member member = eventPost.getMember();
 
         PostDetailsResponse response = PostDetailsResponse.of(eventPost, member);
         if (customUserDetails != null) {
@@ -82,7 +82,7 @@ public class EventPostService {
             .orElseThrow(() -> new StatusCode400Exception(
                 ErrorCase._400_NO_SUCH_TOPIC));
 
-        if (eventPost.getMember().getMemberId() != mergedMember.getMemberId()) {
+        if (eventPost.getMember() == null || eventPost.getMember().getMemberId() != mergedMember.getMemberId()) {
             throw new StatusCode403Exception(ErrorCase._403_NO_AUTHORITY);
         }
         eventPost.update(updateRequest, boardTopic);
@@ -94,7 +94,7 @@ public class EventPostService {
         EventPost eventPost = eventPostRepository.findByPostId(postId)
             .orElseThrow(() -> new StatusCode400Exception(ErrorCase._400_NO_SUCH_POST));
 
-        if (eventPost.getMember().getMemberId() != mergedMember.getMemberId()) {
+        if (eventPost.getMember() == null || eventPost.getMember().getMemberId() != mergedMember.getMemberId()) {
             throw new StatusCode403Exception(ErrorCase._403_NO_AUTHORITY);
         }
         entityManager.remove(eventPost);

@@ -53,7 +53,7 @@ public class QnaPostService {
     public PostDetailsResponse findQnaPost(CustomUserDetails customUserDetails, long postId) {
         QnaPost qnaPost = qnaPostRepository.findByPostId(postId)
             .orElseThrow(() -> new StatusCode400Exception(ErrorCase._400_NO_SUCH_POST));
-        Member member = memberRepository.findByMemberId(qnaPost.getMember().getMemberId()).orElseGet(() -> null);
+        Member member = qnaPost.getMember();
 
         PostDetailsResponse response = PostDetailsResponse.of(qnaPost, member);
         if (customUserDetails != null) {
@@ -82,7 +82,7 @@ public class QnaPostService {
             .orElseThrow(() -> new StatusCode400Exception(
                 ErrorCase._400_NO_SUCH_TOPIC));
 
-        if (qnaPost.getMember().getMemberId() != mergedMember.getMemberId()) {
+        if (qnaPost.getMember() == null || qnaPost.getMember().getMemberId() != mergedMember.getMemberId()) {
             throw new StatusCode403Exception(ErrorCase._403_NO_AUTHORITY);
         }
         qnaPost.update(updateRequest, boardTopic);
@@ -94,7 +94,7 @@ public class QnaPostService {
         QnaPost qnaPost = qnaPostRepository.findByPostId(postId)
             .orElseThrow(() -> new StatusCode400Exception(ErrorCase._400_NO_SUCH_POST));
 
-        if (qnaPost.getMember().getMemberId() != mergedMember.getMemberId()) {
+        if (qnaPost.getMember() == null || qnaPost.getMember().getMemberId() != mergedMember.getMemberId()) {
             throw new StatusCode403Exception(ErrorCase._403_NO_AUTHORITY);
         }
         entityManager.remove(qnaPost);

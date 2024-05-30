@@ -53,7 +53,7 @@ public class CommunityPostService {
     public PostDetailsResponse findCommunityPost(CustomUserDetails customUserDetails, long postId) {
         CommunityPost communityPost = communityPostRepository.findByPostId(postId)
             .orElseThrow(() -> new StatusCode400Exception(ErrorCase._400_NO_SUCH_POST));
-        Member member = memberRepository.findByMemberId(communityPost.getMember().getMemberId()).orElseGet(() -> null);
+        Member member = communityPost.getMember();
 
         PostDetailsResponse response = PostDetailsResponse.of(communityPost, member);
         if (customUserDetails != null) {
@@ -82,7 +82,7 @@ public class CommunityPostService {
             .orElseThrow(() -> new StatusCode400Exception(
                 ErrorCase._400_NO_SUCH_TOPIC));
 
-        if (communityPost.getMember().getMemberId() != mergedMember.getMemberId()) {
+        if (communityPost.getMember() == null || communityPost.getMember().getMemberId() != mergedMember.getMemberId()) {
             throw new StatusCode403Exception(ErrorCase._403_NO_AUTHORITY);
         }
         communityPost.update(updateRequest, boardTopic);
@@ -94,7 +94,7 @@ public class CommunityPostService {
         CommunityPost communityPost = communityPostRepository.findByPostId(postId)
             .orElseThrow(() -> new StatusCode400Exception(ErrorCase._400_NO_SUCH_POST));
 
-        if (communityPost.getMember().getMemberId() != mergedMember.getMemberId()) {
+        if (communityPost.getMember() == null || communityPost.getMember().getMemberId() != mergedMember.getMemberId()) {
             throw new StatusCode403Exception(ErrorCase._403_NO_AUTHORITY);
         }
         entityManager.remove(communityPost);
