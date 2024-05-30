@@ -16,6 +16,7 @@ import com.innim.okkycopy.domain.member.repository.MemberRepository;
 import com.innim.okkycopy.global.auth.CustomUserDetails;
 import com.innim.okkycopy.global.error.ErrorCase;
 import com.innim.okkycopy.global.error.exception.StatusCode400Exception;
+import com.innim.okkycopy.global.error.exception.StatusCode401Exception;
 import com.innim.okkycopy.global.error.exception.StatusCode403Exception;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -40,13 +41,15 @@ public class QnaPostService {
 
     @Transactional
     public void addQnaPost(PostRequest postRequest, CustomUserDetails customUserDetails) {
-        Member member = entityManager.merge(customUserDetails.getMember());
+        Member member = memberRepository.findByMemberId(customUserDetails.getUserId()).orElseThrow(
+            () -> new StatusCode401Exception(ErrorCase._401_NO_SUCH_MEMBER)
+        );
 
         BoardTopic boardTopic = boardTopicRepository.findByName(postRequest.getTopic())
             .orElseThrow(() -> new StatusCode400Exception(
                 ErrorCase._400_NO_SUCH_TOPIC));
         QnaPost qnaPost = QnaPost.of(postRequest, boardTopic, member);
-        entityManager.persist(qnaPost);
+        qnaPostRepository.save(qnaPost);
     }
 
     @Transactional
@@ -75,14 +78,16 @@ public class QnaPostService {
 
     @Transactional
     public void modifyQnaPost(CustomUserDetails customUserDetails, PostRequest updateRequest, long postId) {
-        Member mergedMember = entityManager.merge(customUserDetails.getMember());
+        Member member = memberRepository.findByMemberId(customUserDetails.getUserId()).orElseThrow(
+            () -> new StatusCode401Exception(ErrorCase._401_NO_SUCH_MEMBER)
+        );
         QnaPost qnaPost = qnaPostRepository.findByPostId(postId)
             .orElseThrow(() -> new StatusCode400Exception(ErrorCase._400_NO_SUCH_POST));
         BoardTopic boardTopic = boardTopicRepository.findByName(updateRequest.getTopic())
             .orElseThrow(() -> new StatusCode400Exception(
                 ErrorCase._400_NO_SUCH_TOPIC));
 
-        if (qnaPost.getMember() == null || qnaPost.getMember().getMemberId() != mergedMember.getMemberId()) {
+        if (qnaPost.getMember() == null || qnaPost.getMember().getMemberId() != member.getMemberId()) {
             throw new StatusCode403Exception(ErrorCase._403_NO_AUTHORITY);
         }
         qnaPost.update(updateRequest, boardTopic);
@@ -90,14 +95,17 @@ public class QnaPostService {
 
     @Transactional
     public void removeQnaPost(CustomUserDetails customUserDetails, long postId) {
-        Member mergedMember = entityManager.merge(customUserDetails.getMember());
+        Member member = memberRepository.findByMemberId(customUserDetails.getUserId()).orElseThrow(
+            () -> new StatusCode401Exception(ErrorCase._401_NO_SUCH_MEMBER)
+        );
         QnaPost qnaPost = qnaPostRepository.findByPostId(postId)
             .orElseThrow(() -> new StatusCode400Exception(ErrorCase._400_NO_SUCH_POST));
 
-        if (qnaPost.getMember() == null || qnaPost.getMember().getMemberId() != mergedMember.getMemberId()) {
+        if (qnaPost.getMember() == null || qnaPost.getMember().getMemberId() != member.getMemberId()) {
             throw new StatusCode403Exception(ErrorCase._403_NO_AUTHORITY);
         }
-        entityManager.remove(qnaPost);
+
+        qnaPost.remove(entityManager);
     }
 
     @Transactional(readOnly = true)
