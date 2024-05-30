@@ -38,6 +38,11 @@ public class MemberCrudService {
     }
 
     @Transactional
+    public void removeMember(Member member) {
+        member.remove(entityManager);
+    }
+
+    @Transactional
     public void modifyMemberLoginDate(long memberId, LocalDateTime loginDate)
         throws StatusCodeException {
         Optional<Member> optionalMember = memberRepository.findByMemberId(memberId);

@@ -55,7 +55,7 @@ public class KnowledgePostService {
     public PostDetailsResponse findKnowledgePost(CustomUserDetails customUserDetails, long postId) {
         KnowledgePost knowledgePost = knowledgePostRepository.findByPostId(postId)
             .orElseThrow(() -> new StatusCode400Exception(ErrorCase._400_NO_SUCH_POST));
-        Member member = memberRepository.findByMemberId(knowledgePost.getMember().getMemberId()).orElseGet(() -> null);
+        Member member = knowledgePost.getMember();
 
         PostDetailsResponse response = PostDetailsResponse.of(knowledgePost, member);
         if (customUserDetails != null) {
@@ -84,7 +84,7 @@ public class KnowledgePostService {
             .orElseThrow(() -> new StatusCode400Exception(
                 ErrorCase._400_NO_SUCH_TOPIC));
 
-        if (knowledgePost.getMember().getMemberId() != mergedMember.getMemberId()) {
+        if (knowledgePost.getMember() == null || knowledgePost.getMember().getMemberId() != mergedMember.getMemberId()) {
             throw new StatusCode403Exception(ErrorCase._403_NO_AUTHORITY);
         }
         knowledgePost.update(updateRequest, boardTopic);
@@ -96,7 +96,7 @@ public class KnowledgePostService {
         KnowledgePost knowledgePost = knowledgePostRepository.findByPostId(postId)
             .orElseThrow(() -> new StatusCode400Exception(ErrorCase._400_NO_SUCH_POST));
 
-        if (knowledgePost.getMember().getMemberId() != mergedMember.getMemberId()) {
+        if (knowledgePost.getMember() == null || knowledgePost.getMember().getMemberId() != mergedMember.getMemberId()) {
             throw new StatusCode403Exception(ErrorCase._403_NO_AUTHORITY);
         }
         entityManager.remove(knowledgePost);

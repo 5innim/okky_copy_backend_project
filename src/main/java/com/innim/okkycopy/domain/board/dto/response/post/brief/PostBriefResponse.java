@@ -41,7 +41,7 @@ public class PostBriefResponse {
         PostBriefResponse response = PostBriefResponse.builder()
             .postId(post.getPostId())
             .title(post.getTitle())
-            .writerInfo(WriterInfo.from(post.getMember()))
+            .writerInfo((post.getMember() == null) ? null : WriterInfo.from(post.getMember()))
             .createdDate(post.getCreatedDate())
             .tags(tags)
             .build();

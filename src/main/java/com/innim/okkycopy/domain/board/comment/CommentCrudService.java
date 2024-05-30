@@ -62,7 +62,7 @@ public class CommentCrudService {
         Comment comment = commentRepository.findByCommentId(commentId)
             .orElseThrow(() -> new StatusCode400Exception(ErrorCase._400_NO_SUCH_COMMENT));
 
-        if (comment.getMember().getMemberId() != mergedMember.getMemberId()) {
+        if (comment.getMember() == null || comment.getMember().getMemberId() != mergedMember.getMemberId()) {
             throw new StatusCode403Exception(ErrorCase._403_NO_AUTHORITY);
         }
         comment.update(commentRequest.getContent());
@@ -74,7 +74,7 @@ public class CommentCrudService {
         Comment comment = commentRepository.findByCommentId(commentId)
             .orElseThrow(() -> new StatusCode400Exception(ErrorCase._400_NO_SUCH_COMMENT));
 
-        if (comment.getMember().getMemberId() != mergedMember.getMemberId()) {
+        if (comment.getMember() == null || comment.getMember().getMemberId() != mergedMember.getMemberId()) {
             throw new StatusCode403Exception(ErrorCase._403_NO_AUTHORITY);
         }
         List<Comment> commentList = commentRepository.findByParentId(comment.getCommentId());

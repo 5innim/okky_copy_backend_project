@@ -84,6 +84,9 @@ public class SecurityConfig {
                         "/board/posts/{id}/hate",
                         "/board/comments/{id}/like",
                         "/board/comments/{id}/hate").hasAnyAuthority(Role.USER.getValue(), Role.ADMIN.getValue())
+                    .requestMatchers(HttpMethod.DELETE,
+                        "/member/delete")
+                    .hasAnyAuthority(Role.MAIL_INVALID_USER.getValue(), Role.USER.getValue(), Role.ADMIN.getValue())
                     .requestMatchers(HttpMethod.PUT,
                         "/board/knowledge/posts/{id}",
                         "/board/community/posts/{id}",

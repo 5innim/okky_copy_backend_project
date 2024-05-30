@@ -10,6 +10,7 @@ import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.DiscriminatorColumn;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EntityManager;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
@@ -101,6 +102,20 @@ public class Member {
         } else if (this instanceof KakaoMember) {
             ((KakaoMember) this).setEmail(email);
         }
+    }
+
+    public void remove(EntityManager entityManager) {
+        Member member = entityManager.merge(this);
+
+        for (Post post : member.getPosts()) {
+            post.setMember(null);
+        }
+
+        for (Comment comment : member.getComments()) {
+            comment.setMember(null);
+        }
+
+        entityManager.remove(member);
     }
 
 
