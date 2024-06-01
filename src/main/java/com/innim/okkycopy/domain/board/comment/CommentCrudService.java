@@ -139,8 +139,11 @@ public class CommentCrudService {
         );
         Post post = postRepository.findByPostId(postId)
             .orElseThrow(() -> new StatusCode400Exception(ErrorCase._400_NO_SUCH_POST));
-        commentRepository.findByCommentId(commentId)
+        Comment comment = commentRepository.findByCommentId(commentId)
             .orElseThrow(() -> new StatusCode400Exception(ErrorCase._400_NO_SUCH_COMMENT));
+        if (comment.getDepth() > 1) {
+            throw new StatusCode400Exception(ErrorCase._400_NOT_SUPPORTED_CASE);
+        }
 
         Comment reComment = Comment.reCommentOf(post, mergedMember,
             commentId, reCommentRequest);
