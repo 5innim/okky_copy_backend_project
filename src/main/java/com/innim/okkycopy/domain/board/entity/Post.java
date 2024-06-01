@@ -10,6 +10,7 @@ import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.DiscriminatorColumn;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EntityManager;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -66,6 +67,11 @@ public class Post {
     private List<PostExpression> postExpressionList;
     @OneToMany(mappedBy = "post", cascade = {CascadeType.REMOVE})
     private List<Comment> commentList;
+
+
+    public void remove(EntityManager entityManager) {
+        entityManager.remove(this);
+    }
 
     //TODO: below methods about number for showing should be extended when new domain post is added
     public void increaseLikes() {

@@ -19,6 +19,7 @@ import com.innim.okkycopy.domain.member.entity.Member;
 import com.innim.okkycopy.global.auth.CustomUserDetails;
 import com.innim.okkycopy.global.error.ErrorCase;
 import com.innim.okkycopy.global.error.exception.StatusCode400Exception;
+import com.innim.okkycopy.global.error.exception.StatusCode401Exception;
 import com.innim.okkycopy.global.error.exception.StatusCode403Exception;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -45,24 +46,29 @@ public class CommentCrudService {
     public void addComment(CustomUserDetails customUserDetails,
         CommentRequest commentRequest,
         long postId) {
-        Member mergedMember = entityManager.merge(customUserDetails.getMember());
+        Member member = memberRepository.findByMemberId(customUserDetails.getUserId()).orElseThrow(
+            () -> new StatusCode401Exception(ErrorCase._401_NO_SUCH_MEMBER)
+        );
+
         Post post = postRepository.findByPostId(postId)
             .orElseThrow(() -> new StatusCode400Exception(ErrorCase._400_NO_SUCH_POST));
 
-        Comment comment = Comment.of(post, mergedMember,
+        Comment comment = Comment.of(post, member,
             commentRequest);
-        entityManager.persist(comment);
+        commentRepository.save(comment);
     }
 
     @Transactional
     public void modifyComment(CustomUserDetails customUserDetails,
         CommentRequest commentRequest,
         long commentId) {
-        Member mergedMember = entityManager.merge(customUserDetails.getMember());
+        Member member = memberRepository.findByMemberId(customUserDetails.getUserId()).orElseThrow(
+            () -> new StatusCode401Exception(ErrorCase._401_NO_SUCH_MEMBER)
+        );
         Comment comment = commentRepository.findByCommentId(commentId)
             .orElseThrow(() -> new StatusCode400Exception(ErrorCase._400_NO_SUCH_COMMENT));
 
-        if (comment.getMember() == null || comment.getMember().getMemberId() != mergedMember.getMemberId()) {
+        if (comment.getMember() == null || comment.getMember().getMemberId() != member.getMemberId()) {
             throw new StatusCode403Exception(ErrorCase._403_NO_AUTHORITY);
         }
         comment.update(commentRequest.getContent());
@@ -70,11 +76,13 @@ public class CommentCrudService {
 
     @Transactional
     public void removeComment(CustomUserDetails customUserDetails, long commentId) {
-        Member mergedMember = entityManager.merge(customUserDetails.getMember());
+        Member member = memberRepository.findByMemberId(customUserDetails.getUserId()).orElseThrow(
+            () -> new StatusCode401Exception(ErrorCase._401_NO_SUCH_MEMBER)
+        );
         Comment comment = commentRepository.findByCommentId(commentId)
             .orElseThrow(() -> new StatusCode400Exception(ErrorCase._400_NO_SUCH_COMMENT));
 
-        if (comment.getMember() == null || comment.getMember().getMemberId() != mergedMember.getMemberId()) {
+        if (comment.getMember() == null || comment.getMember().getMemberId() != member.getMemberId()) {
             throw new StatusCode403Exception(ErrorCase._403_NO_AUTHORITY);
         }
         List<Comment> commentList = commentRepository.findByParentId(comment.getCommentId());
@@ -126,16 +134,21 @@ public class CommentCrudService {
         long postId,
         long commentId,
         ReCommentRequest reCommentRequest) {
-        Member mergedMember = entityManager.merge(customUserDetails.getMember());
+        Member mergedMember = memberRepository.findByMemberId(customUserDetails.getUserId()).orElseThrow(
+            () -> new StatusCode401Exception(ErrorCase._401_NO_SUCH_MEMBER)
+        );
         Post post = postRepository.findByPostId(postId)
             .orElseThrow(() -> new StatusCode400Exception(ErrorCase._400_NO_SUCH_POST));
-        commentRepository.findByCommentId(commentId)
+        Comment comment = commentRepository.findByCommentId(commentId)
             .orElseThrow(() -> new StatusCode400Exception(ErrorCase._400_NO_SUCH_COMMENT));
+        if (comment.getDepth() > 1) {
+            throw new StatusCode400Exception(ErrorCase._400_NOT_SUPPORTED_CASE);
+        }
 
         Comment reComment = Comment.reCommentOf(post, mergedMember,
             commentId, reCommentRequest);
 
-        entityManager.persist(reComment);
+        commentRepository.save(reComment);
     }
 
     @Transactional(readOnly = true)

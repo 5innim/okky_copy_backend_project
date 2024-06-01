@@ -5,14 +5,13 @@ import com.innim.okkycopy.domain.member.entity.Member;
 import com.innim.okkycopy.domain.member.entity.OkkyMember;
 import com.innim.okkycopy.domain.member.dto.request.MemberRequest;
 import com.innim.okkycopy.domain.member.dto.response.MemberBriefResponse;
+import com.innim.okkycopy.domain.member.repository.MemberRepository;
 import com.innim.okkycopy.domain.member.repository.OkkyMemberRepository;
 import com.innim.okkycopy.global.error.ErrorCase;
 import com.innim.okkycopy.global.error.exception.StatusCode400Exception;
 import com.innim.okkycopy.global.error.exception.StatusCode401Exception;
 import com.innim.okkycopy.global.error.exception.StatusCode409Exception;
 import com.innim.okkycopy.global.util.email.MailUtil;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Date;
@@ -31,10 +30,8 @@ public class OkkyMemberService {
 
     private final PasswordEncoder passwordEncoder;
     private final OkkyMemberRepository okkyMemberRepository;
+    private final MemberRepository memberRepository;
     private final MailUtil mailUtil;
-
-    @PersistenceContext
-    private EntityManager entityManager;
 
     @Transactional(propagation = Propagation.REQUIRES_NEW, isolation = Isolation.SERIALIZABLE)
     public MemberBriefResponse addMember(MemberRequest memberRequest) {
@@ -56,9 +53,12 @@ public class OkkyMemberService {
     }
 
     @Transactional
-    public void modifyMember(Member member, ChangePasswordRequest changePasswordRequest) {
-        Member mergedMember = entityManager.merge(member);
-        if (!(mergedMember instanceof OkkyMember okkyMember)) {
+    public void modifyMember(Member requester, ChangePasswordRequest changePasswordRequest) {
+        Member member = memberRepository.findByMemberId(requester.getMemberId()).orElseThrow(
+            () -> new StatusCode401Exception(ErrorCase._401_NO_SUCH_MEMBER)
+        );
+
+        if (!(member instanceof OkkyMember okkyMember)) {
             throw new StatusCode400Exception(ErrorCase._400_NOT_SUPPORTED_CASE);
         }
 

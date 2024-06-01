@@ -16,6 +16,7 @@ import com.innim.okkycopy.domain.member.entity.Member;
 import com.innim.okkycopy.global.auth.CustomUserDetails;
 import com.innim.okkycopy.global.error.ErrorCase;
 import com.innim.okkycopy.global.error.exception.StatusCode400Exception;
+import com.innim.okkycopy.global.error.exception.StatusCode401Exception;
 import com.innim.okkycopy.global.error.exception.StatusCode403Exception;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -40,13 +41,15 @@ public class CommunityPostService {
 
     @Transactional
     public void addCommunityPost(PostRequest postRequest, CustomUserDetails customUserDetails) {
-        Member member = entityManager.merge(customUserDetails.getMember());
+        Member member = memberRepository.findByMemberId(customUserDetails.getUserId()).orElseThrow(
+            () -> new StatusCode401Exception(ErrorCase._401_NO_SUCH_MEMBER)
+        );
 
         BoardTopic boardTopic = boardTopicRepository.findByName(postRequest.getTopic())
             .orElseThrow(() -> new StatusCode400Exception(
                 ErrorCase._400_NO_SUCH_TOPIC));
         CommunityPost communityPost = CommunityPost.of(postRequest, boardTopic, member);
-        entityManager.persist(communityPost);
+        communityPostRepository.save(communityPost);
     }
 
     @Transactional
@@ -75,14 +78,16 @@ public class CommunityPostService {
 
     @Transactional
     public void modifyCommunityPost(CustomUserDetails customUserDetails, PostRequest updateRequest, long postId) {
-        Member mergedMember = entityManager.merge(customUserDetails.getMember());
+        Member member = memberRepository.findByMemberId(customUserDetails.getUserId()).orElseThrow(
+            () -> new StatusCode401Exception(ErrorCase._401_NO_SUCH_MEMBER)
+        );
         CommunityPost communityPost = communityPostRepository.findByPostId(postId)
             .orElseThrow(() -> new StatusCode400Exception(ErrorCase._400_NO_SUCH_POST));
         BoardTopic boardTopic = boardTopicRepository.findByName(updateRequest.getTopic())
             .orElseThrow(() -> new StatusCode400Exception(
                 ErrorCase._400_NO_SUCH_TOPIC));
 
-        if (communityPost.getMember() == null || communityPost.getMember().getMemberId() != mergedMember.getMemberId()) {
+        if (communityPost.getMember() == null || communityPost.getMember().getMemberId() != member.getMemberId()) {
             throw new StatusCode403Exception(ErrorCase._403_NO_AUTHORITY);
         }
         communityPost.update(updateRequest, boardTopic);
@@ -90,14 +95,17 @@ public class CommunityPostService {
 
     @Transactional
     public void removeCommunityPost(CustomUserDetails customUserDetails, long postId) {
-        Member mergedMember = entityManager.merge(customUserDetails.getMember());
+        Member member = memberRepository.findByMemberId(customUserDetails.getUserId()).orElseThrow(
+            () -> new StatusCode401Exception(ErrorCase._401_NO_SUCH_MEMBER)
+        );
         CommunityPost communityPost = communityPostRepository.findByPostId(postId)
             .orElseThrow(() -> new StatusCode400Exception(ErrorCase._400_NO_SUCH_POST));
 
-        if (communityPost.getMember() == null || communityPost.getMember().getMemberId() != mergedMember.getMemberId()) {
+        if (communityPost.getMember() == null || communityPost.getMember().getMemberId() != member.getMemberId()) {
             throw new StatusCode403Exception(ErrorCase._403_NO_AUTHORITY);
         }
-        entityManager.remove(communityPost);
+
+        communityPost.remove(entityManager);
     }
 
     @Transactional(readOnly = true)

@@ -15,7 +15,6 @@ import com.innim.okkycopy.global.util.email.MailUtil;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import java.time.LocalDateTime;
-import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -31,10 +30,12 @@ public class MemberCrudService {
     EntityManager entityManager;
 
     @Transactional(readOnly = true)
-    public MemberDetailsResponse findMember(Member member) {
-        Member mergedMember = entityManager.merge(member);
+    public MemberDetailsResponse findMember(Member requester) {
+        Member member = memberRepository.findByMemberId(requester.getMemberId()).orElseThrow(
+            () -> new StatusCode401Exception(ErrorCase._401_NO_SUCH_MEMBER)
+        );
 
-        return MemberDetailsResponse.from(mergedMember);
+        return MemberDetailsResponse.from(member);
     }
 
     @Transactional
@@ -45,8 +46,7 @@ public class MemberCrudService {
     @Transactional
     public void modifyMemberLoginDate(long memberId, LocalDateTime loginDate)
         throws StatusCodeException {
-        Optional<Member> optionalMember = memberRepository.findByMemberId(memberId);
-        Member member = optionalMember.orElseThrow(
+        Member member = memberRepository.findByMemberId(memberId).orElseThrow(
             () -> new StatusCode401Exception(ErrorCase._401_NO_SUCH_MEMBER));
         member.setLoginDate(loginDate);
     }
@@ -61,7 +61,8 @@ public class MemberCrudService {
 
         if (member.getRole() != Role.MAIL_INVALID_USER) {
             throw new StatusCode401Exception(ErrorCase._401_MAIL_ALREADY_AUTHENTICATED);
-        };
+        }
+        ;
 
         try {
             String generatedKey = EncryptionUtil.encryptWithSHA256(
@@ -69,9 +70,9 @@ public class MemberCrudService {
             if (!key.equals(generatedKey)) {
                 throw new StatusCode401Exception(ErrorCase._401_KEY_VALIDATION_FAIL);
             }
-        } catch(HttpStatusCodeException ex) {
+        } catch (HttpStatusCodeException ex) {
             throw ex;
-        } catch(Exception ex) {
+        } catch (Exception ex) {
             throw new StatusCode500Exception(ErrorCase._500_KEY_GENERATE_FAIL);
         }
 
@@ -95,27 +96,31 @@ public class MemberCrudService {
     }
 
     @Transactional
-    public void modifyMember(Member member, ProfileUpdateRequest profileUpdateRequest) {
-        Member mergedMember = entityManager.merge(member);
-        mergedMember.setName(profileUpdateRequest.getName());
-        mergedMember.setNickname(profileUpdateRequest.getNickname());
-        mergedMember.setProfile(profileUpdateRequest.getProfile());
+    public void modifyMember(Member requester, ProfileUpdateRequest profileUpdateRequest) {
+        Member member = memberRepository.findByMemberId(requester.getMemberId()).orElseThrow(
+            () -> new StatusCode401Exception(ErrorCase._401_NO_SUCH_MEMBER)
+        );
+        member.setName(profileUpdateRequest.getName());
+        member.setNickname(profileUpdateRequest.getNickname());
+        member.setProfile(profileUpdateRequest.getProfile());
 
     }
 
     @Transactional
-    public void modifyMemberLogoutDate(Member member, LocalDateTime logoutDate)
+    public void modifyMemberLogoutDate(Member requester, LocalDateTime logoutDate)
         throws StatusCodeException {
-        Member mergedMember = entityManager.merge(member);
-        mergedMember.setLogoutDate(logoutDate);
+        Member member = memberRepository.findByMemberId(requester.getMemberId()).orElseThrow(
+            () -> new StatusCode401Exception(ErrorCase._401_NO_SUCH_MEMBER)
+        );
+        member.setLogoutDate(logoutDate);
     }
 
     @Transactional(readOnly = true)
     public Member findMember(long memberId)
         throws StatusCodeException {
-        Optional<Member> optionalMember = memberRepository.findByMemberId(memberId);
-        return optionalMember.orElseThrow(
-            () -> new StatusCode401Exception(ErrorCase._401_NO_SUCH_MEMBER));
+        return memberRepository.findByMemberId(memberId).orElseThrow(
+            () -> new StatusCode401Exception(ErrorCase._401_NO_SUCH_MEMBER)
+        );
     }
 
 }

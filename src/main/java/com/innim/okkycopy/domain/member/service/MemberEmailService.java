@@ -8,14 +8,13 @@ import com.innim.okkycopy.domain.member.entity.NaverMember;
 import com.innim.okkycopy.domain.member.entity.OkkyMember;
 import com.innim.okkycopy.domain.member.repository.GoogleMemberRepository;
 import com.innim.okkycopy.domain.member.repository.KakaoMemberRepository;
+import com.innim.okkycopy.domain.member.repository.MemberRepository;
 import com.innim.okkycopy.domain.member.repository.NaverMemberRepository;
 import com.innim.okkycopy.domain.member.repository.OkkyMemberRepository;
 import com.innim.okkycopy.global.auth.enums.Role;
 import com.innim.okkycopy.global.error.ErrorCase;
 import com.innim.okkycopy.global.error.exception.StatusCode401Exception;
 import com.innim.okkycopy.global.util.email.MailUtil;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,33 +27,33 @@ public class MemberEmailService {
     private final GoogleMemberRepository googleMemberRepository;
     private final NaverMemberRepository naverMemberRepository;
     private final KakaoMemberRepository kakaoMemberRepository;
+    private final MemberRepository memberRepository;
     private final MailUtil mailUtil;
 
-    @PersistenceContext
-    EntityManager entityManager;
-
     @Transactional(readOnly = true)
-    public void sendAuthenticationMail(UpdateEmailRequest updateEmailRequest, Member member) {
-        Member mergedMember = entityManager.merge(member);
-        if (mergedMember.findEmail().equals(updateEmailRequest.getEmail())) {
-            if (mergedMember.getRole() != Role.MAIL_INVALID_USER) {
+    public void sendAuthenticationMail(UpdateEmailRequest updateEmailRequest, Member requester) {
+        Member member = memberRepository.findByMemberId(requester.getMemberId()).orElseThrow(
+            () -> new StatusCode401Exception(ErrorCase._401_NO_SUCH_MEMBER)
+        );
+        if (member.findEmail().equals(updateEmailRequest.getEmail())) {
+            if (member.getRole() != Role.MAIL_INVALID_USER) {
                 throw new StatusCode401Exception(ErrorCase._401_MAIL_ALREADY_AUTHENTICATED);
             }
 
             mailUtil.sendAuthenticateChangedEmailAndPutCache(
                 updateEmailRequest.getEmail(),
-                mergedMember.getMemberId(),
+                member.getMemberId(),
                 false);
 
         } else { // TODO: Add case for new oAuth member
             boolean isExist = false;
-            if (mergedMember instanceof OkkyMember) {
+            if (member instanceof OkkyMember) {
                 isExist = okkyMemberRepository.existsByEmail(updateEmailRequest.getEmail());
-            } else if (mergedMember instanceof GoogleMember) {
+            } else if (member instanceof GoogleMember) {
                 isExist = googleMemberRepository.existsByEmail(updateEmailRequest.getEmail());
-            } else if (mergedMember instanceof KakaoMember) {
+            } else if (member instanceof KakaoMember) {
                 isExist = kakaoMemberRepository.existsByEmail(updateEmailRequest.getEmail());
-            } else if (mergedMember instanceof NaverMember) {
+            } else if (member instanceof NaverMember) {
                 isExist = naverMemberRepository.existsByEmail(updateEmailRequest.getEmail());
             }
 
@@ -64,7 +63,7 @@ public class MemberEmailService {
 
             mailUtil.sendAuthenticateChangedEmailAndPutCache(
                 updateEmailRequest.getEmail(),
-                mergedMember.getMemberId(),
+                member.getMemberId(),
                 true);
         }
     }
