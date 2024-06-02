@@ -78,7 +78,7 @@ public class MemberController {
     }
 
     @PutMapping("/change-password")
-    public ResponseEntity<Object> memberModify(@Valid @RequestBody ChangePasswordRequest changePasswordRequest,
+    public ResponseEntity<Object> memberPasswordModify(@Valid @RequestBody ChangePasswordRequest changePasswordRequest,
         @AuthenticationPrincipal CustomUserDetails customUserDetails) {
         okkyMemberService.modifyMember(customUserDetails.getMember(), changePasswordRequest);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
@@ -133,7 +133,7 @@ public class MemberController {
     }
 
     @PutMapping("/logout")
-    public ResponseEntity<Object> memberModify(@AuthenticationPrincipal CustomUserDetails customUserDetails) {
+    public ResponseEntity<Object> memberLogoutDateModify(@AuthenticationPrincipal CustomUserDetails customUserDetails) {
         Date logoutDate = new Date();
         LocalDateTime localDateTime = LocalDateTime.ofInstant(logoutDate.toInstant(), ZoneId.systemDefault());
         memberCrudService.modifyMemberLogoutDate(customUserDetails.getMember(), localDateTime);
