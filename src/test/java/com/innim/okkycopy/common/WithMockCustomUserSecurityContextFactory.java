@@ -42,6 +42,7 @@ public class WithMockCustomUserSecurityContextFactory implements
             .password("test_password")
             .name("test_name")
             .loginDate(null)
+            .logoutDate(null)
             .posts(new ArrayList<>())
             .build();
 
