@@ -26,7 +26,7 @@ public class MemberCrudService {
     private final MemberRepository memberRepository;
     private final MailUtil mailUtil;
     @PersistenceContext
-    EntityManager entityManager;
+    private final EntityManager entityManager;
 
     @Transactional(readOnly = true)
     public MemberDetailsResponse findMember(Member requester) {
