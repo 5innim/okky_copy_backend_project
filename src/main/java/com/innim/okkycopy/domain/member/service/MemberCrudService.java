@@ -72,7 +72,7 @@ public class MemberCrudService {
             if (!key.equals(generatedKey)) {
                 throw new StatusCode401Exception(ErrorCase._401_KEY_VALIDATION_FAIL);
             }
-        } catch (HttpStatusCodeException ex) {
+        } catch (StatusCodeException ex) {
             throw ex;
         } catch (Exception ex) {
             throw new StatusCode500Exception(ErrorCase._500_KEY_GENERATE_FAIL);
