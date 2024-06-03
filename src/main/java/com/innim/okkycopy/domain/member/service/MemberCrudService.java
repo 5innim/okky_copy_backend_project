@@ -39,7 +39,11 @@ public class MemberCrudService {
 
     @Transactional
     public void removeMember(Member member) {
-        member.remove(entityManager);
+        try {
+            member.remove(entityManager);
+        } catch (IllegalArgumentException ex) {
+            throw new StatusCode401Exception(ErrorCase._401_NO_SUCH_MEMBER);
+        }
     }
 
     @Transactional
