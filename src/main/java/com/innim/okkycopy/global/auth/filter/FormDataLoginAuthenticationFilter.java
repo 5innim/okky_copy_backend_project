@@ -6,7 +6,6 @@ import com.innim.okkycopy.global.auth.dto.request.LoginRequest;
 import com.innim.okkycopy.global.error.ErrorCase;
 import com.innim.okkycopy.global.error.exception.StatusCode400Exception;
 import com.innim.okkycopy.global.error.exception.StatusCode401Exception;
-import com.innim.okkycopy.global.error.exception.StatusCodeException;
 import com.innim.okkycopy.global.util.JwtUtil;
 import com.innim.okkycopy.global.util.ResponseUtil;
 import jakarta.servlet.FilterChain;
@@ -54,7 +53,7 @@ public class FormDataLoginAuthenticationFilter extends OncePerRequestFilter {
         }
     }
 
-    private Authentication attemptAuthentication(String id, String password) throws StatusCodeException {
+    private Authentication attemptAuthentication(String id, String password) {
         if (id.isEmpty() || password.isEmpty()) {
             throw new StatusCode400Exception(ErrorCase._400_BAD_FORM_DATA);
         }
@@ -67,8 +66,7 @@ public class FormDataLoginAuthenticationFilter extends OncePerRequestFilter {
         }
     }
 
-    private void successfulAuthentication(HttpServletResponse response, Authentication authResult)
-        throws StatusCodeException {
+    private void successfulAuthentication(HttpServletResponse response, Authentication authResult) {
         CustomUserDetails userDetails = (CustomUserDetails) authResult.getPrincipal();
         long userId = userDetails.getMember().getMemberId();
 

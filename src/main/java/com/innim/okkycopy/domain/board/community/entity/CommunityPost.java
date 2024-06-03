@@ -8,7 +8,6 @@ import com.innim.okkycopy.domain.board.entity.Tag;
 import com.innim.okkycopy.domain.member.entity.Member;
 import com.innim.okkycopy.global.error.ErrorCase;
 import com.innim.okkycopy.global.error.exception.StatusCode400Exception;
-import com.innim.okkycopy.global.error.exception.StatusCodeException;
 import jakarta.persistence.Column;
 import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
@@ -51,8 +50,7 @@ public class CommunityPost extends Post {
     @Column(nullable = false)
     private Integer comments;
 
-    public static CommunityPost of(PostRequest postRequest, BoardTopic boardTopic, Member member)
-        throws StatusCodeException {
+    public static CommunityPost of(PostRequest postRequest, BoardTopic boardTopic, Member member) {
         if (isNotSupportedTopic(boardTopic)) {
             throw new StatusCode400Exception(ErrorCase._400_BAD_FORM_DATA);
         }

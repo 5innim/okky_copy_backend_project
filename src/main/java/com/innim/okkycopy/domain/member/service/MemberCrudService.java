@@ -18,7 +18,6 @@ import java.time.LocalDateTime;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.client.HttpStatusCodeException;
 
 @Service
 @RequiredArgsConstructor
@@ -44,8 +43,7 @@ public class MemberCrudService {
     }
 
     @Transactional
-    public void modifyMemberLoginDate(long memberId, LocalDateTime loginDate)
-        throws StatusCodeException {
+    public void modifyMemberLoginDate(long memberId, LocalDateTime loginDate) {
         Member member = memberRepository.findByMemberId(memberId).orElseThrow(
             () -> new StatusCode401Exception(ErrorCase._401_NO_SUCH_MEMBER));
         member.setLoginDate(loginDate);
@@ -107,8 +105,7 @@ public class MemberCrudService {
     }
 
     @Transactional
-    public void modifyMemberLogoutDate(Member requester, LocalDateTime logoutDate)
-        throws StatusCodeException {
+    public void modifyMemberLogoutDate(Member requester, LocalDateTime logoutDate) {
         Member member = memberRepository.findByMemberId(requester.getMemberId()).orElseThrow(
             () -> new StatusCode401Exception(ErrorCase._401_NO_SUCH_MEMBER)
         );
@@ -116,8 +113,7 @@ public class MemberCrudService {
     }
 
     @Transactional(readOnly = true)
-    public Member findMember(long memberId)
-        throws StatusCodeException {
+    public Member findMember(long memberId) {
         return memberRepository.findByMemberId(memberId).orElseThrow(
             () -> new StatusCode401Exception(ErrorCase._401_NO_SUCH_MEMBER)
         );

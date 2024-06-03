@@ -4,7 +4,6 @@ import com.innim.okkycopy.domain.member.entity.Member;
 import com.innim.okkycopy.global.error.ErrorCase;
 import com.innim.okkycopy.global.error.exception.StatusCode401Exception;
 import com.innim.okkycopy.global.error.exception.StatusCode500Exception;
-import com.innim.okkycopy.global.error.exception.StatusCodeException;
 import com.innim.okkycopy.global.util.property.JwtProperty;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
@@ -17,18 +16,17 @@ import java.util.Map;
 
 public class JwtUtil {
 
-    public static String generateAccessToken(Long userId, Date loginDate) throws StatusCodeException {
+    public static String generateAccessToken(Long userId, Date loginDate) {
         Date expiredDate = new Date(loginDate.getTime() + JwtProperty.accessValidTime);
         return generateToken(userId, expiredDate, loginDate, "access");
     }
 
-    public static String generateRefreshToken(Long userId, Date loginDate) throws StatusCodeException {
+    public static String generateRefreshToken(Long userId, Date loginDate) {
         Date expiredDate = new Date(loginDate.getTime() + JwtProperty.refreshValidTime);
         return generateToken(userId, expiredDate, loginDate, "refresh");
     }
 
-    public static String generateToken(Long userId, Date expiredDate, Date loginDate, String tokenSub)
-        throws StatusCodeException {
+    public static String generateToken(Long userId, Date expiredDate, Date loginDate, String tokenSub) {
 
         String generatedToken;
         try {
@@ -48,7 +46,7 @@ public class JwtUtil {
     }
 
 
-    public static Claims validateToken(String token) throws StatusCodeException {
+    public static Claims validateToken(String token) {
 
         try {
             JwtParser parser = Jwts.parserBuilder().setSigningKey(JwtProperty.secretKey).build();

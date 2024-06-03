@@ -27,7 +27,7 @@ public class S3Uploader {
     @Value("${cloud.aws.s3.folder-path}")
     private String folderPath;
 
-    public String uploadFileToS3(MultipartFile multipartFile) throws StatusCodeException, IOException {
+    public String uploadFileToS3(MultipartFile multipartFile) throws IOException {
         File uploadFile = convert(multipartFile)
             .orElseThrow(() -> new StatusCodeException(ErrorCase._500_FILE_NOT_CREATED));
 
