@@ -15,6 +15,7 @@ import com.innim.okkycopy.domain.member.service.MemberCrudService;
 import com.innim.okkycopy.global.auth.enums.Role;
 import com.innim.okkycopy.global.error.ErrorCase;
 import com.innim.okkycopy.global.error.exception.StatusCode401Exception;
+import com.innim.okkycopy.global.error.exception.StatusCode403Exception;
 import com.innim.okkycopy.global.util.EncryptionUtil;
 import com.innim.okkycopy.global.util.email.EmailAuthenticateValue;
 import com.innim.okkycopy.global.util.email.MailUtil;
@@ -181,7 +182,7 @@ public class MemberCrudServiceTest {
         }
 
         @Test
-        void given_memberIsAlreadyAuthenticated_then_throwErrorCase401010() {
+        void given_memberIsAlreadyAuthenticated_then_throwErrorCase403003() {
             // given
             String key = "test_key";
             EmailAuthenticateValue emailAuthenticateValue = emailAuthenticateValue();
@@ -196,9 +197,9 @@ public class MemberCrudServiceTest {
             });
 
             // then
-            assertThat(exception).isInstanceOf(StatusCode401Exception.class);
-            assertThat(((StatusCode401Exception) exception).getErrorCase()).isEqualTo(
-                ErrorCase._401_MAIL_ALREADY_AUTHENTICATED);
+            assertThat(exception).isInstanceOf(StatusCode403Exception.class);
+            assertThat(((StatusCode403Exception) exception).getErrorCase()).isEqualTo(
+                ErrorCase._403_MAIL_ALREADY_AUTHENTICATED);
         }
 
         @Test
@@ -370,8 +371,8 @@ public class MemberCrudServiceTest {
             given(memberRepository.findByMemberId(member.getMemberId())).willReturn(Optional.empty());
 
             // when
-            Exception exception = catchException( () -> {
-               memberCrudService.modifyMemberLogoutDate(member, localDateTime);
+            Exception exception = catchException(() -> {
+                memberCrudService.modifyMemberLogoutDate(member, localDateTime);
             });
 
             // then
@@ -409,7 +410,7 @@ public class MemberCrudServiceTest {
             given(memberRepository.findByMemberId(memberId)).willReturn(Optional.empty());
 
             // when
-            Exception exception = catchException( () -> {
+            Exception exception = catchException(() -> {
                 memberCrudService.findMember(memberId);
             });
 

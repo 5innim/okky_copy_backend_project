@@ -30,7 +30,7 @@ public class KakaoMemberService {
 
         Object value = session.getAttribute(oAuthMemberRequest.getKey());
         if (value == null) {
-            throw new StatusCode400Exception(ErrorCase._400_BAD_FORM_DATA);
+            throw new StatusCode401Exception(ErrorCase._401_NO_SUCH_KEY);
         }
 
         CustomOAuth2User oAuth2User = (CustomOAuth2User) value;

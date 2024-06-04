@@ -7,6 +7,7 @@ import com.innim.okkycopy.domain.member.repository.MemberRepository;
 import com.innim.okkycopy.global.auth.enums.Role;
 import com.innim.okkycopy.global.error.ErrorCase;
 import com.innim.okkycopy.global.error.exception.StatusCode401Exception;
+import com.innim.okkycopy.global.error.exception.StatusCode403Exception;
 import com.innim.okkycopy.global.error.exception.StatusCode500Exception;
 import com.innim.okkycopy.global.error.exception.StatusCodeException;
 import com.innim.okkycopy.global.util.EncryptionUtil;
@@ -62,7 +63,7 @@ public class MemberCrudService {
             () -> new StatusCode401Exception(ErrorCase._401_NO_SUCH_MEMBER));
 
         if (member.getRole() != Role.MAIL_INVALID_USER) {
-            throw new StatusCode401Exception(ErrorCase._401_MAIL_ALREADY_AUTHENTICATED);
+            throw new StatusCode403Exception(ErrorCase._403_MAIL_ALREADY_AUTHENTICATED);
         }
         ;
 

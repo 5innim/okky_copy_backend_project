@@ -13,7 +13,9 @@ import com.innim.okkycopy.domain.member.repository.NaverMemberRepository;
 import com.innim.okkycopy.domain.member.repository.OkkyMemberRepository;
 import com.innim.okkycopy.global.auth.enums.Role;
 import com.innim.okkycopy.global.error.ErrorCase;
+import com.innim.okkycopy.global.error.exception.StatusCode400Exception;
 import com.innim.okkycopy.global.error.exception.StatusCode401Exception;
+import com.innim.okkycopy.global.error.exception.StatusCode403Exception;
 import com.innim.okkycopy.global.util.email.MailUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -37,7 +39,7 @@ public class MemberEmailService {
         );
         if (member.findEmail().equals(updateEmailRequest.getEmail())) {
             if (member.getRole() != Role.MAIL_INVALID_USER) {
-                throw new StatusCode401Exception(ErrorCase._401_MAIL_ALREADY_AUTHENTICATED);
+                throw new StatusCode403Exception(ErrorCase._403_MAIL_ALREADY_AUTHENTICATED);
             }
 
             mailUtil.sendAuthenticateChangedEmailAndPutCache(
@@ -58,7 +60,7 @@ public class MemberEmailService {
             }
 
             if (isExist) {
-                throw new StatusCode401Exception(ErrorCase._400_IN_USAGE_EMAIL);
+                throw new StatusCode400Exception(ErrorCase._400_IN_USAGE_EMAIL);
             }
 
             mailUtil.sendAuthenticateChangedEmailAndPutCache(
