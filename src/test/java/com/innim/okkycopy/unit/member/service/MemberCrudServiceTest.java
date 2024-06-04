@@ -270,6 +270,7 @@ public class MemberCrudServiceTest {
             assertThat(exception).isInstanceOf(StatusCode401Exception.class);
             assertThat(((StatusCode401Exception) exception).getErrorCase()).isEqualTo(ErrorCase._401_NO_SUCH_KEY);
         }
+
         @Test
         void given_noExistMember_then_throwErrorCase401005() {
             // given
@@ -296,7 +297,8 @@ public class MemberCrudServiceTest {
             member.setRole(Role.MAIL_INVALID_USER);
             EmailAuthenticateValue emailAuthenticateValue = emailAuthenticateValue();
             given(mailUtil.findValueByEmailChangeAuthenticate(key)).willReturn(Optional.of(emailAuthenticateValue));
-            given(memberRepository.findByMemberId(emailAuthenticateValue.getMemberId())).willReturn(Optional.of(member));
+            given(memberRepository.findByMemberId(emailAuthenticateValue.getMemberId())).willReturn(
+                Optional.of(member));
 
             // when
             memberCrudService.modifyMemberRoleAndEmail(key);
@@ -323,7 +325,7 @@ public class MemberCrudServiceTest {
             given(memberRepository.findByMemberId(member.getMemberId())).willReturn(Optional.empty());
 
             // when
-            Exception exception = catchException( () -> {
+            Exception exception = catchException(() -> {
                 memberCrudService.modifyMember(member, profileUpdateRequest);
             });
 
