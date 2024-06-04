@@ -10,7 +10,6 @@ import com.innim.okkycopy.global.error.exception.StatusCode401Exception;
 import com.innim.okkycopy.global.util.email.MailUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
-import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,12 +20,6 @@ public class KakaoMemberService {
 
     private final KakaoMemberRepository kakaoMemberRepository;
     private final MailUtil mailUtil;
-
-    @Transactional(readOnly = true)
-    public KakaoMember findKakaoMember(String providerId) {
-        Optional<KakaoMember> kakaoMember = kakaoMemberRepository.findByProviderId(providerId);
-        return kakaoMember.orElse(null);
-    }
 
     @Transactional
     public Long addKakaoMember(OAuthMemberRequest oAuthMemberRequest, String provider, HttpServletRequest request) {
