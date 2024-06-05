@@ -1,6 +1,5 @@
 package com.innim.okkycopy.domain.board;
 
-import com.innim.okkycopy.domain.board.dto.request.ScrapRequest;
 import com.innim.okkycopy.domain.board.dto.response.FileResponse;
 import com.innim.okkycopy.domain.board.enums.ExpressionType;
 import com.innim.okkycopy.domain.board.service.BoardExpressionService;
@@ -17,7 +16,6 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -38,19 +36,18 @@ public class BoardController {
         return ResponseEntity.ok(boardTopicService.findBoardTopics());
     }
 
-    @PostMapping("/post/scrap")
-    public void scrapAdd(
-        @RequestBody ScrapRequest scrapRequest,
-        @AuthenticationPrincipal CustomUserDetails customUserDetails) {
-        boardScrapService.addScrap(customUserDetails.getMember(), scrapRequest.getPostId());
-        ResponseEntity.ok().build();
+    @PostMapping("/posts/{id}/scrap")
+    public ResponseEntity<Object> scrapAdd(
+        @AuthenticationPrincipal CustomUserDetails customUserDetails, @PathVariable long id) {
+        boardScrapService.addScrap(customUserDetails.getMember(), id);
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
-    @DeleteMapping("/post/scrap")
-    public void scrapRemove(
-        @RequestBody ScrapRequest scrapRequest,
-        @AuthenticationPrincipal CustomUserDetails customUserDetails) {
-        boardScrapService.removeScrap(customUserDetails.getMember(), scrapRequest.getPostId());
+    @DeleteMapping("/posts/{id}/scrap")
+    public ResponseEntity<Object> scrapRemove(
+        @AuthenticationPrincipal CustomUserDetails customUserDetails, @PathVariable long id) {
+        boardScrapService.removeScrap(customUserDetails.getMember(), id);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
     @PostMapping("/posts/{id}/like")
