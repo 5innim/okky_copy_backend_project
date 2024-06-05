@@ -63,7 +63,7 @@ public class SecurityConfig {
                         "/board/community/write",
                         "/board/event/write",
                         "/board/qna/write",
-                        "/board/post/scrap",
+                        "/board/posts/{id}/scrap",
                         "/board/posts/{id}/comment",
                         "/board/posts/{postId}/comments/{commentId}/recomment",
                         "/board/posts/{id}/like",
@@ -74,7 +74,7 @@ public class SecurityConfig {
                         "/board/file/upload",
                         "/member/update-email").hasAnyAuthority(Role.MAIL_INVALID_USER.getValue(), Role.USER.getValue(), Role.ADMIN.getValue())
                     .requestMatchers(HttpMethod.DELETE,
-                        "/board/post/scrap",
+                        "/board/posts/{id}/scrap",
                         "/board/knowledge/posts/{id}",
                         "/board/community/posts/{id}",
                         "/board/event/posts/{id}",
