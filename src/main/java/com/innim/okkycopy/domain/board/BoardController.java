@@ -1,6 +1,7 @@
 package com.innim.okkycopy.domain.board;
 
 import com.innim.okkycopy.domain.board.dto.response.FileResponse;
+import com.innim.okkycopy.domain.board.dto.response.topics.TopicListResponse;
 import com.innim.okkycopy.domain.board.enums.ExpressionType;
 import com.innim.okkycopy.domain.board.service.BoardExpressionService;
 import com.innim.okkycopy.domain.board.service.BoardScrapService;
@@ -32,7 +33,7 @@ public class BoardController {
     private final S3Uploader s3Uploader;
 
     @GetMapping("/topics")
-    public ResponseEntity<Object> boardTopicList() {
+    public ResponseEntity<TopicListResponse> boardTopicList() {
         return ResponseEntity.ok(boardTopicService.findBoardTopics());
     }
 
@@ -83,7 +84,7 @@ public class BoardController {
     }
 
     @PostMapping("/file/upload")
-    public ResponseEntity<Object> fileAdd(@RequestParam("file") MultipartFile file)
+    public ResponseEntity<FileResponse> fileAdd(@RequestParam("file") MultipartFile file)
         throws IOException {
         return ResponseEntity.ok(new FileResponse(s3Uploader.uploadFileToS3(file)));
     }
