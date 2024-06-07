@@ -10,8 +10,8 @@ import com.innim.okkycopy.domain.board.BoardController;
 import com.innim.okkycopy.domain.board.dto.response.FileResponse;
 import com.innim.okkycopy.domain.board.dto.response.topics.TopicListResponse;
 import com.innim.okkycopy.domain.board.enums.ExpressionType;
-import com.innim.okkycopy.domain.board.service.BoardExpressionService;
-import com.innim.okkycopy.domain.board.service.BoardScrapService;
+import com.innim.okkycopy.domain.board.service.PostExpressionService;
+import com.innim.okkycopy.domain.board.service.PostScrapService;
 import com.innim.okkycopy.domain.board.service.BoardTopicService;
 import com.innim.okkycopy.global.auth.CustomUserDetails;
 import com.innim.okkycopy.global.common.S3Uploader;
@@ -34,9 +34,9 @@ import org.springframework.web.multipart.MultipartFile;
 public class BoardControllerTest {
 
     @Mock
-    BoardExpressionService boardExpressionService;
+    PostExpressionService postExpressionService;
     @Mock
-    BoardScrapService boardScrapService;
+    PostScrapService postScrapService;
     @Mock
     BoardTopicService boardTopicService;
     @Mock
@@ -80,8 +80,8 @@ public class BoardControllerTest {
             ResponseEntity<Object> response = boardController.scrapAdd(customUserDetails, id);
 
             // then
-            then(boardScrapService).should(times(1)).addScrap(customUserDetails.getMember(), id);
-            then(boardScrapService).shouldHaveNoMoreInteractions();
+            then(postScrapService).should(times(1)).addScrap(customUserDetails.getMember(), id);
+            then(postScrapService).shouldHaveNoMoreInteractions();
             assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
         }
 
@@ -100,8 +100,8 @@ public class BoardControllerTest {
             ResponseEntity<Object> response = boardController.scrapRemove(customUserDetails, id);
 
             // then
-            then(boardScrapService).should(times(1)).removeScrap(customUserDetails.getMember(), id);
-            then(boardScrapService).shouldHaveNoMoreInteractions();
+            then(postScrapService).should(times(1)).removeScrap(customUserDetails.getMember(), id);
+            then(postScrapService).shouldHaveNoMoreInteractions();
             assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
         }
 
@@ -120,9 +120,9 @@ public class BoardControllerTest {
             ResponseEntity<Object> response = boardController.likeExpressionAdd(customUserDetails, id);
 
             // then
-            then(boardExpressionService).should(times(1))
+            then(postExpressionService).should(times(1))
                 .addPostExpression(customUserDetails.getMember(), id, ExpressionType.LIKE);
-            then(boardExpressionService).shouldHaveNoMoreInteractions();
+            then(postExpressionService).shouldHaveNoMoreInteractions();
             assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
 
         }
@@ -142,9 +142,9 @@ public class BoardControllerTest {
             ResponseEntity<Object> response = boardController.hateExpressionAdd(customUserDetails, id);
 
             // then
-            then(boardExpressionService).should(times(1))
+            then(postExpressionService).should(times(1))
                 .addPostExpression(customUserDetails.getMember(), id, ExpressionType.HATE);
-            then(boardExpressionService).shouldHaveNoMoreInteractions();
+            then(postExpressionService).shouldHaveNoMoreInteractions();
             assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
         }
     }
@@ -162,9 +162,9 @@ public class BoardControllerTest {
             ResponseEntity<Object> response = boardController.likeExpressionRemove(customUserDetails, id);
 
             // then
-            then(boardExpressionService).should(times(1))
+            then(postExpressionService).should(times(1))
                 .removePostExpression(customUserDetails.getMember(), id, ExpressionType.LIKE);
-            then(boardExpressionService).shouldHaveNoMoreInteractions();
+            then(postExpressionService).shouldHaveNoMoreInteractions();
             assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
         }
     }
@@ -182,9 +182,9 @@ public class BoardControllerTest {
             ResponseEntity<Object> response = boardController.hateExpressionRemove(customUserDetails, id);
 
             // then
-            then(boardExpressionService).should(times(1))
+            then(postExpressionService).should(times(1))
                 .removePostExpression(customUserDetails.getMember(), id, ExpressionType.HATE);
-            then(boardExpressionService).shouldHaveNoMoreInteractions();
+            then(postExpressionService).shouldHaveNoMoreInteractions();
             assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
         }
     }

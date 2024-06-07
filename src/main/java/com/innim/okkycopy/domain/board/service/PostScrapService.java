@@ -17,14 +17,14 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
-public class BoardScrapService {
+public class PostScrapService {
 
     private final PostRepository postRepository;
     private final ScrapRepository scrapRepository;
     private final MemberRepository memberRepository;
 
     @PersistenceContext
-    private EntityManager entityManager;
+    private final EntityManager entityManager;
 
 
     @Transactional

@@ -3,8 +3,8 @@ package com.innim.okkycopy.domain.board;
 import com.innim.okkycopy.domain.board.dto.response.FileResponse;
 import com.innim.okkycopy.domain.board.dto.response.topics.TopicListResponse;
 import com.innim.okkycopy.domain.board.enums.ExpressionType;
-import com.innim.okkycopy.domain.board.service.BoardExpressionService;
-import com.innim.okkycopy.domain.board.service.BoardScrapService;
+import com.innim.okkycopy.domain.board.service.PostExpressionService;
+import com.innim.okkycopy.domain.board.service.PostScrapService;
 import com.innim.okkycopy.domain.board.service.BoardTopicService;
 import com.innim.okkycopy.global.auth.CustomUserDetails;
 import com.innim.okkycopy.global.common.S3Uploader;
@@ -27,8 +27,8 @@ import org.springframework.web.multipart.MultipartFile;
 @RequiredArgsConstructor
 public class BoardController {
 
-    private final BoardExpressionService boardExpressionService;
-    private final BoardScrapService boardScrapService;
+    private final PostExpressionService postExpressionService;
+    private final PostScrapService postScrapService;
     private final BoardTopicService boardTopicService;
     private final S3Uploader s3Uploader;
 
@@ -40,14 +40,14 @@ public class BoardController {
     @PostMapping("/posts/{id}/scrap")
     public ResponseEntity<Object> scrapAdd(
         @AuthenticationPrincipal CustomUserDetails customUserDetails, @PathVariable long id) {
-        boardScrapService.addScrap(customUserDetails.getMember(), id);
+        postScrapService.addScrap(customUserDetails.getMember(), id);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @DeleteMapping("/posts/{id}/scrap")
     public ResponseEntity<Object> scrapRemove(
         @AuthenticationPrincipal CustomUserDetails customUserDetails, @PathVariable long id) {
-        boardScrapService.removeScrap(customUserDetails.getMember(), id);
+        postScrapService.removeScrap(customUserDetails.getMember(), id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
@@ -55,7 +55,7 @@ public class BoardController {
     public ResponseEntity<Object> likeExpressionAdd(
         @AuthenticationPrincipal CustomUserDetails customUserDetails,
         @PathVariable long id) {
-        boardExpressionService.addPostExpression(customUserDetails.getMember(), id, ExpressionType.LIKE);
+        postExpressionService.addPostExpression(customUserDetails.getMember(), id, ExpressionType.LIKE);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
@@ -63,7 +63,7 @@ public class BoardController {
     public ResponseEntity<Object> hateExpressionAdd(
         @AuthenticationPrincipal CustomUserDetails customUserDetails,
         @PathVariable long id) {
-        boardExpressionService.addPostExpression(customUserDetails.getMember(), id, ExpressionType.HATE);
+        postExpressionService.addPostExpression(customUserDetails.getMember(), id, ExpressionType.HATE);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
@@ -71,7 +71,7 @@ public class BoardController {
     public ResponseEntity<Object> likeExpressionRemove(
         @AuthenticationPrincipal CustomUserDetails customUserDetails,
         @PathVariable long id) {
-        boardExpressionService.removePostExpression(customUserDetails.getMember(), id, ExpressionType.LIKE);
+        postExpressionService.removePostExpression(customUserDetails.getMember(), id, ExpressionType.LIKE);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
@@ -79,7 +79,7 @@ public class BoardController {
     public ResponseEntity<Object> hateExpressionRemove(
         @AuthenticationPrincipal CustomUserDetails customUserDetails,
         @PathVariable long id) {
-        boardExpressionService.removePostExpression(customUserDetails.getMember(), id, ExpressionType.HATE);
+        postExpressionService.removePostExpression(customUserDetails.getMember(), id, ExpressionType.HATE);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
