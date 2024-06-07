@@ -65,7 +65,7 @@ public class MemberControllerTest {
     class _memberAdd_$MemberRequest {
 
         @Test
-        void given_inputMemberRequest_then_responseMemberBriefResponse() {
+        void given_request_then_responseMemberBriefResponse() {
             // given
             MemberRequest memberRequest = memberRequest();
             MemberBriefResponse memberBriefResponse = memberBriefResponse();
@@ -226,7 +226,7 @@ public class MemberControllerTest {
     class _memberModify_$ProfileUpdateRequest_$CustomUserDetails {
 
         @Test
-        void given_correctRequest_then_responseHttpStatus204() {
+        void given_request_then_responseHttpStatus204() {
             // given
             CustomUserDetails customUserDetails = WithMockCustomUserSecurityContextFactory.customUserDetailsMock();
             ProfileUpdateRequest profileUpdateRequest = profileUpdateRequest();
@@ -253,7 +253,7 @@ public class MemberControllerTest {
     class _memberPasswordModify_$ChangePasswordRequest_$CustomUserDetails {
 
         @Test
-        void given_correctRequest_then_responseHttpStatus204() {
+        void given_request_then_responseHttpStatus204() {
             // given
             CustomUserDetails customUserDetails = WithMockCustomUserSecurityContextFactory.customUserDetailsMock();
             ChangePasswordRequest changePasswordRequest = changePasswordRequest();
@@ -280,7 +280,7 @@ public class MemberControllerTest {
     class _memberLogoutDateModify_$CustomUserDetails {
 
         @Test
-        void given_correctRequest_then_responseHttpStatus204() {
+        void given_request_then_responseHttpStatus204() {
             // given
             CustomUserDetails customUserDetails = WithMockCustomUserSecurityContextFactory.customUserDetailsMock();
 
@@ -299,7 +299,7 @@ public class MemberControllerTest {
     class _memberDetails_$CustomUserDetails {
 
         @Test
-        void given_correctRequest_then_responseMemberDetailsResponse() {
+        void given_request_then_responseMemberDetailsResponse() {
             // given
             CustomUserDetails customUserDetails = WithMockCustomUserSecurityContextFactory.customUserDetailsMock();
             MemberDetailsResponse memberDetailsResponse = memberDetailsResponse(customUserDetails.getMember());
@@ -325,7 +325,7 @@ public class MemberControllerTest {
     class _memberRemove_$CustomUserDetails {
 
         @Test
-        void given_correctRequest_then_responseHttpStatus204() {
+        void given_request_then_responseHttpStatus204() {
             // given
             CustomUserDetails customUserDetails = WithMockCustomUserSecurityContextFactory.customUserDetailsMock();
 
@@ -343,7 +343,7 @@ public class MemberControllerTest {
     class _authenticationMailSend_$UpdateEmailRequest_$CustomUserDetails {
 
         @Test
-        void given_correctRequest_then_invokeSendAuthenticationMail() {
+        void given_request_then_invokeSendAuthenticationMail() {
             // given
             UpdateEmailRequest updateEmailRequest = updateEmailRequest();
             CustomUserDetails customUserDetails = WithMockCustomUserSecurityContextFactory.customUserDetailsMock();
@@ -367,7 +367,7 @@ public class MemberControllerTest {
     class _emailAuthenticate_$String {
 
         @Test
-        void given_correctRequest_then_responseHttpStatus204() {
+        void given_request_then_responseHttpStatus204() {
             // given
             String key = "testKey";
 
@@ -385,7 +385,7 @@ public class MemberControllerTest {
     class _emailChangeAuthenticate_$String {
 
         @Test
-        void given_correctRequest_then_responseHttpStatus204() {
+        void given_request_then_responseHttpStatus204() {
             // given
             String key = "testKey";
 

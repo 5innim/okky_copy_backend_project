@@ -106,7 +106,7 @@ public class MemberEmailServiceTest {
         }
 
         @Test
-        void given_correctMailAuthenticateRequest_then_sendMail() {
+        void given_invokeForMailAuthenticate_then_sendMail() {
             // given
             UpdateEmailRequest updateEmailRequest = updateEmailRequest();
             Member member = WithMockCustomUserSecurityContextFactory.customUserDetailsMock().getMember();
@@ -127,7 +127,7 @@ public class MemberEmailServiceTest {
         }
 
         @Test
-        void given_correctChangeMailAuthenticateRequest_then_sendMail() {
+        void given_invokeForChangeMailAuthenticate_then_sendMail() {
             // given
             UpdateEmailRequest updateEmailRequest = updateEmailRequest();
             Member member = WithMockCustomUserSecurityContextFactory.customUserDetailsMock().getMember();

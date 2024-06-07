@@ -97,7 +97,7 @@ public class NaverMemberServiceTest {
         }
 
         @Test
-        void given_correctRequest_then_saveAndSendEmail() {
+        void given_invoke_then_saveAndSendEmail() {
             // given
             MockHttpServletRequest httpServletRequest = httpServletRequest();
             httpServletRequest.setSession(new MockHttpSession());

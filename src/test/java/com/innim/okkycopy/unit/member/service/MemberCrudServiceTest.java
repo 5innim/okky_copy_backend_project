@@ -225,7 +225,7 @@ public class MemberCrudServiceTest {
         }
 
         @Test
-        void given_correctRequest_then_invokeSetRole() throws NoSuchAlgorithmException {
+        void given_invoke_then_invokeSetRole() throws NoSuchAlgorithmException {
             // given
             Member member = WithMockCustomUserSecurityContextFactory.customUserDetailsMock().getMember();
             String key = EncryptionUtil.encryptWithSHA256(
@@ -290,7 +290,7 @@ public class MemberCrudServiceTest {
         }
 
         @Test
-        void given_correctRequest_then_invokeChangeEmail() {
+        void given_invoke_then_invokeChangeEmail() {
             // given
             String key = "test_key";
             Member member = WithMockCustomUserSecurityContextFactory.customUserDetailsMock().getMember();
@@ -337,7 +337,7 @@ public class MemberCrudServiceTest {
         }
 
         @Test
-        void given_correctRequest_then_invokeSetMethods() {
+        void given_invoke_then_invokeSetMethods() {
             // given
             Member member = WithMockCustomUserSecurityContextFactory.customUserDetailsMock().getMember();
             ProfileUpdateRequest profileUpdateRequest = profileUpdateRequest();
@@ -385,7 +385,7 @@ public class MemberCrudServiceTest {
         }
 
         @Test
-        void given_correctRequest_thenInvokeSerLogoutDate() {
+        void given_invoke_thenInvokeSerLogoutDate() {
             // given
             Member member = WithMockCustomUserSecurityContextFactory.customUserDetailsMock().getMember();
             Date logoutDate = new Date();

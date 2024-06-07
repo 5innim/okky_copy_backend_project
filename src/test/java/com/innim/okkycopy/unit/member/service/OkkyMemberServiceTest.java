@@ -89,7 +89,7 @@ public class OkkyMemberServiceTest {
         }
 
         @Test
-        void given_correctRequest_then_saveAndSendEmail() {
+        void given_invoke_then_saveAndSendEmail() {
             // given
             MemberRequest memberRequest = memberRequest();
             given(okkyMemberRepository.existsById(memberRequest.getId())).willReturn(false);
