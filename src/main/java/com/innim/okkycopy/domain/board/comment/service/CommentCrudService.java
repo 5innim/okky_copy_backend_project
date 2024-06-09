@@ -166,9 +166,13 @@ public class CommentCrudService {
                 Member member = memberRepository.findByMemberId(comment.getMentionedMember()).orElseGet(() -> null);
                 mentionedNickname = (member == null) ? "un-known" : member.getNickname();
             }
-            CommentExpression commentExpression = commentExpressionRepository
-                .findByMemberAndComment(comment, requester)
-                .orElseGet(() -> null);
+
+            CommentExpression commentExpression = null;
+            if (requester != null) {
+                commentExpression = commentExpressionRepository
+                    .findByMemberAndComment(comment, requester)
+                    .orElseGet(() -> null);
+            }
 
             RequesterInfo requesterInfo =
                 (requester == null) ? null : RequesterInfo.builder()
