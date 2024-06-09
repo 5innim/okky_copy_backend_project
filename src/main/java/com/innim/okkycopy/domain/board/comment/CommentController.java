@@ -4,6 +4,8 @@ import com.innim.okkycopy.domain.board.comment.dto.request.CommentRequest;
 import com.innim.okkycopy.domain.board.comment.dto.request.ReCommentRequest;
 import com.innim.okkycopy.domain.board.comment.dto.response.CommentListResponse;
 import com.innim.okkycopy.domain.board.comment.dto.response.ReCommentListResponse;
+import com.innim.okkycopy.domain.board.comment.service.CommentCrudService;
+import com.innim.okkycopy.domain.board.comment.service.CommentExpressionService;
 import com.innim.okkycopy.domain.board.enums.ExpressionType;
 import com.innim.okkycopy.global.auth.CustomUserDetails;
 import jakarta.validation.Valid;
