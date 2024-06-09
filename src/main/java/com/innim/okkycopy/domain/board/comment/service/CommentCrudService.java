@@ -164,7 +164,7 @@ public class CommentCrudService {
             String mentionedNickname = null;
             if (comment.getMentionedMember() != null) {
                 Member member = memberRepository.findByMemberId(comment.getMentionedMember()).orElseGet(() -> null);
-                mentionedNickname = (member == null) ? "(unknown)" : member.getNickname();
+                mentionedNickname = (member == null) ? "un-known" : member.getNickname();
             }
             CommentExpression commentExpression = commentExpressionRepository
                 .findByMemberAndComment(comment, requester)
