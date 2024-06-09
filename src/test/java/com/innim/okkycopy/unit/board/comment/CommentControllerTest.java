@@ -7,8 +7,8 @@ import static org.mockito.Mockito.times;
 
 import com.innim.okkycopy.common.WithMockCustomUserSecurityContextFactory;
 import com.innim.okkycopy.domain.board.comment.CommentController;
-import com.innim.okkycopy.domain.board.comment.CommentCrudService;
-import com.innim.okkycopy.domain.board.comment.CommentExpressionService;
+import com.innim.okkycopy.domain.board.comment.service.CommentCrudService;
+import com.innim.okkycopy.domain.board.comment.service.CommentExpressionService;
 import com.innim.okkycopy.domain.board.comment.dto.request.CommentRequest;
 import com.innim.okkycopy.domain.board.comment.dto.request.ReCommentRequest;
 import com.innim.okkycopy.domain.board.comment.dto.response.CommentListResponse;
