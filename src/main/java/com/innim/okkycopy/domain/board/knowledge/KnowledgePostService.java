@@ -38,7 +38,7 @@ public class KnowledgePostService {
     private final PostExpressionRepository postExpressionRepository;
 
     @PersistenceContext
-    private EntityManager entityManager;
+    private final EntityManager entityManager;
 
     @Transactional
     public void addKnowledgePost(PostRequest postRequest, CustomUserDetails customUserDetails) {

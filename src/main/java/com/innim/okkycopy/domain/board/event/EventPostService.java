@@ -37,7 +37,7 @@ public class EventPostService {
     private final ScrapRepository scrapRepository;
 
     @PersistenceContext
-    private EntityManager entityManager;
+    private final EntityManager entityManager;
 
     @Transactional
     public void addEventPost(PostRequest postRequest, CustomUserDetails customUserDetails) {

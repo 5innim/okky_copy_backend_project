@@ -37,7 +37,7 @@ public class CommunityPostService {
     private final ScrapRepository scrapRepository;
 
     @PersistenceContext
-    private EntityManager entityManager;
+    private final EntityManager entityManager;
 
     @Transactional
     public void addCommunityPost(PostRequest postRequest, CustomUserDetails customUserDetails) {
