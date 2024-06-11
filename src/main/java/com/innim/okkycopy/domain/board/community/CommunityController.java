@@ -1,6 +1,8 @@
 package com.innim.okkycopy.domain.board.community;
 
 import com.innim.okkycopy.domain.board.dto.request.write.PostRequest;
+import com.innim.okkycopy.domain.board.dto.response.post.brief.PostListResponse;
+import com.innim.okkycopy.domain.board.dto.response.post.detail.PostDetailsResponse;
 import com.innim.okkycopy.global.auth.CustomUserDetails;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -36,7 +38,7 @@ public class CommunityController {
     }
 
     @GetMapping("/posts/{id}")
-    public ResponseEntity<Object> communityPostDetails(
+    public ResponseEntity<PostDetailsResponse> communityPostDetails(
         @AuthenticationPrincipal CustomUserDetails customUserDetails,
         @PathVariable("id") long id) {
         return ResponseEntity.ok(communityPostService.findCommunityPost(customUserDetails, id));
@@ -60,7 +62,7 @@ public class CommunityController {
     }
 
     @GetMapping("/posts")
-    public ResponseEntity<Object> briefPostList(
+    public ResponseEntity<PostListResponse> briefPostList(
         @RequestParam(required = false) Long topicId,
         @RequestParam(required = false) String keyword,
         @PageableDefault(size = 20, sort = "createdDate", direction = Sort.Direction.DESC) Pageable pageable) {
