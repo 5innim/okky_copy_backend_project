@@ -92,13 +92,13 @@ public class CommunityControllerTest {
         long topicId = 1;
         String keyword = "test_keyword";
         Pageable pageable = null;
-        given(communityPostService.findCommunityPostsByKeywordAndPageable(topicId, keyword, pageable)).willReturn(null);
+        given(communityPostService.findCommunityPostsByTopicIdAndKeyword(topicId, keyword, pageable)).willReturn(null);
 
         // when
         ResponseEntity<Object> response = communityController.briefPostList(topicId, keyword, pageable);
 
         // then
-        then(communityPostService).should(times(1)).findCommunityPostsByKeywordAndPageable(topicId, keyword, pageable);
+        then(communityPostService).should(times(1)).findCommunityPostsByTopicIdAndKeyword(topicId, keyword, pageable);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     }
 

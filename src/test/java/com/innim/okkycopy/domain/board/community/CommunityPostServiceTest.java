@@ -143,7 +143,7 @@ public class CommunityPostServiceTest {
 
             // when
             Throwable thrown = catchThrowable(() -> {
-                communityPostService.findCommunityPostsByKeywordAndPageable(topicId, keyword, pageable);
+                communityPostService.findCommunityPostsByTopicIdAndKeyword(topicId, keyword, pageable);
             });
 
             // then
@@ -167,7 +167,7 @@ public class CommunityPostServiceTest {
 
             // when
             Throwable thrown = catchThrowable(() -> {
-                communityPostService.findCommunityPostsByKeywordAndPageable(topicId, keyword, pageable);
+                communityPostService.findCommunityPostsByTopicIdAndKeyword(topicId, keyword, pageable);
             });
 
             // then

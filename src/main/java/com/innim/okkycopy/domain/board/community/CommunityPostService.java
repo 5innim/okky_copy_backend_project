@@ -109,10 +109,10 @@ public class CommunityPostService {
     }
 
     @Transactional(readOnly = true)
-    public PostListResponse findCommunityPostsByKeywordAndPageable(Long topicId, String keyword, Pageable pageable) {
+    public PostListResponse findCommunityPostsByTopicIdAndKeyword(Long topicId, String keyword, Pageable pageable) {
         Page<CommunityPost> communityPostPage;
         if (topicId == null) {
-            communityPostPage = communityPostRepository.findAllByKeywordAndPageable((keyword == null) ? "" : keyword,
+            communityPostPage = communityPostRepository.findPageByKeyword((keyword == null) ? "" : keyword,
                 pageable);
         } else {
             BoardTopic boardTopic = boardTopicRepository
@@ -121,7 +121,7 @@ public class CommunityPostService {
             if (CommunityPost.isNotSupportedTopic(boardTopic)) {
                 throw new StatusCode400Exception(ErrorCase._400_NOT_SUPPORTED_CASE);
             }
-            communityPostPage = communityPostRepository.findByTopicId(boardTopic, (keyword == null) ? "" : keyword,
+            communityPostPage = communityPostRepository.findPageByBoardTopicAndKeyword(boardTopic, (keyword == null) ? "" : keyword,
                 pageable);
         }
 

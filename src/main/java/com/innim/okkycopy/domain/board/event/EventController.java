@@ -65,6 +65,6 @@ public class EventController {
         @RequestParam(required = false) String keyword,
         @PageableDefault(size = 20, sort = "createdDate", direction = Sort.Direction.DESC) Pageable pageable) {
         return ResponseEntity.ok()
-            .body(eventPostService.findEventPostsByKeywordAndPageable(topicId, keyword, pageable));
+            .body(eventPostService.findEventPostsByTopicIdAndKeyword(topicId, keyword, pageable));
     }
 }

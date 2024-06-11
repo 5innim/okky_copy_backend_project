@@ -65,7 +65,7 @@ public class KnowledgeController {
         @RequestParam(required = false) String keyword,
         @PageableDefault(size = 20, sort = "createdDate", direction = Sort.Direction.DESC) Pageable pageable) {
         return ResponseEntity.ok()
-            .body(knowledgePostService.findKnowledgePostsByKeywordAndPageable(topicId, keyword, pageable));
+            .body(knowledgePostService.findKnowledgePostsByTopicIdAndKeyword(topicId, keyword, pageable));
     }
 
 }

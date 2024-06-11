@@ -112,10 +112,10 @@ public class KnowledgePostService {
     }
 
     @Transactional(readOnly = true)
-    public PostListResponse findKnowledgePostsByKeywordAndPageable(Long topicId, String keyword, Pageable pageable) {
+    public PostListResponse findKnowledgePostsByTopicIdAndKeyword(Long topicId, String keyword, Pageable pageable) {
         Page<KnowledgePost> knowledgePostPage;
         if (topicId == null) {
-            knowledgePostPage = knowledgePostRepository.findAllByKeywordAndPageable((keyword == null) ? "" : keyword,
+            knowledgePostPage = knowledgePostRepository.findPageByKeyword((keyword == null) ? "" : keyword,
                 pageable);
         } else {
             BoardTopic boardTopic = boardTopicRepository
@@ -124,7 +124,7 @@ public class KnowledgePostService {
             if (KnowledgePost.isNotSupportedTopic(boardTopic)) {
                 throw new StatusCode400Exception(ErrorCase._400_NOT_SUPPORTED_CASE);
             }
-            knowledgePostPage = knowledgePostRepository.findByTopicId(boardTopic, (keyword == null) ? "" : keyword,
+            knowledgePostPage = knowledgePostRepository.findPageByBoardTopicAndKeyword(boardTopic, (keyword == null) ? "" : keyword,
                 pageable);
         }
 

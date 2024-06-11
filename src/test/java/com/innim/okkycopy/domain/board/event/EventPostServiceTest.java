@@ -142,7 +142,7 @@ public class EventPostServiceTest {
 
             // when
             Throwable thrown = catchThrowable(() -> {
-                eventPostService.findEventPostsByKeywordAndPageable(topicId, keyword, pageable);
+                eventPostService.findEventPostsByTopicIdAndKeyword(topicId, keyword, pageable);
             });
 
             // then
@@ -166,7 +166,7 @@ public class EventPostServiceTest {
 
             // when
             Throwable thrown = catchThrowable(() -> {
-                eventPostService.findEventPostsByKeywordAndPageable(topicId, keyword, pageable);
+                eventPostService.findEventPostsByTopicIdAndKeyword(topicId, keyword, pageable);
             });
 
             // then

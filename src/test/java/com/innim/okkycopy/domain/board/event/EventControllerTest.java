@@ -92,13 +92,13 @@ public class EventControllerTest {
         long topicId = 1;
         String keyword = "test_keyword";
         Pageable pageable = null;
-        given(eventPostService.findEventPostsByKeywordAndPageable(topicId, keyword, pageable)).willReturn(null);
+        given(eventPostService.findEventPostsByTopicIdAndKeyword(topicId, keyword, pageable)).willReturn(null);
 
         // when
         ResponseEntity<Object> response = eventController.briefPostList(topicId, keyword, pageable);
 
         // then
-        then(eventPostService).should(times(1)).findEventPostsByKeywordAndPageable(topicId, keyword, pageable);
+        then(eventPostService).should(times(1)).findEventPostsByTopicIdAndKeyword(topicId, keyword, pageable);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     }
 

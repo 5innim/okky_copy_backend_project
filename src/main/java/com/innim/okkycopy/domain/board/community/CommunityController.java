@@ -65,6 +65,6 @@ public class CommunityController {
         @RequestParam(required = false) String keyword,
         @PageableDefault(size = 20, sort = "createdDate", direction = Sort.Direction.DESC) Pageable pageable) {
         return ResponseEntity.ok()
-            .body(communityPostService.findCommunityPostsByKeywordAndPageable(topicId, keyword, pageable));
+            .body(communityPostService.findCommunityPostsByTopicIdAndKeyword(topicId, keyword, pageable));
     }
 }

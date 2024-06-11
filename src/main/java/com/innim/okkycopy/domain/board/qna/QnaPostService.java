@@ -109,10 +109,10 @@ public class QnaPostService {
     }
 
     @Transactional(readOnly = true)
-    public PostListResponse findQnaPostsByKeywordAndPageable(Long topicId, String keyword, Pageable pageable) {
+    public PostListResponse findQnaPostsByTopicIdAndKeyword(Long topicId, String keyword, Pageable pageable) {
         Page<QnaPost> qnaPostPage;
         if (topicId == null) {
-            qnaPostPage = qnaPostRepository.findAllByKeywordAndPageable((keyword == null) ? "" : keyword,
+            qnaPostPage = qnaPostRepository.findPageByKeyword((keyword == null) ? "" : keyword,
                 pageable);
         } else {
             BoardTopic boardTopic = boardTopicRepository
@@ -121,7 +121,7 @@ public class QnaPostService {
             if (QnaPost.isNotSupportedTopic(boardTopic)) {
                 throw new StatusCode400Exception(ErrorCase._400_NOT_SUPPORTED_CASE);
             }
-            qnaPostPage = qnaPostRepository.findByTopicId(boardTopic, (keyword == null) ? "" : keyword,
+            qnaPostPage = qnaPostRepository.findPageByBoardTopicAndKeyword(boardTopic, (keyword == null) ? "" : keyword,
                 pageable);
         }
 

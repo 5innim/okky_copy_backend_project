@@ -65,7 +65,7 @@ public class QnaController {
         @RequestParam(required = false) String keyword,
         @PageableDefault(size = 20, sort = "createdDate", direction = Sort.Direction.DESC) Pageable pageable) {
         return ResponseEntity.ok()
-            .body(qnaPostService.findQnaPostsByKeywordAndPageable(topicId, keyword, pageable));
+            .body(qnaPostService.findQnaPostsByTopicIdAndKeyword(topicId, keyword, pageable));
     }
 
 }

@@ -13,8 +13,8 @@ public interface QnaPostRepository extends JpaRepository<QnaPost, Long> {
     Optional<QnaPost> findByPostId(long postId);
 
     @Query("SELECT q FROM QnaPost q WHERE q.boardTopic = :boardTopic AND q.title LIKE CONCAT('%', :keyword, '%')")
-    Page<QnaPost> findByTopicId(@Param("boardTopic") BoardTopic boardTopic, String keyword, Pageable pageable);
+    Page<QnaPost> findPageByBoardTopicAndKeyword(@Param("boardTopic") BoardTopic boardTopic, String keyword, Pageable pageable);
 
     @Query("SELECT q FROM QnaPost q WHERE q.title LIKE CONCAT('%', :keyword, '%')")
-    Page<QnaPost> findAllByKeywordAndPageable(String keyword, Pageable pageable);
+    Page<QnaPost> findPageByKeyword(String keyword, Pageable pageable);
 }

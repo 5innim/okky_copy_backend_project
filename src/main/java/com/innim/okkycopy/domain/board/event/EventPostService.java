@@ -110,10 +110,10 @@ public class EventPostService {
     }
 
     @Transactional(readOnly = true)
-    public PostListResponse findEventPostsByKeywordAndPageable(Long topicId, String keyword, Pageable pageable) {
+    public PostListResponse findEventPostsByTopicIdAndKeyword(Long topicId, String keyword, Pageable pageable) {
         Page<EventPost> eventPostPage;
         if (topicId == null) {
-            eventPostPage = eventPostRepository.findAllByKeywordAndPageable((keyword == null) ? "" : keyword,
+            eventPostPage = eventPostRepository.findPageByKeyword((keyword == null) ? "" : keyword,
                 pageable);
         } else {
             BoardTopic boardTopic = boardTopicRepository
@@ -122,7 +122,7 @@ public class EventPostService {
             if (EventPost.isNotSupportedTopic(boardTopic)) {
                 throw new StatusCode400Exception(ErrorCase._400_NOT_SUPPORTED_CASE);
             }
-            eventPostPage = eventPostRepository.findByTopicId(boardTopic, (keyword == null) ? "" : keyword,
+            eventPostPage = eventPostRepository.findPageByBoardTopicAndKeyword(boardTopic, (keyword == null) ? "" : keyword,
                 pageable);
         }
 

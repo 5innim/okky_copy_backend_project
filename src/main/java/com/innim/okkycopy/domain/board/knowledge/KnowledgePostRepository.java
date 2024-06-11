@@ -14,8 +14,8 @@ public interface KnowledgePostRepository extends JpaRepository<KnowledgePost, Lo
     Optional<KnowledgePost> findByPostId(long postId);
 
     @Query("SELECT k FROM KnowledgePost k WHERE k.boardTopic = :boardTopic AND k.title LIKE CONCAT('%', :keyword, '%')")
-    Page<KnowledgePost> findByTopicId(@Param("boardTopic") BoardTopic boardTopic, String keyword, Pageable pageable);
+    Page<KnowledgePost> findPageByBoardTopicAndKeyword(@Param("boardTopic") BoardTopic boardTopic, String keyword, Pageable pageable);
 
     @Query("SELECT k FROM KnowledgePost k WHERE k.title LIKE CONCAT('%', :keyword, '%')")
-    Page<KnowledgePost> findAllByKeywordAndPageable(String keyword, Pageable pageable);
+    Page<KnowledgePost> findPageByKeyword(String keyword, Pageable pageable);
 }
