@@ -142,7 +142,7 @@ class KnowledgePostServiceTest {
 
             // when
             Throwable thrown = catchThrowable(() -> {
-                knowledgePostService.findKnowledgePostsByKeywordAndPageable(topicId, keyword, pageable);
+                knowledgePostService.findKnowledgePostsByTopicIdAndKeyword(topicId, keyword, pageable);
             });
 
             // then
