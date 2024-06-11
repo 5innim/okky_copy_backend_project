@@ -59,9 +59,8 @@ public class KnowledgePostService {
     public PostDetailsResponse findKnowledgePost(CustomUserDetails customUserDetails, long postId) {
         KnowledgePost knowledgePost = knowledgePostRepository.findByPostId(postId)
             .orElseThrow(() -> new StatusCode400Exception(ErrorCase._400_NO_SUCH_POST));
-        Member member = knowledgePost.getMember();
 
-        PostDetailsResponse response = PostDetailsResponse.of(knowledgePost, member);
+        PostDetailsResponse response = PostDetailsResponse.from(knowledgePost);
         if (customUserDetails != null) {
             Member requester = customUserDetails.getMember();
             PostExpression postExpression = postExpressionRepository.findByMemberAndPost(knowledgePost, requester)

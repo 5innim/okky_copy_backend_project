@@ -57,9 +57,8 @@ public class EventPostService {
     public PostDetailsResponse findEventPost(CustomUserDetails customUserDetails, long postId) {
         EventPost eventPost = eventPostRepository.findByPostId(postId)
             .orElseThrow(() -> new StatusCode400Exception(ErrorCase._400_NO_SUCH_POST));
-        Member member = eventPost.getMember();
 
-        PostDetailsResponse response = PostDetailsResponse.of(eventPost, member);
+        PostDetailsResponse response = PostDetailsResponse.from(eventPost);
         if (customUserDetails != null) {
             Member requester = customUserDetails.getMember();
             PostExpression postExpression = postExpressionRepository.findByMemberAndPost(eventPost, requester)

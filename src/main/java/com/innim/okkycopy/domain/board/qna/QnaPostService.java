@@ -56,9 +56,8 @@ public class QnaPostService {
     public PostDetailsResponse findQnaPost(CustomUserDetails customUserDetails, long postId) {
         QnaPost qnaPost = qnaPostRepository.findByPostId(postId)
             .orElseThrow(() -> new StatusCode400Exception(ErrorCase._400_NO_SUCH_POST));
-        Member member = qnaPost.getMember();
 
-        PostDetailsResponse response = PostDetailsResponse.of(qnaPost, member);
+        PostDetailsResponse response = PostDetailsResponse.from(qnaPost);
         if (customUserDetails != null) {
             Member requester = customUserDetails.getMember();
             PostExpression postExpression = postExpressionRepository.findByMemberAndPost(qnaPost, requester)

@@ -56,9 +56,8 @@ public class CommunityPostService {
     public PostDetailsResponse findCommunityPost(CustomUserDetails customUserDetails, long postId) {
         CommunityPost communityPost = communityPostRepository.findByPostId(postId)
             .orElseThrow(() -> new StatusCode400Exception(ErrorCase._400_NO_SUCH_POST));
-        Member member = communityPost.getMember();
 
-        PostDetailsResponse response = PostDetailsResponse.of(communityPost, member);
+        PostDetailsResponse response = PostDetailsResponse.from(communityPost);
         if (customUserDetails != null) {
             Member requester = customUserDetails.getMember();
             PostExpression postExpression = postExpressionRepository.findByMemberAndPost(communityPost, requester)
