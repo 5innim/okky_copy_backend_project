@@ -1,4 +1,4 @@
-package com.innim.okkycopy.domain.board.knowledge.repository;
+package com.innim.okkycopy.domain.board.knowledge;
 
 import com.innim.okkycopy.domain.board.entity.BoardTopic;
 import com.innim.okkycopy.domain.board.knowledge.entity.KnowledgePost;
