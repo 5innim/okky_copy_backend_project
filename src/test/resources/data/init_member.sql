@@ -1,0 +1,1 @@
+ALTER SEQUENCE member_member_id_seq RESTART WITH 1;
