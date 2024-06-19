@@ -15,8 +15,8 @@ spring:
   datasource:
     driver-class-name: org.postgresql.Driver
     url: jdbc:postgresql://localhost:5432/okky_local
-    username: for_local
-    password: okky1234
+    username: ENC(KQ2uRg7hcNuHjpgIrvlKs4V/va7Y5KPN)
+    password: ENC(zLsTa9C2h1w8me3BM2F5qsEaTCWftOWH)
 
   # security
   security:
@@ -24,19 +24,19 @@ spring:
       client:
         registration:
           google:
-            client-id: 673990742828-f60dbpkqo1jlo185ifqf1r511hv91a5p.apps.googleusercontent.com
-            client-secret: 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
+            client-id: ENC(Ck0Cj57kel2bvXqsEpK5VbOZbtGfjviH5ttd6i52c5q7hqgGKsY7R04n58ikilpzrLXLKB9FeSJ7aXRMAqCZVEFSxoGa7lhb3h/SQPgrzJZOXbsLkGDAyw==)
+            client-secret: ENC(lPgEaf20NXLmvD83bsIqWCPQBee3Mn8wz19fHtlFZ8dhcNfar0kCPcytPEZAFkkQ)
             scope: profile, email
           naver:
-            client-id: uZhfLm6LMONXWSNq1GJS
-            client-secret: yWTfRzdst7
+            client-id: ENC(WfA4i2GOU/t/PhIINpi61aj1eyJWWLlmwP5oa8sIEG4=)
+            client-secret: ENC(JGqhRVhBOKijKdnlIE+j7X2ZIPHgYWbC)
             redirect-uri: http://localhost:8080/login/oauth2/code/naver
             authorization-grant-type: authorization_code
             scope: name, email, profile_image, nickname
             client-name: Naver
           kakao:
-            client-id: 74808dcb66d7d1ab8ad725dc7f58a1fd
-            client-secret: QSzFRmwG5PL0lqz4BHrPVkLOdgB8tssn
+            client-id: ENC(C4iUOAYYbs7AcEVrSzO+AonO6XU5Io0d0qfcwaizwGi2hCFtEASQ73CDdUTxoGBi)
+            client-secret: ENC(VHp49XZ7PPHYAmjYXGRlOMfBZ7zt7YGYYlYhmbVCp1mntYug2F84tDTrIzOPxh0j)
             redirect-uri: http://localhost:8080/login/oauth2/code/kakao
             client-authentication-method: client_secret_post
             authorization-grant-type: authorization_code
@@ -60,8 +60,8 @@ spring:
     default-encoding: UTF-8
     host: smtp.gmail.com
     port: 587
-    username: bjm22247@gmail.com
-    password: imzi mmoo qmuc xjuz
+    username: okky.innim@gmail.com
+    password: ENC(XKNBaO2fQd3qiHY0Y1Rix/gr4NjrlLR6y1IHK9huwZg=) #flgq ofor cfyr rqip
     properties.mail:
       smtp:
         auth: true
@@ -107,8 +107,8 @@ cloud:
     stack.auto: false
     region.static: ap-northeast-2
     credentials:
-      access-key: AKIA43MJDZISSDPJ2I4Y
-      secret-key: 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
+      access-key: ENC(KEFZS81oj8KYeXuL3M9ikgvQk3975CgjRBE2MYvZ40w=)
+      secret-key: ENC(CCtHoAQbk/a0KKLw3gRU2TRzftMXpMAsIpZCKcmF9uRzkseBcGIh+0VqU6u6TLWRrPsHg0zGuBc=)
 
 # frontend
 frontend:
