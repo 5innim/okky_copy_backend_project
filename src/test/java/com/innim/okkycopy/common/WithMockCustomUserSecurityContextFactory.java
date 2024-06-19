@@ -6,6 +6,7 @@ import com.innim.okkycopy.global.auth.CustomUserDetails;
 import com.innim.okkycopy.global.auth.enums.Role;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collections;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
@@ -39,6 +40,8 @@ public class WithMockCustomUserSecurityContextFactory implements
             .profile(null)
             .nickname("test_nickname")
             .emailCheck(true)
+            .comments(Collections.emptyList())
+            .posts(Collections.emptyList())
             .password("test_password")
             .name("test_name")
             .loginDate(null)
