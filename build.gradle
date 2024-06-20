@@ -56,6 +56,9 @@ dependencies {
 
 	// cache
 	implementation 'com.google.guava:guava:33.2.0-jre'
+
+	// jasypt
+	implementation 'com.github.ulisesbocchio:jasypt-spring-boot-starter:3.0.5'
 }
 
 tasks.named('test') {
