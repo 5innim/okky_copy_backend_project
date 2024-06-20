@@ -115,23 +115,18 @@ public class MemberControllerTest {
                 .willReturn(1L);
 
             // when
-            Exception exception = catchException(() -> {
-                    memberController.memberAdd(oAuthMemberRequest, provider,
-                        httpServletRequest,
-                        httpServletResponse);
-                }
-            );
+            memberController.memberAdd(oAuthMemberRequest, provider,
+                httpServletRequest,
+                httpServletResponse);
 
             // then
-            assertThat(((StatusCode500Exception) exception).getErrorCase())
-                .isEqualTo(ErrorCase._500_JWT_GENERATE_FAIL); // JwtProperty is in bean context
             then(googleMemberService).should(times(1))
                 .addGoogleMember(oAuthMemberRequest, provider, httpServletRequest);
             then(googleMemberService).shouldHaveNoMoreInteractions();
         }
 
         @Test
-        void given_providerIsKakao_then_invokeKakaoMemberService() {
+        void given_providerIsKakao_then_invokeKakaoMemberService() throws IOException {
             // given
             String provider = "kakao";
             OAuthMemberRequest oAuthMemberRequest = oAuthMemberRequest();
@@ -141,23 +136,18 @@ public class MemberControllerTest {
                 .willReturn(1L);
 
             // when
-            Exception exception = catchException(() -> {
-                    memberController.memberAdd(oAuthMemberRequest, provider,
-                        httpServletRequest,
-                        httpServletResponse);
-                }
-            );
+            memberController.memberAdd(oAuthMemberRequest, provider,
+                httpServletRequest,
+                httpServletResponse);
 
             // then
-            assertThat(((StatusCode500Exception) exception).getErrorCase())
-                .isEqualTo(ErrorCase._500_JWT_GENERATE_FAIL); // JwtProperty is in bean context
             then(kakaoMemberService).should(times(1))
                 .addKakaoMember(oAuthMemberRequest, provider, httpServletRequest);
             then(kakaoMemberService).shouldHaveNoMoreInteractions();
         }
 
         @Test
-        void given_providerIsNaver_then_invokeNaverMemberService() {
+        void given_providerIsNaver_then_invokeNaverMemberService() throws IOException {
             // given
             String provider = "naver";
             OAuthMemberRequest oAuthMemberRequest = oAuthMemberRequest();
@@ -167,16 +157,11 @@ public class MemberControllerTest {
                 .willReturn(1L);
 
             // when
-            Exception exception = catchException(() -> {
-                    memberController.memberAdd(oAuthMemberRequest, provider,
-                        httpServletRequest,
-                        httpServletResponse);
-                }
-            );
+            memberController.memberAdd(oAuthMemberRequest, provider,
+                httpServletRequest,
+                httpServletResponse);
 
             // then
-            assertThat(((StatusCode500Exception) exception).getErrorCase())
-                .isEqualTo(ErrorCase._500_JWT_GENERATE_FAIL); // JwtProperty is in bean context
             then(naverMemberService).should(times(1))
                 .addNaverMember(oAuthMemberRequest, provider, httpServletRequest);
             then(naverMemberService).shouldHaveNoMoreInteractions();

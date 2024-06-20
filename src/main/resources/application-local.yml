@@ -61,7 +61,7 @@ spring:
     host: smtp.gmail.com
     port: 587
     username: okky.innim@gmail.com
-    password: ENC(XKNBaO2fQd3qiHY0Y1Rix/gr4NjrlLR6y1IHK9huwZg=) #flgq ofor cfyr rqip
+    password: ENC(XKNBaO2fQd3qiHY0Y1Rix/gr4NjrlLR6y1IHK9huwZg=)
     properties.mail:
       smtp:
         auth: true
