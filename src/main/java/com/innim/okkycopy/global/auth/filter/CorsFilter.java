@@ -17,21 +17,21 @@ public class CorsFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
         throws ServletException, IOException {
 
-        if (request.getHeader("Origin").equals("http://www.okkycopy.store")) {
+        if (request.getHeader("Origin") != null && request.getHeader("Origin").equals("http://www.okkycopy.store")) {
             response.setHeader("Access-Control-Allow-Origin", "http://www.okkycopy.store");
         } else {
             response.setHeader("Access-Control-Allow-Origin", allowOrigin);
         }
 
         response.setHeader("Access-Control-Allow-Credentials", "true");
-        response.setHeader("Access-Control-Allow-Methods","POST, GET, OPTIONS, DELETE, PUT");
+        response.setHeader("Access-Control-Allow-Methods", "POST, GET, OPTIONS, DELETE, PUT");
         response.setHeader("Access-Control-Max-Age", "3600");
         response.setHeader("Access-Control-Allow-Headers",
             "Origin, X-Requested-With, Content-Type, Accept, Authorization");
 
-        if("OPTIONS".equalsIgnoreCase(request.getMethod())) {
+        if ("OPTIONS".equalsIgnoreCase(request.getMethod())) {
             response.setStatus(HttpServletResponse.SC_OK);
-        }else {
+        } else {
             filterChain.doFilter(request, response);
         }
     }
