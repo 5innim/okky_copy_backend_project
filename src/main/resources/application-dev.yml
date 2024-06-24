@@ -112,7 +112,7 @@ cloud:
 
 # frontend
 frontend:
-  origin: http://localhost:8081
+  origin: http://okkycopy.store
   path:
     base: /
     signup: /oauth/signup
