@@ -18,7 +18,7 @@ public class CorsFilter extends OncePerRequestFilter {
         throws ServletException, IOException {
 
         if (request.getHeader("Origin") != null && request.getHeader("Origin").equals("http://www.okkycopy.store")) {
-            response.setHeader("Access-Control-Allow-Origin", "http://www.okkycopy.store");
+            response.setHeader("Access-Control-Allow-Origin", "https://www.okkycopy.store");
         } else {
             response.setHeader("Access-Control-Allow-Origin", allowOrigin);
         }
