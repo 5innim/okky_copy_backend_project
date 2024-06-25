@@ -26,6 +26,7 @@ spring:
           google:
             client-id: ENC(JhnSYoDaFmDwgr2OqmEvjin+Gv92pdnafb/YCY5+tg34lYz3UIiJ8tNvr9ENqkiwilVvKUXeRB9CuO90+ZnsFLcvNjXWRH8ZsGruIKSSVmbb2nT/J0sDLw==)
             client-secret: ENC(x91HIfuUF7NstcqZRUnYUNWjaAMxXB2V7xiTfPZAQ9AIipUGmlq3GPH17w9pLFkP)
+            redirect-uri: https://okkycopy.store/api/login/oauth2/code/google
             scope: profile, email
           naver:
             client-id: ENC(k39tfb0pNrUMACbIwQc12T6x1ArwaVqEyfHegwrsDWQ=)
