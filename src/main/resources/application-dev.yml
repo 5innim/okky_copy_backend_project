@@ -26,19 +26,19 @@ spring:
           google:
             client-id: ENC(JhnSYoDaFmDwgr2OqmEvjin+Gv92pdnafb/YCY5+tg34lYz3UIiJ8tNvr9ENqkiwilVvKUXeRB9CuO90+ZnsFLcvNjXWRH8ZsGruIKSSVmbb2nT/J0sDLw==)
             client-secret: ENC(x91HIfuUF7NstcqZRUnYUNWjaAMxXB2V7xiTfPZAQ9AIipUGmlq3GPH17w9pLFkP)
-            redirect-uri: https://okkycopy.store/api/login/oauth2/code/google
+            redirect-uri: https://api.okkycopy.store/login/oauth2/code/google
             scope: profile, email
           naver:
             client-id: ENC(k39tfb0pNrUMACbIwQc12T6x1ArwaVqEyfHegwrsDWQ=)
             client-secret: ENC(z6JbvfhiAWq2Ywz9CUF1ig6xNq6NHou3)
-            redirect-uri: https://okkycopy.store/api/login/oauth2/code/naver
+            redirect-uri: https://api.okkycopy.store/login/oauth2/code/naver
             authorization-grant-type: authorization_code
             scope: name, email, profile_image, nickname
             client-name: Naver
           kakao:
             client-id: ENC(5m0JpVB8P5WywsB+6mUY+bNMpKgxYno/rb+bdJZPlFxj4qGm3SYqu2S2zfmwtP3E)
             client-secret: ENC(iqj0VasRD91j7Tm09laevWLcLUuAm8CW2PPCbBXBUFBLwF9t9FFpbuKDAbOqxt+6)
-            redirect-uri: https://okkycopy.store/api/login/oauth2/code/kakao
+            redirect-uri: https://api.okkycopy.store/login/oauth2/code/kakao
             client-authentication-method: client_secret_post
             authorization-grant-type: authorization_code
             scope: profile_nickname, profile_image, account_email
