@@ -30,7 +30,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
         return ResponseEntity
             .status(HttpStatus.BAD_REQUEST)
-            .body(new ErrorResponse(ErrorCase._400_DATA_INTEGRITY_VIOLATION.getCode(), ex.getMessage()));
+            .body(new ErrorResponse(ErrorCase._409_DATA_INTEGRITY_VIOLATION.getCode(), ex.getMessage()));
     }
 
     @ExceptionHandler(MaxUploadSizeExceededException.class)

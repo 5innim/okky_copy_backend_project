@@ -37,7 +37,7 @@ public class CommunityPostService {
     private final ScrapRepository scrapRepository;
 
     @PersistenceContext
-    private EntityManager entityManager;
+    private final EntityManager entityManager;
 
     @Transactional
     public void addCommunityPost(PostRequest postRequest, CustomUserDetails customUserDetails) {
@@ -56,9 +56,8 @@ public class CommunityPostService {
     public PostDetailsResponse findCommunityPost(CustomUserDetails customUserDetails, long postId) {
         CommunityPost communityPost = communityPostRepository.findByPostId(postId)
             .orElseThrow(() -> new StatusCode400Exception(ErrorCase._400_NO_SUCH_POST));
-        Member member = communityPost.getMember();
 
-        PostDetailsResponse response = PostDetailsResponse.of(communityPost, member);
+        PostDetailsResponse response = PostDetailsResponse.from(communityPost);
         if (customUserDetails != null) {
             Member requester = customUserDetails.getMember();
             PostExpression postExpression = postExpressionRepository.findByMemberAndPost(communityPost, requester)
@@ -109,10 +108,10 @@ public class CommunityPostService {
     }
 
     @Transactional(readOnly = true)
-    public PostListResponse findCommunityPostsByKeywordAndPageable(Long topicId, String keyword, Pageable pageable) {
+    public PostListResponse findCommunityPostsByTopicIdAndKeyword(Long topicId, String keyword, Pageable pageable) {
         Page<CommunityPost> communityPostPage;
         if (topicId == null) {
-            communityPostPage = communityPostRepository.findAllByKeywordAndPageable((keyword == null) ? "" : keyword,
+            communityPostPage = communityPostRepository.findPageByKeyword((keyword == null) ? "" : keyword,
                 pageable);
         } else {
             BoardTopic boardTopic = boardTopicRepository
@@ -121,7 +120,7 @@ public class CommunityPostService {
             if (CommunityPost.isNotSupportedTopic(boardTopic)) {
                 throw new StatusCode400Exception(ErrorCase._400_NOT_SUPPORTED_CASE);
             }
-            communityPostPage = communityPostRepository.findByTopicId(boardTopic, (keyword == null) ? "" : keyword,
+            communityPostPage = communityPostRepository.findPageByBoardTopicAndKeyword(boardTopic, (keyword == null) ? "" : keyword,
                 pageable);
         }
 

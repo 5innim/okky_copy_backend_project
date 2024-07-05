@@ -37,7 +37,7 @@ public class QnaPostService {
     private final ScrapRepository scrapRepository;
 
     @PersistenceContext
-    private EntityManager entityManager;
+    private final EntityManager entityManager;
 
     @Transactional
     public void addQnaPost(PostRequest postRequest, CustomUserDetails customUserDetails) {
@@ -56,9 +56,8 @@ public class QnaPostService {
     public PostDetailsResponse findQnaPost(CustomUserDetails customUserDetails, long postId) {
         QnaPost qnaPost = qnaPostRepository.findByPostId(postId)
             .orElseThrow(() -> new StatusCode400Exception(ErrorCase._400_NO_SUCH_POST));
-        Member member = qnaPost.getMember();
 
-        PostDetailsResponse response = PostDetailsResponse.of(qnaPost, member);
+        PostDetailsResponse response = PostDetailsResponse.from(qnaPost);
         if (customUserDetails != null) {
             Member requester = customUserDetails.getMember();
             PostExpression postExpression = postExpressionRepository.findByMemberAndPost(qnaPost, requester)
@@ -109,10 +108,10 @@ public class QnaPostService {
     }
 
     @Transactional(readOnly = true)
-    public PostListResponse findQnaPostsByKeywordAndPageable(Long topicId, String keyword, Pageable pageable) {
+    public PostListResponse findQnaPostsByTopicIdAndKeyword(Long topicId, String keyword, Pageable pageable) {
         Page<QnaPost> qnaPostPage;
         if (topicId == null) {
-            qnaPostPage = qnaPostRepository.findAllByKeywordAndPageable((keyword == null) ? "" : keyword,
+            qnaPostPage = qnaPostRepository.findPageByKeyword((keyword == null) ? "" : keyword,
                 pageable);
         } else {
             BoardTopic boardTopic = boardTopicRepository
@@ -121,7 +120,7 @@ public class QnaPostService {
             if (QnaPost.isNotSupportedTopic(boardTopic)) {
                 throw new StatusCode400Exception(ErrorCase._400_NOT_SUPPORTED_CASE);
             }
-            qnaPostPage = qnaPostRepository.findByTopicId(boardTopic, (keyword == null) ? "" : keyword,
+            qnaPostPage = qnaPostRepository.findPageByBoardTopicAndKeyword(boardTopic, (keyword == null) ? "" : keyword,
                 pageable);
         }
 

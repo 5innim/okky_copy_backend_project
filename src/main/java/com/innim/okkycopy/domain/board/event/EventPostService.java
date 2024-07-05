@@ -37,7 +37,7 @@ public class EventPostService {
     private final ScrapRepository scrapRepository;
 
     @PersistenceContext
-    private EntityManager entityManager;
+    private final EntityManager entityManager;
 
     @Transactional
     public void addEventPost(PostRequest postRequest, CustomUserDetails customUserDetails) {
@@ -57,9 +57,8 @@ public class EventPostService {
     public PostDetailsResponse findEventPost(CustomUserDetails customUserDetails, long postId) {
         EventPost eventPost = eventPostRepository.findByPostId(postId)
             .orElseThrow(() -> new StatusCode400Exception(ErrorCase._400_NO_SUCH_POST));
-        Member member = eventPost.getMember();
 
-        PostDetailsResponse response = PostDetailsResponse.of(eventPost, member);
+        PostDetailsResponse response = PostDetailsResponse.from(eventPost);
         if (customUserDetails != null) {
             Member requester = customUserDetails.getMember();
             PostExpression postExpression = postExpressionRepository.findByMemberAndPost(eventPost, requester)
@@ -110,10 +109,10 @@ public class EventPostService {
     }
 
     @Transactional(readOnly = true)
-    public PostListResponse findEventPostsByKeywordAndPageable(Long topicId, String keyword, Pageable pageable) {
+    public PostListResponse findEventPostsByTopicIdAndKeyword(Long topicId, String keyword, Pageable pageable) {
         Page<EventPost> eventPostPage;
         if (topicId == null) {
-            eventPostPage = eventPostRepository.findAllByKeywordAndPageable((keyword == null) ? "" : keyword,
+            eventPostPage = eventPostRepository.findPageByKeyword((keyword == null) ? "" : keyword,
                 pageable);
         } else {
             BoardTopic boardTopic = boardTopicRepository
@@ -122,7 +121,7 @@ public class EventPostService {
             if (EventPost.isNotSupportedTopic(boardTopic)) {
                 throw new StatusCode400Exception(ErrorCase._400_NOT_SUPPORTED_CASE);
             }
-            eventPostPage = eventPostRepository.findByTopicId(boardTopic, (keyword == null) ? "" : keyword,
+            eventPostPage = eventPostRepository.findPageByBoardTopicAndKeyword(boardTopic, (keyword == null) ? "" : keyword,
                 pageable);
         }
 

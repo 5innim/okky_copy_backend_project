@@ -25,10 +25,12 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.hibernate.annotations.DynamicInsert;
 
 @Entity
 @Getter
+@Setter
 @Builder
 @DynamicInsert
 @Table(name = "comment_expression", uniqueConstraints = {

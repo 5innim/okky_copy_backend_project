@@ -7,6 +7,7 @@ import com.innim.okkycopy.domain.member.repository.MemberRepository;
 import com.innim.okkycopy.global.auth.enums.Role;
 import com.innim.okkycopy.global.error.ErrorCase;
 import com.innim.okkycopy.global.error.exception.StatusCode401Exception;
+import com.innim.okkycopy.global.error.exception.StatusCode403Exception;
 import com.innim.okkycopy.global.error.exception.StatusCode500Exception;
 import com.innim.okkycopy.global.error.exception.StatusCodeException;
 import com.innim.okkycopy.global.util.EncryptionUtil;
@@ -18,7 +19,6 @@ import java.time.LocalDateTime;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.client.HttpStatusCodeException;
 
 @Service
 @RequiredArgsConstructor
@@ -27,7 +27,7 @@ public class MemberCrudService {
     private final MemberRepository memberRepository;
     private final MailUtil mailUtil;
     @PersistenceContext
-    EntityManager entityManager;
+    private final EntityManager entityManager;
 
     @Transactional(readOnly = true)
     public MemberDetailsResponse findMember(Member requester) {
@@ -40,12 +40,15 @@ public class MemberCrudService {
 
     @Transactional
     public void removeMember(Member member) {
-        member.remove(entityManager);
+        try {
+            member.remove(entityManager);
+        } catch (IllegalArgumentException ex) {
+            throw new StatusCode401Exception(ErrorCase._401_NO_SUCH_MEMBER);
+        }
     }
 
     @Transactional
-    public void modifyMemberLoginDate(long memberId, LocalDateTime loginDate)
-        throws StatusCodeException {
+    public void modifyMemberLoginDate(long memberId, LocalDateTime loginDate) {
         Member member = memberRepository.findByMemberId(memberId).orElseThrow(
             () -> new StatusCode401Exception(ErrorCase._401_NO_SUCH_MEMBER));
         member.setLoginDate(loginDate);
@@ -60,7 +63,7 @@ public class MemberCrudService {
             () -> new StatusCode401Exception(ErrorCase._401_NO_SUCH_MEMBER));
 
         if (member.getRole() != Role.MAIL_INVALID_USER) {
-            throw new StatusCode401Exception(ErrorCase._401_MAIL_ALREADY_AUTHENTICATED);
+            throw new StatusCode403Exception(ErrorCase._403_MAIL_ALREADY_AUTHENTICATED);
         }
         ;
 
@@ -70,7 +73,7 @@ public class MemberCrudService {
             if (!key.equals(generatedKey)) {
                 throw new StatusCode401Exception(ErrorCase._401_KEY_VALIDATION_FAIL);
             }
-        } catch (HttpStatusCodeException ex) {
+        } catch (StatusCodeException ex) {
             throw ex;
         } catch (Exception ex) {
             throw new StatusCode500Exception(ErrorCase._500_KEY_GENERATE_FAIL);
@@ -107,8 +110,7 @@ public class MemberCrudService {
     }
 
     @Transactional
-    public void modifyMemberLogoutDate(Member requester, LocalDateTime logoutDate)
-        throws StatusCodeException {
+    public void modifyMemberLogoutDate(Member requester, LocalDateTime logoutDate) {
         Member member = memberRepository.findByMemberId(requester.getMemberId()).orElseThrow(
             () -> new StatusCode401Exception(ErrorCase._401_NO_SUCH_MEMBER)
         );
@@ -116,8 +118,7 @@ public class MemberCrudService {
     }
 
     @Transactional(readOnly = true)
-    public Member findMember(long memberId)
-        throws StatusCodeException {
+    public Member findMember(long memberId) {
         return memberRepository.findByMemberId(memberId).orElseThrow(
             () -> new StatusCode401Exception(ErrorCase._401_NO_SUCH_MEMBER)
         );

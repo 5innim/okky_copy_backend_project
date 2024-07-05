@@ -34,7 +34,9 @@ public class PostDetailsResponse {
 
 
     // TODO: should add case for another post domain at this method
-    public static PostDetailsResponse of(KnowledgePost knowledgePost, Member member) {
+    public static PostDetailsResponse from(KnowledgePost knowledgePost) {
+        Member member = knowledgePost.getMember();
+
         List<String> tags = new ArrayList<>();
         for (Tag tag : knowledgePost.getTags()) {
             tags.add(tag.getName());
@@ -55,7 +57,9 @@ public class PostDetailsResponse {
             .build();
     }
 
-    public static PostDetailsResponse of(CommunityPost communityPost, Member member) {
+    public static PostDetailsResponse from(CommunityPost communityPost) {
+        Member member = communityPost.getMember();
+
         List<String> tags = new ArrayList<>();
         for (Tag tag : communityPost.getTags()) {
             tags.add(tag.getName());
@@ -76,7 +80,9 @@ public class PostDetailsResponse {
             .build();
     }
 
-    public static PostDetailsResponse of(EventPost eventPost, Member member) {
+    public static PostDetailsResponse from(EventPost eventPost) {
+        Member member = eventPost.getMember();
+
         List<String> tags = new ArrayList<>();
         for (Tag tag : eventPost.getTags()) {
             tags.add(tag.getName());
@@ -97,7 +103,9 @@ public class PostDetailsResponse {
             .build();
     }
 
-    public static PostDetailsResponse of(QnaPost qnaPost, Member member) {
+    public static PostDetailsResponse from(QnaPost qnaPost) {
+        Member member = qnaPost.getMember();
+
         List<String> tags = new ArrayList<>();
         for (Tag tag : qnaPost.getTags()) {
             tags.add(tag.getName());

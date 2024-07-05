@@ -2,7 +2,6 @@ package com.innim.okkycopy.global.auth.filter;
 
 import com.innim.okkycopy.domain.member.service.MemberCrudService;
 import com.innim.okkycopy.global.auth.CustomUserDetailsService;
-import com.innim.okkycopy.global.error.exception.StatusCodeException;
 import com.innim.okkycopy.global.util.JwtUtil;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.FilterChain;
@@ -70,7 +69,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     }
 
 
-    private Authentication authenticate(Long userId) throws StatusCodeException {
+    private Authentication authenticate(Long userId) {
 
         UserDetails userDetails = customUserDetailsService.loadUserByUserId(
             userId);

@@ -8,7 +8,6 @@ import com.innim.okkycopy.domain.board.entity.BoardTopic;
 import com.innim.okkycopy.domain.board.entity.PostExpression;
 import com.innim.okkycopy.domain.board.enums.ExpressionType;
 import com.innim.okkycopy.domain.board.knowledge.entity.KnowledgePost;
-import com.innim.okkycopy.domain.board.knowledge.repository.KnowledgePostRepository;
 import com.innim.okkycopy.domain.board.repository.BoardTopicRepository;
 import com.innim.okkycopy.domain.board.repository.PostExpressionRepository;
 import com.innim.okkycopy.domain.board.repository.ScrapRepository;
@@ -38,7 +37,7 @@ public class KnowledgePostService {
     private final PostExpressionRepository postExpressionRepository;
 
     @PersistenceContext
-    private EntityManager entityManager;
+    private final EntityManager entityManager;
 
     @Transactional
     public void addKnowledgePost(PostRequest postRequest, CustomUserDetails customUserDetails) {
@@ -59,9 +58,8 @@ public class KnowledgePostService {
     public PostDetailsResponse findKnowledgePost(CustomUserDetails customUserDetails, long postId) {
         KnowledgePost knowledgePost = knowledgePostRepository.findByPostId(postId)
             .orElseThrow(() -> new StatusCode400Exception(ErrorCase._400_NO_SUCH_POST));
-        Member member = knowledgePost.getMember();
 
-        PostDetailsResponse response = PostDetailsResponse.of(knowledgePost, member);
+        PostDetailsResponse response = PostDetailsResponse.from(knowledgePost);
         if (customUserDetails != null) {
             Member requester = customUserDetails.getMember();
             PostExpression postExpression = postExpressionRepository.findByMemberAndPost(knowledgePost, requester)
@@ -112,10 +110,10 @@ public class KnowledgePostService {
     }
 
     @Transactional(readOnly = true)
-    public PostListResponse findKnowledgePostsByKeywordAndPageable(Long topicId, String keyword, Pageable pageable) {
+    public PostListResponse findKnowledgePostsByTopicIdAndKeyword(Long topicId, String keyword, Pageable pageable) {
         Page<KnowledgePost> knowledgePostPage;
         if (topicId == null) {
-            knowledgePostPage = knowledgePostRepository.findAllByKeywordAndPageable((keyword == null) ? "" : keyword,
+            knowledgePostPage = knowledgePostRepository.findPageByKeyword((keyword == null) ? "" : keyword,
                 pageable);
         } else {
             BoardTopic boardTopic = boardTopicRepository
@@ -124,7 +122,7 @@ public class KnowledgePostService {
             if (KnowledgePost.isNotSupportedTopic(boardTopic)) {
                 throw new StatusCode400Exception(ErrorCase._400_NOT_SUPPORTED_CASE);
             }
-            knowledgePostPage = knowledgePostRepository.findByTopicId(boardTopic, (keyword == null) ? "" : keyword,
+            knowledgePostPage = knowledgePostRepository.findPageByBoardTopicAndKeyword(boardTopic, (keyword == null) ? "" : keyword,
                 pageable);
         }
 

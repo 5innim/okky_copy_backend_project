@@ -10,7 +10,6 @@ import com.innim.okkycopy.global.error.exception.StatusCode401Exception;
 import com.innim.okkycopy.global.util.email.MailUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
-import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,12 +21,6 @@ public class KakaoMemberService {
     private final KakaoMemberRepository kakaoMemberRepository;
     private final MailUtil mailUtil;
 
-    @Transactional(readOnly = true)
-    public KakaoMember findKakaoMember(String providerId) {
-        Optional<KakaoMember> kakaoMember = kakaoMemberRepository.findByProviderId(providerId);
-        return kakaoMember.orElse(null);
-    }
-
     @Transactional
     public Long addKakaoMember(OAuthMemberRequest oAuthMemberRequest, String provider, HttpServletRequest request) {
         HttpSession session = request.getSession(false);
@@ -37,7 +30,7 @@ public class KakaoMemberService {
 
         Object value = session.getAttribute(oAuthMemberRequest.getKey());
         if (value == null) {
-            throw new StatusCode400Exception(ErrorCase._400_BAD_FORM_DATA);
+            throw new StatusCode401Exception(ErrorCase._401_NO_SUCH_KEY);
         }
 
         CustomOAuth2User oAuth2User = (CustomOAuth2User) value;

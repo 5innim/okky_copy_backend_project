@@ -2,6 +2,10 @@ package com.innim.okkycopy.domain.board.comment;
 
 import com.innim.okkycopy.domain.board.comment.dto.request.CommentRequest;
 import com.innim.okkycopy.domain.board.comment.dto.request.ReCommentRequest;
+import com.innim.okkycopy.domain.board.comment.dto.response.CommentListResponse;
+import com.innim.okkycopy.domain.board.comment.dto.response.ReCommentListResponse;
+import com.innim.okkycopy.domain.board.comment.service.CommentCrudService;
+import com.innim.okkycopy.domain.board.comment.service.CommentExpressionService;
 import com.innim.okkycopy.domain.board.enums.ExpressionType;
 import com.innim.okkycopy.global.auth.CustomUserDetails;
 import jakarta.validation.Valid;
@@ -54,7 +58,7 @@ public class CommentController {
     }
 
     @GetMapping("/posts/{id}/comments")
-    public ResponseEntity<Object> commentList(
+    public ResponseEntity<CommentListResponse> commentList(
         @AuthenticationPrincipal CustomUserDetails customUserDetails,
         @PathVariable long id) {
         return ResponseEntity.ok(commentCrudService.findComments(customUserDetails, id));
@@ -71,7 +75,7 @@ public class CommentController {
     }
 
     @GetMapping("/comments/{id}/recomments")
-    public ResponseEntity<Object> reCommentList(
+    public ResponseEntity<ReCommentListResponse> reCommentList(
         @AuthenticationPrincipal CustomUserDetails customUserDetails,
         @PathVariable long id) {
         return ResponseEntity.status(HttpStatus.OK).body(commentCrudService.findReComments(customUserDetails, id));
