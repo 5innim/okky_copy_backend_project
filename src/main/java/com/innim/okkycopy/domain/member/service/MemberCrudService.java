@@ -38,6 +38,13 @@ public class MemberCrudService {
         return MemberDetailsResponse.from(member);
     }
 
+    @Transactional(readOnly = true)
+    public Member findMember(long memberId) {
+        return memberRepository.findByMemberId(memberId).orElseThrow(
+            () -> new StatusCode401Exception(ErrorCase._401_NO_SUCH_MEMBER)
+        );
+    }
+
     @Transactional
     public void removeMember(Member member) {
         try {
@@ -115,13 +122,6 @@ public class MemberCrudService {
             () -> new StatusCode401Exception(ErrorCase._401_NO_SUCH_MEMBER)
         );
         member.setLogoutDate(logoutDate);
-    }
-
-    @Transactional(readOnly = true)
-    public Member findMember(long memberId) {
-        return memberRepository.findByMemberId(memberId).orElseThrow(
-            () -> new StatusCode401Exception(ErrorCase._401_NO_SUCH_MEMBER)
-        );
     }
 
 }

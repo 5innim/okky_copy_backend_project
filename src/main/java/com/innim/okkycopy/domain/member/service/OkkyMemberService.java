@@ -1,10 +1,10 @@
 package com.innim.okkycopy.domain.member.service;
 
 import com.innim.okkycopy.domain.member.dto.request.ChangePasswordRequest;
-import com.innim.okkycopy.domain.member.entity.Member;
-import com.innim.okkycopy.domain.member.entity.OkkyMember;
 import com.innim.okkycopy.domain.member.dto.request.MemberRequest;
 import com.innim.okkycopy.domain.member.dto.response.MemberBriefResponse;
+import com.innim.okkycopy.domain.member.entity.Member;
+import com.innim.okkycopy.domain.member.entity.OkkyMember;
 import com.innim.okkycopy.domain.member.repository.MemberRepository;
 import com.innim.okkycopy.domain.member.repository.OkkyMemberRepository;
 import com.innim.okkycopy.global.error.ErrorCase;

@@ -14,7 +14,8 @@ public interface CommunityPostRepository extends JpaRepository<CommunityPost, Lo
     Optional<CommunityPost> findByPostId(long postId);
 
     @Query("SELECT c FROM CommunityPost c WHERE c.boardTopic = :boardTopic AND c.title LIKE CONCAT('%', :keyword, '%')")
-    Page<CommunityPost> findPageByBoardTopicAndKeyword(@Param("boardTopic") BoardTopic boardTopic, String keyword, Pageable pageable);
+    Page<CommunityPost> findPageByBoardTopicAndKeyword(@Param("boardTopic") BoardTopic boardTopic, String keyword,
+        Pageable pageable);
 
     @Query("SELECT c FROM CommunityPost c WHERE c.title LIKE CONCAT('%', :keyword, '%')")
     Page<CommunityPost> findPageByKeyword(String keyword, Pageable pageable);

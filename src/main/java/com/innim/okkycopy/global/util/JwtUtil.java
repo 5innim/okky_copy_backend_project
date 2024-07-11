@@ -61,7 +61,8 @@ public class JwtUtil {
 
     public static void checkTokenIsLogoutOrIsGeneratedBeforeLogin(Member member, Date date) {
         Date lastLoginDate = (Date) Timestamp.valueOf(member.getLoginDate());
-        Date lastLogoutDate = (member.getLogoutDate() == null) ? null : (Date) Timestamp.valueOf(member.getLogoutDate());
+        Date lastLogoutDate =
+            (member.getLogoutDate() == null) ? null : (Date) Timestamp.valueOf(member.getLogoutDate());
         if (date.compareTo(lastLoginDate) < 0) {
             throw new StatusCode401Exception(ErrorCase._401_BEFORE_THEN_LAST_LOGIN_DATE);
         } else if (lastLogoutDate != null && lastLoginDate.compareTo(lastLogoutDate) < 0) {

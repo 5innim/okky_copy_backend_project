@@ -5,6 +5,8 @@ import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface NaverMemberRepository extends JpaRepository<NaverMember, Long> {
+
     Optional<NaverMember> findByProviderId(String providerId);
+    
     boolean existsByEmail(String email);
 }

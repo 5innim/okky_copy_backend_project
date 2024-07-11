@@ -1,9 +1,9 @@
 package com.innim.okkycopy.domain.member;
 
 import com.innim.okkycopy.domain.member.dto.request.ChangePasswordRequest;
-import com.innim.okkycopy.domain.member.dto.request.ProfileUpdateRequest;
 import com.innim.okkycopy.domain.member.dto.request.MemberRequest;
 import com.innim.okkycopy.domain.member.dto.request.OAuthMemberRequest;
+import com.innim.okkycopy.domain.member.dto.request.ProfileUpdateRequest;
 import com.innim.okkycopy.domain.member.dto.request.UpdateEmailRequest;
 import com.innim.okkycopy.domain.member.dto.response.MemberBriefResponse;
 import com.innim.okkycopy.domain.member.dto.response.MemberDetailsResponse;
@@ -58,6 +58,35 @@ public class MemberController {
             .body(okkyMemberService.addMember(memberRequest));
     }
 
+    @PostMapping("/{provider}/signup")
+    public ResponseEntity<Object> memberAdd(@Valid @RequestBody OAuthMemberRequest oAuthMemberRequest,
+        @PathVariable String provider, HttpServletRequest request, HttpServletResponse response) throws IOException {
+
+        Long memberId = null;
+        switch (provider) {
+            case "google":
+                memberId = googleMemberService.addGoogleMember(oAuthMemberRequest, provider, request);
+                break;
+            case "kakao":
+                memberId = kakaoMemberService.addKakaoMember(oAuthMemberRequest, provider, request);
+                break;
+            case "naver":
+                memberId = naverMemberService.addNaverMember(oAuthMemberRequest, provider, request);
+                break;
+            default:
+                throw new StatusCode400Exception(ErrorCase._400_NOT_SUPPORTED_CASE);
+        }
+
+        Date loginDate = new Date();
+        LocalDateTime localDateTime = LocalDateTime.ofInstant(loginDate.toInstant(), ZoneId.systemDefault());
+        memberCrudService.modifyMemberLoginDate(memberId, localDateTime);
+
+        ResponseUtil.addCookieWithHttpOnly(response, "accessToken", JwtUtil.generateAccessToken(memberId, loginDate));
+        ResponseUtil.addCookieWithHttpOnly(response, "refreshToken", JwtUtil.generateRefreshToken(memberId, loginDate));
+
+        return ResponseEntity.status(HttpStatus.CREATED).build();
+    }
+
     @DeleteMapping("/delete")
     public ResponseEntity<Object> memberRemove(@AuthenticationPrincipal CustomUserDetails customUserDetails) {
         memberCrudService.removeMember(customUserDetails.getMember());
@@ -102,34 +131,7 @@ public class MemberController {
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
-    @PostMapping("/{provider}/signup")
-    public ResponseEntity<Object> memberAdd(@Valid @RequestBody OAuthMemberRequest oAuthMemberRequest,
-        @PathVariable String provider, HttpServletRequest request, HttpServletResponse response) throws IOException {
 
-        Long memberId = null;
-        switch (provider) {
-            case "google":
-                memberId = googleMemberService.addGoogleMember(oAuthMemberRequest, provider, request);
-                break;
-            case "kakao":
-                memberId = kakaoMemberService.addKakaoMember(oAuthMemberRequest, provider, request);
-                break;
-            case "naver":
-                memberId = naverMemberService.addNaverMember(oAuthMemberRequest, provider, request);
-                break;
-            default:
-                throw new StatusCode400Exception(ErrorCase._400_NOT_SUPPORTED_CASE);
-        }
-
-        Date loginDate = new Date();
-        LocalDateTime localDateTime = LocalDateTime.ofInstant(loginDate.toInstant(), ZoneId.systemDefault());
-        memberCrudService.modifyMemberLoginDate(memberId, localDateTime);
-
-        ResponseUtil.addCookieWithHttpOnly(response, "accessToken", JwtUtil.generateAccessToken(memberId, loginDate));
-        ResponseUtil.addCookieWithHttpOnly(response, "refreshToken", JwtUtil.generateRefreshToken(memberId, loginDate));
-
-        return ResponseEntity.status(HttpStatus.CREATED).build();
-    }
 
     @PutMapping("/logout")
     public ResponseEntity<Object> memberLogoutDateModify(@AuthenticationPrincipal CustomUserDetails customUserDetails) {

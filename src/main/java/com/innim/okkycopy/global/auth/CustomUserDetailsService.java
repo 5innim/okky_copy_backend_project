@@ -1,8 +1,8 @@
 package com.innim.okkycopy.global.auth;
 
+import com.innim.okkycopy.domain.member.entity.Member;
 import com.innim.okkycopy.domain.member.entity.OkkyMember;
 import com.innim.okkycopy.domain.member.repository.MemberRepository;
-import com.innim.okkycopy.domain.member.entity.Member;
 import com.innim.okkycopy.domain.member.repository.OkkyMemberRepository;
 import com.innim.okkycopy.global.error.ErrorCase;
 import com.innim.okkycopy.global.error.exception.StatusCode401Exception;

@@ -10,10 +10,12 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 public interface EventPostRepository extends JpaRepository<EventPost, Long> {
+
     Optional<EventPost> findByPostId(long postId);
 
     @Query("SELECT e FROM EventPost e WHERE e.boardTopic = :boardTopic AND e.title LIKE CONCAT('%', :keyword, '%')")
-    Page<EventPost> findPageByBoardTopicAndKeyword(@Param("boardTopic") BoardTopic boardTopic, String keyword, Pageable pageable);
+    Page<EventPost> findPageByBoardTopicAndKeyword(@Param("boardTopic") BoardTopic boardTopic, String keyword,
+        Pageable pageable);
 
     @Query("SELECT e FROM EventPost e WHERE e.title LIKE CONCAT('%', :keyword, '%')")
     Page<EventPost> findPageByKeyword(String keyword, Pageable pageable);
