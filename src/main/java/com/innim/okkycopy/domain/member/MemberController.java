@@ -102,7 +102,6 @@ public class MemberController {
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
-    //TODO "Adjust interceptor later"
     @PostMapping("/{provider}/signup")
     public ResponseEntity<Object> memberAdd(@Valid @RequestBody OAuthMemberRequest oAuthMemberRequest,
         @PathVariable String provider, HttpServletRequest request, HttpServletResponse response) throws IOException {
