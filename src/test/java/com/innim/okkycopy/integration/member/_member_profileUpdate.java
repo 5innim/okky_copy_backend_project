@@ -27,8 +27,8 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
 
 @SpringBootTest
-@DisplayName("/member/profile-update")
 @TestInstance(Lifecycle.PER_CLASS)
+@DisplayName("/member/profile-update")
 public class _member_profileUpdate {
 
     @Autowired
@@ -115,3 +115,4 @@ public class _member_profileUpdate {
             .build();
     }
 }
+
