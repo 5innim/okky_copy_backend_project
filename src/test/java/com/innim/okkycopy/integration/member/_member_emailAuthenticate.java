@@ -50,7 +50,7 @@ public class _member_emailAuthenticate {
     @WithMockCustomUser
     @Sql("/data/init_member.sql")
     @Transactional
-    void given_request_then_response200() throws Exception {
+    void given_request_then_response204() throws Exception {
         // given
         Member member = WithMockCustomUserSecurityContextFactory.customUserDetailsMock().getMember();
         member.setRole(Role.MAIL_INVALID_USER);
