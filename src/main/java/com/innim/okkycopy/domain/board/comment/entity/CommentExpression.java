@@ -73,8 +73,7 @@ public class CommentExpression {
         if (post instanceof KnowledgePost || post instanceof CommunityPost || post instanceof EventPost) {
             return false;
         } else {
-            // return post instanceof QnaPost && comment.getDepth() > 1; // is changed feature after 2024-07-03. it allowed to Qna like others.
-            return false;
+            return post instanceof QnaPost && comment.getDepth() > 1;
         }
     }
 
