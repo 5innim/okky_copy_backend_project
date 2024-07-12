@@ -72,7 +72,6 @@ public class MemberCrudService {
         if (member.getRole() != Role.MAIL_INVALID_USER) {
             throw new StatusCode403Exception(ErrorCase._403_MAIL_ALREADY_AUTHENTICATED);
         }
-        ;
 
         try {
             String generatedKey = EncryptionUtil.encryptWithSHA256(
