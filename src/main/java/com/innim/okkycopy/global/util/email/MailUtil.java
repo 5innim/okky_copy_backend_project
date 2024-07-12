@@ -98,6 +98,7 @@ public class MailUtil {
         mimeMessageHelper.setSubject("[OKKY.copy] 환영합니다. 이메일 인증을 완료해주세요");
         mimeMessageHelper.setTo(receiverEmail);
         mimeMessageHelper.setText(html, true);
+        mimeMessageHelper.setFrom("okky.innim@gmail.com");
         mailSender.send(mimeMessage);
     }
 
@@ -115,6 +116,7 @@ public class MailUtil {
         mimeMessageHelper.setSubject((isChanged) ? "[OKKY.copy] 이메일 변경 인증을 완료해주세요" : "[OKKY.copy] 이메일 인증을 완료해주세요");
         mimeMessageHelper.setTo(receiverEmail);
         mimeMessageHelper.setText(html, true);
+        mimeMessageHelper.setFrom("okky.innim@gmail.com");
         mailSender.send(mimeMessage);
     }
 
