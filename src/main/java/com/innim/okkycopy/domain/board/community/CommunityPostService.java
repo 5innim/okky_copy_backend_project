@@ -11,8 +11,8 @@ import com.innim.okkycopy.domain.board.enums.ExpressionType;
 import com.innim.okkycopy.domain.board.repository.BoardTopicRepository;
 import com.innim.okkycopy.domain.board.repository.PostExpressionRepository;
 import com.innim.okkycopy.domain.board.repository.ScrapRepository;
-import com.innim.okkycopy.domain.member.repository.MemberRepository;
 import com.innim.okkycopy.domain.member.entity.Member;
+import com.innim.okkycopy.domain.member.repository.MemberRepository;
 import com.innim.okkycopy.global.auth.CustomUserDetails;
 import com.innim.okkycopy.global.error.ErrorCase;
 import com.innim.okkycopy.global.error.exception.StatusCode400Exception;
@@ -120,8 +120,8 @@ public class CommunityPostService {
             if (CommunityPost.isNotSupportedTopic(boardTopic)) {
                 throw new StatusCode400Exception(ErrorCase._400_NOT_SUPPORTED_CASE);
             }
-            communityPostPage = communityPostRepository.findPageByBoardTopicAndKeyword(boardTopic, (keyword == null) ? "" : keyword,
-                pageable);
+            communityPostPage = communityPostRepository
+                .findPageByBoardTopicAndKeyword(boardTopic, (keyword == null) ? "" : keyword, pageable);
         }
 
         return PostListResponse.from(communityPostPage);
