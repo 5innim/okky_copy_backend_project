@@ -1,0 +1,1 @@
+ALTER SEQUENCE post_post_id_seq RESTART WITH 1;
