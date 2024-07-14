@@ -24,8 +24,8 @@ public class MailUtil {
 
     private final JavaMailSender mailSender;
     private final SpringTemplateEngine templateEngine;
-    private static final Cache<String, EmailAuthenticateValue> emailAuthenticateCache;
-    private static final Cache<String, EmailAuthenticateValue> emailChangeAuthenticateCache;
+    public static final Cache<String, EmailAuthenticateValue> emailAuthenticateCache;
+    public static final Cache<String, EmailAuthenticateValue> emailChangeAuthenticateCache;
     @Value("#{environment['frontend.origin']}")
     private String frontendOrigin;
     @Value("#{environment['frontend.path.mail-authenticate']}")
@@ -87,34 +87,34 @@ public class MailUtil {
 
     public void sendAuthenticateEmail(String key, String memberName, String receiverEmail) throws MessagingException {
         MimeMessage mimeMessage = mailSender.createMimeMessage();
-        MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, true, "UTF-8");
-
         Context context = new Context();
         context.setVariable("url", frontendOrigin + mailAuthenticatePath);
         context.setVariable("key", key);
         context.setVariable("memberName", memberName);
         String html = templateEngine.process("email_authenticate", context);
 
+        MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, true, "UTF-8");
         mimeMessageHelper.setSubject("[OKKY.copy] 환영합니다. 이메일 인증을 완료해주세요");
         mimeMessageHelper.setTo(receiverEmail);
         mimeMessageHelper.setText(html, true);
+        mimeMessageHelper.setFrom("okky.innim@gmail.com");
         mailSender.send(mimeMessage);
     }
 
     public void sendAuthenticateChangedEmail(String key, boolean isChanged, String receiverEmail)
         throws MessagingException {
         MimeMessage mimeMessage = mailSender.createMimeMessage();
-        MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, true, "UTF-8");
-
         Context context = new Context();
         context.setVariable("url", frontendOrigin + ((isChanged) ? mailChangeAuthenticatePath : mailAuthenticatePath));
         context.setVariable("key", key);
         context.setVariable("prefix", (isChanged) ? "변경 " : "");
         String html = templateEngine.process("email_change_authenticate", context);
 
+        MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, true, "UTF-8");
         mimeMessageHelper.setSubject((isChanged) ? "[OKKY.copy] 이메일 변경 인증을 완료해주세요" : "[OKKY.copy] 이메일 인증을 완료해주세요");
         mimeMessageHelper.setTo(receiverEmail);
         mimeMessageHelper.setText(html, true);
+        mimeMessageHelper.setFrom("okky.innim@gmail.com");
         mailSender.send(mimeMessage);
     }
 

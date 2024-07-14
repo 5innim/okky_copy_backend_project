@@ -28,6 +28,7 @@ import org.hibernate.annotations.DynamicUpdate;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @DynamicUpdate
 public class KakaoMember extends Member {
+
     @Column(name = "provider_id", nullable = false, unique = true)
     private String providerId;
     @Column(nullable = false, unique = true)

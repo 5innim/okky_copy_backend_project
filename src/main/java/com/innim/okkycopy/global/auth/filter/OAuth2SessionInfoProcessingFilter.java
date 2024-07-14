@@ -44,14 +44,15 @@ public class OAuth2SessionInfoProcessingFilter extends OncePerRequestFilter {
                         assert properties != null;
                         assert kakaoAccount != null;
 
-                        LinkedHashMap<String, Boolean> kakaoAccountProfile = (LinkedHashMap<String, Boolean>) kakaoAccount.get(
-                            "profile");
+                        LinkedHashMap<String, Boolean> kakaoAccountProfile =
+                            (LinkedHashMap<String, Boolean>) kakaoAccount.get("profile");
 
 
                         oAuthInfo = OAuthInfoResponse.builder()
 //                            .name(properties.get("name")) TODO "After authenticate business app at kakao, can use name property"
                             .email((String) kakaoAccount.get("email"))
-                            .profile(kakaoAccountProfile.get("is_default_image") ? null : properties.get("profile_image"))
+                            .profile(
+                                kakaoAccountProfile.get("is_default_image") ? null : properties.get("profile_image"))
                             .nickname(properties.get("nickname"))
                             .provider(oAuth2User.getRegistrationId())
                             .build();

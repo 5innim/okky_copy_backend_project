@@ -61,7 +61,8 @@ public class JwtUtil {
 
     public static void checkTokenIsLogoutOrIsGeneratedBeforeLogin(Member member, Date date) {
         Date lastLoginDate = (Date) Timestamp.valueOf(member.getLoginDate());
-        Date lastLogoutDate = (member.getLogoutDate() == null) ? null : (Date) Timestamp.valueOf(member.getLogoutDate());
+        Date lastLogoutDate =
+            (member.getLogoutDate() == null) ? null : (Date) Timestamp.valueOf(member.getLogoutDate());
         if (date.compareTo(lastLoginDate) < 0) {
             throw new StatusCode401Exception(ErrorCase._401_BEFORE_THEN_LAST_LOGIN_DATE);
         } else if (lastLogoutDate != null && lastLoginDate.compareTo(lastLogoutDate) < 0) {
@@ -69,6 +70,11 @@ public class JwtUtil {
         }
     }
 
+
+    //  it was used, when this service use header to transfer jwt,
+    //  but now, using cookie. so those methods below this line is no usage.
+
+    /*
     public static boolean prefixNotMatched(String value) {
         return !value.startsWith(JwtProperty.prefix);
     }
@@ -76,5 +82,6 @@ public class JwtUtil {
     public static String extractTokenWithoutPrefix(String value) {
         return value.substring(JwtProperty.prefix.length());
     }
+     */
 
 }

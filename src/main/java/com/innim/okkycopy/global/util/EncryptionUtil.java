@@ -7,7 +7,7 @@ import java.util.Base64;
 
 public class EncryptionUtil {
 
-    private final static String DIVIDER_STRING = "/";
+    private static final String DIVIDER_STRING = "/";
 
     public static String encryptWithSHA256(String data) throws NoSuchAlgorithmException {
         MessageDigest digest = MessageDigest.getInstance("SHA-256");
@@ -18,7 +18,7 @@ public class EncryptionUtil {
 
     public static String connectStrings(String... str) {
         StringBuilder sb = new StringBuilder(str[0]);
-        for (int i=1; i < str.length; i++) {
+        for (int i = 1; i < str.length; i++) {
             sb.append('/');
             sb.append(str[i]);
         }

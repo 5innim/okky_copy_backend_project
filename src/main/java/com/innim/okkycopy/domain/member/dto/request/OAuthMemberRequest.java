@@ -15,7 +15,7 @@ import lombok.Setter;
 public class OAuthMemberRequest {
 
     private String key;
-    @Pattern(regexp = "^[A-Za-z가-힣0-9]{2,20}$")
+    @Pattern(regexp = "^[A-Za-z가-힣0-9ㄱ-ㅎㅏ-ㅣ]{2,20}$")
     private String nickname;
     private String profile;
     private boolean emailCheck;

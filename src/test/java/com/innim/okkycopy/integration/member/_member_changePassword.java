@@ -11,6 +11,7 @@ import com.innim.okkycopy.domain.member.entity.Member;
 import com.innim.okkycopy.domain.member.entity.OkkyMember;
 import com.innim.okkycopy.domain.member.repository.MemberRepository;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.TestInstance.Lifecycle;
@@ -29,6 +30,7 @@ import org.springframework.web.context.WebApplicationContext;
 
 @SpringBootTest
 @TestInstance(Lifecycle.PER_CLASS)
+@DisplayName("/member/change-password")
 public class _member_changePassword {
     @Autowired
     WebApplicationContext context;

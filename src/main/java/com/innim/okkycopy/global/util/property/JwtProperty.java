@@ -18,7 +18,11 @@ public class JwtProperty {
     public static long refreshValidTime;
     public static Key secretKey;
     public static SignatureAlgorithm signatureAlgorithm;
-    public static String prefix;
+
+    //  it was used, when this service use header to transfer jwt,
+    //  but now, using cookie. so those methods below this line is no usage.
+
+    //public static String prefix;
 
     @Value("#{environment['jwt.signature-algorithm']}")
     public void setAlgorithm(String algorithm) {
@@ -40,12 +44,15 @@ public class JwtProperty {
         this.refreshValidTime = refreshValidTime;
     }
 
+
+    //  it was used, when this service use header to transfer jwt,
+    //  but now, using cookie. so those methods below this line is no usage.
+    /*
     @Value("#{environment['jwt.header.prefix']}")
     public void setPrefix(String prefix) {
         this.prefix = prefix;
     }
-
-
+    */
     @PostConstruct
     private void init() {
         secretKey = Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));

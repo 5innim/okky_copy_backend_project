@@ -72,7 +72,8 @@ public class SecurityConfig {
                         "/board/comments/{id}/hate").hasAnyAuthority(Role.USER.getValue(), Role.ADMIN.getValue())
                     .requestMatchers(HttpMethod.POST,
                         "/board/file/upload",
-                        "/member/update-email").hasAnyAuthority(Role.MAIL_INVALID_USER.getValue(), Role.USER.getValue(), Role.ADMIN.getValue())
+                        "/member/update-email")
+                    .hasAnyAuthority(Role.MAIL_INVALID_USER.getValue(), Role.USER.getValue(), Role.ADMIN.getValue())
                     .requestMatchers(HttpMethod.DELETE,
                         "/board/posts/{id}/scrap",
                         "/board/knowledge/posts/{id}",
@@ -138,10 +139,9 @@ public class SecurityConfig {
                     OAuth2SessionInfoProcessingFilter.class)
                 .addFilterAfter(new RefreshJwtFilter(memberCrudService),
                     FormDataLoginAuthenticationFilter.class)
-                .addFilterAfter(new JwtAuthenticationFilter(customUserDetailsService, new RequestMatcher[]{
-                        new AntPathRequestMatcher("/member/{provider}/signup", "POST")
-                    }, memberCrudService),
-                    RefreshJwtFilter.class);
+                .addFilterAfter(new JwtAuthenticationFilter(customUserDetailsService,
+                    new RequestMatcher[]{new AntPathRequestMatcher("/member/{provider}/signup", "POST")},
+                    memberCrudService), RefreshJwtFilter.class);
         }
     }
 }

@@ -1,6 +1,5 @@
 package com.innim.okkycopy.domain.board.event;
 
-import com.innim.okkycopy.domain.board.event.entity.EventPost;
 import com.innim.okkycopy.domain.board.dto.request.write.PostRequest;
 import com.innim.okkycopy.domain.board.dto.response.post.brief.PostListResponse;
 import com.innim.okkycopy.domain.board.dto.response.post.detail.PostDetailsResponse;
@@ -8,11 +7,12 @@ import com.innim.okkycopy.domain.board.dto.response.post.detail.RequesterInfo;
 import com.innim.okkycopy.domain.board.entity.BoardTopic;
 import com.innim.okkycopy.domain.board.entity.PostExpression;
 import com.innim.okkycopy.domain.board.enums.ExpressionType;
+import com.innim.okkycopy.domain.board.event.entity.EventPost;
 import com.innim.okkycopy.domain.board.repository.BoardTopicRepository;
 import com.innim.okkycopy.domain.board.repository.PostExpressionRepository;
 import com.innim.okkycopy.domain.board.repository.ScrapRepository;
-import com.innim.okkycopy.domain.member.repository.MemberRepository;
 import com.innim.okkycopy.domain.member.entity.Member;
+import com.innim.okkycopy.domain.member.repository.MemberRepository;
 import com.innim.okkycopy.global.auth.CustomUserDetails;
 import com.innim.okkycopy.global.error.ErrorCase;
 import com.innim.okkycopy.global.error.exception.StatusCode400Exception;
@@ -121,8 +121,8 @@ public class EventPostService {
             if (EventPost.isNotSupportedTopic(boardTopic)) {
                 throw new StatusCode400Exception(ErrorCase._400_NOT_SUPPORTED_CASE);
             }
-            eventPostPage = eventPostRepository.findPageByBoardTopicAndKeyword(boardTopic, (keyword == null) ? "" : keyword,
-                pageable);
+            eventPostPage = eventPostRepository
+                .findPageByBoardTopicAndKeyword(boardTopic, (keyword == null) ? "" : keyword, pageable);
         }
 
         return PostListResponse.from(eventPostPage);
