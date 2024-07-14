@@ -70,6 +70,11 @@ public class JwtUtil {
         }
     }
 
+
+    //  it was used, when this service use header to transfer jwt,
+    //  but now, using cookie. so those methods below this line is no usage.
+
+    /*
     public static boolean prefixNotMatched(String value) {
         return !value.startsWith(JwtProperty.prefix);
     }
@@ -77,5 +82,6 @@ public class JwtUtil {
     public static String extractTokenWithoutPrefix(String value) {
         return value.substring(JwtProperty.prefix.length());
     }
+     */
 
 }

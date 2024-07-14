@@ -1,10 +1,14 @@
 # jwt
 jwt:
-  secret: "it's a secret for generating secret key"
-  header:
-    key: "Authorization"
-    prefix: "Bearer "
-  signature-algorithm: "HS256"
+  secret: ENC(dnTlu2iU+s4z/QPDcgp0VLJOxGFXO5wvgYUyCpP0e5oAvUm2MNEOjVQWyK5IiPpXfB6G/ZlOItPT6ElkIrmCdA==)
+
+#  it was used, when this service use header to transfer jwt,
+#  but now, using cookie. so those methods below this line is no usage.
+#  header:
+#    key: "Authorization"
+#    prefix: "Bearer "
+
+  signature-algorithm: ENC(F1956ZFwCXPwXknR7RaRzA==)
   valid-time:
     access-limit-milliseconds: 1_800_000
     refresh-limit-milliseconds: 86_400_000
