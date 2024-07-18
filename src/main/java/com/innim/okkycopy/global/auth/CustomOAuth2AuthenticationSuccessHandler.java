@@ -44,8 +44,8 @@ public class CustomOAuth2AuthenticationSuccessHandler implements AuthenticationS
             LocalDateTime localDateTime = LocalDateTime.ofInstant(loginDate.toInstant(), ZoneId.systemDefault());
             memberCrudService.modifyMemberLoginDate(userId, localDateTime);
 
-            ResponseUtil.addCookieWithHttpOnly(response, "accessToken", JwtUtil.generateAccessToken(userId, loginDate));
-            ResponseUtil.addCookieWithHttpOnly(response, "refreshToken",
+            ResponseUtil.addCookie(response, "accessToken", JwtUtil.generateAccessToken(userId, loginDate));
+            ResponseUtil.addCookie(response, "refreshToken",
                 JwtUtil.generateRefreshToken(userId, loginDate));
 
             response.sendRedirect(frontendOrigin + basePath);

@@ -79,8 +79,8 @@ public class FormDataLoginAuthenticationFilter extends OncePerRequestFilter {
         LocalDateTime localDateTime = LocalDateTime.ofInstant(loginDate.toInstant(), ZoneId.systemDefault());
         memberCrudService.modifyMemberLoginDate(userId, localDateTime);
 
-        ResponseUtil.addCookieWithHttpOnly(response, "accessToken", accessToken);
-        ResponseUtil.addCookieWithHttpOnly(response, "refreshToken", refreshToken);
+        ResponseUtil.addCookie(response, "accessToken", accessToken);
+        ResponseUtil.addCookie(response, "refreshToken", refreshToken);
     }
 
 }
