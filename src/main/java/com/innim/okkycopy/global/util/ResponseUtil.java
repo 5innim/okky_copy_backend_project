@@ -41,7 +41,8 @@ public class ResponseUtil {
     }
 
     public static void addCookie(HttpServletResponse response, String name, String value) {
-        String cookieHeader = String.format("%s=%s; HttpOnly; Secure; Path=/; SameSite=Strict", name, value);
+        // String cookieHeader = String.format("%s=%s; HttpOnly; Secure; Path=/; SameSite=Strict", name, value);
+        String cookieHeader = String.format("%s=%s; HttpOnly; Secure; Path=/", name, value);
         response.addHeader("Set-Cookie", cookieHeader);
     }
 }
