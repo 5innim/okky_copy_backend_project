@@ -141,7 +141,8 @@ public class CommentCrudService {
             .orElseThrow(() -> new StatusCode400Exception(ErrorCase._400_NO_SUCH_POST));
         Comment comment = commentRepository.findByCommentId(commentId)
             .orElseThrow(() -> new StatusCode400Exception(ErrorCase._400_NO_SUCH_COMMENT));
-        if (comment.getDepth() > 1) {
+
+        if (comment.getDepth() > 1 || !post.equals(comment.getPost())) {
             throw new StatusCode400Exception(ErrorCase._400_NOT_SUPPORTED_CASE);
         }
 
