@@ -5,7 +5,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.innim.okkycopy.global.error.ErrorCase;
 import com.innim.okkycopy.global.error.ErrorResponse;
 import jakarta.servlet.ServletInputStream;
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
@@ -41,11 +40,8 @@ public class ResponseUtil {
         response.getWriter().write(body);
     }
 
-    // TODO: After setting https, should modify this method to set secure
-    public static void addCookieWithHttpOnly(HttpServletResponse response, String name, String value) {
-        Cookie cookie = new Cookie(name, value);
-        cookie.setHttpOnly(true);
-        cookie.setPath("/");
-        response.addCookie(cookie);
+    public static void addCookie(HttpServletResponse response, String name, String value) {
+        String cookieHeader = String.format("%s=%s; HttpOnly; Secure; Path=/; SameSite=Strict", name, value);
+        response.addHeader("Set-Cookie", cookieHeader);
     }
 }

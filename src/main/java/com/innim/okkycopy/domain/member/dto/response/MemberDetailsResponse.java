@@ -18,7 +18,6 @@ import lombok.Setter;
 public class MemberDetailsResponse {
 
     private long memberId;
-    private String id;
     private String nickname;
     private List<Long> scrappedPost;
     private String profile;
@@ -50,7 +49,6 @@ public class MemberDetailsResponse {
 
         return MemberDetailsResponse.builder()
             .memberId(member.getMemberId())
-            .id((member instanceof OkkyMember okkyMember) ? okkyMember.getId() : null)
             .nickname(member.getNickname())
             .name(member.getName())
             .accountFrom(accountFrom)

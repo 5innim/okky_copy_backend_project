@@ -81,8 +81,8 @@ public class MemberController {
         LocalDateTime localDateTime = LocalDateTime.ofInstant(loginDate.toInstant(), ZoneId.systemDefault());
         memberCrudService.modifyMemberLoginDate(memberId, localDateTime);
 
-        ResponseUtil.addCookieWithHttpOnly(response, "accessToken", JwtUtil.generateAccessToken(memberId, loginDate));
-        ResponseUtil.addCookieWithHttpOnly(response, "refreshToken", JwtUtil.generateRefreshToken(memberId, loginDate));
+        ResponseUtil.addCookie(response, "accessToken", JwtUtil.generateAccessToken(memberId, loginDate));
+        ResponseUtil.addCookie(response, "refreshToken", JwtUtil.generateRefreshToken(memberId, loginDate));
 
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }

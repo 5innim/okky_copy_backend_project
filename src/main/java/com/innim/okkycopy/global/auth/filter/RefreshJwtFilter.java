@@ -49,7 +49,7 @@ public class RefreshJwtFilter extends OncePerRequestFilter {
 
                     JwtUtil.checkTokenIsLogoutOrIsGeneratedBeforeLogin(memberCrudService.findMember(userId), lat);
 
-                    ResponseUtil.addCookieWithHttpOnly(response, "accessToken",
+                    ResponseUtil.addCookie(response, "accessToken",
                         JwtUtil.generateAccessToken(userId, new Date()));
                 } else {
                     filterChain.doFilter(request, response);
