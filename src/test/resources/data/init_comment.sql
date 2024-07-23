@@ -1,0 +1,1 @@
+ALTER SEQUENCE comment_comment_id_seq RESTART WITH 1;
