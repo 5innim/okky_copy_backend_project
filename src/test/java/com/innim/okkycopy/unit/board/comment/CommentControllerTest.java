@@ -130,7 +130,7 @@ public class CommentControllerTest {
     }
 
     @Nested
-    class _reCommentAdd_$CustomUserDetails_$long_$long_$ReCommentRequest {
+    class _reCommentAdd_$CustomUserDetails_$long_$ReCommentRequest {
 
         @Test
         void given_request_then_invokeAddReComment() {
@@ -141,12 +141,12 @@ public class CommentControllerTest {
             ReCommentRequest reCommentRequest = reCommentRequest();
 
             // when
-            ResponseEntity<Object> response = commentController.reCommentAdd(customUserDetails, postId, commentId,
+            ResponseEntity<Object> response = commentController.reCommentAdd(customUserDetails, commentId,
                 reCommentRequest);
 
             // then
             then(commentCrudService).should(times(1))
-                .addReComment(customUserDetails, postId, commentId, reCommentRequest);
+                .addReComment(customUserDetails, commentId, reCommentRequest);
             then(commentCrudService).shouldHaveNoMoreInteractions();
             assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
 
