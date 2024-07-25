@@ -65,7 +65,7 @@ public class SecurityConfig {
                         "/board/qna/write",
                         "/board/posts/{id}/scrap",
                         "/board/posts/{id}/comment",
-                        "/board/posts/{postId}/comments/{commentId}/recomment",
+                        "/board/comments/{commentId}/recomment",
                         "/board/posts/{id}/like",
                         "/board/posts/{id}/hate",
                         "/board/comments/{id}/like",

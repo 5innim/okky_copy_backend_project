@@ -64,13 +64,12 @@ public class CommentController {
         return ResponseEntity.ok(commentCrudService.findComments(customUserDetails, id));
     }
 
-    @PostMapping("/posts/{postId}/comments/{commentId}/recomment")
+    @PostMapping("/comments/{commentId}/recomment")
     public ResponseEntity<Object> reCommentAdd(
         @AuthenticationPrincipal CustomUserDetails customUserDetails,
-        @PathVariable long postId,
         @PathVariable long commentId,
         @RequestBody @Valid ReCommentRequest reCommentRequest) {
-        commentCrudService.addReComment(customUserDetails, postId, commentId, reCommentRequest);
+        commentCrudService.addReComment(customUserDetails, commentId, reCommentRequest);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 

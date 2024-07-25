@@ -37,8 +37,8 @@ import org.springframework.web.context.WebApplicationContext;
 
 @SpringBootTest
 @TestInstance(Lifecycle.PER_CLASS)
-@DisplayName("/board/posts/{postId}/comments/{commentId}/recomment")
-public class _board_posts_$postId_comments_$commentId_recomment {
+@DisplayName("/board/comments/{commentId}/recomment")
+public class _board_comments_$commentId_recomment {
 
     @Autowired
     WebApplicationContext context;
@@ -77,11 +77,9 @@ public class _board_posts_$postId_comments_$commentId_recomment {
         Comment comment = Comment.of(knowledgePost, member, commentRequest());
         commentRepository.save(comment);
 
-        knowledgePost.setCommentList(Collections.emptyList());
-
 
         // when
-        MockHttpServletResponse response = mockMvc.perform(MockMvcRequestBuilders.post("/board/posts/1/comments/1/recomment")
+        MockHttpServletResponse response = mockMvc.perform(MockMvcRequestBuilders.post("/board/comments/1/recomment")
             .characterEncoding("UTF-8")
             .contentType(MediaType.APPLICATION_JSON)
             .content(new Gson().toJson(ReCommentRequest.builder()

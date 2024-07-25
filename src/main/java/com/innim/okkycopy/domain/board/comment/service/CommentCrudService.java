@@ -131,22 +131,20 @@ public class CommentCrudService {
     @Transactional
     public void addReComment(
         CustomUserDetails customUserDetails,
-        long postId,
         long commentId,
         ReCommentRequest reCommentRequest) {
         Member mergedMember = memberRepository.findByMemberId(customUserDetails.getUserId()).orElseThrow(
             () -> new StatusCode401Exception(ErrorCase._401_NO_SUCH_MEMBER)
         );
-        Post post = postRepository.findByPostId(postId)
-            .orElseThrow(() -> new StatusCode400Exception(ErrorCase._400_NO_SUCH_POST));
+
         Comment comment = commentRepository.findByCommentId(commentId)
             .orElseThrow(() -> new StatusCode400Exception(ErrorCase._400_NO_SUCH_COMMENT));
 
-        if (comment.getDepth() > 1 || !post.equals(comment.getPost())) {
+        if (comment.getDepth() > 1) {
             throw new StatusCode400Exception(ErrorCase._400_NOT_SUPPORTED_CASE);
         }
 
-        Comment reComment = Comment.reCommentOf(post, mergedMember,
+        Comment reComment = Comment.reCommentOf(comment.getPost(), mergedMember,
             commentId, reCommentRequest);
 
         commentRepository.save(reComment);
