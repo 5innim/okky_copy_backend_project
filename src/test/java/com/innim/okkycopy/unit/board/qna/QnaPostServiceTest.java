@@ -21,6 +21,7 @@ import com.innim.okkycopy.domain.board.repository.ScrapRepository;
 import com.innim.okkycopy.domain.member.entity.Member;
 import com.innim.okkycopy.domain.member.repository.MemberRepository;
 import com.innim.okkycopy.global.auth.CustomUserDetails;
+import com.innim.okkycopy.global.common.storage.image_usage.ImageUsageService;
 import com.innim.okkycopy.global.error.ErrorCase;
 import com.innim.okkycopy.global.error.exception.StatusCode400Exception;
 import com.innim.okkycopy.global.error.exception.StatusCode401Exception;
@@ -52,6 +53,9 @@ public class QnaPostServiceTest {
     PostExpressionRepository postExpressionRepository;
     @Mock
     EntityManager entityManager;
+    @Mock
+    ImageUsageService imageUsageService;
+
     @InjectMocks
     QnaPostService qnaPostService;
 
@@ -125,6 +129,8 @@ public class QnaPostServiceTest {
             then(memberRepository).shouldHaveNoMoreInteractions();
             then(boardTopicRepository).should(times(1)).findByName(postRequest.getTopic());
             then(boardTopicRepository).shouldHaveNoMoreInteractions();
+            then(imageUsageService).should(times(1)).modifyImageUsages(any(String.class));
+            then(imageUsageService).shouldHaveNoMoreInteractions();
             assertThat(exception).isInstanceOf(StatusCode400Exception.class);
             assertThat(((StatusCode400Exception) exception).getErrorCase()).isEqualTo(ErrorCase._400_BAD_FORM_DATA);
 
@@ -151,6 +157,8 @@ public class QnaPostServiceTest {
             then(memberRepository).shouldHaveNoMoreInteractions();
             then(boardTopicRepository).should(times(1)).findByName(postRequest.getTopic());
             then(boardTopicRepository).shouldHaveNoMoreInteractions();
+            then(imageUsageService).should(times(1)).modifyImageUsages(any(String.class));
+            then(imageUsageService).shouldHaveNoMoreInteractions();
             then(qnaPostRepository).should(times(1)).save(any(QnaPost.class));
             then(qnaPostRepository).shouldHaveNoMoreInteractions();
 

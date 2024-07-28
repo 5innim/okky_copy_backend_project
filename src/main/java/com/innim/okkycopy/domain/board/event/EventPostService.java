@@ -14,6 +14,7 @@ import com.innim.okkycopy.domain.board.repository.ScrapRepository;
 import com.innim.okkycopy.domain.member.entity.Member;
 import com.innim.okkycopy.domain.member.repository.MemberRepository;
 import com.innim.okkycopy.global.auth.CustomUserDetails;
+import com.innim.okkycopy.global.common.storage.image_usage.ImageUsageService;
 import com.innim.okkycopy.global.error.ErrorCase;
 import com.innim.okkycopy.global.error.exception.StatusCode400Exception;
 import com.innim.okkycopy.global.error.exception.StatusCode401Exception;
@@ -35,6 +36,7 @@ public class EventPostService {
     private final MemberRepository memberRepository;
     private final PostExpressionRepository postExpressionRepository;
     private final ScrapRepository scrapRepository;
+    private final ImageUsageService imageUsageService;
 
     @PersistenceContext
     private final EntityManager entityManager;
@@ -48,6 +50,8 @@ public class EventPostService {
         BoardTopic boardTopic = boardTopicRepository.findByName(postRequest.getTopic())
             .orElseThrow(() -> new StatusCode400Exception(
                 ErrorCase._400_NO_SUCH_TOPIC));
+
+        imageUsageService.modifyImageUsages(postRequest.getContent());
         EventPost eventPost = EventPost.of(postRequest, boardTopic, member);
 
         eventPostRepository.save(eventPost);
