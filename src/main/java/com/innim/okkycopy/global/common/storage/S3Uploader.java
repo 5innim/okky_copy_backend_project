@@ -1,4 +1,4 @@
-package com.innim.okkycopy.global.common;
+package com.innim.okkycopy.global.common.storage;
 
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
