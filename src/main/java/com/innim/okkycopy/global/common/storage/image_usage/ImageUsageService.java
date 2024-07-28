@@ -31,12 +31,12 @@ public class ImageUsageService {
     }
 
     @Transactional
-    public void modifyImageUsages(String content) {
+    public void modifyImageUsages(String content, boolean isInUsage) {
         ArrayList<String> srcList = imageExtractor.extractImageSrc(content);
         for (String src : srcList) {
             long imageName = imageExtractor.extractImageName(src);
             if (imageName != -1) {
-                modifyImageUsage(imageName, true);
+                modifyImageUsage(imageName, isInUsage);
             }
         }
     }

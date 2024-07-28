@@ -52,7 +52,7 @@ public class KnowledgePostService {
             .orElseThrow(() -> new StatusCode400Exception(
                 ErrorCase._400_NO_SUCH_TOPIC));
 
-        imageUsageService.modifyImageUsages(postRequest.getContent());
+        imageUsageService.modifyImageUsages(postRequest.getContent(), true);
         KnowledgePost knowledgePost = KnowledgePost.of(postRequest, boardTopic, member);
         knowledgePostRepository.save(knowledgePost);
     }

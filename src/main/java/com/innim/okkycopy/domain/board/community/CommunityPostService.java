@@ -51,7 +51,7 @@ public class CommunityPostService {
             .orElseThrow(() -> new StatusCode400Exception(
                 ErrorCase._400_NO_SUCH_TOPIC));
 
-        imageUsageService.modifyImageUsages(postRequest.getContent());
+        imageUsageService.modifyImageUsages(postRequest.getContent(), true);
         CommunityPost communityPost = CommunityPost.of(postRequest, boardTopic, member);
 
         communityPostRepository.save(communityPost);

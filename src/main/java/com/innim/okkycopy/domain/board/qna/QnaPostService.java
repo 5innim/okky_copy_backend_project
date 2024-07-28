@@ -51,7 +51,7 @@ public class QnaPostService {
             .orElseThrow(() -> new StatusCode400Exception(
                 ErrorCase._400_NO_SUCH_TOPIC));
 
-        imageUsageService.modifyImageUsages(postRequest.getContent());
+        imageUsageService.modifyImageUsages(postRequest.getContent(), true);
         QnaPost qnaPost = QnaPost.of(postRequest, boardTopic, member);
         qnaPostRepository.save(qnaPost);
     }
