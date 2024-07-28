@@ -4,6 +4,7 @@ import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.innim.okkycopy.global.error.ErrorCase;
+import com.innim.okkycopy.global.error.exception.StatusCode500Exception;
 import com.innim.okkycopy.global.error.exception.StatusCodeException;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -35,7 +36,7 @@ public class S3Uploader {
             String filePath = folderPath + "/" + UUID.randomUUID();
             return putFileToS3(uploadFile, filePath);
         } catch (Exception ex) {
-            throw new StatusCodeException(ErrorCase._500_PUT_S3_FAIL);
+            throw new StatusCode500Exception(ErrorCase._500_PUT_S3_FAIL);
         } finally {
             removeNewFile(uploadFile);
         }
