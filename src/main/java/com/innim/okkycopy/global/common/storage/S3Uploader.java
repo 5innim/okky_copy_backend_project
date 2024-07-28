@@ -49,6 +49,14 @@ public class S3Uploader {
         return amazonS3Client.getUrl(bucket, filePath).toString();
     }
 
+    public void deleteFileFromS3(String fileName) {
+        try {
+            amazonS3Client.deleteObject(bucket, folderPath + "/" + fileName);
+        } catch (Exception ex) {
+            log.error("exception generated during deleting file from S3, file name: " + fileName);
+        }
+    }
+
     private void removeNewFile(File targetFile) {
         if (targetFile.delete()) {
             log.info("file upload fail");
