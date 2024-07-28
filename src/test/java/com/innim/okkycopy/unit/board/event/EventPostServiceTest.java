@@ -129,7 +129,7 @@ public class EventPostServiceTest {
             then(memberRepository).shouldHaveNoMoreInteractions();
             then(boardTopicRepository).should(times(1)).findByName(postRequest.getTopic());
             then(boardTopicRepository).shouldHaveNoMoreInteractions();
-            then(imageUsageService).should(times(1)).modifyImageUsages(any(String.class), true);
+            then(imageUsageService).should(times(1)).modifyImageUsages(postRequest.getContent(), true);
             then(imageUsageService).shouldHaveNoMoreInteractions();
             assertThat(exception).isInstanceOf(StatusCode400Exception.class);
             assertThat(((StatusCode400Exception) exception).getErrorCase()).isEqualTo(ErrorCase._400_BAD_FORM_DATA);
@@ -157,7 +157,7 @@ public class EventPostServiceTest {
             then(memberRepository).shouldHaveNoMoreInteractions();
             then(boardTopicRepository).should(times(1)).findByName(postRequest.getTopic());
             then(boardTopicRepository).shouldHaveNoMoreInteractions();
-            then(imageUsageService).should(times(1)).modifyImageUsages(any(String.class), true);
+            then(imageUsageService).should(times(1)).modifyImageUsages(postRequest.getContent(), true);
             then(imageUsageService).shouldHaveNoMoreInteractions();
             then(eventPostRepository).should(times(1)).save(any(EventPost.class));
             then(eventPostRepository).shouldHaveNoMoreInteractions();
