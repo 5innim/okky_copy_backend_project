@@ -1,4 +1,4 @@
-package com.innim.okkycopy.global.util.email;
+package com.innim.okkycopy.global.common.email;
 
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
@@ -20,7 +20,7 @@ import org.thymeleaf.spring6.SpringTemplateEngine;
 
 @Component
 @RequiredArgsConstructor
-public class MailUtil {
+public class MailManager {
 
     private final JavaMailSender mailSender;
     private final SpringTemplateEngine templateEngine;

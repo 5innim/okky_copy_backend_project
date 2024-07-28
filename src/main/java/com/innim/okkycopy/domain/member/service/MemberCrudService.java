@@ -11,8 +11,8 @@ import com.innim.okkycopy.global.error.exception.StatusCode403Exception;
 import com.innim.okkycopy.global.error.exception.StatusCode500Exception;
 import com.innim.okkycopy.global.error.exception.StatusCodeException;
 import com.innim.okkycopy.global.util.EncryptionUtil;
-import com.innim.okkycopy.global.util.email.EmailAuthenticateValue;
-import com.innim.okkycopy.global.util.email.MailUtil;
+import com.innim.okkycopy.global.common.email.EmailAuthenticateValue;
+import com.innim.okkycopy.global.common.email.MailManager;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import java.time.LocalDateTime;
@@ -25,7 +25,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class MemberCrudService {
 
     private final MemberRepository memberRepository;
-    private final MailUtil mailUtil;
+    private final MailManager mailManager;
     @PersistenceContext
     private final EntityManager entityManager;
 
@@ -63,7 +63,7 @@ public class MemberCrudService {
 
     @Transactional
     public void modifyMemberRole(String key) {
-        EmailAuthenticateValue value = mailUtil.findValueByEmailAuthenticate(key).orElseThrow(
+        EmailAuthenticateValue value = mailManager.findValueByEmailAuthenticate(key).orElseThrow(
             () -> new StatusCode401Exception(ErrorCase._401_NO_SUCH_KEY));
 
         Member member = memberRepository.findByMemberId(value.getMemberId()).orElseThrow(
@@ -86,12 +86,12 @@ public class MemberCrudService {
         }
 
         member.setRole(Role.USER);
-        mailUtil.removeKey(key);
+        mailManager.removeKey(key);
     }
 
     @Transactional
     public void modifyMemberRoleAndEmail(String key) {
-        EmailAuthenticateValue value = mailUtil.findValueByEmailChangeAuthenticate(key).orElseThrow(
+        EmailAuthenticateValue value = mailManager.findValueByEmailChangeAuthenticate(key).orElseThrow(
             () -> new StatusCode401Exception(ErrorCase._401_NO_SUCH_KEY));
 
         Member member = memberRepository.findByMemberId(value.getMemberId()).orElseThrow(
@@ -101,7 +101,7 @@ public class MemberCrudService {
             member.setRole(Role.USER);
         }
         member.changeEmail(value.getEmail());
-        mailUtil.removeKey(key);
+        mailManager.removeKey(key);
     }
 
     @Transactional

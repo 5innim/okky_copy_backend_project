@@ -1,4 +1,4 @@
-package com.innim.okkycopy.global.util.email;
+package com.innim.okkycopy.global.common.email;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
