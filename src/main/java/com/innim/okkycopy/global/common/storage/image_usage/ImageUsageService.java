@@ -6,6 +6,7 @@ import com.innim.okkycopy.global.error.exception.StatusCode400Exception;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -34,6 +35,42 @@ public class ImageUsageService {
         ArrayList<String> srcList = imageExtractor.extractImageSrc(content);
         for (String src : srcList) {
             long imageName = imageExtractor.extractImageName(src);
+            if (imageName != -1) {
+                modifyImageUsage(imageName, true);
+            }
+        }
+    }
+
+    @Transactional
+    public void modifyImageUsages(String oldContent, String newContent) {
+        HashSet<Long> oldImageSet = new HashSet<>();
+        HashSet<Long> notInUse = new HashSet<>();
+        for (String src : imageExtractor.extractImageSrc(oldContent)) {
+            long imageName = imageExtractor.extractImageName(src);
+            if (imageName != -1) {
+                oldImageSet.add(imageName);
+                notInUse.add(imageName);
+            }
+        }
+
+        HashSet<Long> newImageSet = new HashSet<>();
+        HashSet<Long> inUse = new HashSet<>();
+        for (String src : imageExtractor.extractImageSrc(newContent)) {
+            long imageName = imageExtractor.extractImageName(src);
+            if (imageName != -1) {
+                newImageSet.add(imageName);
+                inUse.add(imageName);
+            }
+        }
+
+        notInUse.removeAll(newImageSet);
+        inUse.removeAll(oldImageSet);
+
+        for (long imageName : notInUse) {
+            modifyImageUsage(imageName, false);
+        }
+
+        for (long imageName : inUse) {
             modifyImageUsage(imageName, true);
         }
     }

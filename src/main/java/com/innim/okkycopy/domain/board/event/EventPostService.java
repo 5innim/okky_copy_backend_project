@@ -94,6 +94,8 @@ public class EventPostService {
         if (eventPost.getMember() == null || eventPost.getMember().getMemberId() != member.getMemberId()) {
             throw new StatusCode403Exception(ErrorCase._403_NO_AUTHORITY);
         }
+        imageUsageService.modifyImageUsages(eventPost.getContent(), updateRequest.getContent());
+
         eventPost.update(updateRequest, boardTopic);
     }
 

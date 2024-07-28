@@ -94,6 +94,7 @@ public class KnowledgePostService {
         if (knowledgePost.getMember() == null || knowledgePost.getMember().getMemberId() != member.getMemberId()) {
             throw new StatusCode403Exception(ErrorCase._403_NO_AUTHORITY);
         }
+        imageUsageService.modifyImageUsages(knowledgePost.getContent(), updateRequest.getContent());
         knowledgePost.update(updateRequest, boardTopic);
     }
 

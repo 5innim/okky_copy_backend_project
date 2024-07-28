@@ -94,6 +94,9 @@ public class CommunityPostService {
         if (communityPost.getMember() == null || communityPost.getMember().getMemberId() != member.getMemberId()) {
             throw new StatusCode403Exception(ErrorCase._403_NO_AUTHORITY);
         }
+
+        imageUsageService.modifyImageUsages(communityPost.getContent(), updateRequest.getContent());
+
         communityPost.update(updateRequest, boardTopic);
     }
 

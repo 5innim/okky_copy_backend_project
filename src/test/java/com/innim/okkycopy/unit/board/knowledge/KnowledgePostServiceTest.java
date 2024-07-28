@@ -397,6 +397,8 @@ public class KnowledgePostServiceTest {
             then(knowledgePostRepository).shouldHaveNoMoreInteractions();
             then(boardTopicRepository).should(times(1)).findByName(postRequest.getTopic());
             then(boardTopicRepository).shouldHaveNoMoreInteractions();
+            then(imageUsageService).should(times(1)).modifyImageUsages(knowledgePost().getContent(), postRequest.getContent());
+            then(imageUsageService).shouldHaveNoMoreInteractions();
             assertThat(exception).isInstanceOf(StatusCode400Exception.class);
             assertThat(((StatusCode400Exception) exception).getErrorCase()).isEqualTo(ErrorCase._400_BAD_FORM_DATA);
 
@@ -425,6 +427,8 @@ public class KnowledgePostServiceTest {
             then(knowledgePostRepository).shouldHaveNoMoreInteractions();
             then(boardTopicRepository).should(times(1)).findByName(postRequest.getTopic());
             then(boardTopicRepository).shouldHaveNoMoreInteractions();
+            then(imageUsageService).should(times(1)).modifyImageUsages(knowledgePost().getContent(), postRequest.getContent());
+            then(imageUsageService).shouldHaveNoMoreInteractions();
             assertThat(post.getTitle()).isEqualTo(postRequest.getTitle());
         }
 
