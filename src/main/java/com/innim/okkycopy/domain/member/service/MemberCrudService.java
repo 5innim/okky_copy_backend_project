@@ -5,6 +5,7 @@ import com.innim.okkycopy.domain.member.dto.response.MemberDetailsResponse;
 import com.innim.okkycopy.domain.member.entity.Member;
 import com.innim.okkycopy.domain.member.repository.MemberRepository;
 import com.innim.okkycopy.global.auth.enums.Role;
+import com.innim.okkycopy.global.common.storage.image_usage.ImageUsageService;
 import com.innim.okkycopy.global.error.ErrorCase;
 import com.innim.okkycopy.global.error.exception.StatusCode401Exception;
 import com.innim.okkycopy.global.error.exception.StatusCode403Exception;
@@ -26,6 +27,8 @@ public class MemberCrudService {
 
     private final MemberRepository memberRepository;
     private final MailManager mailManager;
+    private final ImageUsageService imageUsageService;
+
     @PersistenceContext
     private final EntityManager entityManager;
 
@@ -48,6 +51,7 @@ public class MemberCrudService {
     @Transactional
     public void removeMember(Member member) {
         try {
+            imageUsageService.modifyImageUsage(member.getProfile(), false);
             member.remove(entityManager);
         } catch (IllegalArgumentException ex) {
             throw new StatusCode401Exception(ErrorCase._401_NO_SUCH_MEMBER);
@@ -111,6 +115,8 @@ public class MemberCrudService {
         );
         member.setName(profileUpdateRequest.getName());
         member.setNickname(profileUpdateRequest.getNickname());
+
+        imageUsageService.changeImage(member.getProfile(), profileUpdateRequest.getProfile());
         member.setProfile(profileUpdateRequest.getProfile());
 
     }

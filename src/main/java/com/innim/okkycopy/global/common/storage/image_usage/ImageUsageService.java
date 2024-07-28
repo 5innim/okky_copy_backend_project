@@ -76,6 +76,23 @@ public class ImageUsageService {
     }
 
     @Transactional
+    public void changeImage(String oldSrc, String newSrc) {
+        if (oldSrc != null) {
+            long oldImageName = imageExtractor.extractImageName(oldSrc);
+            if (oldImageName != -1) {
+                modifyImageUsage(oldImageName, false);
+            }
+        }
+
+        if (newSrc != null) {
+            long newImageName = imageExtractor.extractImageName(newSrc);
+            if (newImageName != -1) {
+                modifyImageUsage(newImageName, true);
+            }
+        }
+    }
+
+    @Transactional
     public void removeImageUsage(long imageUsageId) {
         Optional<ImageUsage> optional = imageUsageRepository.findByImageUsageId(imageUsageId);
         if (optional.isPresent()) {
@@ -93,5 +110,18 @@ public class ImageUsageService {
         );
 
         imageUsage.setIsInUse(isInUse);
+    }
+
+    @Transactional
+    public void modifyImageUsage(String src, boolean isInUse) {
+        if (src != null) {
+            long imageName = imageExtractor.extractImageName(src);
+            if (imageName != -1) {
+                ImageUsage imageUsage = imageUsageRepository.findByImageUsageId(imageName).orElseThrow(
+                    () -> new StatusCode400Exception(ErrorCase._400_NO_SUCH_IMAGE)
+                );
+                imageUsage.setIsInUse(isInUse);
+            }
+        }
     }
 }

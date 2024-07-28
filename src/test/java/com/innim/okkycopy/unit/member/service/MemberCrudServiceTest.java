@@ -13,6 +13,7 @@ import com.innim.okkycopy.domain.member.entity.Member;
 import com.innim.okkycopy.domain.member.repository.MemberRepository;
 import com.innim.okkycopy.domain.member.service.MemberCrudService;
 import com.innim.okkycopy.global.auth.enums.Role;
+import com.innim.okkycopy.global.common.storage.image_usage.ImageUsageService;
 import com.innim.okkycopy.global.error.ErrorCase;
 import com.innim.okkycopy.global.error.exception.StatusCode401Exception;
 import com.innim.okkycopy.global.error.exception.StatusCode403Exception;
@@ -42,6 +43,8 @@ public class MemberCrudServiceTest {
     MailManager mailManager;
     @Mock
     EntityManager entityManager;
+    @Mock
+    ImageUsageService imageUsageService;
     @InjectMocks
     MemberCrudService memberCrudService;
 
@@ -99,6 +102,8 @@ public class MemberCrudServiceTest {
 
             // then
             then(entityManager).should(times(1)).merge(member);
+            then(imageUsageService).should(times(1)).modifyImageUsage(member.getProfile(), false);
+            then(imageUsageService).shouldHaveNoMoreInteractions();
             then(entityManager).should(times(1)).remove(member);
             then(entityManager).shouldHaveNoMoreInteractions();
         }
@@ -347,6 +352,10 @@ public class MemberCrudServiceTest {
             memberCrudService.modifyMember(member, profileUpdateRequest);
 
             // then
+            then(memberRepository).should(times(1)).findByMemberId(member.getMemberId());
+            then(memberRepository).shouldHaveNoMoreInteractions();
+            then(imageUsageService).should(times(1)).changeImage(null, profileUpdateRequest.getProfile());
+            then(imageUsageService).shouldHaveNoMoreInteractions();
             assertThat(member.getName()).isEqualTo(profileUpdateRequest.getName());
             assertThat(member.getNickname()).isEqualTo(profileUpdateRequest.getNickname());
             assertThat(member.getProfile()).isEqualTo(profileUpdateRequest.getProfile());
