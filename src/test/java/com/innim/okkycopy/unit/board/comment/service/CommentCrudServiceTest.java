@@ -19,6 +19,7 @@ import com.innim.okkycopy.domain.board.repository.PostRepository;
 import com.innim.okkycopy.domain.member.entity.Member;
 import com.innim.okkycopy.domain.member.repository.MemberRepository;
 import com.innim.okkycopy.global.auth.CustomUserDetails;
+import com.innim.okkycopy.global.common.storage.image_usage.ImageUsageService;
 import com.innim.okkycopy.global.error.ErrorCase;
 import com.innim.okkycopy.global.error.exception.StatusCode400Exception;
 import com.innim.okkycopy.global.error.exception.StatusCode401Exception;
@@ -48,6 +49,8 @@ public class CommentCrudServiceTest {
     CommentExpressionRepository commentExpressionRepository;
     @Mock
     EntityManager entityManager;
+    @Mock
+    ImageUsageService imageUsageService;
     @InjectMocks
     CommentCrudService commentCrudService;
 
@@ -120,6 +123,8 @@ public class CommentCrudServiceTest {
             then(memberRepository).shouldHaveNoMoreInteractions();
             then(postRepository).should(times(1)).findByPostId(postId);
             then(postRepository).shouldHaveNoMoreInteractions();
+            then(imageUsageService).should(times(1)).modifyImageUsages(commentRequest.getContent(), true);
+            then(imageUsageService).shouldHaveNoMoreInteractions();
             then(commentRepository).should(times(1)).save(any(Comment.class));
             then(commentRepository).shouldHaveNoMoreInteractions();
 
@@ -232,6 +237,9 @@ public class CommentCrudServiceTest {
             then(memberRepository).shouldHaveNoMoreInteractions();
             then(commentRepository).should(times(1)).findByCommentId(commentId);
             then(commentRepository).shouldHaveNoMoreInteractions();
+            then(imageUsageService).should(times(1))
+                .modifyImageUsages(comment().getContent(), commentRequest.getContent());
+            then(imageUsageService).shouldHaveNoMoreInteractions();
             assertThat(comment.getContent()).isEqualTo(commentRequest.getContent());
         }
 
@@ -340,6 +348,8 @@ public class CommentCrudServiceTest {
             then(commentRepository).should(times(1)).findByCommentId(commentId);
             then(commentRepository).should(times(1)).findByParentId(comment.getCommentId());
             then(commentRepository).shouldHaveNoMoreInteractions();
+            then(imageUsageService).should(times(1)).modifyImageUsages(comment.getContent(), false);
+            then(imageUsageService).shouldHaveNoMoreInteractions();
             then(entityManager).should(times(1)).remove(any(Comment.class));
             then(entityManager).shouldHaveNoMoreInteractions();
 
@@ -433,20 +443,19 @@ public class CommentCrudServiceTest {
     }
 
     @Nested
-    class _addReComment_$CustomUserDetails_$long_$long_$ReCommentRequest {
+    class _addReComment_$CustomUserDetails_$long_$ReCommentRequest {
 
         @Test
         void given_noExistMember_then_throwErrorCase401005() {
             // given
             CustomUserDetails customUserDetails = WithMockCustomUserSecurityContextFactory.customUserDetailsMock();
-            long postId = 1L;
             long commentId = 1L;
             ReCommentRequest reCommentRequest = reCommentRequest();
             given(memberRepository.findByMemberId(customUserDetails.getUserId())).willReturn(Optional.empty());
 
             // when
             Exception exception = catchException(() -> {
-                commentCrudService.addReComment(customUserDetails, postId, commentId, reCommentRequest);
+                commentCrudService.addReComment(customUserDetails, commentId, reCommentRequest);
             });
 
             // then
@@ -458,54 +467,24 @@ public class CommentCrudServiceTest {
         }
 
         @Test
-        void given_noExistPost_then_throwErrorCase400021() {
-            // given
-            CustomUserDetails customUserDetails = WithMockCustomUserSecurityContextFactory.customUserDetailsMock();
-            long postId = 1L;
-            long commentId = 1L;
-            ReCommentRequest reCommentRequest = reCommentRequest();
-            given(memberRepository.findByMemberId(customUserDetails.getUserId())).willReturn(
-                Optional.of(customUserDetails.getMember()));
-            given(postRepository.findByPostId(postId)).willReturn(Optional.empty());
-
-            // when
-            Exception exception = catchException(() -> {
-                commentCrudService.addReComment(customUserDetails, postId, commentId, reCommentRequest);
-            });
-
-            // then
-            then(memberRepository).should(times(1)).findByMemberId(customUserDetails.getUserId());
-            then(memberRepository).shouldHaveNoMoreInteractions();
-            then(postRepository).should(times(1)).findByPostId(postId);
-            then(postRepository).shouldHaveNoMoreInteractions();
-            assertThat(exception).isInstanceOf(StatusCode400Exception.class);
-            assertThat(((StatusCode400Exception) exception).getErrorCase()).isEqualTo(ErrorCase._400_NO_SUCH_POST);
-
-        }
-
-        @Test
         void given_noExistComment_then_throwErrorCase400023() {
             // given
             CustomUserDetails customUserDetails = WithMockCustomUserSecurityContextFactory.customUserDetailsMock();
             long postId = 1L;
             long commentId = 1L;
             ReCommentRequest reCommentRequest = reCommentRequest();
-            Post post = post();
             given(memberRepository.findByMemberId(customUserDetails.getUserId())).willReturn(
                 Optional.of(customUserDetails.getMember()));
-            given(postRepository.findByPostId(postId)).willReturn(Optional.of(post));
             given(commentRepository.findByCommentId(commentId)).willReturn(Optional.empty());
 
             // when
             Exception exception = catchException(() -> {
-                commentCrudService.addReComment(customUserDetails, postId, commentId, reCommentRequest);
+                commentCrudService.addReComment(customUserDetails, commentId, reCommentRequest);
             });
 
             // then
             then(memberRepository).should(times(1)).findByMemberId(customUserDetails.getUserId());
             then(memberRepository).shouldHaveNoMoreInteractions();
-            then(postRepository).should(times(1)).findByPostId(postId);
-            then(postRepository).shouldHaveNoMoreInteractions();
             then(commentRepository).should(times(1)).findByCommentId(commentId);
             then(commentRepository).shouldHaveNoMoreInteractions();
             assertThat(exception).isInstanceOf(StatusCode400Exception.class);
@@ -517,90 +496,47 @@ public class CommentCrudServiceTest {
         void given_commentDepthIsBiggerThan1_then_throwErrorCase400026() {
             // given
             CustomUserDetails customUserDetails = WithMockCustomUserSecurityContextFactory.customUserDetailsMock();
-            long postId = 1L;
             long commentId = 1L;
             ReCommentRequest reCommentRequest = reCommentRequest();
-            Post post = post();
             Comment comment = comment();
             comment.setDepth(2);
             given(memberRepository.findByMemberId(customUserDetails.getUserId())).willReturn(
                 Optional.of(customUserDetails.getMember()));
-            given(postRepository.findByPostId(postId)).willReturn(Optional.of(post));
             given(commentRepository.findByCommentId(commentId)).willReturn(Optional.of(comment));
 
             // when
             Exception exception = catchException(() -> {
-                commentCrudService.addReComment(customUserDetails, postId, commentId, reCommentRequest);
+                commentCrudService.addReComment(customUserDetails, commentId, reCommentRequest);
             });
 
             // then
             then(memberRepository).should(times(1)).findByMemberId(customUserDetails.getUserId());
             then(memberRepository).shouldHaveNoMoreInteractions();
-            then(postRepository).should(times(1)).findByPostId(postId);
-            then(postRepository).shouldHaveNoMoreInteractions();
             then(commentRepository).should(times(1)).findByCommentId(commentId);
             then(commentRepository).shouldHaveNoMoreInteractions();
             assertThat(exception).isInstanceOf(StatusCode400Exception.class);
             assertThat(((StatusCode400Exception) exception).getErrorCase()).isEqualTo(
                 ErrorCase._400_NOT_SUPPORTED_CASE);
 
-        }
-
-        @Test
-        void given_notEqualPostId_then_throwErrorCase400026() {
-            // given
-            CustomUserDetails customUserDetails = WithMockCustomUserSecurityContextFactory.customUserDetailsMock();
-            long postId = 1L;
-            long commentId = 1L;
-            ReCommentRequest reCommentRequest = reCommentRequest();
-            Post post = post();
-            Comment comment = comment();
-            comment.setDepth(1);
-            given(memberRepository.findByMemberId(customUserDetails.getUserId())).willReturn(
-                Optional.of(customUserDetails.getMember()));
-            given(postRepository.findByPostId(postId)).willReturn(Optional.of(post));
-            given(commentRepository.findByCommentId(commentId)).willReturn(Optional.of(comment));
-
-            // when
-            Exception exception = catchException(() -> {
-                commentCrudService.addReComment(customUserDetails, postId, commentId, reCommentRequest);
-            });
-
-            // then
-            then(memberRepository).should(times(1)).findByMemberId(customUserDetails.getUserId());
-            then(memberRepository).shouldHaveNoMoreInteractions();
-            then(postRepository).should(times(1)).findByPostId(postId);
-            then(postRepository).shouldHaveNoMoreInteractions();
-            then(commentRepository).should(times(1)).findByCommentId(commentId);
-            then(commentRepository).shouldHaveNoMoreInteractions();
-            assertThat(exception).isInstanceOf(StatusCode400Exception.class);
-            assertThat(((StatusCode400Exception) exception).getErrorCase()).isEqualTo(
-                ErrorCase._400_NOT_SUPPORTED_CASE);
         }
 
         @Test
         void given_invoke_then_invokeSave() {
             // given
             CustomUserDetails customUserDetails = WithMockCustomUserSecurityContextFactory.customUserDetailsMock();
-            long postId = 1L;
             long commentId = 1L;
             ReCommentRequest reCommentRequest = reCommentRequest();
-            Post post = post();
             Comment comment = comment();
-            comment.setPost(post);
             given(memberRepository.findByMemberId(customUserDetails.getUserId())).willReturn(
                 Optional.of(customUserDetails.getMember()));
-            given(postRepository.findByPostId(postId)).willReturn(Optional.of(post));
             given(commentRepository.findByCommentId(commentId)).willReturn(Optional.of(comment));
 
             // when
-            commentCrudService.addReComment(customUserDetails, postId, commentId, reCommentRequest);
+            commentCrudService.addReComment(customUserDetails, commentId, reCommentRequest);
 
             // then
             then(memberRepository).should(times(1)).findByMemberId(customUserDetails.getUserId());
             then(memberRepository).shouldHaveNoMoreInteractions();
-            then(postRepository).should(times(1)).findByPostId(postId);
-            then(postRepository).shouldHaveNoMoreInteractions();
             then(commentRepository).should(times(1)).findByCommentId(commentId);
             then(commentRepository).should(times(1)).save(any(Comment.class));
             then(commentRepository).shouldHaveNoMoreInteractions();
@@ -688,7 +624,8 @@ public class CommentCrudServiceTest {
             then(commentRepository).should(times(1)).findByCommentId(commentId);
             then(commentRepository).should(times(1)).findByParentId(commentId);
             then(commentRepository).shouldHaveNoMoreInteractions();
-            then(commentExpressionRepository).should(times(1)).findByMemberAndComment(any(Comment.class), any(Member.class));
+            then(commentExpressionRepository).should(times(1))
+                .findByMemberAndComment(any(Comment.class), any(Member.class));
             then(commentExpressionRepository).shouldHaveNoMoreInteractions();
 
         }

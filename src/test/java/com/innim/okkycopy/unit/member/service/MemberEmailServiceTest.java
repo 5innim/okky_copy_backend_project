@@ -20,7 +20,7 @@ import com.innim.okkycopy.global.error.ErrorCase;
 import com.innim.okkycopy.global.error.exception.StatusCode400Exception;
 import com.innim.okkycopy.global.error.exception.StatusCode401Exception;
 import com.innim.okkycopy.global.error.exception.StatusCode403Exception;
-import com.innim.okkycopy.global.util.email.MailUtil;
+import com.innim.okkycopy.global.common.email.MailManager;
 import java.util.Optional;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -43,7 +43,7 @@ public class MemberEmailServiceTest {
     @Mock
     MemberRepository memberRepository;
     @Mock
-    MailUtil mailUtil;
+    MailManager mailManager;
     @InjectMocks
     MemberEmailService memberEmailService;
 
@@ -120,10 +120,10 @@ public class MemberEmailServiceTest {
             // then
             then(memberRepository).should(times(1)).findByMemberId(member.getMemberId());
             then(memberRepository).shouldHaveNoMoreInteractions();
-            then(mailUtil).should(times(1)).sendAuthenticateChangedEmailAndPutCache(updateEmailRequest.getEmail(),
+            then(mailManager).should(times(1)).sendAuthenticateChangedEmailAndPutCache(updateEmailRequest.getEmail(),
                 member.getMemberId(),
                 false);
-            then(mailUtil).shouldHaveNoMoreInteractions();
+            then(mailManager).shouldHaveNoMoreInteractions();
         }
 
         @Test
@@ -142,10 +142,10 @@ public class MemberEmailServiceTest {
             then(memberRepository).shouldHaveNoMoreInteractions();
             then(okkyMemberRepository).should(times(1)).existsByEmail(updateEmailRequest.getEmail());
             then(okkyMemberRepository).shouldHaveNoMoreInteractions();
-            then(mailUtil).should(times(1)).sendAuthenticateChangedEmailAndPutCache(updateEmailRequest.getEmail(),
+            then(mailManager).should(times(1)).sendAuthenticateChangedEmailAndPutCache(updateEmailRequest.getEmail(),
                 member.getMemberId(),
                 true);
-            then(mailUtil).shouldHaveNoMoreInteractions();
+            then(mailManager).shouldHaveNoMoreInteractions();
 
         }
 

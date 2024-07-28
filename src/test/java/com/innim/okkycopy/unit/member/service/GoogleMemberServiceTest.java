@@ -16,7 +16,7 @@ import com.innim.okkycopy.global.auth.CustomOAuth2User;
 import com.innim.okkycopy.global.error.ErrorCase;
 import com.innim.okkycopy.global.error.exception.StatusCode400Exception;
 import com.innim.okkycopy.global.error.exception.StatusCode401Exception;
-import com.innim.okkycopy.global.util.email.MailUtil;
+import com.innim.okkycopy.global.common.email.MailManager;
 import java.util.Collections;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -33,7 +33,7 @@ public class GoogleMemberServiceTest {
     @Mock
     GoogleMemberRepository googleMemberRepository;
     @Mock
-    MailUtil mailUtil;
+    MailManager mailManager;
     @InjectMocks
     GoogleMemberService googleMemberService;
 
@@ -114,9 +114,9 @@ public class GoogleMemberServiceTest {
             // then
             then(googleMemberRepository).should(times(1)).save(any(GoogleMember.class));
             then(googleMemberRepository).shouldHaveNoMoreInteractions();
-            then(mailUtil).should(times(1))
+            then(mailManager).should(times(1))
                 .sendAuthenticateEmailAndPutCache(any(String.class), any(Long.class), any(String.class));
-            then(mailUtil).shouldHaveNoMoreInteractions();
+            then(mailManager).shouldHaveNoMoreInteractions();
             assertThat(memberId).isEqualTo(1L);
         }
 

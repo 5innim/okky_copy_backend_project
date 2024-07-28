@@ -1,15 +1,13 @@
-package com.innim.okkycopy.integration.member;
+package com.innim.okkycopy.integration.board.qna;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 
-import com.innim.okkycopy.common.WithMockCustomUserSecurityContextFactory;
+import com.google.gson.Gson;
 import com.innim.okkycopy.common.annotation.WithMockCustomUser;
-import com.innim.okkycopy.domain.member.entity.Member;
-import com.innim.okkycopy.domain.member.repository.MemberRepository;
-import com.innim.okkycopy.global.util.EncryptionUtil;
-import com.innim.okkycopy.global.common.email.EmailAuthenticateValue;
-import com.innim.okkycopy.global.common.email.MailManager;
+import com.innim.okkycopy.domain.board.dto.request.write.PostRequest;
+import com.innim.okkycopy.domain.board.dto.request.write.TagInfo;
+import java.util.Arrays;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -18,23 +16,22 @@ import org.junit.jupiter.api.TestInstance.Lifecycle;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletResponse;
-import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
 
+
 @SpringBootTest
 @TestInstance(Lifecycle.PER_CLASS)
-@DisplayName("/member/email-change-authenticate")
-public class _member_emailChangeAuthenticate {
+@DisplayName("/board/qna/posts")
+public class _board_qna_posts {
 
     @Autowired
     WebApplicationContext context;
-    @Autowired
-    MemberRepository memberRepository;
 
     MockMvc mockMvc;
 
@@ -46,27 +43,34 @@ public class _member_emailChangeAuthenticate {
     }
 
     @Test
-    @WithMockCustomUser
-    @Sql("/data/init_member.sql")
     @Transactional
-    void given_request_then_response204() throws Exception {
+    @WithMockCustomUser
+    void given_request_then_response200() throws Exception {
         // given
-        Member member = WithMockCustomUserSecurityContextFactory.customUserDetailsMock().getMember();
-        memberRepository.save(member);
-
-        String key = EncryptionUtil.encryptWithSHA256(
-            EncryptionUtil.connectStrings(member.findEmail(), member.getMemberId().toString()));
-        MailManager.emailChangeAuthenticateCache.put(key, new EmailAuthenticateValue(member.getMemberId(), member.findEmail()));
+        mockMvc.perform(
+            MockMvcRequestBuilders.post("/board/qna/write")
+                .characterEncoding("UTF-8")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(new Gson().toJson(writeRequest()))
+        );
 
         // when
         MockHttpServletResponse response = mockMvc.perform(
-            MockMvcRequestBuilders.put("/member/email-change-authenticate?key=" + EncryptionUtil.base64Encode(key))).andReturn().getResponse();
+            MockMvcRequestBuilders
+                .get("/board/qna/posts?topicId=1&page=0&size=20&sort=likes,desc&sort=createdDate,desc")
+        ).andReturn().getResponse();
 
         // then
-        assertThat(response.getStatus()).isEqualTo(HttpStatus.NO_CONTENT.value());
-
-
+        assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());
     }
 
+    PostRequest writeRequest() {
+        return PostRequest.builder()
+            .title("test_title")
+            .topic("기술")
+            .tags(Arrays.asList(new TagInfo("tag1"), new TagInfo("tag2")))
+            .content("test_content")
+            .build();
+    }
 
 }

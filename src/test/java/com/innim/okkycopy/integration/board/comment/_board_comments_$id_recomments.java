@@ -78,7 +78,7 @@ public class _board_comments_$id_recomments {
         commentRepository.save(comment);
 
         knowledgePost.setCommentList(Collections.emptyList());
-        mockMvc.perform(MockMvcRequestBuilders.post("/board/posts/1/comments/1/recomment")
+        mockMvc.perform(MockMvcRequestBuilders.post("/board/comments/1/recomment")
             .characterEncoding("UTF-8")
             .contentType(MediaType.APPLICATION_JSON)
             .content(new Gson().toJson(ReCommentRequest.builder()

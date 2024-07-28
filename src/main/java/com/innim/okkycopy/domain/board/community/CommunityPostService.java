@@ -14,6 +14,7 @@ import com.innim.okkycopy.domain.board.repository.ScrapRepository;
 import com.innim.okkycopy.domain.member.entity.Member;
 import com.innim.okkycopy.domain.member.repository.MemberRepository;
 import com.innim.okkycopy.global.auth.CustomUserDetails;
+import com.innim.okkycopy.global.common.storage.image_usage.ImageUsageService;
 import com.innim.okkycopy.global.error.ErrorCase;
 import com.innim.okkycopy.global.error.exception.StatusCode400Exception;
 import com.innim.okkycopy.global.error.exception.StatusCode401Exception;
@@ -35,6 +36,7 @@ public class CommunityPostService {
     private final MemberRepository memberRepository;
     private final PostExpressionRepository postExpressionRepository;
     private final ScrapRepository scrapRepository;
+    private final ImageUsageService imageUsageService;
 
     @PersistenceContext
     private final EntityManager entityManager;
@@ -48,7 +50,10 @@ public class CommunityPostService {
         BoardTopic boardTopic = boardTopicRepository.findByName(postRequest.getTopic())
             .orElseThrow(() -> new StatusCode400Exception(
                 ErrorCase._400_NO_SUCH_TOPIC));
+
+        imageUsageService.modifyImageUsages(postRequest.getContent(), true);
         CommunityPost communityPost = CommunityPost.of(postRequest, boardTopic, member);
+
         communityPostRepository.save(communityPost);
     }
 
@@ -89,6 +94,9 @@ public class CommunityPostService {
         if (communityPost.getMember() == null || communityPost.getMember().getMemberId() != member.getMemberId()) {
             throw new StatusCode403Exception(ErrorCase._403_NO_AUTHORITY);
         }
+
+        imageUsageService.modifyImageUsages(communityPost.getContent(), updateRequest.getContent());
+
         communityPost.update(updateRequest, boardTopic);
     }
 
@@ -103,7 +111,7 @@ public class CommunityPostService {
         if (communityPost.getMember() == null || communityPost.getMember().getMemberId() != member.getMemberId()) {
             throw new StatusCode403Exception(ErrorCase._403_NO_AUTHORITY);
         }
-
+        imageUsageService.modifyImageUsages(communityPost.getContent(), false);
         communityPost.remove(entityManager);
     }
 

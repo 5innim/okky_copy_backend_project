@@ -1,15 +1,16 @@
-package com.innim.okkycopy.global.common;
+package com.innim.okkycopy.global.common.storage;
 
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.PutObjectRequest;
+import com.innim.okkycopy.global.common.storage.image_usage.ImageUsageService;
 import com.innim.okkycopy.global.error.ErrorCase;
+import com.innim.okkycopy.global.error.exception.StatusCode500Exception;
 import com.innim.okkycopy.global.error.exception.StatusCodeException;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Optional;
-import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -22,6 +23,7 @@ import org.springframework.web.multipart.MultipartFile;
 public class S3Uploader {
 
     private final AmazonS3Client amazonS3Client;
+    private final ImageUsageService imageUsageService;
     @Value("${cloud.aws.s3.bucket}")
     private String bucket;
     @Value("${cloud.aws.s3.folder-path}")
@@ -32,10 +34,10 @@ public class S3Uploader {
             .orElseThrow(() -> new StatusCodeException(ErrorCase._500_FILE_NOT_CREATED));
 
         try {
-            String filePath = folderPath + "/" + UUID.randomUUID();
+            String filePath = folderPath + "/" + imageUsageService.addImageUsage();
             return putFileToS3(uploadFile, filePath);
         } catch (Exception ex) {
-            throw new StatusCodeException(ErrorCase._500_PUT_S3_FAIL);
+            throw new StatusCode500Exception(ErrorCase._500_PUT_S3_FAIL);
         } finally {
             removeNewFile(uploadFile);
         }
@@ -45,6 +47,14 @@ public class S3Uploader {
         amazonS3Client.putObject(new PutObjectRequest(bucket, filePath, uploadFile).withCannedAcl(
             CannedAccessControlList.PublicRead));
         return amazonS3Client.getUrl(bucket, filePath).toString();
+    }
+
+    public void deleteFileFromS3(String fileName) {
+        try {
+            amazonS3Client.deleteObject(bucket, folderPath + "/" + fileName);
+        } catch (Exception ex) {
+            log.error("exception generated during deleting file from S3, file name: " + fileName);
+        }
     }
 
     private void removeNewFile(File targetFile) {

@@ -13,12 +13,13 @@ import com.innim.okkycopy.domain.member.entity.Member;
 import com.innim.okkycopy.domain.member.repository.MemberRepository;
 import com.innim.okkycopy.domain.member.service.MemberCrudService;
 import com.innim.okkycopy.global.auth.enums.Role;
+import com.innim.okkycopy.global.common.storage.image_usage.ImageUsageService;
 import com.innim.okkycopy.global.error.ErrorCase;
 import com.innim.okkycopy.global.error.exception.StatusCode401Exception;
 import com.innim.okkycopy.global.error.exception.StatusCode403Exception;
 import com.innim.okkycopy.global.util.EncryptionUtil;
-import com.innim.okkycopy.global.util.email.EmailAuthenticateValue;
-import com.innim.okkycopy.global.util.email.MailUtil;
+import com.innim.okkycopy.global.common.email.EmailAuthenticateValue;
+import com.innim.okkycopy.global.common.email.MailManager;
 import jakarta.persistence.EntityManager;
 import java.security.NoSuchAlgorithmException;
 import java.time.LocalDateTime;
@@ -39,9 +40,11 @@ public class MemberCrudServiceTest {
     @Mock
     MemberRepository memberRepository;
     @Mock
-    MailUtil mailUtil;
+    MailManager mailManager;
     @Mock
     EntityManager entityManager;
+    @Mock
+    ImageUsageService imageUsageService;
     @InjectMocks
     MemberCrudService memberCrudService;
 
@@ -99,6 +102,8 @@ public class MemberCrudServiceTest {
 
             // then
             then(entityManager).should(times(1)).merge(member);
+            then(imageUsageService).should(times(1)).modifyImageUsage(member.getProfile(), false);
+            then(imageUsageService).shouldHaveNoMoreInteractions();
             then(entityManager).should(times(1)).remove(member);
             then(entityManager).shouldHaveNoMoreInteractions();
         }
@@ -151,7 +156,7 @@ public class MemberCrudServiceTest {
         void given_noExistKey_then_throwErrorCase401009() {
             // given
             String key = "test_key";
-            given(mailUtil.findValueByEmailAuthenticate(key)).willReturn(Optional.empty());
+            given(mailManager.findValueByEmailAuthenticate(key)).willReturn(Optional.empty());
 
             // when
             Exception exception = catchException(() -> {
@@ -168,7 +173,7 @@ public class MemberCrudServiceTest {
             // given
             String key = "test_key";
             EmailAuthenticateValue emailAuthenticateValue = emailAuthenticateValue();
-            given(mailUtil.findValueByEmailAuthenticate(key)).willReturn(Optional.of(emailAuthenticateValue));
+            given(mailManager.findValueByEmailAuthenticate(key)).willReturn(Optional.of(emailAuthenticateValue));
             given(memberRepository.findByMemberId(emailAuthenticateValue.getMemberId())).willReturn(Optional.empty());
 
             // when
@@ -187,7 +192,7 @@ public class MemberCrudServiceTest {
             String key = "test_key";
             EmailAuthenticateValue emailAuthenticateValue = emailAuthenticateValue();
             Member member = WithMockCustomUserSecurityContextFactory.customUserDetailsMock().getMember();
-            given(mailUtil.findValueByEmailAuthenticate(key)).willReturn(Optional.of(emailAuthenticateValue));
+            given(mailManager.findValueByEmailAuthenticate(key)).willReturn(Optional.of(emailAuthenticateValue));
             given(memberRepository.findByMemberId(emailAuthenticateValue.getMemberId())).willReturn(
                 Optional.of(member));
 
@@ -209,7 +214,7 @@ public class MemberCrudServiceTest {
             EmailAuthenticateValue emailAuthenticateValue = emailAuthenticateValue();
             Member member = WithMockCustomUserSecurityContextFactory.customUserDetailsMock().getMember();
             member.setRole(Role.MAIL_INVALID_USER);
-            given(mailUtil.findValueByEmailAuthenticate(key)).willReturn(Optional.of(emailAuthenticateValue));
+            given(mailManager.findValueByEmailAuthenticate(key)).willReturn(Optional.of(emailAuthenticateValue));
             given(memberRepository.findByMemberId(emailAuthenticateValue.getMemberId())).willReturn(
                 Optional.of(member));
 
@@ -233,7 +238,7 @@ public class MemberCrudServiceTest {
             ;
             EmailAuthenticateValue emailAuthenticateValue = emailAuthenticateValue();
             member.setRole(Role.MAIL_INVALID_USER);
-            given(mailUtil.findValueByEmailAuthenticate(key)).willReturn(Optional.of(emailAuthenticateValue));
+            given(mailManager.findValueByEmailAuthenticate(key)).willReturn(Optional.of(emailAuthenticateValue));
             given(memberRepository.findByMemberId(emailAuthenticateValue.getMemberId())).willReturn(
                 Optional.of(member));
 
@@ -242,8 +247,8 @@ public class MemberCrudServiceTest {
 
             // then
             assertThat(member.getRole()).isEqualTo(Role.USER);
-            then(mailUtil).should(times(1)).removeKey(key);
-            then(mailUtil).shouldHaveNoMoreInteractions();
+            then(mailManager).should(times(1)).removeKey(key);
+            then(mailManager).shouldHaveNoMoreInteractions();
         }
 
 
@@ -259,7 +264,7 @@ public class MemberCrudServiceTest {
         void given_noExistKey_then_throwErrorCase401009() {
             // given
             String key = "test_key";
-            given(mailUtil.findValueByEmailChangeAuthenticate(key)).willReturn(Optional.empty());
+            given(mailManager.findValueByEmailChangeAuthenticate(key)).willReturn(Optional.empty());
 
             // when
             Exception exception = catchException(() -> {
@@ -276,7 +281,7 @@ public class MemberCrudServiceTest {
             // given
             String key = "test_key";
             EmailAuthenticateValue emailAuthenticateValue = emailAuthenticateValue();
-            given(mailUtil.findValueByEmailChangeAuthenticate(key)).willReturn(Optional.of(emailAuthenticateValue));
+            given(mailManager.findValueByEmailChangeAuthenticate(key)).willReturn(Optional.of(emailAuthenticateValue));
             given(memberRepository.findByMemberId(emailAuthenticateValue.getMemberId())).willReturn(Optional.empty());
 
             // when
@@ -296,7 +301,7 @@ public class MemberCrudServiceTest {
             Member member = WithMockCustomUserSecurityContextFactory.customUserDetailsMock().getMember();
             member.setRole(Role.MAIL_INVALID_USER);
             EmailAuthenticateValue emailAuthenticateValue = emailAuthenticateValue();
-            given(mailUtil.findValueByEmailChangeAuthenticate(key)).willReturn(Optional.of(emailAuthenticateValue));
+            given(mailManager.findValueByEmailChangeAuthenticate(key)).willReturn(Optional.of(emailAuthenticateValue));
             given(memberRepository.findByMemberId(emailAuthenticateValue.getMemberId())).willReturn(
                 Optional.of(member));
 
@@ -305,8 +310,8 @@ public class MemberCrudServiceTest {
 
             // then
             assertThat(member.getRole()).isEqualTo(Role.USER);
-            then(mailUtil).should(times(1)).removeKey(key);
-            then(mailUtil).shouldHaveNoMoreInteractions();
+            then(mailManager).should(times(1)).removeKey(key);
+            then(mailManager).shouldHaveNoMoreInteractions();
         }
 
         EmailAuthenticateValue emailAuthenticateValue() {
@@ -347,6 +352,10 @@ public class MemberCrudServiceTest {
             memberCrudService.modifyMember(member, profileUpdateRequest);
 
             // then
+            then(memberRepository).should(times(1)).findByMemberId(member.getMemberId());
+            then(memberRepository).shouldHaveNoMoreInteractions();
+            then(imageUsageService).should(times(1)).changeImage(null, profileUpdateRequest.getProfile());
+            then(imageUsageService).shouldHaveNoMoreInteractions();
             assertThat(member.getName()).isEqualTo(profileUpdateRequest.getName());
             assertThat(member.getNickname()).isEqualTo(profileUpdateRequest.getNickname());
             assertThat(member.getProfile()).isEqualTo(profileUpdateRequest.getProfile());

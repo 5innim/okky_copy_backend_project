@@ -22,7 +22,7 @@ import com.innim.okkycopy.global.error.ErrorCase;
 import com.innim.okkycopy.global.error.exception.StatusCode400Exception;
 import com.innim.okkycopy.global.error.exception.StatusCode401Exception;
 import com.innim.okkycopy.global.error.exception.StatusCode409Exception;
-import com.innim.okkycopy.global.util.email.MailUtil;
+import com.innim.okkycopy.global.common.email.MailManager;
 import java.time.LocalDateTime;
 import java.util.Optional;
 import org.junit.jupiter.api.Nested;
@@ -43,7 +43,7 @@ public class OkkyMemberServiceTest {
     @Mock
     MemberRepository memberRepository;
     @Mock
-    MailUtil mailUtil;
+    MailManager mailManager;
     @InjectMocks
     OkkyMemberService okkyMemberService;
 
@@ -107,9 +107,9 @@ public class OkkyMemberServiceTest {
             // then
             then(okkyMemberRepository).should(times(1)).save(any(OkkyMember.class));
             then(okkyMemberRepository).shouldHaveNoMoreInteractions();
-            then(mailUtil).should(times(1))
+            then(mailManager).should(times(1))
                 .sendAuthenticateEmailAndPutCache(any(String.class), any(Long.class), any(String.class));
-            then(mailUtil).shouldHaveNoMoreInteractions();
+            then(mailManager).shouldHaveNoMoreInteractions();
             assertThat(memberBriefResponse.getEmail()).isEqualTo(memberRequest.getEmail());
             assertThat(memberBriefResponse.getNickname()).isEqualTo(memberRequest.getNickname());
             assertThat(memberBriefResponse.getName()).isEqualTo(memberRequest.getName());
