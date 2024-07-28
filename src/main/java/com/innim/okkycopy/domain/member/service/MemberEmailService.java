@@ -16,7 +16,7 @@ import com.innim.okkycopy.global.error.ErrorCase;
 import com.innim.okkycopy.global.error.exception.StatusCode400Exception;
 import com.innim.okkycopy.global.error.exception.StatusCode401Exception;
 import com.innim.okkycopy.global.error.exception.StatusCode403Exception;
-import com.innim.okkycopy.global.util.email.MailUtil;
+import com.innim.okkycopy.global.common.email.MailManager;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,7 +30,7 @@ public class MemberEmailService {
     private final NaverMemberRepository naverMemberRepository;
     private final KakaoMemberRepository kakaoMemberRepository;
     private final MemberRepository memberRepository;
-    private final MailUtil mailUtil;
+    private final MailManager mailManager;
 
     @Transactional(readOnly = true)
     public void sendAuthenticationMail(UpdateEmailRequest updateEmailRequest, Member requester) {
@@ -42,7 +42,7 @@ public class MemberEmailService {
                 throw new StatusCode403Exception(ErrorCase._403_MAIL_ALREADY_AUTHENTICATED);
             }
 
-            mailUtil.sendAuthenticateChangedEmailAndPutCache(
+            mailManager.sendAuthenticateChangedEmailAndPutCache(
                 updateEmailRequest.getEmail(),
                 member.getMemberId(),
                 false);
@@ -63,7 +63,7 @@ public class MemberEmailService {
                 throw new StatusCode400Exception(ErrorCase._400_IN_USAGE_EMAIL);
             }
 
-            mailUtil.sendAuthenticateChangedEmailAndPutCache(
+            mailManager.sendAuthenticateChangedEmailAndPutCache(
                 updateEmailRequest.getEmail(),
                 member.getMemberId(),
                 true);

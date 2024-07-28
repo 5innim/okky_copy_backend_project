@@ -14,7 +14,7 @@ import com.innim.okkycopy.domain.board.service.PostExpressionService;
 import com.innim.okkycopy.domain.board.service.PostScrapService;
 import com.innim.okkycopy.domain.board.service.BoardTopicService;
 import com.innim.okkycopy.global.auth.CustomUserDetails;
-import com.innim.okkycopy.global.common.S3Uploader;
+import com.innim.okkycopy.global.common.storage.S3Uploader;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.Collections;

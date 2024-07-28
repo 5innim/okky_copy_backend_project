@@ -21,6 +21,7 @@ import com.innim.okkycopy.domain.board.repository.ScrapRepository;
 import com.innim.okkycopy.domain.member.entity.Member;
 import com.innim.okkycopy.domain.member.repository.MemberRepository;
 import com.innim.okkycopy.global.auth.CustomUserDetails;
+import com.innim.okkycopy.global.common.storage.image_usage.ImageUsageService;
 import com.innim.okkycopy.global.error.ErrorCase;
 import com.innim.okkycopy.global.error.exception.StatusCode400Exception;
 import com.innim.okkycopy.global.error.exception.StatusCode401Exception;
@@ -52,6 +53,9 @@ public class EventPostServiceTest {
     PostExpressionRepository postExpressionRepository;
     @Mock
     EntityManager entityManager;
+    @Mock
+    ImageUsageService imageUsageService;
+
     @InjectMocks
     EventPostService eventPostService;
 
@@ -125,6 +129,8 @@ public class EventPostServiceTest {
             then(memberRepository).shouldHaveNoMoreInteractions();
             then(boardTopicRepository).should(times(1)).findByName(postRequest.getTopic());
             then(boardTopicRepository).shouldHaveNoMoreInteractions();
+            then(imageUsageService).should(times(1)).modifyImageUsages(any(String.class), true);
+            then(imageUsageService).shouldHaveNoMoreInteractions();
             assertThat(exception).isInstanceOf(StatusCode400Exception.class);
             assertThat(((StatusCode400Exception) exception).getErrorCase()).isEqualTo(ErrorCase._400_BAD_FORM_DATA);
 
@@ -151,6 +157,8 @@ public class EventPostServiceTest {
             then(memberRepository).shouldHaveNoMoreInteractions();
             then(boardTopicRepository).should(times(1)).findByName(postRequest.getTopic());
             then(boardTopicRepository).shouldHaveNoMoreInteractions();
+            then(imageUsageService).should(times(1)).modifyImageUsages(any(String.class), true);
+            then(imageUsageService).shouldHaveNoMoreInteractions();
             then(eventPostRepository).should(times(1)).save(any(EventPost.class));
             then(eventPostRepository).shouldHaveNoMoreInteractions();
 
@@ -389,6 +397,8 @@ public class EventPostServiceTest {
             then(eventPostRepository).shouldHaveNoMoreInteractions();
             then(boardTopicRepository).should(times(1)).findByName(postRequest.getTopic());
             then(boardTopicRepository).shouldHaveNoMoreInteractions();
+            then(imageUsageService).should(times(1)).modifyImageUsages(eventPost().getContent(), postRequest.getContent());
+            then(imageUsageService).shouldHaveNoMoreInteractions();
             assertThat(exception).isInstanceOf(StatusCode400Exception.class);
             assertThat(((StatusCode400Exception) exception).getErrorCase()).isEqualTo(ErrorCase._400_BAD_FORM_DATA);
 
@@ -417,6 +427,8 @@ public class EventPostServiceTest {
             then(eventPostRepository).shouldHaveNoMoreInteractions();
             then(boardTopicRepository).should(times(1)).findByName(postRequest.getTopic());
             then(boardTopicRepository).shouldHaveNoMoreInteractions();
+            then(imageUsageService).should(times(1)).modifyImageUsages(eventPost().getContent(), postRequest.getContent());
+            then(imageUsageService).shouldHaveNoMoreInteractions();
             assertThat(post.getTitle()).isEqualTo(postRequest.getTitle());
         }
 
@@ -538,6 +550,7 @@ public class EventPostServiceTest {
             then(memberRepository).shouldHaveNoMoreInteractions();
             then(eventPostRepository).should(times(1)).findByPostId(postId);
             then(eventPostRepository).shouldHaveNoMoreInteractions();
+            then(imageUsageService).should(times(1)).modifyImageUsages(post.getContent(), false);
             then(entityManager).should(times(1)).remove(post);
             then(entityManager).shouldHaveNoMoreInteractions();
         }

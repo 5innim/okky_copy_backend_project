@@ -7,7 +7,7 @@ import com.innim.okkycopy.global.auth.CustomOAuth2User;
 import com.innim.okkycopy.global.error.ErrorCase;
 import com.innim.okkycopy.global.error.exception.StatusCode400Exception;
 import com.innim.okkycopy.global.error.exception.StatusCode401Exception;
-import com.innim.okkycopy.global.util.email.MailUtil;
+import com.innim.okkycopy.global.common.email.MailManager;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
@@ -19,7 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class GoogleMemberService {
 
     private final GoogleMemberRepository googleMemberRepository;
-    private final MailUtil mailUtil;
+    private final MailManager mailManager;
 
     @Transactional
     public Long addGoogleMember(OAuthMemberRequest oAuthMemberRequest, String provider, HttpServletRequest request) {
@@ -39,7 +39,7 @@ public class GoogleMemberService {
         }
 
         GoogleMember member = googleMemberRepository.save(GoogleMember.of(oAuthMemberRequest, oAuth2User));
-        mailUtil.sendAuthenticateEmailAndPutCache(member.findEmail(), member.getMemberId(), member.getName());
+        mailManager.sendAuthenticateEmailAndPutCache(member.findEmail(), member.getMemberId(), member.getName());
 
         return member.getMemberId();
     }

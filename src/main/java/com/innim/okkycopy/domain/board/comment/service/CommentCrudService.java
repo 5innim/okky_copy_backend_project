@@ -17,6 +17,7 @@ import com.innim.okkycopy.domain.board.repository.PostRepository;
 import com.innim.okkycopy.domain.member.entity.Member;
 import com.innim.okkycopy.domain.member.repository.MemberRepository;
 import com.innim.okkycopy.global.auth.CustomUserDetails;
+import com.innim.okkycopy.global.common.storage.image_usage.ImageUsageService;
 import com.innim.okkycopy.global.error.ErrorCase;
 import com.innim.okkycopy.global.error.exception.StatusCode400Exception;
 import com.innim.okkycopy.global.error.exception.StatusCode401Exception;
@@ -38,6 +39,7 @@ public class CommentCrudService {
     private final CommentRepository commentRepository;
     private final MemberRepository memberRepository;
     private final CommentExpressionRepository commentExpressionRepository;
+    private final ImageUsageService imageUsageService;
 
     @PersistenceContext
     private final EntityManager entityManager;
@@ -53,6 +55,7 @@ public class CommentCrudService {
         Post post = postRepository.findByPostId(postId)
             .orElseThrow(() -> new StatusCode400Exception(ErrorCase._400_NO_SUCH_POST));
 
+        imageUsageService.modifyImageUsages(commentRequest.getContent(), true);
         Comment comment = Comment.of(post, member,
             commentRequest);
         commentRepository.save(comment);
@@ -71,6 +74,8 @@ public class CommentCrudService {
         if (comment.getMember() == null || comment.getMember().getMemberId() != member.getMemberId()) {
             throw new StatusCode403Exception(ErrorCase._403_NO_AUTHORITY);
         }
+
+        imageUsageService.modifyImageUsages(comment.getContent(), commentRequest.getContent());
         comment.update(commentRequest.getContent());
     }
 
@@ -87,8 +92,11 @@ public class CommentCrudService {
         }
         List<Comment> commentList = commentRepository.findByParentId(comment.getCommentId());
         for (Comment c : commentList) {
+            imageUsageService.modifyImageUsages(c.getContent(), false);
             Comment.remove(c, entityManager);
         }
+
+        imageUsageService.modifyImageUsages(comment.getContent(), false);
         Comment.remove(comment, entityManager);
 
     }

@@ -19,6 +19,7 @@ import com.innim.okkycopy.domain.board.repository.PostRepository;
 import com.innim.okkycopy.domain.member.entity.Member;
 import com.innim.okkycopy.domain.member.repository.MemberRepository;
 import com.innim.okkycopy.global.auth.CustomUserDetails;
+import com.innim.okkycopy.global.common.storage.image_usage.ImageUsageService;
 import com.innim.okkycopy.global.error.ErrorCase;
 import com.innim.okkycopy.global.error.exception.StatusCode400Exception;
 import com.innim.okkycopy.global.error.exception.StatusCode401Exception;
@@ -48,6 +49,8 @@ public class CommentCrudServiceTest {
     CommentExpressionRepository commentExpressionRepository;
     @Mock
     EntityManager entityManager;
+    @Mock
+    ImageUsageService imageUsageService;
     @InjectMocks
     CommentCrudService commentCrudService;
 
@@ -120,6 +123,8 @@ public class CommentCrudServiceTest {
             then(memberRepository).shouldHaveNoMoreInteractions();
             then(postRepository).should(times(1)).findByPostId(postId);
             then(postRepository).shouldHaveNoMoreInteractions();
+            then(imageUsageService).should(times(1)).modifyImageUsages(commentRequest.getContent(), true);
+            then(imageUsageService).shouldHaveNoMoreInteractions();
             then(commentRepository).should(times(1)).save(any(Comment.class));
             then(commentRepository).shouldHaveNoMoreInteractions();
 
@@ -232,6 +237,9 @@ public class CommentCrudServiceTest {
             then(memberRepository).shouldHaveNoMoreInteractions();
             then(commentRepository).should(times(1)).findByCommentId(commentId);
             then(commentRepository).shouldHaveNoMoreInteractions();
+            then(imageUsageService).should(times(1))
+                .modifyImageUsages(comment().getContent(), commentRequest.getContent());
+            then(imageUsageService).shouldHaveNoMoreInteractions();
             assertThat(comment.getContent()).isEqualTo(commentRequest.getContent());
         }
 
@@ -340,6 +348,8 @@ public class CommentCrudServiceTest {
             then(commentRepository).should(times(1)).findByCommentId(commentId);
             then(commentRepository).should(times(1)).findByParentId(comment.getCommentId());
             then(commentRepository).shouldHaveNoMoreInteractions();
+            then(imageUsageService).should(times(1)).modifyImageUsages(comment.getContent(), false);
+            then(imageUsageService).shouldHaveNoMoreInteractions();
             then(entityManager).should(times(1)).remove(any(Comment.class));
             then(entityManager).shouldHaveNoMoreInteractions();
 
@@ -614,7 +624,8 @@ public class CommentCrudServiceTest {
             then(commentRepository).should(times(1)).findByCommentId(commentId);
             then(commentRepository).should(times(1)).findByParentId(commentId);
             then(commentRepository).shouldHaveNoMoreInteractions();
-            then(commentExpressionRepository).should(times(1)).findByMemberAndComment(any(Comment.class), any(Member.class));
+            then(commentExpressionRepository).should(times(1))
+                .findByMemberAndComment(any(Comment.class), any(Member.class));
             then(commentExpressionRepository).shouldHaveNoMoreInteractions();
 
         }

@@ -15,7 +15,7 @@ import com.innim.okkycopy.global.auth.CustomOAuth2User;
 import com.innim.okkycopy.global.error.ErrorCase;
 import com.innim.okkycopy.global.error.exception.StatusCode400Exception;
 import com.innim.okkycopy.global.error.exception.StatusCode401Exception;
-import com.innim.okkycopy.global.util.email.MailUtil;
+import com.innim.okkycopy.global.common.email.MailManager;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import org.junit.jupiter.api.Nested;
@@ -33,7 +33,7 @@ public class KakaoMemberServiceTest {
     @Mock
     KakaoMemberRepository kakaoMemberRepository;
     @Mock
-    MailUtil mailUtil;
+    MailManager mailManager;
     @InjectMocks
     KakaoMemberService kakaoMemberService;
 
@@ -114,9 +114,9 @@ public class KakaoMemberServiceTest {
             // then
             then(kakaoMemberRepository).should(times(1)).save(any(KakaoMember.class));
             then(kakaoMemberRepository).shouldHaveNoMoreInteractions();
-            then(mailUtil).should(times(1))
+            then(mailManager).should(times(1))
                 .sendAuthenticateEmailAndPutCache(any(String.class), any(Long.class), any(String.class));
-            then(mailUtil).shouldHaveNoMoreInteractions();
+            then(mailManager).shouldHaveNoMoreInteractions();
             assertThat(memberId).isEqualTo(1L);
         }
 

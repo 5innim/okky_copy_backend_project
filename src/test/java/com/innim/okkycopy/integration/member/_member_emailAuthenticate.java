@@ -9,8 +9,8 @@ import com.innim.okkycopy.domain.member.entity.Member;
 import com.innim.okkycopy.domain.member.repository.MemberRepository;
 import com.innim.okkycopy.global.auth.enums.Role;
 import com.innim.okkycopy.global.util.EncryptionUtil;
-import com.innim.okkycopy.global.util.email.EmailAuthenticateValue;
-import com.innim.okkycopy.global.util.email.MailUtil;
+import com.innim.okkycopy.global.common.email.EmailAuthenticateValue;
+import com.innim.okkycopy.global.common.email.MailManager;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -58,7 +58,7 @@ public class _member_emailAuthenticate {
 
         String key = EncryptionUtil.encryptWithSHA256(
             EncryptionUtil.connectStrings(member.findEmail(), member.getMemberId().toString()));
-        MailUtil.emailAuthenticateCache.put(key, new EmailAuthenticateValue(member.getMemberId(), member.findEmail()));
+        MailManager.emailAuthenticateCache.put(key, new EmailAuthenticateValue(member.getMemberId(), member.findEmail()));
 
         // when
         MockHttpServletResponse response = mockMvc.perform(
