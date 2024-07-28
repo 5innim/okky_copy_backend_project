@@ -550,6 +550,7 @@ public class QnaPostServiceTest {
             then(memberRepository).shouldHaveNoMoreInteractions();
             then(qnaPostRepository).should(times(1)).findByPostId(postId);
             then(qnaPostRepository).shouldHaveNoMoreInteractions();
+            then(imageUsageService).should(times(1)).modifyImageUsages(post.getContent(), false);
             then(entityManager).should(times(1)).remove(post);
             then(entityManager).shouldHaveNoMoreInteractions();
         }

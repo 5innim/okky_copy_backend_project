@@ -550,6 +550,7 @@ public class KnowledgePostServiceTest {
             then(memberRepository).shouldHaveNoMoreInteractions();
             then(knowledgePostRepository).should(times(1)).findByPostId(postId);
             then(knowledgePostRepository).shouldHaveNoMoreInteractions();
+            then(imageUsageService).should(times(1)).modifyImageUsages(post.getContent(), false);
             then(entityManager).should(times(1)).remove(post);
             then(entityManager).shouldHaveNoMoreInteractions();
         }

@@ -108,7 +108,7 @@ public class QnaPostService {
         if (qnaPost.getMember() == null || qnaPost.getMember().getMemberId() != member.getMemberId()) {
             throw new StatusCode403Exception(ErrorCase._403_NO_AUTHORITY);
         }
-
+        imageUsageService.modifyImageUsages(qnaPost.getContent(), false);
         qnaPost.remove(entityManager);
     }
 

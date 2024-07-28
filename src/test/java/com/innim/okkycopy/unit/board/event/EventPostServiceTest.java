@@ -550,6 +550,7 @@ public class EventPostServiceTest {
             then(memberRepository).shouldHaveNoMoreInteractions();
             then(eventPostRepository).should(times(1)).findByPostId(postId);
             then(eventPostRepository).shouldHaveNoMoreInteractions();
+            then(imageUsageService).should(times(1)).modifyImageUsages(post.getContent(), false);
             then(entityManager).should(times(1)).remove(post);
             then(entityManager).shouldHaveNoMoreInteractions();
         }
