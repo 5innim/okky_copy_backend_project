@@ -3,11 +3,10 @@ package com.innim.okkycopy.global.common.storage.image_usage;
 import com.innim.okkycopy.global.common.storage.ImageExtractor;
 import com.innim.okkycopy.global.error.ErrorCase;
 import com.innim.okkycopy.global.error.exception.StatusCode400Exception;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.Optional;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -20,9 +19,6 @@ public class ImageUsageService {
 
     private final ImageUsageRepository imageUsageRepository;
     private final ImageExtractor imageExtractor;
-
-    @PersistenceContext
-    private final EntityManager entityManager;
 
     @Transactional
     public Long addImageUsage() {
@@ -93,14 +89,13 @@ public class ImageUsageService {
     }
 
     @Transactional
-    public void removeImageUsage(long imageUsageId) {
-        Optional<ImageUsage> optional = imageUsageRepository.findByImageUsageId(imageUsageId);
-        if (optional.isPresent()) {
-            ImageUsage imageUsage = optional.get();
-            imageUsage.remove(entityManager);
-        } else {
-            log.error("not exist image_usage_id: " + imageUsageId);
-        }
+    public void removeImageUsagesByIsInUseAndCreatedDate(boolean isInUse, LocalDateTime date) {
+        imageUsageRepository.deleteByIsInUseAndCreatedDate(isInUse, date);
+    }
+    
+    @Transactional 
+    public List<ImageUsage> findImageUsagesByIsInUseAndCreatedDate(boolean isInUse, LocalDateTime date) {
+        return imageUsageRepository.findByIsInUseAndCreatedDate(isInUse, date);
     }
 
     @Transactional
