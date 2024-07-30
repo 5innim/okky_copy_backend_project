@@ -93,7 +93,7 @@ public class ImageUsageService {
         imageUsageRepository.deleteByIsInUseAndCreatedDate(isInUse, date);
     }
     
-    @Transactional 
+    @Transactional(readOnly = true)
     public List<ImageUsage> findImageUsagesByIsInUseAndCreatedDate(boolean isInUse, LocalDateTime date) {
         return imageUsageRepository.findByIsInUseAndCreatedDate(isInUse, date);
     }
