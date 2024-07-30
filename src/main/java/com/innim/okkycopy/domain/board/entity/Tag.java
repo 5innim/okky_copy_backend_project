@@ -11,10 +11,13 @@ import jakarta.persistence.InheritanceType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import java.time.LocalDateTime;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.experimental.SuperBuilder;
+import org.hibernate.annotations.CreationTimestamp;
 
 @Entity
 @Table(name = "tag")
@@ -23,6 +26,7 @@ import lombok.Setter;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Setter
 @Getter
+@SuperBuilder
 public class Tag {
 
     @Id
@@ -34,6 +38,9 @@ public class Tag {
     private Post post;
     @Column(nullable = false)
     private String name;
+    @CreationTimestamp
+    @Column(name = "created_date", nullable = false)
+    private LocalDateTime createdDate;
 
 
 }

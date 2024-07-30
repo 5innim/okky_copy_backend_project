@@ -11,12 +11,14 @@ import jakarta.persistence.Table;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.experimental.SuperBuilder;
 
 @Entity
 @Table(name = "community_tag")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Setter
 @DiscriminatorValue(value = "community")
+@SuperBuilder
 public class CommunityTag extends Tag {
 
     @ManyToOne(optional = false)
@@ -24,11 +26,10 @@ public class CommunityTag extends Tag {
     private BoardTopic boardTopic;
 
     public static CommunityTag of(CommunityPost communityPost, BoardTopic boardTopic, String name) {
-        CommunityTag communityTag = new CommunityTag();
-        communityTag.setPost((Post) communityPost);
-        communityTag.setName(name);
-        communityTag.setBoardTopic(boardTopic);
-
-        return communityTag;
+        return CommunityTag.builder()
+            .post((Post) communityPost)
+            .name(name)
+            .boardTopic(boardTopic)
+            .build();
     }
 }
