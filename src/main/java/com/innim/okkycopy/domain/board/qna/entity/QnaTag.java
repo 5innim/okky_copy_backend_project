@@ -11,12 +11,14 @@ import jakarta.persistence.Table;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.experimental.SuperBuilder;
 
 @Entity
 @Table(name = "qna_tag")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Setter
 @DiscriminatorValue(value = "qna")
+@SuperBuilder
 public class QnaTag extends Tag {
 
     @ManyToOne(optional = false)
@@ -24,12 +26,11 @@ public class QnaTag extends Tag {
     private BoardTopic boardTopic;
 
     public static QnaTag of(QnaPost qnaPost, BoardTopic boardTopic, String name) {
-        QnaTag qnaTag = new QnaTag();
-        qnaTag.setPost((Post) qnaPost);
-        qnaTag.setName(name);
-        qnaTag.setBoardTopic(boardTopic);
-
-        return qnaTag;
+        return QnaTag.builder()
+            .post((Post) qnaPost)
+            .name(name)
+            .boardTopic(boardTopic)
+            .build();
     }
 
 }

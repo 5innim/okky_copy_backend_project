@@ -11,12 +11,14 @@ import jakarta.persistence.Table;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.experimental.SuperBuilder;
 
 @Entity
 @Table(name = "event_tag")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Setter
 @DiscriminatorValue(value = "event")
+@SuperBuilder
 public class EventTag extends Tag {
 
     @ManyToOne(optional = false)
@@ -24,12 +26,11 @@ public class EventTag extends Tag {
     private BoardTopic boardTopic;
 
     public static EventTag of(EventPost eventPost, BoardTopic boardTopic, String name) {
-        EventTag eventTag = new EventTag();
-        eventTag.setPost((Post) eventPost);
-        eventTag.setName(name);
-        eventTag.setBoardTopic(boardTopic);
-
-        return eventTag;
+        return EventTag.builder()
+            .post((Post) eventPost)
+            .name(name)
+            .boardTopic(boardTopic)
+            .build();
     }
 
 }

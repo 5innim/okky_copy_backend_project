@@ -11,12 +11,14 @@ import jakarta.persistence.Table;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.experimental.SuperBuilder;
 
 @Entity
 @Table(name = "knowledge_tag")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Setter
 @DiscriminatorValue(value = "knowledge")
+@SuperBuilder
 public class KnowledgeTag extends Tag {
 
     @ManyToOne(optional = false)
@@ -24,11 +26,10 @@ public class KnowledgeTag extends Tag {
     private BoardTopic boardTopic;
 
     public static KnowledgeTag of(KnowledgePost knowledgePost, BoardTopic boardTopic, String name) {
-        KnowledgeTag knowledgeTag = new KnowledgeTag();
-        knowledgeTag.setPost((Post) knowledgePost);
-        knowledgeTag.setName(name);
-        knowledgeTag.setBoardTopic(boardTopic);
-
-        return knowledgeTag;
+        return KnowledgeTag.builder()
+            .post((Post) knowledgePost)
+            .name(name)
+            .boardTopic(boardTopic)
+            .build();
     }
 }
