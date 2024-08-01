@@ -3,6 +3,7 @@ package com.innim.okkycopy.global.schedule;
 import com.innim.okkycopy.global.common.storage.S3Uploader;
 import com.innim.okkycopy.global.common.storage.image_usage.ImageUsage;
 import com.innim.okkycopy.global.common.storage.image_usage.ImageUsageService;
+import com.innim.okkycopy.global.schedule.weekly.WeeklyScheduleService;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Date;
@@ -19,6 +20,7 @@ public class ScheduledTasks {
 
     private final ImageUsageService imageUsageService;
     private final S3Uploader s3Uploader;
+    private final WeeklyScheduleService weeklyScheduleService;
 
     @Scheduled(cron = "0 35 0 * * *")
     public void removeUnusedImageFromS3() {
@@ -33,5 +35,11 @@ public class ScheduledTasks {
         }
 
         imageUsageService.removeImageUsagesByIsInUseAndCreatedDate(false, midnightTime);
+    }
+
+    @Scheduled(cron = "0 0 2 * * 1")
+    public void doWeeklyJob() {
+        log.info("schedule start: doWeeklyJob");
+        weeklyScheduleService.extractWeeklyTopTags(5);
     }
 }
