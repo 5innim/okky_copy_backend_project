@@ -8,11 +8,13 @@ import static org.mockito.Mockito.times;
 import com.innim.okkycopy.common.WithMockCustomUserSecurityContextFactory;
 import com.innim.okkycopy.domain.board.BoardController;
 import com.innim.okkycopy.domain.board.dto.response.FileResponse;
+import com.innim.okkycopy.domain.board.dto.response.top_tag.TopTagListResponse;
 import com.innim.okkycopy.domain.board.dto.response.topics.TopicListResponse;
 import com.innim.okkycopy.domain.board.enums.ExpressionType;
 import com.innim.okkycopy.domain.board.service.PostExpressionService;
 import com.innim.okkycopy.domain.board.service.PostScrapService;
 import com.innim.okkycopy.domain.board.service.BoardTopicService;
+import com.innim.okkycopy.domain.board.service.TopTagService;
 import com.innim.okkycopy.global.auth.CustomUserDetails;
 import com.innim.okkycopy.global.common.storage.S3Uploader;
 import java.io.IOException;
@@ -39,6 +41,8 @@ public class BoardControllerTest {
     PostScrapService postScrapService;
     @Mock
     BoardTopicService boardTopicService;
+    @Mock
+    TopTagService topTagService;
     @Mock
     S3Uploader s3Uploader;
     @InjectMocks
@@ -208,6 +212,25 @@ public class BoardControllerTest {
             assertThat(Objects.requireNonNull(response.getBody()).getFileUrl()).isEqualTo("test_file_access_url");
 
         }
+    }
+
+    @Nested
+    class _topTagList {
+
+        @Test
+        void given_request_then_responseTopTagListResponse() {
+            // given
+            given(topTagService.findAll()).willReturn(TopTagListResponse.from(Collections.emptyList()));
+
+            // when
+            ResponseEntity<TopTagListResponse> response = boardController.topTagList();
+
+            // then
+            then(topTagService).should(times(1)).findAll();
+            then(topTagService).shouldHaveNoMoreInteractions();
+            assertThat(response.getBody()).isInstanceOf(TopTagListResponse.class);
+        }
+
     }
 
 }

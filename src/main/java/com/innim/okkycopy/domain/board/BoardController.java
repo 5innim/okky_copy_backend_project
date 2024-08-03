@@ -1,11 +1,13 @@
 package com.innim.okkycopy.domain.board;
 
 import com.innim.okkycopy.domain.board.dto.response.FileResponse;
+import com.innim.okkycopy.domain.board.dto.response.top_tag.TopTagListResponse;
 import com.innim.okkycopy.domain.board.dto.response.topics.TopicListResponse;
 import com.innim.okkycopy.domain.board.enums.ExpressionType;
 import com.innim.okkycopy.domain.board.service.BoardTopicService;
 import com.innim.okkycopy.domain.board.service.PostExpressionService;
 import com.innim.okkycopy.domain.board.service.PostScrapService;
+import com.innim.okkycopy.domain.board.service.TopTagService;
 import com.innim.okkycopy.global.auth.CustomUserDetails;
 import com.innim.okkycopy.global.common.storage.S3Uploader;
 import java.io.IOException;
@@ -30,11 +32,17 @@ public class BoardController {
     private final PostExpressionService postExpressionService;
     private final PostScrapService postScrapService;
     private final BoardTopicService boardTopicService;
+    private final TopTagService topTagService;
     private final S3Uploader s3Uploader;
 
     @GetMapping("/topics")
     public ResponseEntity<TopicListResponse> boardTopicList() {
         return ResponseEntity.ok(boardTopicService.findBoardTopics());
+    }
+
+    @GetMapping("/top-tag-list")
+    public ResponseEntity<TopTagListResponse> topTagList() {
+        return ResponseEntity.ok(topTagService.findAll());
     }
 
     @PostMapping("/posts/{id}/scrap")
