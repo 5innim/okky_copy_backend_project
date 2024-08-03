@@ -104,6 +104,7 @@ public class SecurityConfig {
                     .hasAnyAuthority(Role.MAIL_INVALID_USER.getValue(), Role.USER.getValue(), Role.ADMIN.getValue())
                     .requestMatchers(HttpMethod.GET,
                         "/board/topics",
+                        "/board/top-tag-list",
                         "/board/knowledge/posts/{id}",
                         "/board/community/posts/{id}",
                         "/board/event/posts/{id}",
