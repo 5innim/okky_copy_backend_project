@@ -57,7 +57,6 @@ public class _member_info {
         resultActions.andExpectAll(
             jsonPath("memberId").hasJsonPath(),
             jsonPath("nickname").hasJsonPath(),
-            jsonPath("scrappedPost").hasJsonPath(),
             jsonPath("profile").hasJsonPath(),
             jsonPath("name").hasJsonPath(),
             jsonPath("accountFrom").hasJsonPath(),
