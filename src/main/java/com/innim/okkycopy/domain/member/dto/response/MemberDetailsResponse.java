@@ -1,13 +1,10 @@
 package com.innim.okkycopy.domain.member.dto.response;
 
-import com.innim.okkycopy.domain.board.entity.Scrap;
 import com.innim.okkycopy.domain.member.entity.GoogleMember;
 import com.innim.okkycopy.domain.member.entity.KakaoMember;
 import com.innim.okkycopy.domain.member.entity.Member;
 import com.innim.okkycopy.domain.member.entity.NaverMember;
 import com.innim.okkycopy.domain.member.entity.OkkyMember;
-import java.util.ArrayList;
-import java.util.List;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -19,7 +16,6 @@ public class MemberDetailsResponse {
 
     private long memberId;
     private String nickname;
-    private List<Long> scrappedPost;
     private String profile;
     private String name;
     private String accountFrom;
@@ -27,13 +23,6 @@ public class MemberDetailsResponse {
     private String email;
 
     public static MemberDetailsResponse from(Member member) {
-        List<Long> scrappedPostIdList = new ArrayList<>();
-        List<Scrap> scraps = member.getScrapList();
-        if (scraps != null) {
-            for (Scrap scrap : scraps) {
-                scrappedPostIdList.add(scrap.getPost().getPostId());
-            }
-        }
 
         // TODO: if new oauth provider is added, then should expand this logic
         String accountFrom = "";
@@ -55,7 +44,6 @@ public class MemberDetailsResponse {
             .role(member.getRole().getValue())
             .email(member.findEmail())
             .profile(member.getProfile())
-            .scrappedPost(scrappedPostIdList)
             .build();
     }
 
