@@ -25,7 +25,8 @@ public class WeeklyScheduleService {
             .withHour(0)
             .withMinute(0)
             .withSecond(0)
-            .withNano(0);
+            .withNano(0)
+            .plusDays(1);
         LocalDateTime startDate = endDate.minusDays(7);
 
         topTagService.removeAllTopTag();
