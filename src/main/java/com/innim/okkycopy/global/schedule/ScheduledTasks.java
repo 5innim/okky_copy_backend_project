@@ -37,7 +37,7 @@ public class ScheduledTasks {
         imageUsageService.removeImageUsagesByIsInUseAndCreatedDate(false, midnightTime);
     }
 
-    @Scheduled(cron = "0 30 11 * * 1")
+    @Scheduled(cron = "0 50 11 * * 1")
     public void doWeeklyJob() {
         log.info("schedule start: doWeeklyJob");
         weeklyScheduleService.extractWeeklyTopTags(5);

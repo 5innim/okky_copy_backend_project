@@ -21,7 +21,7 @@ public class TopTagService {
 
 
     @Transactional
-    public void addTopTag(int rank, String name, int creates) {
+    public void addTopTag(int rank, String name, long creates) {
         TopTag topTag = new TopTag(rank, name, creates);
         topTagRepository.save(topTag);
     }

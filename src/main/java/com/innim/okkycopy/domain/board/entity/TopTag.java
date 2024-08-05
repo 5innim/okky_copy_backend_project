@@ -23,6 +23,6 @@ public class TopTag {
     @Column(name = "name")
     private String name;
     @Column(name = "creates", nullable = false)
-    private Integer creates;
+    private Long creates;
 
 }

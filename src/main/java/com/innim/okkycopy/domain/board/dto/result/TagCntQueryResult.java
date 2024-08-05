@@ -14,5 +14,5 @@ import lombok.Setter;
 public class TagCntQueryResult {
 
     private String name;
-    private int cnt;
+    private Long cnt;
 }
