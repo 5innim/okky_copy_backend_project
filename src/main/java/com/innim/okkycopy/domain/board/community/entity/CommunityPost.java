@@ -69,7 +69,7 @@ public class CommunityPost extends Post {
 
         List<Tag> tags = new ArrayList<>();
         for (TagInfo tag : postRequest.getTags()) {
-            tags.add(CommunityTag.of(communityPost, boardTopic, tag.getName()));
+            tags.add(Tag.of(communityPost, boardTopic, tag.getName()));
         }
         member.getPosts().add((Post) communityPost);
         communityPost.setTags(tags);
@@ -90,7 +90,7 @@ public class CommunityPost extends Post {
         tags.clear();
 
         for (TagInfo tag : updateRequest.getTags()) {
-            tags.add(CommunityTag.of(this, boardTopic, tag.getName()));
+            tags.add(Tag.of(this, boardTopic, tag.getName()));
         }
     }
 

@@ -69,7 +69,7 @@ public class KnowledgePost extends Post {
 
         List<Tag> tags = new ArrayList<>();
         for (TagInfo tag : postRequest.getTags()) {
-            tags.add(KnowledgeTag.of(knowledgePost, boardTopic, tag.getName()));
+            tags.add(Tag.of(knowledgePost, boardTopic, tag.getName()));
         }
         member.getPosts().add((Post) knowledgePost);
         knowledgePost.setTags(tags);
@@ -90,7 +90,7 @@ public class KnowledgePost extends Post {
         tags.clear();
 
         for (TagInfo tag : updateRequest.getTags()) {
-            tags.add(KnowledgeTag.of(this, boardTopic, tag.getName()));
+            tags.add(Tag.of(this, boardTopic, tag.getName()));
         }
     }
 

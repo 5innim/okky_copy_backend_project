@@ -69,7 +69,7 @@ public class EventPost extends Post {
 
         List<Tag> tags = new ArrayList<>();
         for (TagInfo tag : postRequest.getTags()) {
-            tags.add(EventTag.of(eventPost, boardTopic, tag.getName()));
+            tags.add(Tag.of(eventPost, boardTopic, tag.getName()));
         }
         member.getPosts().add((Post) eventPost);
         eventPost.setTags(tags);
@@ -90,7 +90,7 @@ public class EventPost extends Post {
         tags.clear();
 
         for (TagInfo tag : updateRequest.getTags()) {
-            tags.add(EventTag.of(this, boardTopic, tag.getName()));
+            tags.add(Tag.of(this, boardTopic, tag.getName()));
         }
     }
 
