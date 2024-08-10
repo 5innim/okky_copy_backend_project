@@ -1,6 +1,6 @@
 package com.innim.okkycopy.global.schedule.weekly;
 
-import com.innim.okkycopy.domain.board.dto.result.TagCntQueryResult;
+import com.innim.okkycopy.domain.board.dao.TagCntQueryDao;
 import com.innim.okkycopy.domain.board.service.TagCrudService;
 import com.innim.okkycopy.domain.board.service.TopTagService;
 import java.time.DayOfWeek;
@@ -30,11 +30,11 @@ public class WeeklyScheduleService {
         LocalDateTime startDate = endDate.minusDays(7);
 
         topTagService.removeAllTopTag();
-        List<TagCntQueryResult> results = tagCrudService.findTopTagsByCreatedDateRange(startDate, endDate,
+        List<TagCntQueryDao> results = tagCrudService.findTopTagsByCreatedDateRange(startDate, endDate,
             listLimit);
 
         int rank = 1;
-        for (TagCntQueryResult result : results) {
+        for (TagCntQueryDao result : results) {
             topTagService.addTopTag(rank, result.getName(), result.getCnt());
             rank++;
         }
