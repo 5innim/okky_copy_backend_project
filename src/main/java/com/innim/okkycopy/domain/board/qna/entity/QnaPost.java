@@ -69,7 +69,7 @@ public class QnaPost extends Post {
 
         List<Tag> tags = new ArrayList<>();
         for (TagInfo tag : postRequest.getTags()) {
-            tags.add(Tag.of(qnaPost, boardTopic, tag.getName()));
+            tags.add(Tag.of(qnaPost, tag.getName()));
         }
         member.getPosts().add((Post) qnaPost);
         qnaPost.setTags(tags);
@@ -90,7 +90,7 @@ public class QnaPost extends Post {
         tags.clear();
 
         for (TagInfo tag : updateRequest.getTags()) {
-            tags.add(Tag.of(this, boardTopic, tag.getName()));
+            tags.add(Tag.of(this, tag.getName()));
         }
     }
 

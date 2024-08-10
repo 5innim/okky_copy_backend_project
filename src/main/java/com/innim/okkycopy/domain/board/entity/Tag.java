@@ -2,7 +2,6 @@ package com.innim.okkycopy.domain.board.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -39,15 +38,11 @@ public class Tag {
     @CreationTimestamp
     @Column(name = "created_date", nullable = false)
     private LocalDateTime createdDate;
-    @ManyToOne(optional = false, fetch = FetchType.LAZY)
-    @JoinColumn(name = "topic_id", nullable = false)
-    private BoardTopic boardTopic;
 
-    public static Tag of(Post post, BoardTopic boardTopic, String name) {
+    public static Tag of(Post post, String name) {
         return Tag.builder()
             .post(post)
             .name(name)
-            .boardTopic(boardTopic)
             .build();
     }
 }

@@ -54,7 +54,4 @@ public class BoardTopic {
     @OneToMany(mappedBy = "boardTopic")
     List<QnaPost> qnaPosts;
 
-    @OneToMany(mappedBy = "boardTopic")
-    List<Tag> tags;
-
 }
