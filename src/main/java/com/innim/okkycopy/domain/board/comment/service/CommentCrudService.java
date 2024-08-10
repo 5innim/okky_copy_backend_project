@@ -141,7 +141,7 @@ public class CommentCrudService {
         CustomUserDetails customUserDetails,
         long commentId,
         ReCommentRequest reCommentRequest) {
-        Member mergedMember = memberRepository.findByMemberId(customUserDetails.getUserId()).orElseThrow(
+        Member member = memberRepository.findByMemberId(customUserDetails.getUserId()).orElseThrow(
             () -> new StatusCode401Exception(ErrorCase._401_NO_SUCH_MEMBER)
         );
 
@@ -152,7 +152,7 @@ public class CommentCrudService {
             throw new StatusCode400Exception(ErrorCase._400_NOT_SUPPORTED_CASE);
         }
 
-        Comment reComment = Comment.reCommentOf(comment.getPost(), mergedMember,
+        Comment reComment = Comment.reCommentOf(comment.getPost(), member,
             commentId, reCommentRequest);
 
         commentRepository.save(reComment);
