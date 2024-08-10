@@ -24,6 +24,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
+import org.hibernate.annotations.BatchSize;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.DynamicUpdate;
 
@@ -68,6 +69,7 @@ public class Post {
     private LocalDateTime createdDate;
     @Column(name = "last_update")
     private LocalDateTime lastUpdate;
+    @BatchSize(size = 100)
     @OneToMany(mappedBy = "post", cascade = {CascadeType.REMOVE, CascadeType.PERSIST}, orphanRemoval = true)
     private List<Tag> tags;
     @OneToMany(mappedBy = "post", cascade = {CascadeType.REMOVE})
