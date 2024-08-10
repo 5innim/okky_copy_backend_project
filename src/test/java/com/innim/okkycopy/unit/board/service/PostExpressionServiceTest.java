@@ -150,6 +150,8 @@ public class PostExpressionServiceTest {
         Post post() {
             return Post.builder()
                 .postId(1L)
+                .likes(1)
+                .hates(1)
                 .build();
         }
 
@@ -300,6 +302,8 @@ public class PostExpressionServiceTest {
         Post post() {
             return Post.builder()
                 .postId(1L)
+                .likes(1)
+                .hates(1)
                 .build();
         }
 

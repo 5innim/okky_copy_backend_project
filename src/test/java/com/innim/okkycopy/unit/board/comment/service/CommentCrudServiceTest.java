@@ -135,7 +135,9 @@ public class CommentCrudServiceTest {
         }
 
         Post post() {
-            return Post.builder().build();
+            return Post.builder()
+                .comments(1)
+                .build();
         }
     }
 
@@ -359,6 +361,11 @@ public class CommentCrudServiceTest {
         Comment comment() {
             return Comment.builder()
                 .commentId(1L)
+                .post(
+                    Post.builder()
+                        .comments(1)
+                        .build()
+                )
                 .build();
         }
     }

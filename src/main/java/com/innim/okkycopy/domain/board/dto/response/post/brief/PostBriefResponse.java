@@ -1,12 +1,8 @@
 package com.innim.okkycopy.domain.board.dto.response.post.brief;
 
-import com.innim.okkycopy.domain.board.community.entity.CommunityPost;
 import com.innim.okkycopy.domain.board.dto.response.post.WriterInfo;
 import com.innim.okkycopy.domain.board.entity.Post;
 import com.innim.okkycopy.domain.board.entity.Tag;
-import com.innim.okkycopy.domain.board.event.entity.EventPost;
-import com.innim.okkycopy.domain.board.knowledge.entity.KnowledgePost;
-import com.innim.okkycopy.domain.board.qna.entity.QnaPost;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -46,24 +42,9 @@ public class PostBriefResponse {
             .tags(tags)
             .build();
 
-        //TODO: need to expand when adding new domain of board
-        if (post instanceof KnowledgePost) {
-            response.setViews(((KnowledgePost) post).getViews());
-            response.setComments(((KnowledgePost) post).getComments());
-            response.setLikes(((KnowledgePost) post).getLikes());
-        } else if (post instanceof CommunityPost) {
-            response.setViews(((CommunityPost) post).getViews());
-            response.setComments(((CommunityPost) post).getComments());
-            response.setLikes(((CommunityPost) post).getLikes());
-        } else if (post instanceof EventPost) {
-            response.setViews(((EventPost) post).getViews());
-            response.setComments(((EventPost) post).getComments());
-            response.setLikes(((EventPost) post).getLikes());
-        } else if (post instanceof QnaPost) {
-            response.setViews(((QnaPost) post).getViews());
-            response.setComments(((QnaPost) post).getComments());
-            response.setLikes(((QnaPost) post).getLikes());
-        }
+        response.setViews(post.getViews());
+        response.setComments(post.getComments());
+        response.setLikes(post.getLikes());
 
         return response;
     }

@@ -30,25 +30,9 @@ import org.hibernate.annotations.DynamicUpdate;
 @Setter
 @Getter
 @SuperBuilder
-@Table(name = "knowledge_post")
 @DiscriminatorValue(value = "knowledge")
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 public class KnowledgePost extends Post {
-
-    @ManyToOne(optional = false)
-    @JoinColumn(name = "topic_id")
-    private BoardTopic boardTopic;
-    @Column(nullable = false)
-    private Integer likes;
-    @Column(nullable = false)
-    private Integer hates;
-    @Column(nullable = false)
-    private Integer scraps;
-    @Column(nullable = false)
-    private Integer views;
-    @Column(nullable = false)
-    private Integer comments;
 
     public static KnowledgePost of(PostRequest postRequest, BoardTopic boardTopic, Member member) {
         if (isNotSupportedTopic(boardTopic)) {
