@@ -12,7 +12,7 @@ import lombok.Setter;
 @Setter
 @Builder
 @AllArgsConstructor
-public class ReCommentDetailsResponse implements Comparable<ReCommentDetailsResponse> {
+public class ReCommentDetailsResponse {
 
     private Long commentId;
     private String mentionedNickname;
@@ -40,16 +40,6 @@ public class ReCommentDetailsResponse implements Comparable<ReCommentDetailsResp
             .commentId(comment.getCommentId())
             .requesterInfo(requesterInfo)
             .build();
-    }
-
-    @Override
-    public int compareTo(ReCommentDetailsResponse c) {
-        if (this.createdDate.isBefore(c.createdDate)) {
-            return -1;
-        } else if (this.createdDate.isAfter(c.createdDate)) {
-            return 1;
-        }
-        return 0;
     }
 
 }

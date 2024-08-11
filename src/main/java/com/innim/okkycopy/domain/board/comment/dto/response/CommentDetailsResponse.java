@@ -13,7 +13,7 @@ import lombok.Setter;
 @Setter
 @Builder
 @AllArgsConstructor
-public class CommentDetailsResponse implements Comparable<CommentDetailsResponse> {
+public class CommentDetailsResponse {
 
     private Long commentId;
     private WriterInfo writerInfo;
@@ -23,11 +23,9 @@ public class CommentDetailsResponse implements Comparable<CommentDetailsResponse
     private Integer likes;
     private Integer hates;
     private RequesterInfo requesterInfo;
-    private ReCommentListResponse reComments;
 
     public static CommentDetailsResponse of(
         Comment comment,
-        ReCommentListResponse reComments,
         RequesterInfo requesterInfo) {
         return CommentDetailsResponse.builder()
             .writerInfo((comment.getMember() == null)
@@ -39,18 +37,7 @@ public class CommentDetailsResponse implements Comparable<CommentDetailsResponse
             .hates(comment.getHates())
             .commentId(comment.getCommentId())
             .requesterInfo(requesterInfo)
-            .reComments(reComments)
             .build();
-    }
-
-    @Override
-    public int compareTo(CommentDetailsResponse c) {
-        if (this.createdDate.isBefore(c.createdDate)) {
-            return -1;
-        } else if (this.createdDate.isAfter(c.createdDate)) {
-            return 1;
-        }
-        return 0;
     }
 
 }

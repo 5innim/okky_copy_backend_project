@@ -2,11 +2,7 @@ package com.innim.okkycopy.domain.board.comment.entity;
 
 import com.innim.okkycopy.domain.board.comment.dto.request.CommentRequest;
 import com.innim.okkycopy.domain.board.comment.dto.request.ReCommentRequest;
-import com.innim.okkycopy.domain.board.community.entity.CommunityPost;
 import com.innim.okkycopy.domain.board.entity.Post;
-import com.innim.okkycopy.domain.board.event.entity.EventPost;
-import com.innim.okkycopy.domain.board.knowledge.entity.KnowledgePost;
-import com.innim.okkycopy.domain.board.qna.entity.QnaPost;
 import com.innim.okkycopy.domain.member.entity.Member;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -78,7 +74,6 @@ public class Comment {
         this.lastUpdate = LocalDateTime.now();
     }
 
-    // TODO: this method should be expended when new domain post is added
     public static Comment of(Post post, Member member, CommentRequest commentRequest) {
         Comment comment = Comment.builder()
             .content(commentRequest.getContent())
@@ -88,31 +83,14 @@ public class Comment {
             .post(post)
             .member(member).build();
 
-        if (post instanceof KnowledgePost) {
-            ((KnowledgePost) post).setComments(((KnowledgePost) post).getComments() + 1);
-        } else if (post instanceof CommunityPost) {
-            ((CommunityPost) post).setComments(((CommunityPost) post).getComments() + 1);
-        } else if (post instanceof EventPost) {
-            ((EventPost) post).setComments(((EventPost) post).getComments() + 1);
-        } else if (post instanceof QnaPost) {
-            ((QnaPost) post).setComments(((QnaPost) post).getComments() + 1);
-        }
+        post.setComments(post.getComments() + 1);
 
         return comment;
     }
 
-    // TODO: this method should be expended when new domain post is added
     public static void remove(Comment comment, EntityManager entityManager) {
         Post post = comment.getPost();
-        if (post instanceof KnowledgePost) {
-            ((KnowledgePost) post).setComments(((KnowledgePost) post).getComments() - 1);
-        } else if (post instanceof CommunityPost) {
-            ((CommunityPost) post).setComments(((CommunityPost) post).getComments() - 1);
-        } else if (post instanceof EventPost) {
-            ((EventPost) post).setComments(((EventPost) post).getComments() - 1);
-        } else if (post instanceof QnaPost) {
-            ((QnaPost) post).setComments(((QnaPost) post).getComments() - 1);
-        }
+        post.setComments(post.getComments() - 1);
 
         entityManager.remove(comment);
     }

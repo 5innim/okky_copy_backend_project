@@ -109,6 +109,7 @@ public class PostScrapServiceTest {
         Post post() {
             return Post.builder()
                 .postId(1L)
+                .scraps(1)
                 .build();
         }
     }
@@ -212,6 +213,7 @@ public class PostScrapServiceTest {
         Post post() {
             return Post.builder()
                 .postId(1L)
+                .scraps(1)
                 .build();
         }
 

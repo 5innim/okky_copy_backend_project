@@ -135,7 +135,9 @@ public class CommentCrudServiceTest {
         }
 
         Post post() {
-            return Post.builder().build();
+            return Post.builder()
+                .comments(1)
+                .build();
         }
     }
 
@@ -337,7 +339,8 @@ public class CommentCrudServiceTest {
             given(memberRepository.findByMemberId(customUserDetails.getUserId())).willReturn(
                 Optional.of(customUserDetails.getMember()));
             given(commentRepository.findByCommentId(commentId)).willReturn(Optional.of(comment));
-            given(commentRepository.findByParentId(comment.getCommentId())).willReturn(Collections.emptyList());
+            given(commentRepository.findByParentIdOrderByCreatedDateAsc(comment.getCommentId())).willReturn(
+                Collections.emptyList());
 
             // when
             commentCrudService.removeComment(customUserDetails, commentId);
@@ -346,7 +349,7 @@ public class CommentCrudServiceTest {
             then(memberRepository).should(times(1)).findByMemberId(customUserDetails.getUserId());
             then(memberRepository).shouldHaveNoMoreInteractions();
             then(commentRepository).should(times(1)).findByCommentId(commentId);
-            then(commentRepository).should(times(1)).findByParentId(comment.getCommentId());
+            then(commentRepository).should(times(1)).findByParentIdOrderByCreatedDateAsc(comment.getCommentId());
             then(commentRepository).shouldHaveNoMoreInteractions();
             then(imageUsageService).should(times(1)).modifyImageUsages(comment.getContent(), false);
             then(imageUsageService).shouldHaveNoMoreInteractions();
@@ -359,6 +362,11 @@ public class CommentCrudServiceTest {
         Comment comment() {
             return Comment.builder()
                 .commentId(1L)
+                .post(
+                    Post.builder()
+                        .comments(1)
+                        .build()
+                )
                 .build();
         }
     }
@@ -394,16 +402,12 @@ public class CommentCrudServiceTest {
             given(postRepository.findByPostId(postId)).willReturn(Optional.of(post));
 
             // when
-            Exception exception = catchException(() -> {
-                commentCrudService.findComments(customUserDetails, postId);
-            });
+            commentCrudService.findComments(customUserDetails, postId);
 
             // then
             then(postRepository).should(times(1)).findByPostId(postId);
             then(postRepository).shouldHaveNoMoreInteractions();
             then(commentExpressionRepository).shouldHaveNoInteractions();
-            assertThat(((StatusCode400Exception) exception).getErrorCase()).isEqualTo(
-                ErrorCase._400_NO_SUCH_COMMENT); // exception generated from findReComments
         }
 
         @Test
@@ -415,9 +419,7 @@ public class CommentCrudServiceTest {
             given(postRepository.findByPostId(postId)).willReturn(Optional.of(post));
 
             // when
-            Exception exception = catchException(() -> {
-                commentCrudService.findComments(customUserDetails, postId);
-            });
+            commentCrudService.findComments(customUserDetails, postId);
 
             // then
             then(postRepository).should(times(1)).findByPostId(postId);
@@ -425,8 +427,6 @@ public class CommentCrudServiceTest {
             then(commentExpressionRepository).should(times(1))
                 .findByMemberAndComment(post.getCommentList().get(0), customUserDetails.getMember());
             then(commentExpressionRepository).shouldHaveNoMoreInteractions();
-            assertThat(((StatusCode400Exception) exception).getErrorCase()).isEqualTo(
-                ErrorCase._400_NO_SUCH_COMMENT); // exception generated from findReComments
 
         }
 
@@ -594,14 +594,14 @@ public class CommentCrudServiceTest {
             List<Comment> comments = comments();
             given(commentRepository.findByCommentId(commentId)).willReturn(
                 Optional.of(comment()));
-            given(commentRepository.findByParentId(commentId)).willReturn(comments);
+            given(commentRepository.findByParentIdOrderByCreatedDateAsc(commentId)).willReturn(comments);
 
             // when
             commentCrudService.findReComments(customUserDetails, commentId);
 
             // then
             then(commentRepository).should(times(1)).findByCommentId(commentId);
-            then(commentRepository).should(times(1)).findByParentId(commentId);
+            then(commentRepository).should(times(1)).findByParentIdOrderByCreatedDateAsc(commentId);
             then(commentRepository).shouldHaveNoMoreInteractions();
             then(commentExpressionRepository).shouldHaveNoInteractions();
 
@@ -615,14 +615,14 @@ public class CommentCrudServiceTest {
             List<Comment> comments = comments();
             given(commentRepository.findByCommentId(commentId)).willReturn(
                 Optional.of(comment()));
-            given(commentRepository.findByParentId(commentId)).willReturn(comments);
+            given(commentRepository.findByParentIdOrderByCreatedDateAsc(commentId)).willReturn(comments);
 
             // when
             commentCrudService.findReComments(customUserDetails, commentId);
 
             // then
             then(commentRepository).should(times(1)).findByCommentId(commentId);
-            then(commentRepository).should(times(1)).findByParentId(commentId);
+            then(commentRepository).should(times(1)).findByParentIdOrderByCreatedDateAsc(commentId);
             then(commentRepository).shouldHaveNoMoreInteractions();
             then(commentExpressionRepository).should(times(1))
                 .findByMemberAndComment(any(Comment.class), any(Member.class));
