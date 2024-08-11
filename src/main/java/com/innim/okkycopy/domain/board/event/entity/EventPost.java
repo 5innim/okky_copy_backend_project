@@ -9,25 +9,17 @@ import com.innim.okkycopy.domain.member.entity.Member;
 import com.innim.okkycopy.global.error.ErrorCase;
 import com.innim.okkycopy.global.error.exception.StatusCode400Exception;
 import com.innim.okkycopy.global.error.exception.StatusCodeException;
-import jakarta.persistence.Column;
 import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
 @Entity
-@Table(name = "event_post")
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @DiscriminatorValue(value = "event")
 @Setter
 @Getter
@@ -35,19 +27,6 @@ import lombok.experimental.SuperBuilder;
 @AllArgsConstructor
 public class EventPost extends Post {
 
-    @ManyToOne(optional = false)
-    @JoinColumn(name = "topic_id")
-    private BoardTopic boardTopic;
-    @Column(nullable = false)
-    private Integer likes;
-    @Column(nullable = false)
-    private Integer hates;
-    @Column(nullable = false)
-    private Integer scraps;
-    @Column(nullable = false)
-    private Integer views;
-    @Column(nullable = false)
-    private Integer comments;
 
     public static EventPost of(PostRequest postRequest, BoardTopic boardTopic, Member member)
         throws StatusCodeException {
@@ -69,7 +48,7 @@ public class EventPost extends Post {
 
         List<Tag> tags = new ArrayList<>();
         for (TagInfo tag : postRequest.getTags()) {
-            tags.add(EventTag.of(eventPost, boardTopic, tag.getName()));
+            tags.add(Tag.of(eventPost, tag.getName()));
         }
         member.getPosts().add((Post) eventPost);
         eventPost.setTags(tags);
@@ -90,7 +69,7 @@ public class EventPost extends Post {
         tags.clear();
 
         for (TagInfo tag : updateRequest.getTags()) {
-            tags.add(EventTag.of(this, boardTopic, tag.getName()));
+            tags.add(Tag.of(this, tag.getName()));
         }
     }
 

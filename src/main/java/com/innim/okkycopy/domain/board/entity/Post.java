@@ -1,10 +1,6 @@
 package com.innim.okkycopy.domain.board.entity;
 
 import com.innim.okkycopy.domain.board.comment.entity.Comment;
-import com.innim.okkycopy.domain.board.community.entity.CommunityPost;
-import com.innim.okkycopy.domain.board.event.entity.EventPost;
-import com.innim.okkycopy.domain.board.knowledge.entity.KnowledgePost;
-import com.innim.okkycopy.domain.board.qna.entity.QnaPost;
 import com.innim.okkycopy.domain.member.entity.Member;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -19,6 +15,7 @@ import jakarta.persistence.InheritanceType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OrderBy;
 import jakarta.persistence.Table;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -28,6 +25,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
+import org.hibernate.annotations.BatchSize;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.DynamicUpdate;
 
@@ -38,7 +36,7 @@ import org.hibernate.annotations.DynamicUpdate;
 @SuperBuilder
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Inheritance(strategy = InheritanceType.JOINED)
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "dtype")
 @DynamicUpdate
 public class Post {
@@ -54,17 +52,32 @@ public class Post {
     private String title;
     @Column(length = 20000, nullable = false)
     private String content;
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "topic_id")
+    private BoardTopic boardTopic;
+    @Column(nullable = false)
+    private Integer likes;
+    @Column(nullable = false)
+    private Integer hates;
+    @Column(nullable = false)
+    private Integer scraps;
+    @Column(nullable = false)
+    private Integer views;
+    @Column(nullable = false)
+    private Integer comments;
     @CreationTimestamp
     @Column(name = "created_date", nullable = false)
     private LocalDateTime createdDate;
     @Column(name = "last_update")
     private LocalDateTime lastUpdate;
+    @BatchSize(size = 100)
     @OneToMany(mappedBy = "post", cascade = {CascadeType.REMOVE, CascadeType.PERSIST}, orphanRemoval = true)
     private List<Tag> tags;
     @OneToMany(mappedBy = "post", cascade = {CascadeType.REMOVE})
     private List<Scrap> scrapList;
     @OneToMany(mappedBy = "post", cascade = {CascadeType.REMOVE})
     private List<PostExpression> postExpressionList;
+    @OrderBy("createdDate ASC")
     @OneToMany(mappedBy = "post", cascade = {CascadeType.REMOVE})
     private List<Comment> commentList;
 
@@ -73,88 +86,31 @@ public class Post {
         entityManager.remove(this);
     }
 
-    //TODO: below methods about number for showing should be extended when new domain post is added
     public void increaseLikes() {
-        if (this instanceof KnowledgePost) {
-            ((KnowledgePost) this).setLikes(((KnowledgePost) this).getLikes() + 1);
-        } else if (this instanceof CommunityPost) {
-            ((CommunityPost) this).setLikes(((CommunityPost) this).getLikes() + 1);
-        } else if (this instanceof EventPost) {
-            ((EventPost) this).setLikes(((EventPost) this).getLikes() + 1);
-        } else if (this instanceof QnaPost) {
-            ((QnaPost) this).setLikes(((QnaPost) this).getLikes() + 1);
-        }
+        this.setLikes(this.getLikes() + 1);
     }
 
     public void decreaseLikes() {
-        if (this instanceof KnowledgePost) {
-            ((KnowledgePost) this).setLikes(((KnowledgePost) this).getLikes() - 1);
-        } else if (this instanceof CommunityPost) {
-            ((CommunityPost) this).setLikes(((CommunityPost) this).getLikes() - 1);
-        } else if (this instanceof EventPost) {
-            ((EventPost) this).setLikes(((EventPost) this).getLikes() - 1);
-        } else if (this instanceof QnaPost) {
-            ((QnaPost) this).setLikes(((QnaPost) this).getLikes() - 1);
-        }
+        this.setLikes(this.getLikes() - 1);
     }
 
     public void increaseHates() {
-        if (this instanceof KnowledgePost) {
-            ((KnowledgePost) this).setHates(((KnowledgePost) this).getHates() + 1);
-        } else if (this instanceof CommunityPost) {
-            ((CommunityPost) this).setHates(((CommunityPost) this).getHates() + 1);
-        } else if (this instanceof EventPost) {
-            ((EventPost) this).setHates(((EventPost) this).getHates() + 1);
-        } else if (this instanceof QnaPost) {
-            ((QnaPost) this).setHates(((QnaPost) this).getHates() + 1);
-        }
+        this.setHates(this.getHates() + 1);
     }
 
     public void decreaseHates() {
-        if (this instanceof KnowledgePost) {
-            ((KnowledgePost) this).setHates(((KnowledgePost) this).getHates() - 1);
-        } else if (this instanceof CommunityPost) {
-            ((CommunityPost) this).setHates(((CommunityPost) this).getHates() - 1);
-        } else if (this instanceof EventPost) {
-            ((EventPost) this).setHates(((EventPost) this).getHates() - 1);
-        } else if (this instanceof QnaPost) {
-            ((QnaPost) this).setHates(((QnaPost) this).getHates() - 1);
-        }
+        this.setHates(this.getHates() - 1);
     }
 
     public void increaseScraps() {
-        if (this instanceof KnowledgePost) {
-            ((KnowledgePost) this).setScraps(((KnowledgePost) this).getScraps() + 1);
-        } else if (this instanceof CommunityPost) {
-            ((CommunityPost) this).setScraps(((CommunityPost) this).getScraps() + 1);
-        } else if (this instanceof EventPost) {
-            ((EventPost) this).setScraps(((EventPost) this).getScraps() + 1);
-        } else if (this instanceof QnaPost) {
-            ((QnaPost) this).setScraps(((QnaPost) this).getScraps() + 1);
-        }
+        this.setScraps(this.getScraps() + 1);
     }
 
     public void decreaseScraps() {
-        if (this instanceof KnowledgePost) {
-            ((KnowledgePost) this).setScraps(((KnowledgePost) this).getScraps() - 1);
-        } else if (this instanceof CommunityPost) {
-            ((CommunityPost) this).setScraps(((CommunityPost) this).getScraps() - 1);
-        } else if (this instanceof EventPost) {
-            ((EventPost) this).setScraps(((EventPost) this).getScraps() - 1);
-        } else if (this instanceof QnaPost) {
-            ((QnaPost) this).setScraps(((QnaPost) this).getScraps() - 1);
-        }
+        this.setScraps(this.getScraps() - 1);
     }
 
     public void increaseViews() {
-        if (this instanceof KnowledgePost) {
-            ((KnowledgePost) this).setViews(((KnowledgePost) this).getViews() + 1);
-        } else if (this instanceof CommunityPost) {
-            ((CommunityPost) this).setViews(((CommunityPost) this).getViews() + 1);
-        } else if (this instanceof EventPost) {
-            ((EventPost) this).setViews(((EventPost) this).getViews() + 1);
-        } else if (this instanceof QnaPost) {
-            ((QnaPost) this).setViews(((QnaPost) this).getViews() + 1);
-        }
+        this.setViews(this.getViews() + 1);
     }
 }

@@ -1,16 +1,11 @@
 package com.innim.okkycopy.domain.board.entity;
 
 import com.innim.okkycopy.domain.board.community.entity.CommunityPost;
-import com.innim.okkycopy.domain.board.community.entity.CommunityTag;
 import com.innim.okkycopy.domain.board.event.entity.EventPost;
-import com.innim.okkycopy.domain.board.event.entity.EventTag;
 import com.innim.okkycopy.domain.board.knowledge.entity.KnowledgePost;
-import com.innim.okkycopy.domain.board.knowledge.entity.KnowledgeTag;
 import com.innim.okkycopy.domain.board.qna.entity.QnaPost;
-import com.innim.okkycopy.domain.board.qna.entity.QnaTag;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -47,27 +42,16 @@ public class BoardTopic {
     @Column(nullable = false, unique = true)
     private String name;
 
-    @OneToMany(mappedBy = "boardTopic", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "boardTopic")
     List<KnowledgePost> knowledgePosts;
 
-    @OneToMany(mappedBy = "boardTopic", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "boardTopic")
     List<CommunityPost> communityPosts;
 
-    @OneToMany(mappedBy = "boardTopic", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "boardTopic")
     List<EventPost> eventPosts;
 
-    @OneToMany(mappedBy = "boardTopic", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "boardTopic")
     List<QnaPost> qnaPosts;
 
-    @OneToMany(mappedBy = "boardTopic", fetch = FetchType.LAZY)
-    List<KnowledgeTag> knowledgeTags;
-
-    @OneToMany(mappedBy = "boardTopic", fetch = FetchType.LAZY)
-    List<CommunityTag> communityTags;
-
-    @OneToMany(mappedBy = "boardTopic", fetch = FetchType.LAZY)
-    List<EventTag> eventTags;
-
-    @OneToMany(mappedBy = "boardTopic", fetch = FetchType.LAZY)
-    List<QnaTag> qnaTags;
 }

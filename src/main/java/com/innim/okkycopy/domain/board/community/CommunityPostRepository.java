@@ -5,6 +5,7 @@ import com.innim.okkycopy.domain.board.entity.BoardTopic;
 import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -14,9 +15,11 @@ public interface CommunityPostRepository extends JpaRepository<CommunityPost, Lo
     Optional<CommunityPost> findByPostId(long postId);
 
     @Query("SELECT c FROM CommunityPost c WHERE c.boardTopic = :boardTopic AND c.title LIKE CONCAT('%', :keyword, '%')")
+    @EntityGraph(attributePaths = {"member"})
     Page<CommunityPost> findPageByBoardTopicAndKeyword(@Param("boardTopic") BoardTopic boardTopic, String keyword,
         Pageable pageable);
 
     @Query("SELECT c FROM CommunityPost c WHERE c.title LIKE CONCAT('%', :keyword, '%')")
+    @EntityGraph(attributePaths = {"member"})
     Page<CommunityPost> findPageByKeyword(String keyword, Pageable pageable);
 }

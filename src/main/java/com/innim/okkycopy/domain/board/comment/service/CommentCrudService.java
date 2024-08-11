@@ -25,7 +25,6 @@ import com.innim.okkycopy.global.error.exception.StatusCode403Exception;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -90,7 +89,7 @@ public class CommentCrudService {
         if (comment.getMember() == null || comment.getMember().getMemberId() != member.getMemberId()) {
             throw new StatusCode403Exception(ErrorCase._403_NO_AUTHORITY);
         }
-        List<Comment> commentList = commentRepository.findByParentId(comment.getCommentId());
+        List<Comment> commentList = commentRepository.findByParentIdOrderByCreatedDateAsc(comment.getCommentId());
         for (Comment c : commentList) {
             imageUsageService.modifyImageUsages(c.getContent(), false);
             Comment.remove(c, entityManager);
@@ -126,12 +125,10 @@ public class CommentCrudService {
             commentResponses.add(
                 CommentDetailsResponse.of(
                     comment,
-                    findReComments(customUserDetails, comment.getCommentId()),
                     requesterInfo
                 )
             );
         }
-        Collections.sort(commentResponses);
 
         return new CommentListResponse(commentResponses);
     }
@@ -141,7 +138,7 @@ public class CommentCrudService {
         CustomUserDetails customUserDetails,
         long commentId,
         ReCommentRequest reCommentRequest) {
-        Member mergedMember = memberRepository.findByMemberId(customUserDetails.getUserId()).orElseThrow(
+        Member member = memberRepository.findByMemberId(customUserDetails.getUserId()).orElseThrow(
             () -> new StatusCode401Exception(ErrorCase._401_NO_SUCH_MEMBER)
         );
 
@@ -152,7 +149,7 @@ public class CommentCrudService {
             throw new StatusCode400Exception(ErrorCase._400_NOT_SUPPORTED_CASE);
         }
 
-        Comment reComment = Comment.reCommentOf(comment.getPost(), mergedMember,
+        Comment reComment = Comment.reCommentOf(comment.getPost(), member,
             commentId, reCommentRequest);
 
         commentRepository.save(reComment);
@@ -163,7 +160,7 @@ public class CommentCrudService {
         commentRepository.findByCommentId(commentId)
             .orElseThrow(() -> new StatusCode400Exception(ErrorCase._400_NO_SUCH_COMMENT));
 
-        List<Comment> comments = commentRepository.findByParentId(commentId);
+        List<Comment> comments = commentRepository.findByParentIdOrderByCreatedDateAsc(commentId);
         List<ReCommentDetailsResponse> commentResponses = new ArrayList<>();
 
         Member requester = (customUserDetails == null) ? null : customUserDetails.getMember();
@@ -193,7 +190,6 @@ public class CommentCrudService {
                 ReCommentDetailsResponse.of(comment, mentionedNickname, requesterInfo)
             );
         }
-        Collections.sort(commentResponses);
 
         return new ReCommentListResponse(commentResponses);
     }

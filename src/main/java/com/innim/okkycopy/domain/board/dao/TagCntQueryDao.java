@@ -1,4 +1,4 @@
-package com.innim.okkycopy.domain.board.dto.result;
+package com.innim.okkycopy.domain.board.dao;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -11,8 +11,8 @@ import lombok.Setter;
 @Getter
 @Setter
 @Builder
-public class TagCntQueryResult {
+public class TagCntQueryDao {
 
     private String name;
-    private int cnt;
+    private Long cnt;
 }
