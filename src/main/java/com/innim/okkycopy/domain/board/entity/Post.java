@@ -15,6 +15,7 @@ import jakarta.persistence.InheritanceType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OrderBy;
 import jakarta.persistence.Table;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -76,6 +77,7 @@ public class Post {
     private List<Scrap> scrapList;
     @OneToMany(mappedBy = "post", cascade = {CascadeType.REMOVE})
     private List<PostExpression> postExpressionList;
+    @OrderBy("createdDate ASC")
     @OneToMany(mappedBy = "post", cascade = {CascadeType.REMOVE})
     private List<Comment> commentList;
 
