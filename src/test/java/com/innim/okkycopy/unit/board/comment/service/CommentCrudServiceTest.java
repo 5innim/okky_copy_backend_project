@@ -417,6 +417,8 @@ public class CommentCrudServiceTest {
             long postId = 1L;
             Post post = post();
             given(postRepository.findByPostId(postId)).willReturn(Optional.of(post));
+            given(commentExpressionRepository.findRequesterExpression(any(List.class), any(Long.class))).willReturn(
+                List.of((short) 1));
 
             // when
             commentCrudService.findComments(customUserDetails, postId);
@@ -425,7 +427,7 @@ public class CommentCrudServiceTest {
             then(postRepository).should(times(1)).findByPostId(postId);
             then(postRepository).shouldHaveNoMoreInteractions();
             then(commentExpressionRepository).should(times(1))
-                .findByMemberAndComment(post.getCommentList().get(0), customUserDetails.getMember());
+                .findRequesterExpression(any(List.class), any(Long.class));
             then(commentExpressionRepository).shouldHaveNoMoreInteractions();
 
         }
@@ -595,6 +597,7 @@ public class CommentCrudServiceTest {
             given(commentRepository.findByCommentId(commentId)).willReturn(
                 Optional.of(comment()));
             given(commentRepository.findByParentIdOrderByCreatedDateAsc(commentId)).willReturn(comments);
+            given(commentRepository.findMentionedNickname(any(List.class))).willReturn(List.of("nick"));
 
             // when
             commentCrudService.findReComments(customUserDetails, commentId);
@@ -602,6 +605,7 @@ public class CommentCrudServiceTest {
             // then
             then(commentRepository).should(times(1)).findByCommentId(commentId);
             then(commentRepository).should(times(1)).findByParentIdOrderByCreatedDateAsc(commentId);
+            then(commentRepository).should(times(1)).findMentionedNickname(any(List.class));
             then(commentRepository).shouldHaveNoMoreInteractions();
             then(commentExpressionRepository).shouldHaveNoInteractions();
 
@@ -616,6 +620,9 @@ public class CommentCrudServiceTest {
             given(commentRepository.findByCommentId(commentId)).willReturn(
                 Optional.of(comment()));
             given(commentRepository.findByParentIdOrderByCreatedDateAsc(commentId)).willReturn(comments);
+            given(commentExpressionRepository.findRequesterExpression(any(List.class), any(Long.class))).willReturn(
+                List.of((short) 1));
+            given(commentRepository.findMentionedNickname(any(List.class))).willReturn(List.of("nick"));
 
             // when
             commentCrudService.findReComments(customUserDetails, commentId);
@@ -623,9 +630,9 @@ public class CommentCrudServiceTest {
             // then
             then(commentRepository).should(times(1)).findByCommentId(commentId);
             then(commentRepository).should(times(1)).findByParentIdOrderByCreatedDateAsc(commentId);
+            then(commentExpressionRepository).should(times(1)).findRequesterExpression(any(List.class), any(Long.class));
+            then(commentRepository).should(times(1)).findMentionedNickname(any(List.class));
             then(commentRepository).shouldHaveNoMoreInteractions();
-            then(commentExpressionRepository).should(times(1))
-                .findByMemberAndComment(any(Comment.class), any(Member.class));
             then(commentExpressionRepository).shouldHaveNoMoreInteractions();
 
         }
