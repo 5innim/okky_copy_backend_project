@@ -7,6 +7,7 @@ import jakarta.persistence.Column;
 import jakarta.persistence.DiscriminatorColumn;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -52,7 +53,7 @@ public class Post {
     private String title;
     @Column(length = 20000, nullable = false)
     private String content;
-    @ManyToOne(optional = false)
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = "topic_id")
     private BoardTopic boardTopic;
     @Column(nullable = false)
@@ -70,7 +71,7 @@ public class Post {
     private LocalDateTime createdDate;
     @Column(name = "last_update")
     private LocalDateTime lastUpdate;
-    @BatchSize(size = 100)
+    @BatchSize(size = 20)
     @OneToMany(mappedBy = "post", cascade = {CascadeType.REMOVE, CascadeType.PERSIST}, orphanRemoval = true)
     private List<Tag> tags;
     @OneToMany(mappedBy = "post", cascade = {CascadeType.REMOVE})
