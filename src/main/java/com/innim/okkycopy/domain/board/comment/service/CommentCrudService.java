@@ -8,7 +8,6 @@ import com.innim.okkycopy.domain.board.comment.dto.response.ReCommentDetailsResp
 import com.innim.okkycopy.domain.board.comment.dto.response.ReCommentListResponse;
 import com.innim.okkycopy.domain.board.comment.dto.response.RequesterInfo;
 import com.innim.okkycopy.domain.board.comment.entity.Comment;
-import com.innim.okkycopy.domain.board.comment.entity.CommentExpression;
 import com.innim.okkycopy.domain.board.comment.repository.CommentExpressionRepository;
 import com.innim.okkycopy.domain.board.comment.repository.CommentRepository;
 import com.innim.okkycopy.domain.board.entity.Post;
@@ -26,6 +25,7 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -108,23 +108,25 @@ public class CommentCrudService {
         List<Comment> parentComments = post.getCommentList().stream().filter(comment -> comment.getDepth() == 1)
             .toList();
 
-        List<CommentDetailsResponse> commentResponses = new ArrayList<>();
         Member requester = (customUserDetails == null) ? null : customUserDetails.getMember();
-        for (Comment comment : parentComments) {
-            CommentExpression commentExpression = (requester == null) ? null : commentExpressionRepository
-                .findByMemberAndComment(comment, requester)
-                .orElseGet(() -> null);
+        List<CommentDetailsResponse> commentResponses = new ArrayList<>();
+        List<Short> expressionTypes = findRequesterExpressionType(
+            parentComments.stream().map(Comment::getCommentId).toList(), requester, 20);
+
+        for (int i = 0; i < parentComments.size(); i++) {
             RequesterInfo requesterInfo =
                 (requester == null) ? null : RequesterInfo.builder()
                     .like(
-                        commentExpression != null && commentExpression.getExpressionType().equals(ExpressionType.LIKE))
+                        expressionTypes.get(i) != null && Objects.equals(Integer.valueOf(expressionTypes.get(i)),
+                            ExpressionType.LIKE.getValue()))
                     .hate(
-                        commentExpression != null && commentExpression.getExpressionType().equals(ExpressionType.HATE))
+                        expressionTypes.get(i) != null && Objects.equals(Integer.valueOf(expressionTypes.get(i)),
+                            ExpressionType.HATE.getValue()))
                     .build();
 
             commentResponses.add(
                 CommentDetailsResponse.of(
-                    comment,
+                    parentComments.get(i),
                     requesterInfo
                 )
             );
@@ -132,6 +134,76 @@ public class CommentCrudService {
 
         return new CommentListResponse(commentResponses);
     }
+
+    @Transactional(readOnly = true)
+    public ReCommentListResponse findReComments(CustomUserDetails customUserDetails, long commentId) {
+        commentRepository.findByCommentId(commentId)
+            .orElseThrow(() -> new StatusCode400Exception(ErrorCase._400_NO_SUCH_COMMENT));
+
+        List<Comment> comments = commentRepository.findByParentIdOrderByCreatedDateAsc(commentId);
+        List<ReCommentDetailsResponse> commentResponses = new ArrayList<>();
+
+        Member requester = (customUserDetails == null) ? null : customUserDetails.getMember();
+
+        List<Long> commentIds = comments.stream().map(Comment::getCommentId).toList();
+
+        List<Short> expressionTypes = findRequesterExpressionType(commentIds, requester, 20);
+        List<String> mentionedNicknames = findMentionedNickname(commentIds, 20);
+
+        for (int i = 0; i < comments.size(); i++) {
+            RequesterInfo requesterInfo =
+                (requester == null) ? null : RequesterInfo.builder()
+                    .like(
+                        expressionTypes.get(i) != null && Objects.equals(Integer.valueOf(expressionTypes.get(i)),
+                            ExpressionType.LIKE.getValue()))
+                    .hate(
+                        expressionTypes.get(i) != null && Objects.equals(Integer.valueOf(expressionTypes.get(i)),
+                            ExpressionType.HATE.getValue()))
+                    .build();
+
+            commentResponses.add(
+                ReCommentDetailsResponse.of(comments.get(i), mentionedNicknames.get(i), requesterInfo)
+            );
+        }
+
+        return new ReCommentListResponse(commentResponses);
+    }
+
+    @Transactional(readOnly = true)
+    List<Short> findRequesterExpressionType(List<Long> commentIds, Member requester, int batchSize) {
+        List<Short> expressionTypes = new ArrayList<>();
+        if (requester != null) {
+            int batchQuotient = commentIds.size() / batchSize;
+            for (int i = 0; i < batchQuotient; i++) {
+                expressionTypes.addAll(commentExpressionRepository.findRequesterExpression(
+                    commentIds.subList(i * batchSize, (i + 1) * batchSize),
+                    requester.getMemberId()));
+            }
+            if (commentIds.size() % batchSize != 0) {
+                expressionTypes.addAll(commentExpressionRepository.findRequesterExpression(
+                    commentIds.subList(commentIds.size() - commentIds.size() % batchSize, commentIds.size()),
+                    requester.getMemberId()));
+            }
+        }
+        return expressionTypes;
+    }
+
+    @Transactional(readOnly = true)
+    List<String> findMentionedNickname(List<Long> commentIds, int batchSize) {
+        List<String> mentionedNicknames = new ArrayList<>();
+
+        int batchQuotient = commentIds.size() / batchSize;
+        for (int i = 0; i < batchQuotient; i++) {
+            mentionedNicknames.addAll(commentRepository.findMentionedNickname(
+                commentIds.subList(i * batchSize, (i + 1) * batchSize)));
+        }
+        if (commentIds.size() % batchSize != 0) {
+            mentionedNicknames.addAll(commentRepository.findMentionedNickname(
+                commentIds.subList(commentIds.size() - commentIds.size() % batchSize, commentIds.size())));
+        }
+        return mentionedNicknames;
+    }
+
 
     @Transactional
     public void addReComment(
@@ -153,45 +225,6 @@ public class CommentCrudService {
             commentId, reCommentRequest);
 
         commentRepository.save(reComment);
-    }
-
-    @Transactional(readOnly = true)
-    public ReCommentListResponse findReComments(CustomUserDetails customUserDetails, long commentId) {
-        commentRepository.findByCommentId(commentId)
-            .orElseThrow(() -> new StatusCode400Exception(ErrorCase._400_NO_SUCH_COMMENT));
-
-        List<Comment> comments = commentRepository.findByParentIdOrderByCreatedDateAsc(commentId);
-        List<ReCommentDetailsResponse> commentResponses = new ArrayList<>();
-
-        Member requester = (customUserDetails == null) ? null : customUserDetails.getMember();
-        for (Comment comment : comments) {
-            String mentionedNickname = null;
-            if (comment.getMentionedMember() != null) {
-                Member member = memberRepository.findByMemberId(comment.getMentionedMember()).orElseGet(() -> null);
-                mentionedNickname = (member == null) ? "un-known" : member.getNickname();
-            }
-
-            CommentExpression commentExpression = null;
-            if (requester != null) {
-                commentExpression = commentExpressionRepository
-                    .findByMemberAndComment(comment, requester)
-                    .orElseGet(() -> null);
-            }
-
-            RequesterInfo requesterInfo =
-                (requester == null) ? null : RequesterInfo.builder()
-                    .like(
-                        commentExpression != null && commentExpression.getExpressionType().equals(ExpressionType.LIKE))
-                    .hate(
-                        commentExpression != null && commentExpression.getExpressionType().equals(ExpressionType.HATE))
-                    .build();
-
-            commentResponses.add(
-                ReCommentDetailsResponse.of(comment, mentionedNickname, requesterInfo)
-            );
-        }
-
-        return new ReCommentListResponse(commentResponses);
     }
 
 
