@@ -15,6 +15,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.BatchSize;
 
 @Entity
 @Table(name = "board_type")
@@ -32,6 +33,7 @@ public class BoardType {
 
     @OrderBy("type_id ASC")
     @OneToMany(mappedBy = "boardType")
+    @BatchSize(size = 10)
     private List<BoardTopic> boardTopics;
 
     @Column(nullable = false, unique = true)
