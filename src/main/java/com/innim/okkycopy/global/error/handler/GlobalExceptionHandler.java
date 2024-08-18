@@ -29,7 +29,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     public ResponseEntity<ErrorResponse> handleDataIntegrityViolationException(DataIntegrityViolationException ex) {
 
         return ResponseEntity
-            .status(HttpStatus.BAD_REQUEST)
+            .status(HttpStatus.CONFLICT)
             .body(new ErrorResponse(ErrorCase._409_DATA_INTEGRITY_VIOLATION.getCode(), ex.getMessage()));
     }
 

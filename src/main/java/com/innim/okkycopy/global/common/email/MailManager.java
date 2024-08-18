@@ -14,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 import org.thymeleaf.context.Context;
 import org.thymeleaf.spring6.SpringTemplateEngine;
@@ -41,7 +42,7 @@ public class MailManager {
             .expireAfterWrite(30, TimeUnit.MINUTES)
             .build();
     }
-
+    @Async("mailAsyncExecutor")
     public void sendAuthenticateChangedEmailAndPutCache(String email, Long memberId, boolean isChanged) {
         try {
             String key = EncryptionUtil.encryptWithSHA256(
@@ -65,7 +66,7 @@ public class MailManager {
             throw new StatusCode500Exception(ErrorCase._500_SEND_MAIL_FAIL);
         }
     }
-
+    @Async("mailAsyncExecutor")
     public void sendAuthenticateEmailAndPutCache(String email, Long memberId, String name) {
         try {
             String key = EncryptionUtil.encryptWithSHA256(
@@ -85,6 +86,7 @@ public class MailManager {
         }
     }
 
+    @Async("mailAsyncExecutor")
     public void sendAuthenticateEmail(String key, String memberName, String receiverEmail) throws MessagingException {
         MimeMessage mimeMessage = mailSender.createMimeMessage();
         Context context = new Context();
@@ -101,6 +103,7 @@ public class MailManager {
         mailSender.send(mimeMessage);
     }
 
+    @Async("mailAsyncExecutor")
     public void sendAuthenticateChangedEmail(String key, boolean isChanged, String receiverEmail)
         throws MessagingException {
         MimeMessage mimeMessage = mailSender.createMimeMessage();
