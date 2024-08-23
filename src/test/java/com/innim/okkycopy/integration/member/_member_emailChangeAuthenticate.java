@@ -55,7 +55,7 @@ public class _member_emailChangeAuthenticate {
         memberRepository.save(member);
 
         String key = EncryptionUtil.encryptWithSHA256(
-            EncryptionUtil.connectStrings(member.findEmail(), member.getMemberId().toString()));
+            EncryptionUtil.connectStrings(member.findEmail(), member.getMemberId().toString(), "/"));
         MailManager.emailChangeAuthenticateCache.put(key, new EmailAuthenticateValue(member.getMemberId(), member.findEmail()));
 
         // when

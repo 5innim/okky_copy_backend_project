@@ -10,6 +10,7 @@ import jakarta.mail.internet.MimeMessage;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -20,6 +21,7 @@ import org.thymeleaf.context.Context;
 import org.thymeleaf.spring6.SpringTemplateEngine;
 
 @Component
+@Getter
 @RequiredArgsConstructor
 public class MailManager {
 
@@ -33,6 +35,8 @@ public class MailManager {
     private String mailAuthenticatePath;
     @Value("#{environment['frontend.path.mail-change-authenticate']}")
     private String mailChangeAuthenticatePath;
+    @Value("#{environment['encrypt.divider']}")
+    private String encryptDivider;
 
     static {
         emailAuthenticateCache = CacheBuilder.newBuilder()
@@ -46,7 +50,7 @@ public class MailManager {
     public void sendAuthenticateChangedEmailAndPutCache(String email, Long memberId, boolean isChanged) {
         try {
             String key = EncryptionUtil.encryptWithSHA256(
-                EncryptionUtil.connectStrings(email, memberId.toString()));
+                EncryptionUtil.connectStrings(email, memberId.toString(), encryptDivider));
             if (isChanged) {
                 emailChangeAuthenticateCache.asMap().entrySet().removeIf(entry -> {
                         return Objects.equals(entry.getValue().getMemberId(), memberId);
@@ -70,7 +74,7 @@ public class MailManager {
     public void sendAuthenticateEmailAndPutCache(String email, Long memberId, String name) {
         try {
             String key = EncryptionUtil.encryptWithSHA256(
-                EncryptionUtil.connectStrings(email, memberId.toString()));
+                EncryptionUtil.connectStrings(email, memberId.toString(), encryptDivider));
             emailAuthenticateCache.put(key, new EmailAuthenticateValue(memberId, email));
             try {
                 sendAuthenticateEmail(

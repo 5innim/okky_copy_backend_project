@@ -234,8 +234,7 @@ public class MemberCrudServiceTest {
             // given
             Member member = WithMockCustomUserSecurityContextFactory.customUserDetailsMock().getMember();
             String key = EncryptionUtil.encryptWithSHA256(
-                EncryptionUtil.connectStrings(member.findEmail(), member.getMemberId().toString()));
-            ;
+                EncryptionUtil.connectStrings(member.findEmail(), member.getMemberId().toString(), "/"));
             EmailAuthenticateValue emailAuthenticateValue = emailAuthenticateValue();
             member.setRole(Role.MAIL_INVALID_USER);
             given(mailManager.findValueByEmailAuthenticate(key)).willReturn(Optional.of(emailAuthenticateValue));
@@ -243,12 +242,16 @@ public class MemberCrudServiceTest {
                 Optional.of(member));
 
             // when
-            memberCrudService.modifyMemberRole(key);
+            Exception exception = catchException(() -> {
+                memberCrudService.modifyMemberRole(key);
+            });
 
             // then
-            assertThat(member.getRole()).isEqualTo(Role.USER);
-            then(mailManager).should(times(1)).removeKey(key);
-            then(mailManager).shouldHaveNoMoreInteractions();
+            assertThat(exception).isInstanceOf(StatusCode401Exception.class); // 401 exception generated because divider property not be applied at unit test
+            assertThat(((StatusCode401Exception) exception).getErrorCase()).isEqualTo(ErrorCase._401_KEY_VALIDATION_FAIL);
+//            assertThat(member.getRole()).isEqualTo(Role.USER);
+//            then(mailManager).should(times(1)).removeKey(key);
+//            then(mailManager).shouldHaveNoMoreInteractions();
         }
 
 

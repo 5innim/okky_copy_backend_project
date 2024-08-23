@@ -122,3 +122,8 @@ frontend:
     signup: /oauth/signup
     mail-authenticate: /email-authenticate
     mail-change-authenticate: /email-change-authenticate
+    
+
+# encrypt
+encrypt:
+  divider: ENC(tFPFur+ntigHQbqXgjDibtPM6YgoYXtN)
