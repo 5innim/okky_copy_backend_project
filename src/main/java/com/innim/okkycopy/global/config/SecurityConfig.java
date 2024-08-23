@@ -4,6 +4,7 @@ import com.innim.okkycopy.domain.member.service.MemberCrudService;
 import com.innim.okkycopy.global.auth.CustomOAuth2AuthenticationSuccessHandler;
 import com.innim.okkycopy.global.auth.CustomUserDetailsService;
 import com.innim.okkycopy.global.auth.enums.Role;
+import com.innim.okkycopy.global.auth.enums.UrlPattern;
 import com.innim.okkycopy.global.auth.filter.CorsFilter;
 import com.innim.okkycopy.global.auth.filter.FormDataLoginAuthenticationFilter;
 import com.innim.okkycopy.global.auth.filter.HandleStatusCodeExceptionFilter;
@@ -58,69 +59,23 @@ public class SecurityConfig {
                     .successHandler(oAuth2AuthenticationSuccessHandler);
             })
             .authorizeHttpRequests(request -> {
-                request.requestMatchers(HttpMethod.POST,
-                        "/board/knowledge/write",
-                        "/board/community/write",
-                        "/board/event/write",
-                        "/board/qna/write",
-                        "/board/posts/{id}/scrap",
-                        "/board/posts/{id}/comment",
-                        "/board/comments/{commentId}/recomment",
-                        "/board/posts/{id}/like",
-                        "/board/posts/{id}/hate",
-                        "/board/comments/{id}/like",
-                        "/board/comments/{id}/hate").hasAnyAuthority(Role.USER.getValue(), Role.ADMIN.getValue())
-                    .requestMatchers(HttpMethod.POST,
-                        "/board/file/upload",
-                        "/member/update-email")
+                request.requestMatchers(HttpMethod.POST, UrlPattern.POST_LEVEL_3.getPatterns())
+                    .hasAnyAuthority(Role.USER.getValue(), Role.ADMIN.getValue())
+                    .requestMatchers(HttpMethod.POST, UrlPattern.POST_LEVEL_1.getPatterns())
                     .hasAnyAuthority(Role.MAIL_INVALID_USER.getValue(), Role.USER.getValue(), Role.ADMIN.getValue())
-                    .requestMatchers(HttpMethod.DELETE,
-                        "/board/posts/{id}/scrap",
-                        "/board/knowledge/posts/{id}",
-                        "/board/community/posts/{id}",
-                        "/board/event/posts/{id}",
-                        "/board/qna/posts/{id}",
-                        "/board/comments/{id}",
-                        "/board/posts/{id}/like",
-                        "/board/posts/{id}/hate",
-                        "/board/comments/{id}/like",
-                        "/board/comments/{id}/hate").hasAnyAuthority(Role.USER.getValue(), Role.ADMIN.getValue())
-                    .requestMatchers(HttpMethod.DELETE,
-                        "/member/delete")
+                    .requestMatchers(HttpMethod.POST, UrlPattern.POST_LEVEL_0.getPatterns()).permitAll()
+                    .requestMatchers(HttpMethod.DELETE, UrlPattern.DELETE_LEVEL_3.getPatterns())
+                    .hasAnyAuthority(Role.USER.getValue(), Role.ADMIN.getValue())
+                    .requestMatchers(HttpMethod.DELETE, UrlPattern.DELETE_LEVEL_1.getPatterns())
                     .hasAnyAuthority(Role.MAIL_INVALID_USER.getValue(), Role.USER.getValue(), Role.ADMIN.getValue())
-                    .requestMatchers(HttpMethod.PUT,
-                        "/board/knowledge/posts/{id}",
-                        "/board/community/posts/{id}",
-                        "/board/event/posts/{id}",
-                        "/board/qna/posts/{id}",
-                        "/board/comments/{id}").hasAnyAuthority(Role.USER.getValue(), Role.ADMIN.getValue())
-                    .requestMatchers(HttpMethod.PUT,
-                        "/member/logout",
-                        "/member/profile-update",
-                        "/member/change-password")
+                    .requestMatchers(HttpMethod.PUT, UrlPattern.PUT_LEVEL_3.getPatterns())
+                    .hasAnyAuthority(Role.USER.getValue(), Role.ADMIN.getValue())
+                    .requestMatchers(HttpMethod.PUT, UrlPattern.PUT_LEVEL_1.getPatterns())
                     .hasAnyAuthority(Role.MAIL_INVALID_USER.getValue(), Role.USER.getValue(), Role.ADMIN.getValue())
-                    .requestMatchers(HttpMethod.GET,
-                        "/member/info")
+                    .requestMatchers(HttpMethod.PUT, UrlPattern.PUT_LEVEL_0.getPatterns()).permitAll()
+                    .requestMatchers(HttpMethod.GET, UrlPattern.GET_LEVEL_1.getPatterns())
                     .hasAnyAuthority(Role.MAIL_INVALID_USER.getValue(), Role.USER.getValue(), Role.ADMIN.getValue())
-                    .requestMatchers(HttpMethod.GET,
-                        "/board/topics",
-                        "/board/top-tag-list",
-                        "/board/knowledge/posts/{id}",
-                        "/board/community/posts/{id}",
-                        "/board/event/posts/{id}",
-                        "/board/qna/posts/{id}",
-                        "/board/posts/{id}/comments",
-                        "/board/comments/{id}/recomments",
-                        "/board/knowledge/posts",
-                        "/board/community/posts",
-                        "/board/event/posts",
-                        "/board/qna/posts").permitAll()
-                    .requestMatchers(HttpMethod.POST,
-                        "/member/signup",
-                        "/member/{provider}/signup").permitAll()
-                    .requestMatchers(HttpMethod.PUT,
-                        "/member/email-authenticate",
-                        "/member/email-change-authenticate").permitAll();
+                    .requestMatchers(HttpMethod.GET, UrlPattern.GET_LEVEL_0.getPatterns()).permitAll();
             }).apply(new CustomDsl());
 
         return http.build();

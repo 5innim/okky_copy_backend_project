@@ -36,6 +36,8 @@ public class _member_emailAuthenticate {
     WebApplicationContext context;
     @Autowired
     MemberRepository memberRepository;
+    @Autowired
+    MailManager mailManager;
 
     MockMvc mockMvc;
 
@@ -57,12 +59,14 @@ public class _member_emailAuthenticate {
         memberRepository.save(member);
 
         String key = EncryptionUtil.encryptWithSHA256(
-            EncryptionUtil.connectStrings(member.findEmail(), member.getMemberId().toString()));
-        MailManager.emailAuthenticateCache.put(key, new EmailAuthenticateValue(member.getMemberId(), member.findEmail()));
+            EncryptionUtil.connectStrings(member.findEmail(), member.getMemberId().toString(), mailManager.getEncryptDivider()));
+        MailManager.emailAuthenticateCache.put(key,
+            new EmailAuthenticateValue(member.getMemberId(), member.findEmail()));
 
         // when
         MockHttpServletResponse response = mockMvc.perform(
-            MockMvcRequestBuilders.put("/member/email-authenticate?key=" + EncryptionUtil.base64Encode(key))).andReturn().getResponse();
+                MockMvcRequestBuilders.put("/member/email-authenticate?key=" + EncryptionUtil.base64Encode(key)))
+            .andReturn().getResponse();
 
         // then
         assertThat(response.getStatus()).isEqualTo(HttpStatus.NO_CONTENT.value());
