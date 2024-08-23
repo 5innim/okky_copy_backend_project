@@ -113,7 +113,7 @@ public class MemberController {
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
-    @PostMapping("/update-email")
+    @PostMapping("/change-email")
     public void authenticationMailSend(@Valid @RequestBody UpdateEmailRequest updateEmailRequest,
         @AuthenticationPrincipal CustomUserDetails customUserDetails) {
         memberEmailService.sendAuthenticationMail(updateEmailRequest, customUserDetails.getMember());
@@ -130,7 +130,6 @@ public class MemberController {
         memberCrudService.modifyMemberRoleAndEmail(EncryptionUtil.base64Decode(key));
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
-
 
 
     @PutMapping("/logout")
