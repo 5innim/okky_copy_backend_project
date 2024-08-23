@@ -79,7 +79,8 @@ public class MemberCrudService {
 
         try {
             String generatedKey = EncryptionUtil.encryptWithSHA256(
-                EncryptionUtil.connectStrings(member.findEmail(), member.getMemberId().toString()));
+                EncryptionUtil.connectStrings(member.findEmail(), member.getMemberId().toString(),
+                    mailManager.getEncryptDivider()));
             if (!key.equals(generatedKey)) {
                 throw new StatusCode401Exception(ErrorCase._401_KEY_VALIDATION_FAIL);
             }
