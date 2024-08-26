@@ -1,6 +1,7 @@
 package com.innim.okkycopy.global.auth.filter;
 
 import com.innim.okkycopy.domain.member.service.MemberCrudService;
+import com.innim.okkycopy.global.auth.CustomUserDetails;
 import com.innim.okkycopy.global.auth.CustomUserDetailsService;
 import com.innim.okkycopy.global.util.JwtUtil;
 import io.jsonwebtoken.Claims;
@@ -12,6 +13,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Date;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
@@ -21,6 +23,7 @@ import org.springframework.security.web.util.matcher.RequestMatcher;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 
+@Slf4j
 @AllArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
@@ -52,6 +55,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         if (token == null) {
             filterChain.doFilter(request, response);
         } else {
+            log.info("Authentication start: " + request.getRequestURI());
             Claims claims = JwtUtil.validateToken(token);
             if (claims.getSubject().equals("access")) {
                 Long userId = Long.valueOf((Integer) claims.get("uid"));
@@ -62,6 +66,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 Authentication authResult = authenticate(userId);
                 onSuccessfulAuthentication(authResult, request, response, filterChain);
             } else {
+                log.info("Authentication fail");
                 filterChain.doFilter(request, response);
             }
 
@@ -82,6 +87,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         SecurityContext securityContext = SecurityContextHolder.createEmptyContext();
         securityContext.setAuthentication(authResult);
         SecurityContextHolder.setContext(securityContext);
+
+        log.info("Authentication success: " + ((CustomUserDetails) authResult.getPrincipal()).getUserId());
 
         filterChain.doFilter(request, response);
     }

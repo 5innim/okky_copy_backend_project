@@ -17,6 +17,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Date;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -25,6 +26,7 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.security.web.util.matcher.RequestMatcher;
 import org.springframework.web.filter.OncePerRequestFilter;
 
+@Slf4j
 @AllArgsConstructor
 public class FormDataLoginAuthenticationFilter extends OncePerRequestFilter {
 
@@ -37,16 +39,20 @@ public class FormDataLoginAuthenticationFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
         throws ServletException, IOException {
         if (requestMatcher.matches(request)) {
-
             LoginRequest loginRequest = ResponseUtil.objectOf(request.getInputStream(), LoginRequest.class);
+
             String id = (loginRequest.getId() == null) ? "" : loginRequest.getId().strip();
             String password = (loginRequest.getPassword() == null) ? "" : loginRequest.getPassword().strip();
 
+            log.info("Login start: " + id);
+
             Authentication authResult = attemptAuthentication(id, password);
             if (authResult == null) {
+                log.info("Login fail");
                 throw new StatusCode401Exception(ErrorCase._401_LOGIN_FAIL);
             }
             successfulAuthentication(response, authResult);
+            log.info("Login success: " + ((CustomUserDetails) authResult.getPrincipal()).getUserId());
 
         } else {
             filterChain.doFilter(request, response);
