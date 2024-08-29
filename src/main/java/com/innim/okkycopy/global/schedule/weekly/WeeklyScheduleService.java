@@ -1,11 +1,8 @@
 package com.innim.okkycopy.global.schedule.weekly;
 
-import com.innim.okkycopy.domain.board.dao.TagCntQueryDao;
-import com.innim.okkycopy.domain.board.service.TagCrudService;
+import com.innim.okkycopy.domain.board.entity.TagWeeklyStats;
+import com.innim.okkycopy.domain.board.repository.TagWeeklyStatsRepository;
 import com.innim.okkycopy.domain.board.service.TopTagService;
-import java.time.DayOfWeek;
-import java.time.LocalDateTime;
-import java.time.temporal.TemporalAdjusters;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -15,30 +12,20 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class WeeklyScheduleService {
 
-    private final TagCrudService tagCrudService;
     private final TopTagService topTagService;
+    private final TagWeeklyStatsRepository tagWeeklyStatsRepository;
 
     @Transactional
-    public void extractWeeklyTopTags(int listLimit) {
-        LocalDateTime endDate = LocalDateTime.now()
-            .with(TemporalAdjusters.previous(DayOfWeek.SUNDAY))
-            .withHour(0)
-            .withMinute(0)
-            .withSecond(0)
-            .withNano(0)
-            .plusDays(1);
-        LocalDateTime startDate = endDate.minusDays(7);
-
+    public void extractWeeklyTopTags() {
         topTagService.removeAllTopTag();
-        List<TagCntQueryDao> results = tagCrudService.findTopTagsByCreatedDateRange(startDate, endDate,
-            listLimit);
-
+        List<TagWeeklyStats> results = tagWeeklyStatsRepository.findTop5ByOrderByCreatesDesc();
         int rank = 1;
-        for (TagCntQueryDao result : results) {
-            topTagService.addTopTag(rank, result.getName(), result.getCnt());
+        for (TagWeeklyStats result : results) {
+            topTagService.addTopTag(rank, result.getName(), result.getCreates());
             rank++;
         }
 
+        tagWeeklyStatsRepository.deleteAll();
     }
 
 }
