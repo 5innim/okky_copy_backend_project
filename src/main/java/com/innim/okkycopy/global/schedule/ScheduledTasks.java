@@ -40,6 +40,6 @@ public class ScheduledTasks {
     @Scheduled(cron = "0 0 2 * * 1")
     public void doWeeklyJob() {
         log.info("schedule start: doWeeklyJob");
-        weeklyScheduleService.extractWeeklyTopTags(5);
+        weeklyScheduleService.extractWeeklyTopTags();
     }
 }

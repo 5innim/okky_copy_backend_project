@@ -15,7 +15,7 @@ import lombok.Setter;
 public class TopTagResponse {
 
     private String name;
-    private long cnt;
+    private int cnt;
 
     public static TopTagResponse from(TopTag topTag) {
         return TopTagResponse.builder()
