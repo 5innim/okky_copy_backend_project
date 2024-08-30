@@ -1,6 +1,7 @@
 package com.innim.okkycopy.global.auth;
 
 import com.innim.okkycopy.domain.member.service.MemberCrudService;
+import com.innim.okkycopy.global.util.EncryptionUtil;
 import com.innim.okkycopy.global.util.JwtUtil;
 import com.innim.okkycopy.global.util.ResponseUtil;
 import jakarta.servlet.ServletException;
@@ -67,14 +68,15 @@ public class CustomOAuth2AuthenticationSuccessHandler implements AuthenticationS
                         break;
                 }
                 assert clientId != null;
+
+                request.getSession().setAttribute(String.valueOf(clientId.hashCode()), customOAuth2User);
+                response.sendRedirect(frontendOrigin + signupPath + "?id=" + EncryptionUtil.base64Encode(
+                    String.valueOf(clientId.hashCode())));
+
             } catch (Exception ex) {
                 OAuth2Error oauth2Error = new OAuth2Error("provider_id_not_found");
                 throw new OAuth2AuthenticationException(oauth2Error, oauth2Error.toString());
             }
-
-            request.getSession().setAttribute(String.valueOf(clientId.hashCode()), customOAuth2User);
-            response.sendRedirect(frontendOrigin + signupPath + "?id=" + String.valueOf(clientId.hashCode()));
-
         }
     }
 }

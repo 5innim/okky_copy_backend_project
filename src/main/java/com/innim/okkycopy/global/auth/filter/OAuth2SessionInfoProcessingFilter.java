@@ -4,6 +4,7 @@ import com.innim.okkycopy.global.auth.CustomOAuth2User;
 import com.innim.okkycopy.global.auth.dto.response.OAuthInfoResponse;
 import com.innim.okkycopy.global.error.ErrorCase;
 import com.innim.okkycopy.global.error.exception.StatusCode400Exception;
+import com.innim.okkycopy.global.util.EncryptionUtil;
 import com.innim.okkycopy.global.util.ResponseUtil;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -25,7 +26,7 @@ public class OAuth2SessionInfoProcessingFilter extends OncePerRequestFilter {
         throws ServletException, IOException {
         if (requestMatcher.matches(request)) {
             try {
-                String principalName = request.getParameter("id");
+                String principalName = EncryptionUtil.base64Decode(request.getParameter("id"));
                 CustomOAuth2User oAuth2User = (CustomOAuth2User) request.getSession().getAttribute(principalName);
                 OAuthInfoResponse oAuthInfo = null;
                 switch (oAuth2User.getRegistrationId()) {
