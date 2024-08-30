@@ -7,6 +7,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.google.gson.Gson;
 import com.innim.okkycopy.domain.member.dto.request.OAuthMemberRequest;
 import com.innim.okkycopy.global.auth.CustomOAuth2User;
+import com.innim.okkycopy.global.util.EncryptionUtil;
 import java.util.HashMap;
 import java.util.Map;
 import org.junit.jupiter.api.BeforeAll;
@@ -69,7 +70,7 @@ public class _member_$provider_signup {
         // given
         OAuthMemberRequest oAuthMemberRequest = oAuthMemberRequest();
         oAuthMemberRequest.setNickname("testNickname");
-        oAuthMemberRequest.setKey("test_key");
+        oAuthMemberRequest.setKey(EncryptionUtil.base64Encode("test_key"));
 
         Map<String, Object> attributes = new HashMap<>();
         attributes.put("name_attribute_key", "provider_id");

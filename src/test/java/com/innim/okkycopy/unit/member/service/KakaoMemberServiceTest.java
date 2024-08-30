@@ -16,6 +16,8 @@ import com.innim.okkycopy.global.error.ErrorCase;
 import com.innim.okkycopy.global.error.exception.StatusCode400Exception;
 import com.innim.okkycopy.global.error.exception.StatusCode401Exception;
 import com.innim.okkycopy.global.common.email.MailManager;
+import com.innim.okkycopy.global.util.EncryptionUtil;
+import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import org.junit.jupiter.api.Nested;
@@ -41,7 +43,7 @@ public class KakaoMemberServiceTest {
     class _addKakaoMember_$OAuthMemberRequest_$String_$HttpServletRequest {
 
         @Test
-        void given_noExistSession_then_throwErrorCase401006() {
+        void given_noExistSession_then_throwErrorCase401006() throws NoSuchAlgorithmException {
             // given
             MockHttpServletRequest httpServletRequest = httpServletRequest();
             String provider = "kakao";
@@ -58,7 +60,7 @@ public class KakaoMemberServiceTest {
         }
 
         @Test
-        void given_noExistKey_then_throwErrorCase401009() {
+        void given_noExistKey_then_throwErrorCase401009() throws NoSuchAlgorithmException {
             // given
             MockHttpServletRequest httpServletRequest = httpServletRequest();
             httpServletRequest.setSession(new MockHttpSession());
@@ -76,7 +78,7 @@ public class KakaoMemberServiceTest {
         }
 
         @Test
-        void given_notMatchedProvider_then_throwErrorCase400024() {
+        void given_notMatchedProvider_then_throwErrorCase400024() throws NoSuchAlgorithmException {
             // given
             MockHttpServletRequest httpServletRequest = httpServletRequest();
             httpServletRequest.setSession(new MockHttpSession());
@@ -97,7 +99,7 @@ public class KakaoMemberServiceTest {
         }
 
         @Test
-        void given_invoke_then_saveAndSendEmail() {
+        void given_invoke_then_saveAndSendEmail() throws NoSuchAlgorithmException {
             // given
             MockHttpServletRequest httpServletRequest = httpServletRequest();
             httpServletRequest.setSession(new MockHttpSession());
@@ -125,9 +127,9 @@ public class KakaoMemberServiceTest {
             return new MockHttpServletRequest();
         }
 
-        OAuthMemberRequest oAuthMemberRequest() {
+        OAuthMemberRequest oAuthMemberRequest() throws NoSuchAlgorithmException {
             return OAuthMemberRequest.builder()
-                .key("testKey")
+                .key(EncryptionUtil.base64Encode("testKey"))
                 .nickname("testNickname")
                 .profile("testProfile")
                 .emailCheck(true)
