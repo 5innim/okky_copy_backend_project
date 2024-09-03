@@ -30,6 +30,7 @@ public class NaverMemberService {
         }
 
         Object value = session.getAttribute(EncryptionUtil.base64Decode(oAuthMemberRequest.getKey()));
+        session.invalidate();
         if (value == null) {
             throw new StatusCode401Exception(ErrorCase._401_NO_SUCH_KEY);
         }

@@ -417,7 +417,7 @@ public class CommentCrudServiceTest {
             long postId = 1L;
             Post post = post();
             given(postRepository.findByPostId(postId)).willReturn(Optional.of(post));
-            given(commentExpressionRepository.findRequesterExpression(any(List.class), any(Long.class))).willReturn(
+            given(commentExpressionRepository.findRequesterExpressionType(any(List.class), any(Long.class))).willReturn(
                 List.of((short) 1));
 
             // when
@@ -427,7 +427,7 @@ public class CommentCrudServiceTest {
             then(postRepository).should(times(1)).findByPostId(postId);
             then(postRepository).shouldHaveNoMoreInteractions();
             then(commentExpressionRepository).should(times(1))
-                .findRequesterExpression(any(List.class), any(Long.class));
+                .findRequesterExpressionType(any(List.class), any(Long.class));
             then(commentExpressionRepository).shouldHaveNoMoreInteractions();
 
         }
@@ -620,7 +620,7 @@ public class CommentCrudServiceTest {
             given(commentRepository.findByCommentId(commentId)).willReturn(
                 Optional.of(comment()));
             given(commentRepository.findByParentIdOrderByCreatedDateAsc(commentId)).willReturn(comments);
-            given(commentExpressionRepository.findRequesterExpression(any(List.class), any(Long.class))).willReturn(
+            given(commentExpressionRepository.findRequesterExpressionType(any(List.class), any(Long.class))).willReturn(
                 List.of((short) 1));
             given(commentRepository.findMentionedNickname(any(List.class))).willReturn(List.of("nick"));
 
@@ -630,7 +630,7 @@ public class CommentCrudServiceTest {
             // then
             then(commentRepository).should(times(1)).findByCommentId(commentId);
             then(commentRepository).should(times(1)).findByParentIdOrderByCreatedDateAsc(commentId);
-            then(commentExpressionRepository).should(times(1)).findRequesterExpression(any(List.class), any(Long.class));
+            then(commentExpressionRepository).should(times(1)).findRequesterExpressionType(any(List.class), any(Long.class));
             then(commentRepository).should(times(1)).findMentionedNickname(any(List.class));
             then(commentRepository).shouldHaveNoMoreInteractions();
             then(commentExpressionRepository).shouldHaveNoMoreInteractions();

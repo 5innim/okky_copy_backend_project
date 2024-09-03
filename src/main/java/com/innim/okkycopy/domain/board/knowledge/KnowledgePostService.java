@@ -47,7 +47,6 @@ public class KnowledgePostService {
             () -> new StatusCode401Exception(ErrorCase._401_NO_SUCH_MEMBER)
         );
 
-
         BoardTopic boardTopic = boardTopicRepository.findByName(postRequest.getTopic())
             .orElseThrow(() -> new StatusCode400Exception(
                 ErrorCase._400_NO_SUCH_TOPIC));

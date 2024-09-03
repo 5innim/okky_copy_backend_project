@@ -68,7 +68,6 @@ public class CustomOAuth2AuthenticationSuccessHandler implements AuthenticationS
                         break;
                 }
                 assert clientId != null;
-
                 request.getSession().setAttribute(String.valueOf(clientId.hashCode()), customOAuth2User);
                 response.sendRedirect(frontendOrigin + signupPath + "?id=" + EncryptionUtil.base64Encode(
                     String.valueOf(clientId.hashCode())));
