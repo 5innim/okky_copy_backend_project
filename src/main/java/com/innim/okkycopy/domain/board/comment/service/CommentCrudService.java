@@ -175,12 +175,12 @@ public class CommentCrudService {
         if (requester != null) {
             int batchQuotient = commentIds.size() / batchSize;
             for (int i = 0; i < batchQuotient; i++) {
-                expressionTypes.addAll(commentExpressionRepository.findRequesterExpression(
+                expressionTypes.addAll(commentExpressionRepository.findRequesterExpressionType(
                     commentIds.subList(i * batchSize, (i + 1) * batchSize),
                     requester.getMemberId()));
             }
             if (commentIds.size() % batchSize != 0) {
-                expressionTypes.addAll(commentExpressionRepository.findRequesterExpression(
+                expressionTypes.addAll(commentExpressionRepository.findRequesterExpressionType(
                     commentIds.subList(commentIds.size() - commentIds.size() % batchSize, commentIds.size()),
                     requester.getMemberId()));
             }

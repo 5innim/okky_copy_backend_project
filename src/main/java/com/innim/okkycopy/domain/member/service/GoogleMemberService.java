@@ -8,6 +8,7 @@ import com.innim.okkycopy.global.error.ErrorCase;
 import com.innim.okkycopy.global.error.exception.StatusCode400Exception;
 import com.innim.okkycopy.global.error.exception.StatusCode401Exception;
 import com.innim.okkycopy.global.common.email.MailManager;
+import com.innim.okkycopy.global.util.EncryptionUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
@@ -28,7 +29,8 @@ public class GoogleMemberService {
             throw new StatusCode401Exception(ErrorCase._401_NOT_EXIST_SESSION);
         }
 
-        Object value = session.getAttribute(oAuthMemberRequest.getKey());
+        Object value = session.getAttribute(EncryptionUtil.base64Decode(oAuthMemberRequest.getKey()));
+        session.invalidate();
         if (value == null) {
             throw new StatusCode401Exception(ErrorCase._401_NO_SUCH_KEY);
         }

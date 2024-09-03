@@ -5,24 +5,20 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "top_tag")
+@Table(name = "tag_weekly_stats")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Getter
 @Setter
-@AllArgsConstructor
-public class TopTag {
+@Getter
+public class TagWeeklyStats {
+
     @Id
-    @Column(name = "top_tag_id")
-    private Integer topTagId;
-    @Column(name = "name")
-    private String name;
-    @Column(name = "creates", nullable = false)
-    private Integer creates;
+    String name;
+    @Column(nullable = false)
+    Integer creates;
 
 }

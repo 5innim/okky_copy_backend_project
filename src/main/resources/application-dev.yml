@@ -6,7 +6,7 @@ server:
 # logging
 logging:
   level:
-    com.innim.okkycopy: debug
+    com.innim.okkycopy: info
 
 
 
