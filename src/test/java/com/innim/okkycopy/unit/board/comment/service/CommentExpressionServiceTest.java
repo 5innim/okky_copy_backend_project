@@ -22,7 +22,9 @@ import com.innim.okkycopy.domain.member.repository.MemberRepository;
 import com.innim.okkycopy.global.error.ErrorCase;
 import com.innim.okkycopy.global.error.exception.StatusCode400Exception;
 import com.innim.okkycopy.global.error.exception.StatusCode401Exception;
+import io.jsonwebtoken.lang.Collections;
 import jakarta.persistence.EntityManager;
+import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -358,4 +360,65 @@ public class CommentExpressionServiceTest {
                 .build();
         }
     }
+
+    @Nested
+    class _findRequesterExpressionType_$List_$Member_$int {
+
+        @Test
+        void given_noAuthentication_then_notFindCommentExpression() {
+            // given
+            Member member = null;
+            List<Long> commentIds = Collections.arrayToList(new Long[]{1L, 2L, 3L, 4L, 5L});
+            int batchSize = 5;
+
+            // when
+            commentExpressionService.findRequesterExpressionType(commentIds, member, batchSize);
+
+            // then
+            then(commentExpressionRepository).shouldHaveNoInteractions();
+
+        }
+
+        @Test
+        void given_lowerBatchSizeThanCommentIdsSize_then_invokeMoreFindCommentExpression() {
+            // given
+            Member member = WithMockCustomUserSecurityContextFactory.customUserDetailsMock().getMember();
+            List<Long> commentIds = Collections.arrayToList(new Long[]{1L, 2L, 3L, 4L, 5L, 6L});
+            int batchSize = 5;
+            given(commentExpressionRepository.findRequesterExpressionType(any(List.class), any(Long.class)))
+                .willReturn(
+                    Collections.arrayToList(new Short[]{(short) 1, (short) 1, (short) 1, (short) 1, (short) 1}));
+
+            // when
+            List<Short> expressionTypes = commentExpressionService.findRequesterExpressionType(commentIds, member,
+                batchSize);
+
+            // then
+            then(commentExpressionRepository).should(
+                times(2)).findRequesterExpressionType(any(List.class), any(Long.class));
+        }
+
+        @Test
+        void given_authentication_then_findCommentExpressionAndReturnExpressionTypes() {
+            // given
+            Member member = WithMockCustomUserSecurityContextFactory.customUserDetailsMock().getMember();
+            List<Long> commentIds = Collections.arrayToList(new Long[]{1L, 2L, 3L, 4L, 5L});
+            int batchSize = 5;
+            given(commentExpressionRepository.findRequesterExpressionType(any(List.class), any(Long.class)))
+                .willReturn(
+                    Collections.arrayToList(new Short[]{(short) 1, (short) 1, (short) 1, (short) 1, (short) 1}));
+
+            // when
+            List<Short> expressionTypes = commentExpressionService.findRequesterExpressionType(commentIds, member,
+                batchSize);
+
+            // then
+            then(commentExpressionRepository).should(
+                times(1)).findRequesterExpressionType(any(List.class), any(Long.class));
+            assertThat(expressionTypes).isInstanceOf(List.class);
+            assertThat(expressionTypes.get(0)).isInstanceOf(Short.class);
+        }
+
+    }
+
 }

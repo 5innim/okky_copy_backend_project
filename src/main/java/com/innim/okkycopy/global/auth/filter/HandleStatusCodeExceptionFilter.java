@@ -8,8 +8,10 @@ import jakarta.servlet.ServletRequest;
 import jakarta.servlet.ServletResponse;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.filter.GenericFilterBean;
 
+@Slf4j
 public class HandleStatusCodeExceptionFilter extends GenericFilterBean {
 
     @Override
@@ -18,6 +20,10 @@ public class HandleStatusCodeExceptionFilter extends GenericFilterBean {
         try {
             filterChain.doFilter(servletRequest, servletResponse);
         } catch (StatusCodeException ex) {
+            log.error("------------- Error generated -------------");
+            log.error("Error code: " + ex.getErrorCase().getCode());
+            log.error("Error message: " + ex.getErrorCase().getCode());
+            log.info("StatusCodeExc");
             ResponseUtil.setResponseToErrorResponse((HttpServletResponse) servletResponse, ex.getErrorCase());
         }
     }

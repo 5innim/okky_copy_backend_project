@@ -66,7 +66,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 Authentication authResult = authenticate(userId);
                 onSuccessfulAuthentication(authResult, request, response, filterChain);
             } else {
-                log.info("Authentication fail");
                 filterChain.doFilter(request, response);
             }
 

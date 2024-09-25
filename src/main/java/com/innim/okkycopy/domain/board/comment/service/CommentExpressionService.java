@@ -12,6 +12,8 @@ import com.innim.okkycopy.global.error.exception.StatusCode400Exception;
 import com.innim.okkycopy.global.error.exception.StatusCode401Exception;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
+import java.util.ArrayList;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -59,5 +61,24 @@ public class CommentExpressionService {
         }
 
         CommentExpression.remove(entityManager, commentExpression, comment, type);
+    }
+
+    @Transactional(readOnly = true)
+    public List<Short> findRequesterExpressionType(List<Long> commentIds, Member requester, int batchSize) {
+        List<Short> expressionTypes = new ArrayList<>();
+        if (requester != null) {
+            int batchQuotient = commentIds.size() / batchSize;
+            for (int i = 0; i < batchQuotient; i++) {
+                expressionTypes.addAll(commentExpressionRepository.findRequesterExpressionType(
+                    commentIds.subList(i * batchSize, (i + 1) * batchSize),
+                    requester.getMemberId()));
+            }
+            if (commentIds.size() % batchSize != 0) {
+                expressionTypes.addAll(commentExpressionRepository.findRequesterExpressionType(
+                    commentIds.subList(commentIds.size() - commentIds.size() % batchSize, commentIds.size()),
+                    requester.getMemberId()));
+            }
+        }
+        return expressionTypes;
     }
 }
