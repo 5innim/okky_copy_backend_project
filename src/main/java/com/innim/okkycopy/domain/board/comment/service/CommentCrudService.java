@@ -2,16 +2,11 @@ package com.innim.okkycopy.domain.board.comment.service;
 
 import com.innim.okkycopy.domain.board.comment.dto.request.CommentRequest;
 import com.innim.okkycopy.domain.board.comment.dto.request.ReCommentRequest;
-import com.innim.okkycopy.domain.board.comment.dto.response.CommentDetailsResponse;
 import com.innim.okkycopy.domain.board.comment.dto.response.CommentListResponse;
-import com.innim.okkycopy.domain.board.comment.dto.response.ReCommentDetailsResponse;
 import com.innim.okkycopy.domain.board.comment.dto.response.ReCommentListResponse;
-import com.innim.okkycopy.domain.board.comment.dto.response.RequesterInfo;
 import com.innim.okkycopy.domain.board.comment.entity.Comment;
-import com.innim.okkycopy.domain.board.comment.repository.CommentExpressionRepository;
 import com.innim.okkycopy.domain.board.comment.repository.CommentRepository;
 import com.innim.okkycopy.domain.board.entity.Post;
-import com.innim.okkycopy.domain.board.enums.ExpressionType;
 import com.innim.okkycopy.domain.board.repository.PostRepository;
 import com.innim.okkycopy.domain.member.entity.Member;
 import com.innim.okkycopy.domain.member.repository.MemberRepository;
@@ -25,7 +20,6 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -37,7 +31,7 @@ public class CommentCrudService {
     private final PostRepository postRepository;
     private final CommentRepository commentRepository;
     private final MemberRepository memberRepository;
-    private final CommentExpressionRepository commentExpressionRepository;
+    private final CommentExpressionService commentExpressionService;
     private final ImageUsageService imageUsageService;
 
     @PersistenceContext
@@ -107,32 +101,11 @@ public class CommentCrudService {
 
         List<Comment> parentComments = post.getCommentList().stream().filter(comment -> comment.getDepth() == 1)
             .toList();
-
         Member requester = (customUserDetails == null) ? null : customUserDetails.getMember();
-        List<CommentDetailsResponse> commentResponses = new ArrayList<>();
-        List<Short> expressionTypes = findRequesterExpressionType(
+        List<Short> expressionTypes = commentExpressionService.findRequesterExpressionType(
             parentComments.stream().map(Comment::getCommentId).toList(), requester, 20);
 
-        for (int i = 0; i < parentComments.size(); i++) {
-            RequesterInfo requesterInfo =
-                (requester == null) ? null : RequesterInfo.builder()
-                    .like(
-                        expressionTypes.get(i) != null && Objects.equals(Integer.valueOf(expressionTypes.get(i)),
-                            ExpressionType.LIKE.getValue()))
-                    .hate(
-                        expressionTypes.get(i) != null && Objects.equals(Integer.valueOf(expressionTypes.get(i)),
-                            ExpressionType.HATE.getValue()))
-                    .build();
-
-            commentResponses.add(
-                CommentDetailsResponse.of(
-                    parentComments.get(i),
-                    requesterInfo
-                )
-            );
-        }
-
-        return new CommentListResponse(commentResponses);
+        return CommentListResponse.of(parentComments, expressionTypes, requester);
     }
 
     @Transactional(readOnly = true)
@@ -141,51 +114,12 @@ public class CommentCrudService {
             .orElseThrow(() -> new StatusCode400Exception(ErrorCase._400_NO_SUCH_COMMENT));
 
         List<Comment> comments = commentRepository.findByParentIdOrderByCreatedDateAsc(commentId);
-        List<ReCommentDetailsResponse> commentResponses = new ArrayList<>();
-
         Member requester = (customUserDetails == null) ? null : customUserDetails.getMember();
-
         List<Long> commentIds = comments.stream().map(Comment::getCommentId).toList();
-
-        List<Short> expressionTypes = findRequesterExpressionType(commentIds, requester, 20);
+        List<Short> expressionTypes = commentExpressionService.findRequesterExpressionType(commentIds, requester, 20);
         List<String> mentionedNicknames = findMentionedNickname(commentIds, 20);
 
-        for (int i = 0; i < comments.size(); i++) {
-            RequesterInfo requesterInfo =
-                (requester == null) ? null : RequesterInfo.builder()
-                    .like(
-                        expressionTypes.get(i) != null && Objects.equals(Integer.valueOf(expressionTypes.get(i)),
-                            ExpressionType.LIKE.getValue()))
-                    .hate(
-                        expressionTypes.get(i) != null && Objects.equals(Integer.valueOf(expressionTypes.get(i)),
-                            ExpressionType.HATE.getValue()))
-                    .build();
-
-            commentResponses.add(
-                ReCommentDetailsResponse.of(comments.get(i), mentionedNicknames.get(i), requesterInfo)
-            );
-        }
-
-        return new ReCommentListResponse(commentResponses);
-    }
-
-    @Transactional(readOnly = true)
-    List<Short> findRequesterExpressionType(List<Long> commentIds, Member requester, int batchSize) {
-        List<Short> expressionTypes = new ArrayList<>();
-        if (requester != null) {
-            int batchQuotient = commentIds.size() / batchSize;
-            for (int i = 0; i < batchQuotient; i++) {
-                expressionTypes.addAll(commentExpressionRepository.findRequesterExpressionType(
-                    commentIds.subList(i * batchSize, (i + 1) * batchSize),
-                    requester.getMemberId()));
-            }
-            if (commentIds.size() % batchSize != 0) {
-                expressionTypes.addAll(commentExpressionRepository.findRequesterExpressionType(
-                    commentIds.subList(commentIds.size() - commentIds.size() % batchSize, commentIds.size()),
-                    requester.getMemberId()));
-            }
-        }
-        return expressionTypes;
+        return ReCommentListResponse.of(comments, mentionedNicknames, expressionTypes, requester);
     }
 
     @Transactional(readOnly = true)
