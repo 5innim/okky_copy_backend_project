@@ -14,6 +14,7 @@ import com.innim.okkycopy.domain.board.comment.entity.Comment;
 import com.innim.okkycopy.domain.board.comment.repository.CommentExpressionRepository;
 import com.innim.okkycopy.domain.board.comment.repository.CommentRepository;
 import com.innim.okkycopy.domain.board.comment.service.CommentCrudService;
+import com.innim.okkycopy.domain.board.comment.service.CommentExpressionService;
 import com.innim.okkycopy.domain.board.entity.Post;
 import com.innim.okkycopy.domain.board.repository.PostRepository;
 import com.innim.okkycopy.domain.member.entity.Member;
@@ -46,7 +47,7 @@ public class CommentCrudServiceTest {
     @Mock
     MemberRepository memberRepository;
     @Mock
-    CommentExpressionRepository commentExpressionRepository;
+    CommentExpressionService commentExpressionService;
     @Mock
     EntityManager entityManager;
     @Mock
@@ -394,31 +395,14 @@ public class CommentCrudServiceTest {
         }
 
         @Test
-        void given_noAuthentication_then_notFindCommentExpression() {
-            // given
-            CustomUserDetails customUserDetails = null;
-            long postId = 1L;
-            Post post = post();
-            given(postRepository.findByPostId(postId)).willReturn(Optional.of(post));
-
-            // when
-            commentCrudService.findComments(customUserDetails, postId);
-
-            // then
-            then(postRepository).should(times(1)).findByPostId(postId);
-            then(postRepository).shouldHaveNoMoreInteractions();
-            then(commentExpressionRepository).shouldHaveNoInteractions();
-        }
-
-        @Test
         void given_authentication_then_findCommentExpression() {
             // given
             CustomUserDetails customUserDetails = WithMockCustomUserSecurityContextFactory.customUserDetailsMock();
             long postId = 1L;
             Post post = post();
             given(postRepository.findByPostId(postId)).willReturn(Optional.of(post));
-            given(commentExpressionRepository.findRequesterExpressionType(any(List.class), any(Long.class))).willReturn(
-                List.of((short) 1));
+            given(commentExpressionService.findRequesterExpressionType(any(List.class), any(Member.class),
+                any(Integer.class))).willReturn(List.of((short) 1));
 
             // when
             commentCrudService.findComments(customUserDetails, postId);
@@ -426,9 +410,10 @@ public class CommentCrudServiceTest {
             // then
             then(postRepository).should(times(1)).findByPostId(postId);
             then(postRepository).shouldHaveNoMoreInteractions();
-            then(commentExpressionRepository).should(times(1))
-                .findRequesterExpressionType(any(List.class), any(Long.class));
-            then(commentExpressionRepository).shouldHaveNoMoreInteractions();
+            then(commentExpressionService).should(times(1))
+                .findRequesterExpressionType(any(List.class), any(Member.class),
+                    any(Integer.class));
+            then(commentExpressionService).shouldHaveNoMoreInteractions();
 
         }
 
@@ -589,29 +574,6 @@ public class CommentCrudServiceTest {
         }
 
         @Test
-        void given_noAuthentication_then_notFindCommentExpression() {
-            // given
-            CustomUserDetails customUserDetails = null;
-            long commentId = 1L;
-            List<Comment> comments = comments();
-            given(commentRepository.findByCommentId(commentId)).willReturn(
-                Optional.of(comment()));
-            given(commentRepository.findByParentIdOrderByCreatedDateAsc(commentId)).willReturn(comments);
-            given(commentRepository.findMentionedNickname(any(List.class))).willReturn(List.of("nick"));
-
-            // when
-            commentCrudService.findReComments(customUserDetails, commentId);
-
-            // then
-            then(commentRepository).should(times(1)).findByCommentId(commentId);
-            then(commentRepository).should(times(1)).findByParentIdOrderByCreatedDateAsc(commentId);
-            then(commentRepository).should(times(1)).findMentionedNickname(any(List.class));
-            then(commentRepository).shouldHaveNoMoreInteractions();
-            then(commentExpressionRepository).shouldHaveNoInteractions();
-
-        }
-
-        @Test
         void given_authentication_then_findCommentExpression() {
             // given
             CustomUserDetails customUserDetails = WithMockCustomUserSecurityContextFactory.customUserDetailsMock();
@@ -620,8 +582,8 @@ public class CommentCrudServiceTest {
             given(commentRepository.findByCommentId(commentId)).willReturn(
                 Optional.of(comment()));
             given(commentRepository.findByParentIdOrderByCreatedDateAsc(commentId)).willReturn(comments);
-            given(commentExpressionRepository.findRequesterExpressionType(any(List.class), any(Long.class))).willReturn(
-                List.of((short) 1));
+            given(commentExpressionService.findRequesterExpressionType(any(List.class), any(Member.class),
+                any(Integer.class))).willReturn(List.of((short) 1));
             given(commentRepository.findMentionedNickname(any(List.class))).willReturn(List.of("nick"));
 
             // when
@@ -630,10 +592,12 @@ public class CommentCrudServiceTest {
             // then
             then(commentRepository).should(times(1)).findByCommentId(commentId);
             then(commentRepository).should(times(1)).findByParentIdOrderByCreatedDateAsc(commentId);
-            then(commentExpressionRepository).should(times(1)).findRequesterExpressionType(any(List.class), any(Long.class));
+            then(commentExpressionService).should(times(1))
+                .findRequesterExpressionType(any(List.class), any(Member.class),
+                    any(Integer.class));
             then(commentRepository).should(times(1)).findMentionedNickname(any(List.class));
             then(commentRepository).shouldHaveNoMoreInteractions();
-            then(commentExpressionRepository).shouldHaveNoMoreInteractions();
+            then(commentExpressionService).shouldHaveNoMoreInteractions();
 
         }
 
