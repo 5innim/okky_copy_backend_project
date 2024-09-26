@@ -42,12 +42,12 @@ public class OAuth2SessionInfoProcessingFilter extends OncePerRequestFilter {
                     case "kakao":
                         LinkedHashMap<String, String> properties = oAuth2User.getAttribute("properties");
                         LinkedHashMap<String, Object> kakaoAccount = oAuth2User.getAttribute("kakao_account");
-                        assert properties != null;
-                        assert kakaoAccount != null;
+                        if (properties == null || kakaoAccount == null) {
+                            throw new NullPointerException();
+                        }
 
                         LinkedHashMap<String, Boolean> kakaoAccountProfile =
                             (LinkedHashMap<String, Boolean>) kakaoAccount.get("profile");
-
 
                         oAuthInfo = OAuthInfoResponse.builder()
 //                            .name(properties.get("name")) TODO "After authenticate business app at kakao, can use name property"
@@ -61,7 +61,10 @@ public class OAuth2SessionInfoProcessingFilter extends OncePerRequestFilter {
                     case "naver":
                         LinkedHashMap<String, String> map = oAuth2User.getAttribute("response");
 
-                        assert map != null;
+                        if (map == null) {
+                            throw new NullPointerException();
+                        }
+
                         oAuthInfo = OAuthInfoResponse.builder()
                             .name(map.get("name"))
                             .email(map.get("email"))
@@ -72,7 +75,9 @@ public class OAuth2SessionInfoProcessingFilter extends OncePerRequestFilter {
                         break;
                 }
 
-                assert oAuthInfo != null;
+                if (oAuthInfo == null) {
+                    throw new NullPointerException();
+                }
 
                 ResponseUtil.setResponseToObject(response, oAuthInfo);
 

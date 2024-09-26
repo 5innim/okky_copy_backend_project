@@ -41,7 +41,9 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
             case "naver":
                 try {
                     LinkedHashMap<String, String> map = oAuth2User.getAttribute("response");
-                    assert map != null;
+                    if (map == null) {
+                        throw new NullPointerException();
+                    }
                     return CustomOAuth2User.of(oAuth2User, nameAttributeKey,
                         naverMemberRepository.findByProviderId(map.get("id")).orElse(null),
                         registrationId);
