@@ -4,8 +4,6 @@ import com.innim.okkycopy.global.common.validation.annotation.ListSize;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Size;
 import java.util.List;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -13,8 +11,6 @@ import lombok.Setter;
 @Setter
 @Getter
 @NoArgsConstructor
-@AllArgsConstructor
-@Builder
 public class PostRequest {
 
     @Size(min = 1)
