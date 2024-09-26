@@ -165,12 +165,13 @@ public class QnaPostServiceTest {
         }
 
         PostRequest postRequest() {
-            return PostRequest.builder()
-                .title("test_title")
-                .topic("test_topic")
-                .tags(Collections.emptyList())
-                .content("test_content")
-                .build();
+            PostRequest request = new PostRequest();
+            request.setTitle("test_title");
+            request.setTopic("test_topic");
+            request.setTags(Collections.emptyList());
+            request.setContent("test_content");
+
+            return request;
         }
 
     }
@@ -433,12 +434,13 @@ public class QnaPostServiceTest {
         }
 
         PostRequest postRequest() {
-            return PostRequest.builder()
-                .title("test_title")
-                .content("test_content")
-                .topic("test_topic")
-                .tags(Collections.emptyList())
-                .build();
+            PostRequest request = new PostRequest();
+            request.setTitle("test_title");
+            request.setTopic("test_topic");
+            request.setTags(Collections.emptyList());
+            request.setContent("test_content");
+
+            return request;
         }
 
         QnaPost qnaPost() {

@@ -182,13 +182,15 @@ public class _board_qna_write {
         assertThat(response.getStatus()).isEqualTo(HttpStatus.CREATED.value());
     }
 
-
     PostRequest postRequest() {
-        return PostRequest.builder()
-            .title("test_title")
-            .topic("기술")
-            .tags(Collections.emptyList())
-            .content("test_content")
-            .build();
+        PostRequest request = new PostRequest();
+        request.setTitle("test_title");
+        request.setTopic("기술");
+        request.setTags(Collections.emptyList());
+        request.setContent("test_content");
+
+        return request;
     }
+
+
 }

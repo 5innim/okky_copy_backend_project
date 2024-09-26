@@ -113,7 +113,9 @@ public class _board_comments_$id_hate {
     }
 
     CommentRequest commentRequest() {
-        return new CommentRequest("test comment");
+        CommentRequest request = new CommentRequest();
+        request.setContent("test_content");
+        return request;
     }
 
     KnowledgePost knowledgePost() {

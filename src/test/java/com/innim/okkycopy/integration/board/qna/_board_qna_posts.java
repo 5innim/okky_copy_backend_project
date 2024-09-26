@@ -51,7 +51,7 @@ public class _board_qna_posts {
             MockMvcRequestBuilders.post("/board/qna/write")
                 .characterEncoding("UTF-8")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(new Gson().toJson(writeRequest()))
+                .content(new Gson().toJson(postRequest()))
         );
 
         // when
@@ -64,13 +64,14 @@ public class _board_qna_posts {
         assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());
     }
 
-    PostRequest writeRequest() {
-        return PostRequest.builder()
-            .title("test_title")
-            .topic("기술")
-            .tags(Arrays.asList(new TagInfo("tag1"), new TagInfo("tag2")))
-            .content("test_content")
-            .build();
+    PostRequest postRequest() {
+        PostRequest request = new PostRequest();
+        request.setTitle("test_title");
+        request.setTopic("기술");
+        request.setTags(Arrays.asList(new TagInfo("tag1"), new TagInfo("tag2")));
+        request.setContent("test_content");
+
+        return request;
     }
 
 }

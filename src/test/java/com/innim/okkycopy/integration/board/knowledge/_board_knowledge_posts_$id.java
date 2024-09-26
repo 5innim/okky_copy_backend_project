@@ -255,14 +255,14 @@ public class _board_knowledge_posts_$id {
         assertThat(response.getStatus()).isEqualTo(HttpStatus.NO_CONTENT.value());
     }
 
-
     PostRequest postRequest() {
-        return PostRequest.builder()
-            .title("test_title")
-            .topic("Tech 뉴스")
-            .tags(Collections.emptyList())
-            .content("test_content")
-            .build();
+        PostRequest request = new PostRequest();
+        request.setTitle("test_title");
+        request.setTopic("Tech 뉴스");
+        request.setTags(Collections.emptyList());
+        request.setContent("test_content");
+
+        return request;
     }
 
     KnowledgePost knowledgePost() {

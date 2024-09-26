@@ -6,8 +6,8 @@ import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.times;
 
 import com.innim.okkycopy.domain.board.dto.request.write.PostRequest;
-import com.innim.okkycopy.domain.board.dto.response.post.brief.PostListResponse;
-import com.innim.okkycopy.domain.board.dto.response.post.detail.PostDetailsResponse;
+import com.innim.okkycopy.domain.board.dto.response.post.PostListResponse;
+import com.innim.okkycopy.domain.board.dto.response.post.PostDetailsResponse;
 import com.innim.okkycopy.domain.board.knowledge.KnowledgeController;
 import com.innim.okkycopy.domain.board.knowledge.KnowledgePostService;
 import com.innim.okkycopy.global.auth.CustomUserDetails;
