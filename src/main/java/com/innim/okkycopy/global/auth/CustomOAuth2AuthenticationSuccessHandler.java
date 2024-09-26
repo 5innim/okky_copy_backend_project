@@ -61,13 +61,17 @@ public class CustomOAuth2AuthenticationSuccessHandler implements AuthenticationS
                         break;
                     case "naver":
                         LinkedHashMap<String, String> map = customOAuth2User.getAttribute("response");
-                        assert map != null;
+                        if (map == null) {
+                            throw new NullPointerException();
+                        }
 
                         clientId = new OAuth2AuthorizedClientId(customOAuth2User.getRegistrationId(),
                             map.get("id"));
                         break;
                 }
-                assert clientId != null;
+                if (clientId == null) {
+                    throw new NullPointerException();
+                }
                 request.getSession().setAttribute(String.valueOf(clientId.hashCode()), customOAuth2User);
                 response.sendRedirect(frontendOrigin + signupPath + "?id=" + EncryptionUtil.base64Encode(
                     String.valueOf(clientId.hashCode())));

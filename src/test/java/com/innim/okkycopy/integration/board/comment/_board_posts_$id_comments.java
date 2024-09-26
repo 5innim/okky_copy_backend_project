@@ -84,7 +84,9 @@ public class _board_posts_$id_comments {
     }
 
     CommentRequest commentRequest() {
-        return new CommentRequest("test comment");
+        CommentRequest request = new CommentRequest();
+        request.setContent("test_content");
+        return request;
     }
 
     KnowledgePost knowledgePost() {

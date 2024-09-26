@@ -79,20 +79,24 @@ public class _board_comments_$commentId_recomment {
 
 
         // when
+        ReCommentRequest request = new ReCommentRequest();
+        request.setMentionId(1L);
+        request.setContent("test_content2");
+
+
         MockHttpServletResponse response = mockMvc.perform(MockMvcRequestBuilders.post("/board/comments/1/recomment")
             .characterEncoding("UTF-8")
             .contentType(MediaType.APPLICATION_JSON)
-            .content(new Gson().toJson(ReCommentRequest.builder()
-                .mentionId(1L)
-                .content("test_comment2")
-                .build()))).andReturn().getResponse();
+            .content(new Gson().toJson(request))).andReturn().getResponse();
 
         // then
         assertThat(response.getStatus()).isEqualTo(HttpStatus.CREATED.value());
     }
 
     CommentRequest commentRequest() {
-        return new CommentRequest("test comment");
+        CommentRequest request = new CommentRequest();
+        request.setContent("test_content");
+        return request;
     }
 
     KnowledgePost knowledgePost() {

@@ -84,15 +84,16 @@ public class Comment {
             .post(post)
             .member(member).build();
 
-        post.setComments(post.getComments() + 1);
+        post.increaseComments();
 
         return comment;
     }
 
     public static void remove(Comment comment, EntityManager entityManager) {
-        Post post = comment.getPost();
-        post.setComments(post.getComments() - 1);
-
+        if (comment.getDepth() == 1) {
+            Post post = comment.getPost();
+            post.decreaseComments();
+        }
         entityManager.remove(comment);
     }
 

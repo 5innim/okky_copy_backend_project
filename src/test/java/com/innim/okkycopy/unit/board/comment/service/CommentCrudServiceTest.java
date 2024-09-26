@@ -11,7 +11,6 @@ import com.innim.okkycopy.common.WithMockCustomUserSecurityContextFactory;
 import com.innim.okkycopy.domain.board.comment.dto.request.CommentRequest;
 import com.innim.okkycopy.domain.board.comment.dto.request.ReCommentRequest;
 import com.innim.okkycopy.domain.board.comment.entity.Comment;
-import com.innim.okkycopy.domain.board.comment.repository.CommentExpressionRepository;
 import com.innim.okkycopy.domain.board.comment.repository.CommentRepository;
 import com.innim.okkycopy.domain.board.comment.service.CommentCrudService;
 import com.innim.okkycopy.domain.board.comment.service.CommentExpressionService;
@@ -132,9 +131,10 @@ public class CommentCrudServiceTest {
         }
 
         CommentRequest commentRequest() {
-            return new CommentRequest("test_content");
+            CommentRequest request = new CommentRequest();
+            request.setContent("test_content");
+            return request;
         }
-
         Post post() {
             return Post.builder()
                 .comments(1)
@@ -247,7 +247,9 @@ public class CommentCrudServiceTest {
         }
 
         CommentRequest commentRequest() {
-            return new CommentRequest("test_content");
+            CommentRequest request = new CommentRequest();
+            request.setContent("test_content");
+            return request;
         }
 
         Comment comment() {
@@ -368,6 +370,7 @@ public class CommentCrudServiceTest {
                         .comments(1)
                         .build()
                 )
+                .depth(1)
                 .build();
         }
     }
@@ -544,10 +547,10 @@ public class CommentCrudServiceTest {
         }
 
         ReCommentRequest reCommentRequest() {
-            return ReCommentRequest.builder()
-                .content("test_content")
-                .mentionId(1L)
-                .build();
+            ReCommentRequest request = new ReCommentRequest();
+            request.setMentionId(1L);
+            request.setContent("test_content");
+            return request;
         }
     }
 

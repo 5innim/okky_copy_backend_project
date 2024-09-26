@@ -2,12 +2,10 @@ package com.innim.okkycopy.domain.board.community;
 
 import com.innim.okkycopy.domain.board.community.entity.CommunityPost;
 import com.innim.okkycopy.domain.board.dto.request.write.PostRequest;
-import com.innim.okkycopy.domain.board.dto.response.post.brief.PostListResponse;
-import com.innim.okkycopy.domain.board.dto.response.post.detail.PostDetailsResponse;
-import com.innim.okkycopy.domain.board.dto.response.post.detail.RequesterInfo;
+import com.innim.okkycopy.domain.board.dto.response.post.PostListResponse;
+import com.innim.okkycopy.domain.board.dto.response.post.PostDetailsResponse;
 import com.innim.okkycopy.domain.board.entity.BoardTopic;
 import com.innim.okkycopy.domain.board.entity.PostExpression;
-import com.innim.okkycopy.domain.board.enums.ExpressionType;
 import com.innim.okkycopy.domain.board.repository.BoardTopicRepository;
 import com.innim.okkycopy.domain.board.repository.PostExpressionRepository;
 import com.innim.okkycopy.domain.board.repository.ScrapRepository;
@@ -62,18 +60,15 @@ public class CommunityPostService {
         CommunityPost communityPost = communityPostRepository.findByPostId(postId)
             .orElseThrow(() -> new StatusCode400Exception(ErrorCase._400_NO_SUCH_POST));
 
-        PostDetailsResponse response = PostDetailsResponse.from(communityPost);
+        PostDetailsResponse response;
         if (customUserDetails != null) {
             Member requester = customUserDetails.getMember();
             PostExpression postExpression = postExpressionRepository.findByMemberAndPost(communityPost, requester)
                 .orElseGet(() -> null);
-            response.setRequesterInfo(
-                RequesterInfo.builder()
-                    .scrap(scrapRepository.findByMemberAndPost(communityPost, requester).isPresent())
-                    .like(postExpression != null && postExpression.getExpressionType().equals(ExpressionType.LIKE))
-                    .hate(postExpression != null && postExpression.getExpressionType().equals(ExpressionType.HATE))
-                    .build()
-            );
+            response = PostDetailsResponse.from(communityPost, postExpression,
+                scrapRepository.findByMemberAndPost(communityPost, requester).isPresent());
+        } else {
+            response = PostDetailsResponse.from(communityPost);
         }
         communityPost.increaseViews();
 
