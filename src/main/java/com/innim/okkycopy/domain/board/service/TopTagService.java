@@ -1,6 +1,6 @@
 package com.innim.okkycopy.domain.board.service;
 
-import com.innim.okkycopy.domain.board.dto.response.top_tag.TopTagListResponse;
+import com.innim.okkycopy.domain.board.dto.response.TopTagListResponse;
 import com.innim.okkycopy.domain.board.entity.TopTag;
 import com.innim.okkycopy.domain.board.repository.TopTagRepository;
 import java.util.List;

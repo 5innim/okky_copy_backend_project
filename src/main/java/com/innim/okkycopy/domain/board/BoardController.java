@@ -1,8 +1,8 @@
 package com.innim.okkycopy.domain.board;
 
 import com.innim.okkycopy.domain.board.dto.response.FileResponse;
-import com.innim.okkycopy.domain.board.dto.response.top_tag.TopTagListResponse;
-import com.innim.okkycopy.domain.board.dto.response.topics.TopicListResponse;
+import com.innim.okkycopy.domain.board.dto.response.TopTagListResponse;
+import com.innim.okkycopy.domain.board.dto.response.TopicListResponse;
 import com.innim.okkycopy.domain.board.enums.ExpressionType;
 import com.innim.okkycopy.domain.board.service.BoardTopicService;
 import com.innim.okkycopy.domain.board.service.PostExpressionService;
