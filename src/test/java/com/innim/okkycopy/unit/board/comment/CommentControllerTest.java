@@ -55,7 +55,9 @@ public class CommentControllerTest {
         }
 
         CommentRequest commentRequest() {
-            return new CommentRequest("test_content");
+            CommentRequest request = new CommentRequest();
+            request.setContent("test_content");
+            return request;
         }
 
 
@@ -81,7 +83,9 @@ public class CommentControllerTest {
         }
 
         CommentRequest commentRequest() {
-            return new CommentRequest("test_content");
+            CommentRequest request = new CommentRequest();
+            request.setContent("test_content");
+            return request;
         }
     }
 
@@ -153,10 +157,10 @@ public class CommentControllerTest {
         }
 
         ReCommentRequest reCommentRequest() {
-            return ReCommentRequest.builder()
-                .mentionId(1L)
-                .content("test_content")
-                .build();
+            ReCommentRequest request = new ReCommentRequest();
+            request.setMentionId(1L);
+            request.setContent("test_content");
+            return request;
         }
     }
 

@@ -5,7 +5,7 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.times;
 
-import com.innim.okkycopy.domain.board.dto.response.top_tag.TopTagListResponse;
+import com.innim.okkycopy.domain.board.dto.response.TopTagListResponse;
 import com.innim.okkycopy.domain.board.repository.TopTagRepository;
 import com.innim.okkycopy.domain.board.service.TopTagService;
 import java.util.Collections;

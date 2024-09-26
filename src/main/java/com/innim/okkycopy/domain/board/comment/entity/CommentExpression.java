@@ -1,10 +1,7 @@
 package com.innim.okkycopy.domain.board.comment.entity;
 
-import com.innim.okkycopy.domain.board.community.entity.CommunityPost;
 import com.innim.okkycopy.domain.board.entity.Post;
 import com.innim.okkycopy.domain.board.enums.ExpressionType;
-import com.innim.okkycopy.domain.board.event.entity.EventPost;
-import com.innim.okkycopy.domain.board.knowledge.entity.KnowledgePost;
 import com.innim.okkycopy.domain.board.qna.entity.QnaPost;
 import com.innim.okkycopy.domain.member.entity.Member;
 import jakarta.persistence.Column;
@@ -26,7 +23,9 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.Hibernate;
 import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.proxy.HibernateProxy;
 
 @Entity
 @Getter
@@ -67,14 +66,16 @@ public class CommentExpression {
             .build();
     }
 
-    // TODO: this method should be expended when new domain post is added
+    // TODO: this method should be expended when new post domain is added
     public static boolean isNotSupportedCase(Comment comment) {
         Post post = comment.getPost();
-        if (post instanceof KnowledgePost || post instanceof CommunityPost || post instanceof EventPost) {
-            return false;
-        } else {
-            return post instanceof QnaPost && comment.getDepth() > 1;
+
+        // do unproxy post, because post field in Comment is FetchType.LAZY.
+        if (post instanceof HibernateProxy) {
+            post = (Post) Hibernate.unproxy(post);
         }
+
+        return post instanceof QnaPost && comment.getDepth() > 1;
     }
 
     public static void remove(

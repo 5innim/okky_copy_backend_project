@@ -111,6 +111,14 @@ public class Post {
         this.setScraps(this.getScraps() - 1);
     }
 
+    public void increaseComments() {
+        this.setComments(this.getComments() + 1);
+    }
+
+    public void decreaseComments() {
+        this.setComments(this.getComments() - 1);
+    }
+
     public void increaseViews() {
         this.setViews(this.getViews() + 1);
     }

@@ -1,6 +1,6 @@
 package com.innim.okkycopy.domain.board.service;
 
-import com.innim.okkycopy.domain.board.dto.response.topics.TopicListResponse;
+import com.innim.okkycopy.domain.board.dto.response.TopicListResponse;
 import com.innim.okkycopy.domain.board.entity.BoardType;
 import com.innim.okkycopy.domain.board.repository.BoardTypeRepository;
 import com.innim.okkycopy.global.error.ErrorCase;
