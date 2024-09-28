@@ -397,7 +397,7 @@ public class MemberCrudServiceTest {
         }
 
         @Test
-        void given_invoke_thenInvokeSerLogoutDate() {
+        void given_invoke_thenInvokeModifyLogoutDate() {
             // given
             Member member = WithMockCustomUserSecurityContextFactory.customUserDetailsMock().getMember();
             Date logoutDate = new Date();
