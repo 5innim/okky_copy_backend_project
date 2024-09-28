@@ -108,11 +108,11 @@ public class _member_profileUpdate {
     }
 
     ProfileUpdateRequest profileUpdateRequest() {
-        return ProfileUpdateRequest.builder()
-            .name("testName")
-            .nickname("testNickname")
-            .profile(null)
-            .build();
+        ProfileUpdateRequest request = new ProfileUpdateRequest();
+        request.setProfile(null);
+        request.setNickname("testNickname");
+        request.setName("testName");
+        return request;
     }
 }
 

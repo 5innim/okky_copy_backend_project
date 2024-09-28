@@ -128,12 +128,12 @@ public class GoogleMemberServiceTest {
         }
 
         OAuthMemberRequest oAuthMemberRequest() throws NoSuchAlgorithmException {
-            return OAuthMemberRequest.builder()
-                .key(EncryptionUtil.base64Encode("testKey"))
-                .nickname("testNickname")
-                .profile("testProfile")
-                .emailCheck(true)
-                .build();
+            OAuthMemberRequest request = new OAuthMemberRequest();
+            request.setKey(EncryptionUtil.base64Encode("testKey"));
+            request.setNickname("testNickname");
+            request.setProfile("testProfile");
+            request.setEmailCheck(true);
+            return request;
         }
 
         CustomOAuth2User customOAuth2User() {

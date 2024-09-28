@@ -148,13 +148,13 @@ public class _member_signup {
     }
 
     MemberRequest memberRequest() {
-        return MemberRequest.builder()
-            .id("test1234")
-            .password("test1234**")
-            .email("test@test.com")
-            .name("testName")
-            .nickname("testNickname")
-            .emailCheck(true)
-            .build();
+        MemberRequest request = new MemberRequest();
+        request.setId("test1234");
+        request.setPassword("test1234**");
+        request.setEmail("test@test.com");
+        request.setEmailCheck(true);
+        request.setName("testName");
+        request.setNickname("testNickname");
+        return request;
     }
 }
