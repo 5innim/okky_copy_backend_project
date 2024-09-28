@@ -47,32 +47,45 @@ public class Member {
     @Column(name = "member_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long memberId;
+
     @Column(nullable = false)
     private String name;
+
     @Column(nullable = false, unique = true)
     private String nickname;
+
     @Column(nullable = false, name = "email_check")
     private boolean emailCheck;
+
     @Column(nullable = false, name = "created_date")
     @CreationTimestamp
     private LocalDateTime createdDate;
+
     @Enumerated(EnumType.ORDINAL)
     @Column(nullable = false)
     private Role role;
+
     @Column
     private String profile;
+
     @Column(name = "login_date")
     private LocalDateTime loginDate;
+
     @Column(name = "logout_date")
     private LocalDateTime logoutDate;
+
     @OneToMany(mappedBy = "member")
     private List<Post> posts;
+
     @OneToMany(mappedBy = "member", cascade = {CascadeType.REMOVE})
     private List<Scrap> scrapList;
+
     @OneToMany(mappedBy = "member", cascade = {CascadeType.REMOVE})
     private List<PostExpression> postExpressionList;
+
     @OneToMany(mappedBy = "member", cascade = {CascadeType.REMOVE})
     private List<CommentExpression> commentExpressionList;
+
     @OneToMany(mappedBy = "member")
     private List<Comment> comments;
 

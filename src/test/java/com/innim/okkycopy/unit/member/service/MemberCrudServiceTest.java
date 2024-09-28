@@ -153,10 +153,10 @@ public class MemberCrudServiceTest {
     class _modifyMemberRole_$String {
 
         @Test
-        void given_noExistKey_then_throwErrorCase401009() {
+        void given_noExistKey_then_throwErrorCase401009() throws NoSuchAlgorithmException {
             // given
-            String key = "test_key";
-            given(mailManager.findValueByEmailAuthenticate(key)).willReturn(Optional.empty());
+            String key = EncryptionUtil.base64Encode("test_key");
+            given(mailManager.findValueByEmailAuthenticate("test_key")).willReturn(Optional.empty());
 
             // when
             Exception exception = catchException(() -> {
@@ -169,11 +169,11 @@ public class MemberCrudServiceTest {
         }
 
         @Test
-        void given_noExistMember_then_throwErrorCase401005() {
+        void given_noExistMember_then_throwErrorCase401005() throws NoSuchAlgorithmException {
             // given
-            String key = "test_key";
+            String key = EncryptionUtil.base64Encode("test_key");
             EmailAuthenticateValue emailAuthenticateValue = emailAuthenticateValue();
-            given(mailManager.findValueByEmailAuthenticate(key)).willReturn(Optional.of(emailAuthenticateValue));
+            given(mailManager.findValueByEmailAuthenticate("test_key")).willReturn(Optional.of(emailAuthenticateValue));
             given(memberRepository.findByMemberId(emailAuthenticateValue.getMemberId())).willReturn(Optional.empty());
 
             // when
@@ -187,12 +187,12 @@ public class MemberCrudServiceTest {
         }
 
         @Test
-        void given_memberIsAlreadyAuthenticated_then_throwErrorCase403003() {
+        void given_memberIsAlreadyAuthenticated_then_throwErrorCase403003() throws NoSuchAlgorithmException {
             // given
-            String key = "test_key";
+            String key = EncryptionUtil.base64Encode("test_key");
             EmailAuthenticateValue emailAuthenticateValue = emailAuthenticateValue();
             Member member = WithMockCustomUserSecurityContextFactory.customUserDetailsMock().getMember();
-            given(mailManager.findValueByEmailAuthenticate(key)).willReturn(Optional.of(emailAuthenticateValue));
+            given(mailManager.findValueByEmailAuthenticate("test_key")).willReturn(Optional.of(emailAuthenticateValue));
             given(memberRepository.findByMemberId(emailAuthenticateValue.getMemberId())).willReturn(
                 Optional.of(member));
 
@@ -208,13 +208,13 @@ public class MemberCrudServiceTest {
         }
 
         @Test
-        void given_validateKeyFail_then_throwErrorCase401011() {
+        void given_validateKeyFail_then_throwErrorCase401011() throws NoSuchAlgorithmException {
             // given
-            String key = "test_key";
+            String key = EncryptionUtil.base64Encode("test_key");
             EmailAuthenticateValue emailAuthenticateValue = emailAuthenticateValue();
             Member member = WithMockCustomUserSecurityContextFactory.customUserDetailsMock().getMember();
             member.setRole(Role.MAIL_INVALID_USER);
-            given(mailManager.findValueByEmailAuthenticate(key)).willReturn(Optional.of(emailAuthenticateValue));
+            given(mailManager.findValueByEmailAuthenticate("test_key")).willReturn(Optional.of(emailAuthenticateValue));
             given(memberRepository.findByMemberId(emailAuthenticateValue.getMemberId())).willReturn(
                 Optional.of(member));
 
@@ -243,7 +243,7 @@ public class MemberCrudServiceTest {
 
             // when
             Exception exception = catchException(() -> {
-                memberCrudService.modifyMemberRole(key);
+                memberCrudService.modifyMemberRole(EncryptionUtil.base64Encode(key));
             });
 
             // then
@@ -264,10 +264,10 @@ public class MemberCrudServiceTest {
     class _modifyMemberRoleAndEmail_$String {
 
         @Test
-        void given_noExistKey_then_throwErrorCase401009() {
+        void given_noExistKey_then_throwErrorCase401009() throws NoSuchAlgorithmException {
             // given
-            String key = "test_key";
-            given(mailManager.findValueByEmailChangeAuthenticate(key)).willReturn(Optional.empty());
+            String key = EncryptionUtil.base64Encode("test_key");
+            given(mailManager.findValueByEmailChangeAuthenticate("test_key")).willReturn(Optional.empty());
 
             // when
             Exception exception = catchException(() -> {
@@ -280,11 +280,11 @@ public class MemberCrudServiceTest {
         }
 
         @Test
-        void given_noExistMember_then_throwErrorCase401005() {
+        void given_noExistMember_then_throwErrorCase401005() throws NoSuchAlgorithmException {
             // given
-            String key = "test_key";
+            String key = EncryptionUtil.base64Encode("test_key");
             EmailAuthenticateValue emailAuthenticateValue = emailAuthenticateValue();
-            given(mailManager.findValueByEmailChangeAuthenticate(key)).willReturn(Optional.of(emailAuthenticateValue));
+            given(mailManager.findValueByEmailChangeAuthenticate("test_key")).willReturn(Optional.of(emailAuthenticateValue));
             given(memberRepository.findByMemberId(emailAuthenticateValue.getMemberId())).willReturn(Optional.empty());
 
             // when
@@ -298,13 +298,13 @@ public class MemberCrudServiceTest {
         }
 
         @Test
-        void given_invoke_then_invokeChangeEmail() {
+        void given_invoke_then_invokeChangeEmail() throws NoSuchAlgorithmException {
             // given
-            String key = "test_key";
+            String key = EncryptionUtil.base64Encode("test_key");
             Member member = WithMockCustomUserSecurityContextFactory.customUserDetailsMock().getMember();
             member.setRole(Role.MAIL_INVALID_USER);
             EmailAuthenticateValue emailAuthenticateValue = emailAuthenticateValue();
-            given(mailManager.findValueByEmailChangeAuthenticate(key)).willReturn(Optional.of(emailAuthenticateValue));
+            given(mailManager.findValueByEmailChangeAuthenticate("test_key")).willReturn(Optional.of(emailAuthenticateValue));
             given(memberRepository.findByMemberId(emailAuthenticateValue.getMemberId())).willReturn(
                 Optional.of(member));
 
@@ -313,7 +313,7 @@ public class MemberCrudServiceTest {
 
             // then
             assertThat(member.getRole()).isEqualTo(Role.USER);
-            then(mailManager).should(times(1)).removeKey(key);
+            then(mailManager).should(times(1)).removeKey("test_key");
             then(mailManager).shouldHaveNoMoreInteractions();
         }
 
@@ -365,11 +365,11 @@ public class MemberCrudServiceTest {
         }
 
         ProfileUpdateRequest profileUpdateRequest() {
-            return ProfileUpdateRequest.builder()
-                .profile("update_profile")
-                .nickname("update_nickname")
-                .name("update_name")
-                .build();
+            ProfileUpdateRequest request = new ProfileUpdateRequest();
+            request.setProfile("update_profile");
+            request.setNickname("update_nickname");
+            request.setName("update_name");
+            return request;
         }
     }
 
@@ -386,7 +386,7 @@ public class MemberCrudServiceTest {
 
             // when
             Exception exception = catchException(() -> {
-                memberCrudService.modifyMemberLogoutDate(member, localDateTime);
+                memberCrudService.modifyMemberLogoutDate(member);
             });
 
             // then
@@ -405,7 +405,7 @@ public class MemberCrudServiceTest {
             given(memberRepository.findByMemberId(member.getMemberId())).willReturn(Optional.of(member));
 
             // when
-            memberCrudService.modifyMemberLogoutDate(member, localDateTime);
+            memberCrudService.modifyMemberLogoutDate(member);
 
             // then
             then(memberRepository).should(times(1)).findByMemberId(member.getMemberId());

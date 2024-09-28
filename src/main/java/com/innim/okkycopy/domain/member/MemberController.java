@@ -16,7 +16,6 @@ import com.innim.okkycopy.domain.member.service.OkkyMemberService;
 import com.innim.okkycopy.global.auth.CustomUserDetails;
 import com.innim.okkycopy.global.error.ErrorCase;
 import com.innim.okkycopy.global.error.exception.StatusCode400Exception;
-import com.innim.okkycopy.global.util.EncryptionUtil;
 import com.innim.okkycopy.global.util.JwtUtil;
 import com.innim.okkycopy.global.util.ResponseUtil;
 import jakarta.servlet.http.HttpServletRequest;
@@ -121,23 +120,20 @@ public class MemberController {
 
     @PutMapping("/email-authenticate")
     public ResponseEntity<Object> emailAuthenticate(String key) {
-        memberCrudService.modifyMemberRole(EncryptionUtil.base64Decode(key));
+        memberCrudService.modifyMemberRole(key);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
     @PutMapping("/email-change-authenticate")
     public ResponseEntity<Object> emailChangeAuthenticate(String key) {
-        memberCrudService.modifyMemberRoleAndEmail(EncryptionUtil.base64Decode(key));
+        memberCrudService.modifyMemberRoleAndEmail(key);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
 
     @PutMapping("/logout")
     public ResponseEntity<Object> memberLogoutDateModify(@AuthenticationPrincipal CustomUserDetails customUserDetails) {
-        Date logoutDate = new Date();
-        LocalDateTime localDateTime = LocalDateTime.ofInstant(logoutDate.toInstant(), ZoneId.systemDefault());
-        memberCrudService.modifyMemberLogoutDate(customUserDetails.getMember(), localDateTime);
-
+        memberCrudService.modifyMemberLogoutDate(customUserDetails.getMember());
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 

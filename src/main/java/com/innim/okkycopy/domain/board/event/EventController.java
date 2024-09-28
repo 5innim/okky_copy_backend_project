@@ -1,8 +1,8 @@
 package com.innim.okkycopy.domain.board.event;
 
 import com.innim.okkycopy.domain.board.dto.request.write.PostRequest;
-import com.innim.okkycopy.domain.board.dto.response.post.PostListResponse;
 import com.innim.okkycopy.domain.board.dto.response.post.PostDetailsResponse;
+import com.innim.okkycopy.domain.board.dto.response.post.PostListResponse;
 import com.innim.okkycopy.global.auth.CustomUserDetails;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

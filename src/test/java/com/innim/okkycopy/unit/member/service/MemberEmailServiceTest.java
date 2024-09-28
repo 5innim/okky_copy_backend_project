@@ -9,10 +9,7 @@ import static org.mockito.Mockito.times;
 import com.innim.okkycopy.common.WithMockCustomUserSecurityContextFactory;
 import com.innim.okkycopy.domain.member.dto.request.UpdateEmailRequest;
 import com.innim.okkycopy.domain.member.entity.Member;
-import com.innim.okkycopy.domain.member.repository.GoogleMemberRepository;
-import com.innim.okkycopy.domain.member.repository.KakaoMemberRepository;
 import com.innim.okkycopy.domain.member.repository.MemberRepository;
-import com.innim.okkycopy.domain.member.repository.NaverMemberRepository;
 import com.innim.okkycopy.domain.member.repository.OkkyMemberRepository;
 import com.innim.okkycopy.domain.member.service.MemberEmailService;
 import com.innim.okkycopy.global.auth.enums.Role;
@@ -34,12 +31,6 @@ public class MemberEmailServiceTest {
 
     @Mock
     OkkyMemberRepository okkyMemberRepository;
-    @Mock
-    GoogleMemberRepository googleMemberRepository;
-    @Mock
-    NaverMemberRepository naverMemberRepository;
-    @Mock
-    KakaoMemberRepository kakaoMemberRepository;
     @Mock
     MemberRepository memberRepository;
     @Mock
@@ -150,7 +141,10 @@ public class MemberEmailServiceTest {
         }
 
         UpdateEmailRequest updateEmailRequest() {
-            return new UpdateEmailRequest("update_email");
+            UpdateEmailRequest request = new UpdateEmailRequest();
+            request.setEmail("update_email");
+            return request;
         }
+
     }
 }

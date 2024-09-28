@@ -46,38 +46,53 @@ public class Post {
     @Column(name = "post_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long postId;
+
     @ManyToOne
     @JoinColumn(name = "member_id")
     private Member member;
+
     @Column(nullable = false)
     private String title;
+
     @Column(length = 20000, nullable = false)
     private String content;
+
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = "topic_id")
     private BoardTopic boardTopic;
+
     @Column(nullable = false)
     private Integer likes;
+
     @Column(nullable = false)
     private Integer hates;
+
     @Column(nullable = false)
     private Integer scraps;
+
     @Column(nullable = false)
     private Integer views;
+
     @Column(nullable = false)
     private Integer comments;
+
     @CreationTimestamp
     @Column(name = "created_date", nullable = false)
     private LocalDateTime createdDate;
+
     @Column(name = "last_update")
     private LocalDateTime lastUpdate;
+
     @BatchSize(size = 20)
     @OneToMany(mappedBy = "post", cascade = {CascadeType.REMOVE, CascadeType.PERSIST}, orphanRemoval = true)
     private List<Tag> tags;
+
     @OneToMany(mappedBy = "post", cascade = {CascadeType.REMOVE})
     private List<Scrap> scrapList;
+
     @OneToMany(mappedBy = "post", cascade = {CascadeType.REMOVE})
     private List<PostExpression> postExpressionList;
+
     @OrderBy("createdDate ASC")
     @OneToMany(mappedBy = "post", cascade = {CascadeType.REMOVE})
     private List<Comment> commentList;

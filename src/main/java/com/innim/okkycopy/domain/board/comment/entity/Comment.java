@@ -44,29 +44,40 @@ public class Comment {
     @Column(name = "comment_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long commentId;
+
     @Column(name = "created_date", nullable = false)
     @CreationTimestamp
     private LocalDateTime createdDate;
+
     @Column(name = "last_update")
     private LocalDateTime lastUpdate;
+
     @Column(name = "likes", nullable = false)
     private Integer likes;
+
     @Column(name = "hates", nullable = false)
     private Integer hates;
+
     @Column(name = "content", nullable = false, length = 20000)
     private String content;
+
     @Column(name = "parent_id")
     private Long parentId;
+
     @Column(name = "depth", nullable = false)
     private Integer depth;
+
     @Column(name = "mentioned_member")
     private Long mentionedMember;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "post_id", nullable = false)
     private Post post;
+
     @ManyToOne
     @JoinColumn(name = "member_id")
     private Member member;
+
     @OneToMany(mappedBy = "comment", cascade = {CascadeType.REMOVE})
     private List<CommentExpression> commentExpressionList;
 

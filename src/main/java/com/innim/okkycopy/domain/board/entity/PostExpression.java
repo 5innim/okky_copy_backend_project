@@ -38,12 +38,15 @@ public class PostExpression {
     @Column(name = "expression_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long expressionId;
+
     @Column(name = "expression_type")
     @Enumerated(value = EnumType.ORDINAL)
     private ExpressionType expressionType;
+
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = "post_id")
     private Post post;
+
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private Member member;

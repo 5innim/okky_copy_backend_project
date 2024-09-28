@@ -28,8 +28,10 @@ public class ImageUsage {
     @Column(name = "image_usage_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long imageUsageId;
+
     @Column(name = "is_in_use", nullable = false)
     private Boolean isInUse;
+
     @Column(name = "created_date", nullable = false)
     @CreationTimestamp
     private LocalDateTime createdDate;

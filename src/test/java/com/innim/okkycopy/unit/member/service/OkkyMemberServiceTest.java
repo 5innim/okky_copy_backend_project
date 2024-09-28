@@ -117,14 +117,14 @@ public class OkkyMemberServiceTest {
         }
 
         MemberRequest memberRequest() {
-            return MemberRequest.builder()
-                .id("testId")
-                .password("testPassword**")
-                .email("testEmail@email.com")
-                .emailCheck(true)
-                .name("testName")
-                .nickname("testNickname")
-                .build();
+            MemberRequest request = new MemberRequest();
+            request.setId("testId");
+            request.setPassword("testPassword**");
+            request.setEmail("testEmail@email.com");
+            request.setEmailCheck(true);
+            request.setName("testName");
+            request.setNickname("testNickname");
+            return request;
         }
     }
 
@@ -249,10 +249,10 @@ public class OkkyMemberServiceTest {
         }
 
         ChangePasswordRequest changePasswordRequest() {
-            return ChangePasswordRequest.builder()
-                .oldPassword("old_password")
-                .newPassword("new_password")
-                .build();
+            ChangePasswordRequest request = new ChangePasswordRequest();
+            request.setOldPassword("old_password");
+            request.setNewPassword("new_password");
+            return request;
         }
     }
 }

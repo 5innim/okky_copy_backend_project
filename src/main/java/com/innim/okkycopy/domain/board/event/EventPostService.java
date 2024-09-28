@@ -1,8 +1,8 @@
 package com.innim.okkycopy.domain.board.event;
 
 import com.innim.okkycopy.domain.board.dto.request.write.PostRequest;
-import com.innim.okkycopy.domain.board.dto.response.post.PostListResponse;
 import com.innim.okkycopy.domain.board.dto.response.post.PostDetailsResponse;
+import com.innim.okkycopy.domain.board.dto.response.post.PostListResponse;
 import com.innim.okkycopy.domain.board.entity.BoardTopic;
 import com.innim.okkycopy.domain.board.entity.PostExpression;
 import com.innim.okkycopy.domain.board.event.entity.EventPost;

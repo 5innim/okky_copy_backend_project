@@ -96,7 +96,6 @@ public class _member_$provider_signup {
     }
 
     OAuthMemberRequest oAuthMemberRequest() {
-        return OAuthMemberRequest.builder()
-            .build();
+        return new OAuthMemberRequest();
     }
 }
