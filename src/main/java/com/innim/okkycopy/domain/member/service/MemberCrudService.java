@@ -5,6 +5,8 @@ import com.innim.okkycopy.domain.member.dto.response.MemberDetailsResponse;
 import com.innim.okkycopy.domain.member.entity.Member;
 import com.innim.okkycopy.domain.member.repository.MemberRepository;
 import com.innim.okkycopy.global.auth.enums.Role;
+import com.innim.okkycopy.global.common.email.EmailAuthenticateValue;
+import com.innim.okkycopy.global.common.email.MailManager;
 import com.innim.okkycopy.global.common.storage.image_usage.ImageUsageService;
 import com.innim.okkycopy.global.error.ErrorCase;
 import com.innim.okkycopy.global.error.exception.StatusCode401Exception;
@@ -12,11 +14,11 @@ import com.innim.okkycopy.global.error.exception.StatusCode403Exception;
 import com.innim.okkycopy.global.error.exception.StatusCode500Exception;
 import com.innim.okkycopy.global.error.exception.StatusCodeException;
 import com.innim.okkycopy.global.util.EncryptionUtil;
-import com.innim.okkycopy.global.common.email.EmailAuthenticateValue;
-import com.innim.okkycopy.global.common.email.MailManager;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.Date;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -67,6 +69,7 @@ public class MemberCrudService {
 
     @Transactional
     public void modifyMemberRole(String key) {
+        key = EncryptionUtil.base64Decode(key);
         EmailAuthenticateValue value = mailManager.findValueByEmailAuthenticate(key).orElseThrow(
             () -> new StatusCode401Exception(ErrorCase._401_NO_SUCH_KEY));
 
@@ -96,8 +99,9 @@ public class MemberCrudService {
 
     @Transactional
     public void modifyMemberRoleAndEmail(String key) {
-        EmailAuthenticateValue value = mailManager.findValueByEmailChangeAuthenticate(key).orElseThrow(
-            () -> new StatusCode401Exception(ErrorCase._401_NO_SUCH_KEY));
+        key = EncryptionUtil.base64Decode(key);
+        EmailAuthenticateValue value = mailManager.findValueByEmailChangeAuthenticate(key)
+            .orElseThrow(() -> new StatusCode401Exception(ErrorCase._401_NO_SUCH_KEY));
 
         Member member = memberRepository.findByMemberId(value.getMemberId()).orElseThrow(
             () -> new StatusCode401Exception(ErrorCase._401_NO_SUCH_MEMBER));
@@ -123,11 +127,14 @@ public class MemberCrudService {
     }
 
     @Transactional
-    public void modifyMemberLogoutDate(Member requester, LocalDateTime logoutDate) {
+    public void modifyMemberLogoutDate(Member requester) {
+        Date logoutDate = new Date();
+        LocalDateTime localDateTime = LocalDateTime.ofInstant(logoutDate.toInstant(), ZoneId.systemDefault());
+
         Member member = memberRepository.findByMemberId(requester.getMemberId()).orElseThrow(
             () -> new StatusCode401Exception(ErrorCase._401_NO_SUCH_MEMBER)
         );
-        member.setLogoutDate(logoutDate);
+        member.setLogoutDate(localDateTime);
     }
 
 }

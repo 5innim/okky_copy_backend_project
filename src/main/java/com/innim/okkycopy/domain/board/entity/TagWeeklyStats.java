@@ -17,8 +17,9 @@ import lombok.Setter;
 public class TagWeeklyStats {
 
     @Id
-    String name;
+    private String name;
+
     @Column(nullable = false)
-    Integer creates;
+    private Integer creates;
 
 }

@@ -23,10 +23,13 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @Getter
 @Setter
 public class OkkyMember extends Member {
+
     @Column(nullable = false, unique = true)
     private String id;
+
     @Column(nullable = false)
     private String password;
+
     @Column(nullable = false, unique = true)
     private String email;
 

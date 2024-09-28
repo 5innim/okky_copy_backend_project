@@ -30,11 +30,14 @@ public class Tag {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "tag_id")
     private Long tagId;
+
     @ManyToOne(optional = false)
     @JoinColumn(name = "post_id", nullable = false)
     private Post post;
+
     @Column(nullable = false)
     private String name;
+
     @CreationTimestamp
     @Column(name = "created_date", nullable = false)
     private LocalDateTime createdDate;
