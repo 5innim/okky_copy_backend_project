@@ -6,6 +6,7 @@ import com.innim.okkycopy.domain.board.dto.response.post.PostListResponse;
 import com.innim.okkycopy.domain.board.entity.BoardTopic;
 import com.innim.okkycopy.domain.board.entity.PostExpression;
 import com.innim.okkycopy.domain.board.event.entity.EventPost;
+import com.innim.okkycopy.domain.board.event.interfaces.EventPostActionable;
 import com.innim.okkycopy.domain.board.repository.BoardTopicRepository;
 import com.innim.okkycopy.domain.board.repository.PostExpressionRepository;
 import com.innim.okkycopy.domain.board.repository.ScrapRepository;
@@ -91,7 +92,7 @@ public class EventPostService {
         }
         imageUsageService.modifyImageUsages(eventPost.getContent(), updateRequest.getContent());
 
-        eventPost.update(updateRequest, boardTopic);
+        ((EventPostActionable) eventPost).update(updateRequest, boardTopic);
     }
 
     @Transactional
