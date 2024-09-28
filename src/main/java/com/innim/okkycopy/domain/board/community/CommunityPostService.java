@@ -1,6 +1,7 @@
 package com.innim.okkycopy.domain.board.community;
 
 import com.innim.okkycopy.domain.board.community.entity.CommunityPost;
+import com.innim.okkycopy.domain.board.community.interfaces.CommunityPostActionable;
 import com.innim.okkycopy.domain.board.dto.request.write.PostRequest;
 import com.innim.okkycopy.domain.board.dto.response.post.PostDetailsResponse;
 import com.innim.okkycopy.domain.board.dto.response.post.PostListResponse;
@@ -92,7 +93,7 @@ public class CommunityPostService {
 
         imageUsageService.modifyImageUsages(communityPost.getContent(), updateRequest.getContent());
 
-        communityPost.update(updateRequest, boardTopic);
+        ((CommunityPostActionable) communityPost).update(updateRequest, boardTopic);
     }
 
     @Transactional

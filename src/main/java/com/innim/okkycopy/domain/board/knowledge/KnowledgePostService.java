@@ -6,6 +6,7 @@ import com.innim.okkycopy.domain.board.dto.response.post.PostDetailsResponse;
 import com.innim.okkycopy.domain.board.entity.BoardTopic;
 import com.innim.okkycopy.domain.board.entity.PostExpression;
 import com.innim.okkycopy.domain.board.knowledge.entity.KnowledgePost;
+import com.innim.okkycopy.domain.board.knowledge.interfaces.KnowledgePostActionable;
 import com.innim.okkycopy.domain.board.repository.BoardTopicRepository;
 import com.innim.okkycopy.domain.board.repository.PostExpressionRepository;
 import com.innim.okkycopy.domain.board.repository.ScrapRepository;
@@ -89,7 +90,7 @@ public class KnowledgePostService {
             throw new StatusCode403Exception(ErrorCase._403_NO_AUTHORITY);
         }
         imageUsageService.modifyImageUsages(knowledgePost.getContent(), updateRequest.getContent());
-        knowledgePost.update(updateRequest, boardTopic);
+        ((KnowledgePostActionable) knowledgePost).update(updateRequest, boardTopic);
     }
 
     @Transactional

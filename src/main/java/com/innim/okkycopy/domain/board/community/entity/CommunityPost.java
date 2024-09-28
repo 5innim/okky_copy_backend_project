@@ -1,5 +1,6 @@
 package com.innim.okkycopy.domain.board.community.entity;
 
+import com.innim.okkycopy.domain.board.community.interfaces.CommunityPostActionable;
 import com.innim.okkycopy.domain.board.dto.request.write.PostRequest;
 import com.innim.okkycopy.domain.board.dto.request.write.TagInfo;
 import com.innim.okkycopy.domain.board.entity.BoardTopic;
@@ -26,7 +27,7 @@ import org.hibernate.annotations.DynamicUpdate;
 @Setter
 @Getter
 @SuperBuilder
-public class CommunityPost extends Post {
+public class CommunityPost extends Post implements CommunityPostActionable {
 
     public static CommunityPost of(PostRequest postRequest, BoardTopic boardTopic, Member member) {
         if (isNotSupportedTopic(boardTopic)) {
@@ -55,6 +56,7 @@ public class CommunityPost extends Post {
         return communityPost;
     }
 
+    @Override
     public void update(PostRequest updateRequest, BoardTopic boardTopic) {
         if (isNotSupportedTopic(boardTopic)) {
             throw new StatusCode400Exception(ErrorCase._400_BAD_FORM_DATA);
