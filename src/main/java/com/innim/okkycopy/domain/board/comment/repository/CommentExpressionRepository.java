@@ -19,6 +19,7 @@ public interface CommentExpressionRepository extends JpaRepository<CommentExpres
         + "FROM (SELECT c.comment_id, c.created_date FROM comment c WHERE c.comment_id IN :commentIds) sc "
         + "LEFT JOIN (SELECT ce.comment_id, ce.member_id, ce.expression_type FROM comment_expression ce WHERE ce.member_id = :memberId) sce "
         + "ON sc.comment_id = sce.comment_id " + "ORDER BY sc.created_date ASC", nativeQuery = true)
-    List<Short> findRequesterExpressionType(@Param("commentIds") List<Long> commentIds, @Param("memberId") Long memberId);
+    List<Short> findRequesterExpressionType(@Param("commentIds") List<Long> commentIds,
+        @Param("memberId") Long memberId);
 
 }
