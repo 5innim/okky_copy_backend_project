@@ -26,12 +26,9 @@ import com.innim.okkycopy.domain.member.service.OkkyMemberService;
 import com.innim.okkycopy.global.auth.CustomUserDetails;
 import com.innim.okkycopy.global.error.ErrorCase;
 import com.innim.okkycopy.global.error.exception.StatusCode400Exception;
-import com.innim.okkycopy.global.error.exception.StatusCode500Exception;
-import com.innim.okkycopy.global.util.EncryptionUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.time.LocalDateTime;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -82,14 +79,14 @@ public class MemberControllerTest {
         }
 
         MemberRequest memberRequest() {
-            return MemberRequest.builder()
-                .id("testId")
-                .password("testPassword**")
-                .email("testEmail@email.com")
-                .emailCheck(true)
-                .name("testName")
-                .nickname("testNickname")
-                .build();
+            MemberRequest request = new MemberRequest();
+            request.setId("testId");
+            request.setPassword("testPassword**");
+            request.setEmail("testEmail@email.com");
+            request.setEmailCheck(true);
+            request.setName("testName");
+            request.setNickname("testNickname");
+            return request;
         }
 
         MemberBriefResponse memberBriefResponse() {
@@ -197,12 +194,12 @@ public class MemberControllerTest {
         }
 
         OAuthMemberRequest oAuthMemberRequest() {
-            return OAuthMemberRequest.builder()
-                .key("testKey")
-                .nickname("testNickname")
-                .profile("testProfile")
-                .emailCheck(true)
-                .build();
+            OAuthMemberRequest request = new OAuthMemberRequest();
+            request.setKey("testKey");
+            request.setNickname("testNickname");
+            request.setProfile("testProfile");
+            request.setEmailCheck(true);
+            return request;
         }
     }
 
@@ -226,11 +223,11 @@ public class MemberControllerTest {
         }
 
         ProfileUpdateRequest profileUpdateRequest() {
-            return ProfileUpdateRequest.builder()
-                .profile("update_profile")
-                .nickname("update_nickname")
-                .name("update_name")
-                .build();
+            ProfileUpdateRequest request = new ProfileUpdateRequest();
+            request.setProfile("update_profile");
+            request.setNickname("update_nickname");
+            request.setName("update_name");
+            return request;
         }
     }
 
@@ -254,10 +251,10 @@ public class MemberControllerTest {
         }
 
         ChangePasswordRequest changePasswordRequest() {
-            return ChangePasswordRequest.builder()
-                .oldPassword("old_password")
-                .newPassword("new_password")
-                .build();
+            ChangePasswordRequest request = new ChangePasswordRequest();
+            request.setOldPassword("old_password");
+            request.setNewPassword("new_password");
+            return request;
         }
     }
 
@@ -274,7 +271,7 @@ public class MemberControllerTest {
 
             // then
             then(memberCrudService).should(times(1))
-                .modifyMemberLogoutDate(any(Member.class), any(LocalDateTime.class));
+                .modifyMemberLogoutDate(any(Member.class));
             then(memberCrudService).shouldHaveNoMoreInteractions();
             assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
         }
@@ -343,7 +340,9 @@ public class MemberControllerTest {
         }
 
         UpdateEmailRequest updateEmailRequest() {
-            return new UpdateEmailRequest("update_email");
+            UpdateEmailRequest request = new UpdateEmailRequest();
+            request.setEmail("update_email");
+            return request;
         }
 
     }
@@ -360,7 +359,7 @@ public class MemberControllerTest {
             ResponseEntity<Object> response = memberController.emailAuthenticate(key);
 
             // then
-            then(memberCrudService).should(times(1)).modifyMemberRole(EncryptionUtil.base64Decode(key));
+            then(memberCrudService).should(times(1)).modifyMemberRole(key);
             then(memberCrudService).shouldHaveNoMoreInteractions();
             assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
         }
@@ -378,7 +377,7 @@ public class MemberControllerTest {
             ResponseEntity<Object> response = memberController.emailChangeAuthenticate(key);
 
             // then
-            then(memberCrudService).should(times(1)).modifyMemberRoleAndEmail(EncryptionUtil.base64Decode(key));
+            then(memberCrudService).should(times(1)).modifyMemberRoleAndEmail(key);
             then(memberCrudService).shouldHaveNoMoreInteractions();
             assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
         }

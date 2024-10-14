@@ -20,8 +20,10 @@ public class TopTag {
     @Id
     @Column(name = "top_tag_id")
     private Integer topTagId;
+
     @Column(name = "name")
     private String name;
+
     @Column(name = "creates", nullable = false)
     private Integer creates;
 

@@ -10,13 +10,11 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.IdClass;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-import jakarta.persistence.UniqueConstraint;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -32,25 +30,27 @@ import org.hibernate.proxy.HibernateProxy;
 @Setter
 @Builder
 @DynamicInsert
-@Table(name = "comment_expression", uniqueConstraints = {
-    @UniqueConstraint(columnNames = {"member_id", "comment_id"})})
+@IdClass(CommentExpressionKey.class)
+@Table(name = "comment_expression")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 public class CommentExpression {
 
     @Id
-    @Column(name = "expression_id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long expressionId;
-    @Column(name = "expression_type")
-    @Enumerated(value = EnumType.ORDINAL)
-    private ExpressionType expressionType;
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = "comment_id")
     private Comment comment;
+
+    @Id
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private Member member;
+
+    @Column(name = "expression_type")
+    @Enumerated(value = EnumType.ORDINAL)
+    private ExpressionType expressionType;
+
+
 
 
     public static CommentExpression of(Comment comment, Member member, ExpressionType type) {

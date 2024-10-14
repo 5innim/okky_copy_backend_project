@@ -5,6 +5,7 @@ import com.innim.okkycopy.domain.board.dto.request.write.TagInfo;
 import com.innim.okkycopy.domain.board.entity.BoardTopic;
 import com.innim.okkycopy.domain.board.entity.Post;
 import com.innim.okkycopy.domain.board.entity.Tag;
+import com.innim.okkycopy.domain.board.knowledge.interfaces.KnowledgePostActionable;
 import com.innim.okkycopy.domain.member.entity.Member;
 import com.innim.okkycopy.global.error.ErrorCase;
 import com.innim.okkycopy.global.error.exception.StatusCode400Exception;
@@ -26,7 +27,7 @@ import org.hibernate.annotations.DynamicUpdate;
 @SuperBuilder
 @DiscriminatorValue(value = "knowledge")
 @AllArgsConstructor
-public class KnowledgePost extends Post {
+public class KnowledgePost extends Post implements KnowledgePostActionable {
 
     public static KnowledgePost of(PostRequest postRequest, BoardTopic boardTopic, Member member) {
         if (isNotSupportedTopic(boardTopic)) {
@@ -55,6 +56,7 @@ public class KnowledgePost extends Post {
         return knowledgePost;
     }
 
+    @Override
     public void update(PostRequest updateRequest, BoardTopic boardTopic) {
         if (isNotSupportedTopic(boardTopic)) {
             throw new StatusCode400Exception(ErrorCase._400_BAD_FORM_DATA);

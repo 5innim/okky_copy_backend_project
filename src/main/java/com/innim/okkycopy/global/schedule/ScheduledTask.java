@@ -16,7 +16,7 @@ import org.springframework.stereotype.Component;
 @Component
 @RequiredArgsConstructor
 @Slf4j
-public class ScheduledTasks {
+public class ScheduledTask {
 
     private final ImageUsageService imageUsageService;
     private final S3Uploader s3Uploader;

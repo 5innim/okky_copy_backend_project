@@ -193,7 +193,6 @@ public class CommentExpressionServiceTest {
 
         CommentExpression commentExpression() {
             return CommentExpression.builder()
-                .expressionId(1L)
                 .expressionType(ExpressionType.LIKE)
                 .build();
         }

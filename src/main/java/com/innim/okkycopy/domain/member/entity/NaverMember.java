@@ -31,6 +31,7 @@ public class NaverMember extends Member {
 
     @Column(name = "provider_id", nullable = false, unique = true)
     private String providerId;
+
     @Column(nullable = false, unique = true)
     private String email;
 

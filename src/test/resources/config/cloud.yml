@@ -1,0 +1,11 @@
+# cloud
+cloud:
+  aws:
+    s3:
+      bucket: okky-copy-backend-dev
+      folder-path: static/image
+    stack.auto: false
+    region.static: ap-northeast-2
+    credentials:
+      access-key: ENC(KEFZS81oj8KYeXuL3M9ikgvQk3975CgjRBE2MYvZ40w=)
+      secret-key: ENC(CCtHoAQbk/a0KKLw3gRU2TRzftMXpMAsIpZCKcmF9uRzkseBcGIh+0VqU6u6TLWRrPsHg0zGuBc=)

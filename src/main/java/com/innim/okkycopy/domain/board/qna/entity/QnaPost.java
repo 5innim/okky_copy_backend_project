@@ -5,6 +5,7 @@ import com.innim.okkycopy.domain.board.dto.request.write.TagInfo;
 import com.innim.okkycopy.domain.board.entity.BoardTopic;
 import com.innim.okkycopy.domain.board.entity.Post;
 import com.innim.okkycopy.domain.board.entity.Tag;
+import com.innim.okkycopy.domain.board.qna.interfaces.QnaPostActionable;
 import com.innim.okkycopy.domain.member.entity.Member;
 import com.innim.okkycopy.global.error.ErrorCase;
 import com.innim.okkycopy.global.error.exception.StatusCode400Exception;
@@ -25,7 +26,7 @@ import lombok.experimental.SuperBuilder;
 @Getter
 @SuperBuilder
 @AllArgsConstructor
-public class QnaPost extends Post {
+public class QnaPost extends Post implements QnaPostActionable {
 
     public static QnaPost of(PostRequest postRequest, BoardTopic boardTopic, Member member)
         throws StatusCodeException {
@@ -55,6 +56,7 @@ public class QnaPost extends Post {
         return qnaPost;
     }
 
+    @Override
     public void update(PostRequest updateRequest, BoardTopic boardTopic) {
         if (isNotSupportedTopic(boardTopic)) {
             throw new StatusCode400Exception(ErrorCase._400_BAD_FORM_DATA);

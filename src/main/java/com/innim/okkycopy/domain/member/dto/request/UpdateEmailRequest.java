@@ -9,8 +9,8 @@ import lombok.Setter;
 @Setter
 @Getter
 @NoArgsConstructor
-@AllArgsConstructor
 public class UpdateEmailRequest {
+
     @Email
     private String email;
 }

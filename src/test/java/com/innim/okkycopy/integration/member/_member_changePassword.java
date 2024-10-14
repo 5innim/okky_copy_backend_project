@@ -113,10 +113,10 @@ public class _member_changePassword {
     }
 
     ChangePasswordRequest changePasswordRequest() {
-        return ChangePasswordRequest.builder()
-            .oldPassword("old_password_11")
-            .newPassword("new_password_11")
-            .build();
+        ChangePasswordRequest request = new ChangePasswordRequest();
+        request.setOldPassword("old_password_11");
+        request.setNewPassword("new_password_11");
+        return request;
     }
 
 

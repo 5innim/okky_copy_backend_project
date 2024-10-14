@@ -72,7 +72,7 @@ public class JwtUtil {
 
 
     //  it was used, when this service use header to transfer jwt,
-    //  but now, using cookie. so those methods below this line is no usage.
+    //  but now, using cookie. so those methods below this line is not in usage.
 
     /*
     public static boolean prefixNotMatched(String value) {

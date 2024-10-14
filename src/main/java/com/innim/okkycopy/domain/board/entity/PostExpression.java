@@ -8,13 +8,11 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.IdClass;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-import jakarta.persistence.UniqueConstraint;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -27,26 +25,27 @@ import org.hibernate.annotations.DynamicInsert;
 @Getter
 @Setter
 @Builder
-@Table(name = "post_expression", uniqueConstraints = {
-    @UniqueConstraint(columnNames = {"member_id", "post_id"})})
+@Table(name = "post_expression")
+@IdClass(PostExpressionKey.class)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @DynamicInsert
 public class PostExpression {
 
     @Id
-    @Column(name = "expression_id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long expressionId;
-    @Column(name = "expression_type")
-    @Enumerated(value = EnumType.ORDINAL)
-    private ExpressionType expressionType;
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = "post_id")
     private Post post;
+
+    @Id
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private Member member;
+
+    @Column(name = "expression_type")
+    @Enumerated(value = EnumType.ORDINAL)
+    private ExpressionType expressionType;
+
 
     public static PostExpression of(Post post, Member member, ExpressionType type) {
         if (type.equals(ExpressionType.LIKE)) {

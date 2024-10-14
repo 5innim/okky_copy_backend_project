@@ -5,6 +5,7 @@ import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface OkkyMemberRepository extends JpaRepository<OkkyMember, Long> {
+
     boolean existsById(String id);
 
     boolean existsByEmail(String email);
