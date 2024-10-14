@@ -157,7 +157,6 @@ public class PostExpressionServiceTest {
 
         PostExpression postExpression(ExpressionType expressionType, Member member) {
             return PostExpression.builder()
-                .expressionId(1L)
                 .expressionType(expressionType)
                 .member(member)
                 .build();
@@ -309,7 +308,6 @@ public class PostExpressionServiceTest {
 
         PostExpression postExpression(ExpressionType expressionType, Member member) {
             return PostExpression.builder()
-                .expressionId(1L)
                 .expressionType(expressionType)
                 .member(member)
                 .build();
