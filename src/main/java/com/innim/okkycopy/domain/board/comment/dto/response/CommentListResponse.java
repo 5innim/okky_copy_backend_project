@@ -7,6 +7,7 @@ import com.innim.okkycopy.domain.member.entity.Member;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -52,7 +53,7 @@ public class CommentListResponse {
     @Setter
     @SuperBuilder
     @NoArgsConstructor
-    @AllArgsConstructor
+    @AllArgsConstructor(access = AccessLevel.PRIVATE)
     static class CommentDetailsResponse {
 
         private Long commentId;
@@ -84,7 +85,7 @@ public class CommentListResponse {
     @Getter
     @Setter
     @Builder
-    @AllArgsConstructor
+    @AllArgsConstructor(access = AccessLevel.PRIVATE)
     static class RequesterInfo {
 
         private boolean like;

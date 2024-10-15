@@ -34,10 +34,10 @@ import org.hibernate.annotations.DynamicInsert;
 @Setter
 @Getter
 @Builder
-@AllArgsConstructor
+@DynamicInsert
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Inheritance(strategy = InheritanceType.JOINED)
-@DynamicInsert
 public class Comment {
 
     @Id

@@ -8,6 +8,7 @@ import com.innim.okkycopy.domain.member.entity.Member;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -15,7 +16,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-@AllArgsConstructor
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Builder
 public class PostDetailsResponse {
 
@@ -69,7 +70,7 @@ public class PostDetailsResponse {
     @Getter
     @Setter
     @Builder
-    @AllArgsConstructor
+    @AllArgsConstructor(access = AccessLevel.PRIVATE)
     static class RequesterInfo {
 
         private boolean scrap;

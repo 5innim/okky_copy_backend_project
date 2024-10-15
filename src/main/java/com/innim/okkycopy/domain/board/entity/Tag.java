@@ -20,7 +20,7 @@ import org.hibernate.annotations.CreationTimestamp;
 @Entity
 @Table(name = "tag")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@AllArgsConstructor
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Setter
 @Getter
 @Builder

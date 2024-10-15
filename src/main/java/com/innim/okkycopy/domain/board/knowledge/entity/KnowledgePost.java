@@ -14,19 +14,18 @@ import jakarta.persistence.Entity;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
-import org.hibernate.annotations.DynamicUpdate;
 
-@DynamicUpdate
 @Entity
 @Setter
 @Getter
 @SuperBuilder
 @DiscriminatorValue(value = "knowledge")
-@AllArgsConstructor
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class KnowledgePost extends Post implements KnowledgePostActionable {
 
     public static KnowledgePost of(PostRequest postRequest, BoardTopic boardTopic, Member member) {
