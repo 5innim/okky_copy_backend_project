@@ -220,7 +220,6 @@ public class PostScrapServiceTest {
         Scrap scrap(Member member, Post post) {
             return Scrap.builder()
                 .member(member)
-                .scrapId(1L)
                 .post(post)
                 .build();
         }
