@@ -7,6 +7,7 @@ server:
 logging:
   level:
     com.innim.okkycopy: debug
+    org.hibernate.orm.jdbc.bind: trace
 
 
 
@@ -89,7 +90,7 @@ spring:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
-        format-sql: true
+        format_sql: true
     show-sql: true
     defer-datasource-initialization: true
 

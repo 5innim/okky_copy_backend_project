@@ -9,6 +9,7 @@ import com.innim.okkycopy.domain.member.entity.Member;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
@@ -49,7 +50,7 @@ public class ReCommentListResponse {
     @Getter
     @Setter
     @SuperBuilder
-    @AllArgsConstructor
+    @AllArgsConstructor(access = AccessLevel.PRIVATE)
     static class ReCommentDetailsResponse extends CommentDetailsResponse {
 
         private String mentionedNickname;

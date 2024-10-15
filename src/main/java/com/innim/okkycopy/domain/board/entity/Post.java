@@ -28,18 +28,18 @@ import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.BatchSize;
 import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.DynamicUpdate;
+import org.hibernate.annotations.DynamicInsert;
 
 @Entity
 @Table(name = "post")
 @Setter
 @Getter
 @SuperBuilder
-@AllArgsConstructor
+@DynamicInsert
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "dtype")
-@DynamicUpdate
 public class Post {
 
     @Id

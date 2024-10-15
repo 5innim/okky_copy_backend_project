@@ -22,7 +22,7 @@ import org.hibernate.annotations.BatchSize;
 @Builder
 @Setter
 @Getter
-@AllArgsConstructor
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class BoardType {
 
