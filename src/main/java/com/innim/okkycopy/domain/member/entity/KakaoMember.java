@@ -24,7 +24,7 @@ import org.hibernate.annotations.DynamicUpdate;
 @SuperBuilder
 @Getter
 @Setter
-@AllArgsConstructor
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @DynamicUpdate
 public class KakaoMember extends Member {

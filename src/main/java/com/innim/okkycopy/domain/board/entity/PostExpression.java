@@ -19,7 +19,6 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.annotations.DynamicInsert;
 
 @Entity
 @Getter
@@ -28,8 +27,7 @@ import org.hibernate.annotations.DynamicInsert;
 @Table(name = "post_expression")
 @IdClass(PostExpressionKey.class)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@AllArgsConstructor
-@DynamicInsert
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class PostExpression {
 
     @Id

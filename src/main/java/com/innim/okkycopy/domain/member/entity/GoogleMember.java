@@ -22,9 +22,9 @@ import org.hibernate.annotations.DynamicUpdate;
 @SuperBuilder
 @Getter
 @Setter
-@AllArgsConstructor
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @DynamicUpdate
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class GoogleMember extends Member {
 
     @Column(name = "provider_id", nullable = false, unique = true)

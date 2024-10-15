@@ -22,18 +22,16 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.Hibernate;
-import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.proxy.HibernateProxy;
 
 @Entity
 @Getter
 @Setter
 @Builder
-@DynamicInsert
 @IdClass(CommentExpressionKey.class)
 @Table(name = "comment_expression")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@AllArgsConstructor
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class CommentExpression {
 
     @Id

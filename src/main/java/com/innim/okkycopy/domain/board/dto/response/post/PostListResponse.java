@@ -5,6 +5,7 @@ import com.innim.okkycopy.domain.board.entity.Tag;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -14,7 +15,7 @@ import org.springframework.data.domain.Page;
 @Setter
 @Getter
 @Builder
-@AllArgsConstructor
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class PostListResponse {
 
     private List<PostBriefResponse> posts;
@@ -35,7 +36,7 @@ public class PostListResponse {
     @Getter
     @Setter
     @Builder
-    @AllArgsConstructor
+    @AllArgsConstructor(access = AccessLevel.PRIVATE)
     static class PostBriefResponse {
 
         private long postId;

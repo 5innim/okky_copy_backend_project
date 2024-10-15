@@ -4,6 +4,7 @@ package com.innim.okkycopy.domain.board.dto.response;
 import com.innim.okkycopy.domain.board.entity.TopTag;
 import java.util.ArrayList;
 import java.util.List;
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -12,7 +13,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @Builder
-@AllArgsConstructor
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class TopTagListResponse {
 
     private List<TopTagResponse> tags;
@@ -33,7 +34,7 @@ public class TopTagListResponse {
     @Getter
     @Setter
     @Builder
-    @AllArgsConstructor
+    @AllArgsConstructor(access = AccessLevel.PRIVATE)
     static class TopTagResponse {
 
         private String name;
