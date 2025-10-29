@@ -53,6 +53,8 @@ public class CommunityPostService {
         imageUsageService.modifyImageUsages(postRequest.getContent(), true);
         CommunityPost communityPost = CommunityPost.of(postRequest, boardTopic, member);
 
+        System.out.println("webhook test");
+
         communityPostRepository.save(communityPost);
     }
 
