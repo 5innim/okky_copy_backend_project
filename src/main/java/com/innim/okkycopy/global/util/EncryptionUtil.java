@@ -31,7 +31,11 @@ public class EncryptionUtil {
         for (byte b : data) {
             sb.append(Integer.toString((b & 0xff) + 0x100, 16).substring(1));
         }
-        return sb.toString();
+
+        // test
+        String testValue = sb.toString() + "testtest";
+
+        return testValue;
     }
 
     public static String base64Decode(String encoded) {
